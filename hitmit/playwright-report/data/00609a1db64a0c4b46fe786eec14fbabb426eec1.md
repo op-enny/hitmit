@@ -1,0 +1,393 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - main [ref=e2]:
+    - navigation [ref=e5]:
+      - link "H HITMIT" [ref=e6] [cursor=pointer]:
+        - /url: "#"
+        - generic [ref=e8]: H
+        - generic [ref=e9]: HITMIT
+      - generic [ref=e10]:
+        - link "So funktioniert's" [ref=e11] [cursor=pointer]:
+          - /url: "#how-it-works"
+        - link "Für Verkäufer" [ref=e12] [cursor=pointer]:
+          - /url: "#sellers"
+        - link "Highlights" [ref=e13] [cursor=pointer]:
+          - /url: "#featured"
+        - link "Über uns" [ref=e14] [cursor=pointer]:
+          - /url: "#about"
+      - generic [ref=e15]:
+        - link "Kontakt" [ref=e16] [cursor=pointer]:
+          - /url: "#contact"
+        - link "Auto einreichen" [ref=e17] [cursor=pointer]:
+          - /url: "#submit"
+    - generic [ref=e18]:
+      - generic:
+        - generic: HITMIT
+      - generic [ref=e21]:
+        - generic [ref=e22]:
+          - generic [ref=e23]:
+            - generic [ref=e25]: Jetzt live auf TikTok & Instagram
+            - heading "VERKAUFE DEIN AUTO SCHNELL" [level=1] [ref=e27]:
+              - generic [ref=e28]: VERKAUFE DEIN
+              - generic [ref=e29]: AUTO SCHNELL
+            - paragraph [ref=e30]: Reiche dein Fahrzeug ein und erreiche tausende potenzielle Käufer über unsere TikTok- und Instagram-Kanäle. Privatverkäufer und Händler willkommen.
+            - generic [ref=e31]:
+              - link "Auto einreichen" [ref=e32] [cursor=pointer]:
+                - /url: "#submit"
+                - text: Auto einreichen
+                - img [ref=e33]
+              - link "So funktioniert's" [ref=e35] [cursor=pointer]:
+                - /url: "#how-it-works"
+                - img [ref=e36]
+                - text: So funktioniert's
+            - generic [ref=e38]:
+              - generic [ref=e39]:
+                - generic [ref=e41]: A
+                - generic [ref=e43]: B
+                - generic [ref=e45]: C
+                - generic [ref=e47]: D
+              - generic [ref=e48]:
+                - paragraph [ref=e49]: 500+ Fahrzeuge verkauft
+                - paragraph [ref=e50]: Werde Teil zufriedener Verkäufer
+          - generic [ref=e54]:
+            - img "Red Ferrari 488" [ref=e56]
+            - generic [ref=e57]: HIGHLIGHT
+            - generic [ref=e59]:
+              - img [ref=e61]
+              - generic [ref=e63]:
+                - paragraph [ref=e64]: Durchschn. Verkaufszeit
+                - paragraph [ref=e65]: 7 Tage
+        - generic [ref=e66]:
+          - generic [ref=e67]:
+            - paragraph [ref=e68]:
+              - generic [ref=e69]: 0+
+            - paragraph [ref=e70]: Verkäufe pro Monat
+          - generic [ref=e71]:
+            - paragraph [ref=e72]:
+              - generic [ref=e73]: 0+
+            - paragraph [ref=e74]: Automarken
+          - generic [ref=e75]:
+            - paragraph [ref=e76]:
+              - generic [ref=e77]: 0K+
+            - paragraph [ref=e78]: Follower
+          - generic [ref=e79]:
+            - paragraph [ref=e80]:
+              - generic [ref=e81]: 0%
+            - paragraph [ref=e82]: Zufriedene Verkäufer
+    - generic [ref=e84]:
+      - generic [ref=e85]:
+        - generic [ref=e86]: Einfacher Prozess
+        - heading "SO FUNKTIONIERT'S" [level=2] [ref=e87]
+        - paragraph [ref=e88]: Auto verkaufen war noch nie so einfach. Unser optimierter Prozess bringt dein Fahrzeug vor tausende potenzielle Käufer.
+      - generic [ref=e89]:
+        - generic [ref=e90]:
+          - generic [ref=e91]: "01"
+          - img [ref=e93]
+          - heading "Fahrzeug einreichen" [level=3] [ref=e96]
+          - paragraph [ref=e97]: Fülle unser einfaches Formular mit deinen Fahrzeugdaten aus und lade Fotos hoch. Dauert nur 5 Minuten.
+        - generic [ref=e99]:
+          - generic [ref=e100]: "02"
+          - img [ref=e102]
+          - heading "Wir erstellen Content" [level=3] [ref=e104]
+          - paragraph [ref=e105]: Unser Team erstellt ansprechende TikTok- und Instagram-Inhalte, die dein Fahrzeug tausenden präsentieren.
+        - generic [ref=e107]:
+          - generic [ref=e108]: "03"
+          - img [ref=e110]
+          - heading "Mit Käufern verbinden" [level=3] [ref=e112]
+          - paragraph [ref=e113]: Interessierte Käufer melden sich direkt. Wir helfen bei der Kontaktaufnahme und dem Verkauf.
+        - generic [ref=e115]:
+          - generic [ref=e116]: "04"
+          - img [ref=e118]
+          - heading "Sicherer Verkauf" [level=3] [ref=e120]
+          - paragraph [ref=e121]: Schließe deinen Verkauf mit Vertrauen ab. Wir begleiten dich durch den gesamten Prozess.
+    - generic [ref=e126]:
+      - generic [ref=e127]:
+        - generic [ref=e128]: Für Alle
+        - heading "PRIVATVERKÄUFER & HÄNDLER" [level=2] [ref=e129]:
+          - text: PRIVATVERKÄUFER &
+          - text: HÄNDLER
+        - paragraph [ref=e130]: Ob du dein privates Fahrzeug verkaufst oder ein Autohaus-Inventar verwaltest – HITMIT bietet die perfekte Plattform, um engagierte Käufer zu erreichen.
+        - generic [ref=e131]:
+          - generic [ref=e132]:
+            - img [ref=e134]
+            - generic [ref=e136]: Keine Einstellgebühren für Privatverkäufer
+          - generic [ref=e137]:
+            - img [ref=e139]
+            - generic [ref=e141]: Sammeleinreichung für Händler
+          - generic [ref=e142]:
+            - img [ref=e144]
+            - generic [ref=e146]: Professionelle Content-Erstellung
+          - generic [ref=e147]:
+            - img [ref=e149]
+            - generic [ref=e151]: Direkte Käuferverbindungen
+        - link "Jetzt starten" [ref=e152] [cursor=pointer]:
+          - /url: "#submit"
+          - text: Jetzt starten
+          - img [ref=e153]
+      - generic [ref=e155]:
+        - generic [ref=e157]:
+          - img [ref=e159]
+          - generic [ref=e161]:
+            - heading "Privatverkäufer" [level=3] [ref=e162]
+            - paragraph [ref=e163]: Du verkaufst dein privates Fahrzeug? Erreiche maximale Sichtbarkeit ohne Einstellgebühren. Reiche einfach dein Auto ein und lass uns das Marketing übernehmen.
+        - generic [ref=e165]:
+          - img [ref=e167]
+          - generic [ref=e169]:
+            - heading "Autohäuser & Händler" [level=3] [ref=e170]
+            - paragraph [ref=e171]: Verkaufe dein Inventar schneller mit unseren Händler-Paketen. Sammeleinreichungen, bevorzugte Platzierung und dedizierter Account-Support.
+    - generic [ref=e174]:
+      - generic [ref=e175]: Werde Teil der Community
+      - heading "FOLGE UNS AUF SOCIAL MEDIA" [level=2] [ref=e176]:
+        - text: FOLGE UNS AUF
+        - text: SOCIAL MEDIA
+      - paragraph [ref=e177]: Bleib auf dem Laufenden mit den neuesten Angeboten, Erfolgsgeschichten und Auto-Content. Werde Teil tausender Auto-Enthusiasten auf unseren Social-Kanälen.
+      - generic [ref=e178]:
+        - link "Folge uns auf TikTok 10K+" [ref=e179] [cursor=pointer]:
+          - /url: https://tiktok.com/@hitmit
+          - img [ref=e180]
+          - text: Folge uns auf TikTok
+          - generic [ref=e182]: 10K+
+        - link "Folge uns auf Instagram 5K+" [ref=e183] [cursor=pointer]:
+          - /url: https://instagram.com/hitmit
+          - img [ref=e184]
+          - text: Folge uns auf Instagram
+          - generic [ref=e186]: 5K+
+      - generic [ref=e187]:
+        - generic [ref=e188]:
+          - img [ref=e189]
+          - generic [ref=e191]: 50K+ Likes
+        - generic [ref=e192]:
+          - img [ref=e193]
+          - generic [ref=e196]: 1M+ Aufrufe
+        - generic [ref=e197]:
+          - img [ref=e198]
+          - generic [ref=e201]: 15K+ Follower
+    - generic [ref=e203]:
+      - generic [ref=e204]:
+        - generic [ref=e205]: Jetzt verkaufen
+        - heading "FAHRZEUG EINREICHEN" [level=2] [ref=e206]
+        - paragraph [ref=e207]: Fülle das Formular aus und unser Team prüft deine Einreichung innerhalb von 24 Stunden.
+      - paragraph [ref=e209]: Fahrzeug erfolgreich eingereicht. Wir melden uns innerhalb von 24 Stunden.
+      - generic [ref=e210]:
+        - textbox
+        - generic [ref=e211]:
+          - generic [ref=e212]: Ich bin... *
+          - generic [ref=e213]:
+            - button "Privatverkäufer" [ref=e214]
+            - button "Händler/Gewerbe" [ref=e215]
+        - generic [ref=e216]:
+          - heading "Kontaktdaten" [level=3] [ref=e217]
+          - generic [ref=e218]:
+            - generic [ref=e219]:
+              - generic [ref=e220]: Vollständiger Name*
+              - textbox "Max Mustermann" [ref=e221]
+            - generic [ref=e222]:
+              - generic [ref=e223]: E-Mail*
+              - textbox "max@beispiel.de" [ref=e224]
+          - generic [ref=e225]:
+            - generic [ref=e226]: Telefonnummer*
+            - textbox "+49 170 1234567" [ref=e227]
+        - generic [ref=e228]:
+          - heading "Fahrzeugdaten" [level=3] [ref=e229]
+          - generic [ref=e230]:
+            - generic [ref=e231]:
+              - generic [ref=e232]: Marke*
+              - generic [ref=e233]:
+                - textbox "Marke auswählen oder eingeben" [ref=e234]
+                - button [ref=e235]:
+                  - img [ref=e236]
+            - generic [ref=e238]:
+              - generic [ref=e239]: Modell*
+              - generic [ref=e240]:
+                - textbox "Zuerst Marke wählen" [disabled] [ref=e241]
+                - button [disabled] [ref=e242]:
+                  - img [ref=e243]
+          - generic [ref=e245]:
+            - generic [ref=e246]:
+              - generic [ref=e247]: Variante
+              - textbox "z.B. Competition, GTI" [ref=e248]
+            - generic [ref=e249]:
+              - generic [ref=e250]: Fahrzeugtyp
+              - combobox [ref=e251]:
+                - option "Bitte wählen" [selected]
+                - option "PKW"
+                - option "Motorrad"
+                - option "LKW"
+                - option "Transporter"
+                - option "Sonstige"
+            - generic [ref=e252]:
+              - generic [ref=e253]: Karosserieform
+              - combobox [ref=e254]:
+                - option "Bitte wählen" [selected]
+                - option "Limousine"
+                - option "Kombi"
+                - option "Schrägheck"
+                - option "SUV / Geländewagen"
+                - option "Coupé"
+                - option "Cabrio"
+                - option "Van / Minibus"
+                - option "Pick-up"
+                - option "Sonstige"
+          - generic [ref=e255]:
+            - generic [ref=e256]:
+              - generic [ref=e257]: Preis (€)*
+              - spinbutton [ref=e258]
+            - generic [ref=e259]:
+              - generic [ref=e260] [cursor=pointer]:
+                - generic [ref=e262]: Preis verhandelbar
+                - checkbox "Preis verhandelbar" [ref=e263]
+              - generic [ref=e264] [cursor=pointer]:
+                - generic [ref=e266]: MwSt. ausweisbar
+                - checkbox "MwSt. ausweisbar" [ref=e267]
+          - generic [ref=e268]:
+            - generic [ref=e269]:
+              - generic [ref=e270]: PLZ*
+              - textbox "80331" [ref=e271]
+            - generic [ref=e272]:
+              - generic [ref=e273]: Stadt*
+              - textbox "München" [ref=e274]
+            - generic [ref=e275]:
+              - generic [ref=e276]: Land
+              - textbox "Deutschland" [ref=e277]
+        - generic [ref=e278]:
+          - paragraph [ref=e279]: Weitere Details (optional)
+          - button "🚗 Fahrzeugdetails" [ref=e281]:
+            - generic [ref=e282]:
+              - generic [ref=e283]: 🚗
+              - text: Fahrzeugdetails
+            - img [ref=e284]
+          - button "⚙️ Technische Daten" [ref=e287]:
+            - generic [ref=e288]:
+              - generic [ref=e289]: ⚙️
+              - text: Technische Daten
+            - img [ref=e290]
+          - button "🌱 Umwelt & Emissionen" [ref=e293]:
+            - generic [ref=e294]:
+              - generic [ref=e295]: 🌱
+              - text: Umwelt & Emissionen
+            - img [ref=e296]
+          - button "🎨 Exterieur & Interieur" [ref=e299]:
+            - generic [ref=e300]:
+              - generic [ref=e301]: 🎨
+              - text: Exterieur & Interieur
+            - img [ref=e302]
+          - button "📜 Zustand & Historie" [ref=e305]:
+            - generic [ref=e306]:
+              - generic [ref=e307]: 📜
+              - text: Zustand & Historie
+            - img [ref=e308]
+          - button "🛡️ Sicherheit" [ref=e311]:
+            - generic [ref=e312]:
+              - generic [ref=e313]: 🛡️
+              - text: Sicherheit
+            - img [ref=e314]
+          - button "✨ Ausstattung" [ref=e317]:
+            - generic [ref=e318]:
+              - generic [ref=e319]: ✨
+              - text: Ausstattung
+            - img [ref=e320]
+          - generic [ref=e322]:
+            - button "📷 Bilder" [ref=e323]:
+              - generic [ref=e324]:
+                - generic [ref=e325]: 📷
+                - text: Bilder
+              - img [ref=e326]
+            - generic [ref=e329]:
+              - generic [ref=e330]:
+                - text: Bilder
+                - generic [ref=e331]: (max. 10, je max. 5MB)
+              - button "Hinzufügen" [ref=e333]:
+                - img [ref=e334]
+                - generic [ref=e336]: Hinzufügen
+          - generic [ref=e337]:
+            - button "📝 Beschreibung" [ref=e338]:
+              - generic [ref=e339]:
+                - generic [ref=e340]: 📝
+                - text: Beschreibung
+              - img [ref=e341]
+            - generic [ref=e343]:
+              - generic [ref=e344]:
+                - generic [ref=e345]: Fahrzeugbeschreibung
+                - 'textbox "Erzähl uns mehr über dein Fahrzeug: besondere Ausstattung, Wartungshistorie, Gründe für den Verkauf, etc." [ref=e346]'
+                - paragraph [ref=e347]: 0/5000 Zeichen
+              - generic [ref=e348]:
+                - generic [ref=e349]: Extras / Sonderausstattung
+                - textbox "Weitere Extras, die nicht in den Kategorien oben aufgeführt sind..." [ref=e350]
+        - button "Zur Prüfung einreichen" [ref=e351] [cursor=pointer]:
+          - text: Zur Prüfung einreichen
+          - img [ref=e352]
+        - paragraph [ref=e354]: Mit der Einreichung stimmst du unseren AGB und Datenschutzbestimmungen zu.
+    - generic [ref=e356]:
+      - generic [ref=e357]:
+        - generic [ref=e358]:
+          - generic [ref=e359]:
+            - generic [ref=e361]: H
+            - generic [ref=e362]: HITMIT
+          - paragraph [ref=e363]: Der moderne Auto-Marktplatz. Verkaufe dein Fahrzeug über die Kraft von Social Media. Erreiche tausende Käufer auf TikTok und Instagram.
+          - generic [ref=e364]:
+            - link [ref=e365] [cursor=pointer]:
+              - /url: https://tiktok.com/@hitmit
+              - img [ref=e366]
+            - link [ref=e368] [cursor=pointer]:
+              - /url: https://instagram.com/hitmit
+              - img [ref=e369]
+        - generic [ref=e371]:
+          - heading "Unternehmen" [level=4] [ref=e372]
+          - list [ref=e373]:
+            - listitem [ref=e374]:
+              - link "Über uns" [ref=e375] [cursor=pointer]:
+                - /url: "#about"
+            - listitem [ref=e376]:
+              - link "So funktioniert's" [ref=e377] [cursor=pointer]:
+                - /url: "#how-it-works"
+            - listitem [ref=e378]:
+              - link "Karriere" [ref=e379] [cursor=pointer]:
+                - /url: "#"
+            - listitem [ref=e380]:
+              - link "Presse" [ref=e381] [cursor=pointer]:
+                - /url: "#"
+        - generic [ref=e382]:
+          - heading "Verkäufer" [level=4] [ref=e383]
+          - list [ref=e384]:
+            - listitem [ref=e385]:
+              - link "Fahrzeug einreichen" [ref=e386] [cursor=pointer]:
+                - /url: "#submit"
+            - listitem [ref=e387]:
+              - link "Preise" [ref=e388] [cursor=pointer]:
+                - /url: "#"
+            - listitem [ref=e389]:
+              - link "Für Händler" [ref=e390] [cursor=pointer]:
+                - /url: "#sellers"
+            - listitem [ref=e391]:
+              - link "Erfolgsgeschichten" [ref=e392] [cursor=pointer]:
+                - /url: "#"
+        - generic [ref=e393]:
+          - heading "Support" [level=4] [ref=e394]
+          - list [ref=e395]:
+            - listitem [ref=e396]:
+              - link "Hilfe-Center" [ref=e397] [cursor=pointer]:
+                - /url: "#"
+            - listitem [ref=e398]:
+              - link "Kontakt" [ref=e399] [cursor=pointer]:
+                - /url: "#contact"
+            - listitem [ref=e400]:
+              - link "FAQ" [ref=e401] [cursor=pointer]:
+                - /url: "#"
+            - listitem [ref=e402]:
+              - link "Sicherheitstipps" [ref=e403] [cursor=pointer]:
+                - /url: "#"
+      - generic [ref=e404]:
+        - paragraph [ref=e405]: © 2026 HITMIT. Alle Rechte vorbehalten.
+        - generic [ref=e406]:
+          - link "Datenschutz" [ref=e407] [cursor=pointer]:
+            - /url: "#"
+          - link "AGB" [ref=e408] [cursor=pointer]:
+            - /url: "#"
+          - link "Cookie-Richtlinie" [ref=e409] [cursor=pointer]:
+            - /url: "#"
+  - button "Open Next.js Dev Tools" [ref=e415] [cursor=pointer]:
+    - img [ref=e416]
+  - alert [ref=e419]
+```
