@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 
 // ============================================================================
@@ -620,27 +620,830 @@ function SocialCTASection() {
 }
 
 // ============================================================================
-// SUBMIT FORM SECTION
+// SUBMIT FORM SECTION - Types and Constants
+// ============================================================================
+
+interface VehicleFormData {
+  // Contact
+  sellerType: "private" | "dealer" | "";
+  contactName: string;
+  contactEmail: string;
+  contactPhone: string;
+  // Required Vehicle
+  brand: string;
+  model: string;
+  price: string;
+  zip: string;
+  city: string;
+  // Optional Vehicle
+  variant: string;
+  vehicleType: string;
+  vehicleCategory: string;
+  vin: string;
+  firstRegistration: string;
+  constructionYear: string;
+  huValidUntil: string;
+  mileage: string;
+  previousOwners: string;
+  fuelType: string;
+  powerPs: string;
+  transmission: string;
+  driveType: string;
+  cylinders: string;
+  engineSize: string;
+  tankSize: string;
+  emissionClass: string;
+  environmentalBadge: string;
+  particleFilter: boolean | null;
+  co2Emission: string;
+  colorGeneral: string;
+  colorManufacturer: string;
+  doors: string;
+  seats: string;
+  weight: string;
+  condition: string;
+  accidentFree: boolean | null;
+  repaintFree: boolean | null;
+  stoneguardFilm: boolean | null;
+  serviceHistory: boolean | null;
+  serviceHistoryAt: string;
+  warrantyUntil: string;
+  manufacturerWarrantyUntil: string;
+  interiorColor: string;
+  seatMaterial: string;
+  comfortFeatures: string[];
+  safetyFeatures: string[];
+  exteriorFeatures: string[];
+  multimediaFeatures: string[];
+  airbags: string;
+  parkingAid: string;
+  climateZones: string;
+  rimSize: string;
+  tireConditionFront: string;
+  tireConditionRear: string;
+  priceNegotiable: boolean;
+  vatDeductible: boolean;
+  country: string;
+  description: string;
+  extras: string;
+  // Honeypot
+  website: string;
+}
+
+const initialFormData: VehicleFormData = {
+  sellerType: "",
+  contactName: "",
+  contactEmail: "",
+  contactPhone: "",
+  brand: "",
+  model: "",
+  price: "",
+  zip: "",
+  city: "",
+  variant: "",
+  vehicleType: "",
+  vehicleCategory: "",
+  vin: "",
+  firstRegistration: "",
+  constructionYear: "",
+  huValidUntil: "",
+  mileage: "",
+  previousOwners: "",
+  fuelType: "",
+  powerPs: "",
+  transmission: "",
+  driveType: "",
+  cylinders: "",
+  engineSize: "",
+  tankSize: "",
+  emissionClass: "",
+  environmentalBadge: "",
+  particleFilter: null,
+  co2Emission: "",
+  colorGeneral: "",
+  colorManufacturer: "",
+  doors: "",
+  seats: "",
+  weight: "",
+  condition: "",
+  accidentFree: null,
+  repaintFree: null,
+  stoneguardFilm: null,
+  serviceHistory: null,
+  serviceHistoryAt: "",
+  warrantyUntil: "",
+  manufacturerWarrantyUntil: "",
+  interiorColor: "",
+  seatMaterial: "",
+  comfortFeatures: [],
+  safetyFeatures: [],
+  exteriorFeatures: [],
+  multimediaFeatures: [],
+  airbags: "",
+  parkingAid: "",
+  climateZones: "",
+  rimSize: "",
+  tireConditionFront: "",
+  tireConditionRear: "",
+  priceNegotiable: false,
+  vatDeductible: false,
+  country: "Deutschland",
+  description: "",
+  extras: "",
+  website: "",
+};
+
+// Options for select fields
+const FUEL_TYPE_OPTIONS = [
+  { value: "", label: "Bitte wählen" },
+  { value: "petrol", label: "Benzin" },
+  { value: "diesel", label: "Diesel" },
+  { value: "electric", label: "Elektro" },
+  { value: "hybrid", label: "Hybrid" },
+  { value: "pluginHybrid", label: "Plug-in-Hybrid" },
+  { value: "lpg", label: "LPG (Autogas)" },
+  { value: "cng", label: "CNG (Erdgas)" },
+  { value: "hydrogen", label: "Wasserstoff" },
+  { value: "other", label: "Sonstige" },
+];
+
+const TRANSMISSION_OPTIONS = [
+  { value: "", label: "Bitte wählen" },
+  { value: "manual", label: "Schaltgetriebe" },
+  { value: "automatic", label: "Automatik" },
+  { value: "semiAutomatic", label: "Halbautomatik" },
+];
+
+const DRIVE_TYPE_OPTIONS = [
+  { value: "", label: "Bitte wählen" },
+  { value: "fwd", label: "Frontantrieb" },
+  { value: "rwd", label: "Heckantrieb" },
+  { value: "awd", label: "Allrad (AWD)" },
+  { value: "4wd", label: "Allrad (4WD)" },
+];
+
+const CONDITION_OPTIONS = [
+  { value: "", label: "Bitte wählen" },
+  { value: "new", label: "Neuwagen" },
+  { value: "used", label: "Gebraucht" },
+  { value: "classic", label: "Oldtimer" },
+  { value: "damaged", label: "Unfallfahrzeug" },
+];
+
+const VEHICLE_TYPE_OPTIONS = [
+  { value: "", label: "Bitte wählen" },
+  { value: "car", label: "PKW" },
+  { value: "motorcycle", label: "Motorrad" },
+  { value: "truck", label: "LKW" },
+  { value: "van", label: "Transporter" },
+  { value: "other", label: "Sonstige" },
+];
+
+// Car brands and their models
+const CAR_BRANDS_MODELS: Record<string, string[]> = {
+  "Alfa Romeo": ["Giulia", "Stelvio", "Tonale", "Giulietta", "4C", "MiTo"],
+  "Audi": ["A1", "A3", "A4", "A5", "A6", "A7", "A8", "Q2", "Q3", "Q4 e-tron", "Q5", "Q7", "Q8", "e-tron", "e-tron GT", "RS3", "RS4", "RS5", "RS6", "RS7", "RS Q8", "S3", "S4", "S5", "S6", "S7", "S8", "TT", "R8"],
+  "BMW": ["1er", "2er", "3er", "4er", "5er", "6er", "7er", "8er", "X1", "X2", "X3", "X4", "X5", "X6", "X7", "XM", "Z4", "i3", "i4", "i5", "i7", "iX", "iX1", "iX3", "M2", "M3", "M4", "M5", "M8"],
+  "Chevrolet": ["Camaro", "Corvette", "Spark", "Trax", "Equinox", "Blazer", "Tahoe"],
+  "Citroën": ["C1", "C3", "C3 Aircross", "C4", "C4 X", "C5 Aircross", "C5 X", "Berlingo", "SpaceTourer", "ë-C4"],
+  "Cupra": ["Formentor", "Born", "Leon", "Ateca", "Tavascan"],
+  "Dacia": ["Sandero", "Duster", "Jogger", "Spring", "Logan"],
+  "DS": ["DS 3", "DS 4", "DS 7", "DS 9"],
+  "Ferrari": ["296 GTB", "296 GTS", "SF90", "F8", "Roma", "Portofino", "812", "Purosangue"],
+  "Fiat": ["500", "500X", "500L", "Panda", "Tipo", "Punto", "Ducato", "500e"],
+  "Ford": ["Fiesta", "Focus", "Puma", "Kuga", "Explorer", "Mustang", "Mustang Mach-E", "Ranger", "Transit", "Galaxy", "S-MAX", "Tourneo"],
+  "Honda": ["Civic", "Jazz", "HR-V", "CR-V", "ZR-V", "e:Ny1", "e"],
+  "Hyundai": ["i10", "i20", "i30", "Kona", "Tucson", "Santa Fe", "Ioniq 5", "Ioniq 6", "Nexo", "Bayon"],
+  "Jaguar": ["XE", "XF", "F-Type", "E-Pace", "F-Pace", "I-Pace"],
+  "Jeep": ["Renegade", "Compass", "Cherokee", "Grand Cherokee", "Wrangler", "Gladiator", "Avenger"],
+  "Kia": ["Picanto", "Rio", "Ceed", "ProCeed", "XCeed", "Sportage", "Sorento", "Niro", "EV6", "EV9", "Stinger"],
+  "Lamborghini": ["Huracán", "Urus", "Revuelto"],
+  "Land Rover": ["Defender", "Discovery", "Discovery Sport", "Range Rover", "Range Rover Sport", "Range Rover Velar", "Range Rover Evoque"],
+  "Lexus": ["UX", "NX", "RX", "LX", "ES", "IS", "LC", "LS", "RZ"],
+  "Maserati": ["Ghibli", "Quattroporte", "Levante", "MC20", "Grecale", "GranTurismo"],
+  "Mazda": ["2", "3", "6", "CX-3", "CX-30", "CX-5", "CX-60", "MX-5", "MX-30"],
+  "Mercedes-Benz": ["A-Klasse", "B-Klasse", "C-Klasse", "E-Klasse", "S-Klasse", "CLA", "CLS", "GLA", "GLB", "GLC", "GLE", "GLS", "G-Klasse", "EQA", "EQB", "EQC", "EQE", "EQS", "AMG GT", "SL", "Vito", "V-Klasse", "Sprinter"],
+  "Mini": ["3-Türer", "5-Türer", "Cabrio", "Clubman", "Countryman", "Electric"],
+  "Mitsubishi": ["Space Star", "ASX", "Eclipse Cross", "Outlander", "L200"],
+  "Nissan": ["Micra", "Juke", "Qashqai", "X-Trail", "Leaf", "Ariya", "GT-R", "Navara"],
+  "Opel": ["Corsa", "Astra", "Insignia", "Mokka", "Crossland", "Grandland", "Combo", "Vivaro", "Zafira"],
+  "Peugeot": ["208", "308", "408", "508", "2008", "3008", "5008", "Rifter", "Traveller", "e-208", "e-2008", "e-308"],
+  "Porsche": ["911", "718 Boxster", "718 Cayman", "Panamera", "Cayenne", "Macan", "Taycan"],
+  "Renault": ["Clio", "Captur", "Mégane", "Arkana", "Austral", "Espace", "Kangoo", "Zoe", "Mégane E-Tech", "Scenic E-Tech"],
+  "Seat": ["Ibiza", "Leon", "Arona", "Ateca", "Tarraco", "Alhambra"],
+  "Škoda": ["Fabia", "Scala", "Octavia", "Superb", "Kamiq", "Karoq", "Kodiaq", "Enyaq"],
+  "Smart": ["fortwo", "forfour", "#1", "#3"],
+  "Subaru": ["Impreza", "XV", "Forester", "Outback", "Solterra", "BRZ", "WRX"],
+  "Suzuki": ["Swift", "Ignis", "Vitara", "S-Cross", "Jimny", "Across"],
+  "Tesla": ["Model 3", "Model Y", "Model S", "Model X", "Cybertruck"],
+  "Toyota": ["Aygo X", "Yaris", "Yaris Cross", "Corolla", "Camry", "C-HR", "RAV4", "Highlander", "Land Cruiser", "Supra", "GR86", "bZ4X", "Proace"],
+  "Volkswagen": ["Polo", "Golf", "ID.3", "ID.4", "ID.5", "ID.7", "ID. Buzz", "T-Cross", "T-Roc", "Tiguan", "Touareg", "Passat", "Arteon", "Taigo", "up!", "Caddy", "Multivan", "Transporter", "Amarok"],
+  "Volvo": ["XC40", "XC60", "XC90", "C40", "S60", "S90", "V60", "V90", "EX30", "EX90"],
+  "Sonstige": ["Anderes Modell"],
+};
+
+const CAR_BRANDS = Object.keys(CAR_BRANDS_MODELS).sort();
+
+const VEHICLE_CATEGORY_OPTIONS = [
+  { value: "", label: "Bitte wählen" },
+  { value: "sedan", label: "Limousine" },
+  { value: "wagon", label: "Kombi" },
+  { value: "hatchback", label: "Schrägheck" },
+  { value: "suv", label: "SUV" },
+  { value: "offroad", label: "Geländewagen" },
+  { value: "sports", label: "Sportwagen" },
+  { value: "coupe", label: "Coupé" },
+  { value: "convertible", label: "Cabrio" },
+  { value: "van", label: "Van / Minibus" },
+  { value: "pickup", label: "Pick-up" },
+  { value: "other", label: "Sonstige" },
+];
+
+const COLOR_OPTIONS = [
+  { value: "", label: "Bitte wählen" },
+  { value: "black", label: "Schwarz" },
+  { value: "white", label: "Weiß" },
+  { value: "silver", label: "Silber" },
+  { value: "gray", label: "Grau" },
+  { value: "blue", label: "Blau" },
+  { value: "red", label: "Rot" },
+  { value: "green", label: "Grün" },
+  { value: "brown", label: "Braun" },
+  { value: "beige", label: "Beige" },
+  { value: "yellow", label: "Gelb" },
+  { value: "orange", label: "Orange" },
+  { value: "gold", label: "Gold" },
+  { value: "other", label: "Sonstige" },
+];
+
+const EMISSION_CLASS_OPTIONS = [
+  { value: "", label: "Bitte wählen" },
+  { value: "euro6d", label: "Euro 6d" },
+  { value: "euro6c", label: "Euro 6c" },
+  { value: "euro6b", label: "Euro 6b" },
+  { value: "euro6", label: "Euro 6" },
+  { value: "euro5", label: "Euro 5" },
+  { value: "euro4", label: "Euro 4" },
+  { value: "euro3", label: "Euro 3" },
+  { value: "euro2", label: "Euro 2" },
+  { value: "euro1", label: "Euro 1" },
+];
+
+const ENVIRONMENTAL_BADGE_OPTIONS = [
+  { value: "", label: "Bitte wählen" },
+  { value: "green", label: "Grün (4)" },
+  { value: "yellow", label: "Gelb (3)" },
+  { value: "red", label: "Rot (2)" },
+  { value: "none", label: "Keine" },
+];
+
+const SEAT_MATERIAL_OPTIONS = [
+  { value: "", label: "Bitte wählen" },
+  { value: "leather", label: "Leder" },
+  { value: "partLeather", label: "Teilleder" },
+  { value: "fabric", label: "Stoff" },
+  { value: "alcantara", label: "Alcantara" },
+  { value: "velour", label: "Velours" },
+  { value: "other", label: "Sonstige" },
+];
+
+const AIRBAGS_OPTIONS = [
+  { value: "", label: "Bitte wählen" },
+  { value: "front", label: "Front-Airbags" },
+  { value: "frontSide", label: "Front- und Seiten-Airbags" },
+  { value: "full", label: "Rundum-Airbags" },
+  { value: "none", label: "Keine" },
+];
+
+const PARKING_AID_OPTIONS = [
+  { value: "", label: "Bitte wählen" },
+  { value: "rear", label: "Hinten" },
+  { value: "front", label: "Vorne" },
+  { value: "both", label: "Vorne und hinten" },
+  { value: "camera", label: "Kamera" },
+  { value: "camera360", label: "360°-Grad-Kamera" },
+  { value: "self", label: "Selbstparkend" },
+  { value: "none", label: "Keine" },
+];
+
+const TIRE_CONDITION_OPTIONS = [
+  { value: "", label: "Bitte wählen" },
+  { value: "new", label: "Neu" },
+  { value: "good", label: "Gut" },
+  { value: "fair", label: "Ausreichend" },
+  { value: "worn", label: "Abgefahren" },
+];
+
+const COMFORT_FEATURES = [
+  "Klimaanlage",
+  "Klimaautomatik",
+  "Sitzheizung",
+  "Lenkradheizung",
+  "Elektrische Sitze",
+  "Massagesitze",
+  "Panoramadach",
+  "Schiebedach",
+  "Elektrische Heckklappe",
+  "Keyless Entry",
+  "Standheizung",
+  "Tempomat",
+  "Abstandsregeltempomat",
+  "Sitzbelüftung vorne",
+  "Sitzbelüftung hinten",
+  "Keyless-Go",
+];
+
+const SAFETY_FEATURES = [
+  "ABS",
+  "ESP",
+  "Traktionskontrolle",
+  "Spurhalteassistent",
+  "Totwinkelassistent",
+  "Notbremsassistent",
+  "Müdigkeitserkennung",
+  "Verkehrszeichenerkennung",
+  "Nachtsichtassistent",
+  "Head-up-Display",
+  "Reifendruckkontrolle",
+  "Querverkehrsassistent",
+  "Isofix",
+];
+
+const EXTERIOR_FEATURES = [
+  "LED-Scheinwerfer",
+  "Xenon-Scheinwerfer",
+  "Matrix-LED",
+  "Tagfahrlicht",
+  "Nebelscheinwerfer",
+  "Alufelgen",
+  "Dachreling",
+  "Anhängerkupplung",
+  "Sportpaket",
+  "Lackversiegelung",
+];
+
+const MULTIMEDIA_FEATURES = [
+  "Navigationssystem",
+  "Apple CarPlay",
+  "Android Auto",
+  "Bluetooth",
+  "USB",
+  "DAB-Radio",
+  "Soundsystem",
+  "Rückfahrkamera",
+  "360°-Kamera",
+  "WLAN-Hotspot",
+  "Induktives Laden",
+];
+
+// ============================================================================
+// SUBMIT FORM SECTION - Components
+// ============================================================================
+
+function FormSection({
+  title,
+  icon,
+  children,
+  defaultOpen = false
+}: {
+  title: string;
+  icon: string;
+  children: React.ReactNode;
+  defaultOpen?: boolean;
+}) {
+  const [isOpen, setIsOpen] = useState(defaultOpen);
+
+  return (
+    <div className="border border-[#e5e5e5] rounded-2xl overflow-hidden">
+      <button
+        type="button"
+        onClick={() => setIsOpen(!isOpen)}
+        className="w-full flex items-center justify-between p-5 bg-[#fafafa] hover:bg-[#f5f5f5] transition-colors"
+      >
+        <span className="flex items-center gap-3 font-semibold text-[#0a0a0a]">
+          <span className="text-xl">{icon}</span>
+          {title}
+        </span>
+        <ChevronRightIcon className={`w-5 h-5 text-[#737373] transition-transform ${isOpen ? "rotate-90" : ""}`} />
+      </button>
+      {isOpen && (
+        <div className="p-6 space-y-6 border-t border-[#e5e5e5]">
+          {children}
+        </div>
+      )}
+    </div>
+  );
+}
+
+function FormInput({
+  label,
+  required,
+  ...props
+}: {
+  label: string;
+  required?: boolean;
+} & React.InputHTMLAttributes<HTMLInputElement>) {
+  return (
+    <div>
+      <label className="block text-sm font-semibold text-[#0a0a0a] mb-2">
+        {label}
+        {required && <span className="text-[#f14011] ml-1">*</span>}
+      </label>
+      <input className="input" required={required} {...props} />
+    </div>
+  );
+}
+
+function FormSelect({
+  label,
+  required,
+  options,
+  ...props
+}: {
+  label: string;
+  required?: boolean;
+  options: { value: string; label: string }[];
+} & React.SelectHTMLAttributes<HTMLSelectElement>) {
+  return (
+    <div>
+      <label className="block text-sm font-semibold text-[#0a0a0a] mb-2">
+        {label}
+        {required && <span className="text-[#f14011] ml-1">*</span>}
+      </label>
+      <select className="input appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23737373%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E')] bg-[length:12px] bg-[right_1rem_center] bg-no-repeat pr-10" required={required} {...props}>
+        {options.map((opt) => (
+          <option key={opt.value} value={opt.value}>{opt.label}</option>
+        ))}
+      </select>
+    </div>
+  );
+}
+
+function FormCombobox({
+  label,
+  required,
+  options,
+  value,
+  onChange,
+  placeholder,
+  disabled,
+}: {
+  label: string;
+  required?: boolean;
+  options: string[];
+  value: string;
+  onChange: (value: string) => void;
+  placeholder?: string;
+  disabled?: boolean;
+}) {
+  const [isOpen, setIsOpen] = useState(false);
+  const [search, setSearch] = useState("");
+  const inputRef = useRef<HTMLInputElement>(null);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  const filteredOptions = options.filter((opt) =>
+    opt.toLowerCase().includes(search.toLowerCase())
+  );
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node) &&
+        inputRef.current &&
+        !inputRef.current.contains(event.target as Node)
+      ) {
+        setIsOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  const handleSelect = (option: string) => {
+    onChange(option);
+    setSearch("");
+    setIsOpen(false);
+  };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newValue = e.target.value;
+    setSearch(newValue);
+    onChange(newValue);
+    if (!isOpen) setIsOpen(true);
+  };
+
+  const handleFocus = () => {
+    setIsOpen(true);
+  };
+
+  return (
+    <div className="relative">
+      <label className="block text-sm font-semibold text-[#0a0a0a] mb-2">
+        {label}
+        {required && <span className="text-[#f14011] ml-1">*</span>}
+      </label>
+      <div className="relative">
+        <input
+          ref={inputRef}
+          type="text"
+          className="input pr-10"
+          placeholder={placeholder}
+          value={value}
+          onChange={handleInputChange}
+          onFocus={handleFocus}
+          required={required}
+          disabled={disabled}
+          autoComplete="off"
+        />
+        <button
+          type="button"
+          onClick={() => setIsOpen(!isOpen)}
+          className="absolute right-3 top-1/2 -translate-y-1/2 text-[#737373] hover:text-[#525252]"
+          disabled={disabled}
+        >
+          <svg className={`w-5 h-5 transition-transform ${isOpen ? "rotate-180" : ""}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+          </svg>
+        </button>
+      </div>
+      {isOpen && filteredOptions.length > 0 && (
+        <div
+          ref={dropdownRef}
+          className="absolute z-50 w-full mt-1 bg-white border border-[#e5e5e5] rounded-xl shadow-lg max-h-60 overflow-y-auto"
+        >
+          {filteredOptions.map((option) => (
+            <button
+              key={option}
+              type="button"
+              onClick={() => handleSelect(option)}
+              className={`w-full px-4 py-2.5 text-left hover:bg-[#f5f5f5] transition-colors ${
+                value === option ? "bg-[#fef2ef] text-[#f14011] font-medium" : "text-[#0a0a0a]"
+              }`}
+            >
+              {option}
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+function FormCheckbox({
+  label,
+  checked,
+  onChange,
+}: {
+  label: string;
+  checked: boolean;
+  onChange: (checked: boolean) => void;
+}) {
+  return (
+    <label className="flex items-center gap-3 cursor-pointer group">
+      <div className={`w-5 h-5 rounded border-2 flex items-center justify-center transition-all ${
+        checked ? "bg-[#f14011] border-[#f14011]" : "border-[#d4d4d4] group-hover:border-[#a3a3a3]"
+      }`}>
+        {checked && (
+          <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+          </svg>
+        )}
+      </div>
+      <span className="text-sm text-[#525252]">{label}</span>
+      <input type="checkbox" className="sr-only" checked={checked} onChange={(e) => onChange(e.target.checked)} />
+    </label>
+  );
+}
+
+function FormTriState({
+  label,
+  value,
+  onChange,
+}: {
+  label: string;
+  value: boolean | null;
+  onChange: (value: boolean | null) => void;
+}) {
+  return (
+    <div>
+      <label className="block text-sm font-semibold text-[#0a0a0a] mb-2">{label}</label>
+      <div className="flex gap-2">
+        {[
+          { val: true, label: "Ja" },
+          { val: false, label: "Nein" },
+          { val: null, label: "K.A." },
+        ].map((opt) => (
+          <button
+            key={String(opt.val)}
+            type="button"
+            onClick={() => onChange(opt.val)}
+            className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+              value === opt.val
+                ? "bg-[#f14011] text-white"
+                : "bg-[#f5f5f5] text-[#525252] hover:bg-[#e5e5e5]"
+            }`}
+          >
+            {opt.label}
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function FormFeatureSelect({
+  label,
+  features,
+  selected,
+  onChange,
+}: {
+  label: string;
+  features: string[];
+  selected: string[];
+  onChange: (selected: string[]) => void;
+}) {
+  const toggleFeature = (feature: string) => {
+    if (selected.includes(feature)) {
+      onChange(selected.filter((f) => f !== feature));
+    } else {
+      onChange([...selected, feature]);
+    }
+  };
+
+  return (
+    <div>
+      <label className="block text-sm font-semibold text-[#0a0a0a] mb-3">{label}</label>
+      <div className="flex flex-wrap gap-2">
+        {features.map((feature) => (
+          <button
+            key={feature}
+            type="button"
+            onClick={() => toggleFeature(feature)}
+            className={`px-3 py-1.5 rounded-full text-sm transition-all ${
+              selected.includes(feature)
+                ? "bg-[#f14011] text-white"
+                : "bg-[#f5f5f5] text-[#525252] hover:bg-[#e5e5e5]"
+            }`}
+          >
+            {feature}
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function ImageUpload({
+  images,
+  onChange,
+}: {
+  images: string[];
+  onChange: (images: string[]) => void;
+}) {
+  const fileInputRef = React.useRef<HTMLInputElement>(null);
+  const MAX_IMAGES = 10;
+  const MAX_SIZE_MB = 5;
+
+  const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files || []);
+    const remainingSlots = MAX_IMAGES - images.length;
+    const filesToProcess = files.slice(0, remainingSlots);
+
+    const newImages: string[] = [];
+    for (const file of filesToProcess) {
+      if (file.size > MAX_SIZE_MB * 1024 * 1024) {
+        alert(`${file.name} ist größer als ${MAX_SIZE_MB}MB`);
+        continue;
+      }
+      if (!file.type.startsWith("image/")) {
+        alert(`${file.name} ist kein Bild`);
+        continue;
+      }
+      const base64 = await new Promise<string>((resolve) => {
+        const reader = new FileReader();
+        reader.onloadend = () => resolve(reader.result as string);
+        reader.readAsDataURL(file);
+      });
+      newImages.push(base64);
+    }
+    onChange([...images, ...newImages]);
+    if (fileInputRef.current) fileInputRef.current.value = "";
+  };
+
+  const removeImage = (index: number) => {
+    onChange(images.filter((_, i) => i !== index));
+  };
+
+  return (
+    <div>
+      <label className="block text-sm font-semibold text-[#0a0a0a] mb-3">
+        Bilder <span className="font-normal text-[#737373]">(max. {MAX_IMAGES}, je max. {MAX_SIZE_MB}MB)</span>
+      </label>
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        {images.map((img, index) => (
+          <div key={index} className="relative aspect-square rounded-xl overflow-hidden bg-[#f5f5f5] group">
+            <img src={img} alt={`Bild ${index + 1}`} className="w-full h-full object-cover" />
+            <button
+              type="button"
+              onClick={() => removeImage(index)}
+              className="absolute top-2 right-2 w-8 h-8 bg-black/50 hover:bg-black/70 rounded-full flex items-center justify-center text-white opacity-0 group-hover:opacity-100 transition-opacity"
+            >
+              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+        ))}
+        {images.length < MAX_IMAGES && (
+          <button
+            type="button"
+            onClick={() => fileInputRef.current?.click()}
+            className="aspect-square rounded-xl border-2 border-dashed border-[#d4d4d4] hover:border-[#f14011] flex flex-col items-center justify-center gap-2 text-[#737373] hover:text-[#f14011] transition-colors"
+          >
+            <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+            </svg>
+            <span className="text-sm font-medium">Hinzufügen</span>
+          </button>
+        )}
+      </div>
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept="image/*"
+        multiple
+        onChange={handleFileSelect}
+        className="hidden"
+      />
+    </div>
+  );
+}
+
+// ============================================================================
+// SUBMIT FORM SECTION - Main Component
 // ============================================================================
 
 function SubmitFormSection() {
-  const [formData, setFormData] = useState({
-    sellerType: "",
-    name: "",
-    email: "",
-    phone: "",
-    carMake: "",
-    carModel: "",
-    year: "",
-    price: "",
-    description: "",
-  });
+  const [formData, setFormData] = useState<VehicleFormData>(initialFormData);
+  const [images, setImages] = useState<string[]>([]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitStatus, setSubmitStatus] = useState<{ type: "success" | "error"; message: string } | null>(null);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const updateField = <K extends keyof VehicleFormData>(field: K, value: VehicleFormData[K]) => {
+    setFormData((prev) => ({ ...prev, [field]: value }));
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle form submission
-    console.log("Form submitted:", formData);
-    alert("Vielen Dank für deine Einreichung! Wir melden uns innerhalb von 24 Stunden.");
+    setIsSubmitting(true);
+    setSubmitStatus(null);
+
+    try {
+      const payload = {
+        ...formData,
+        sellerType: formData.sellerType || "private",
+        price: parseFloat(formData.price) || 0,
+        constructionYear: formData.constructionYear ? parseInt(formData.constructionYear) : undefined,
+        mileage: formData.mileage ? parseInt(formData.mileage) : undefined,
+        previousOwners: formData.previousOwners ? parseInt(formData.previousOwners) : undefined,
+        powerPs: formData.powerPs ? parseInt(formData.powerPs) : undefined,
+        cylinders: formData.cylinders ? parseInt(formData.cylinders) : undefined,
+        engineSize: formData.engineSize ? parseInt(formData.engineSize) : undefined,
+        tankSize: formData.tankSize ? parseInt(formData.tankSize) : undefined,
+        co2Emission: formData.co2Emission ? parseInt(formData.co2Emission) : undefined,
+        doors: formData.doors ? parseInt(formData.doors) : undefined,
+        seats: formData.seats ? parseInt(formData.seats) : undefined,
+        weight: formData.weight ? parseInt(formData.weight) : undefined,
+        climateZones: formData.climateZones ? parseInt(formData.climateZones) : undefined,
+        rimSize: formData.rimSize ? parseInt(formData.rimSize) : undefined,
+        images,
+      };
+
+      const response = await fetch("/api/submit-vehicle", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        setSubmitStatus({ type: "success", message: result.message });
+        setFormData(initialFormData);
+        setImages([]);
+      } else {
+        setSubmitStatus({
+          type: "error",
+          message: result.errors?.join(", ") || result.error || "Ein Fehler ist aufgetreten"
+        });
+      }
+    } catch {
+      setSubmitStatus({ type: "error", message: "Netzwerkfehler. Bitte versuche es erneut." });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -658,24 +1461,50 @@ function SubmitFormSection() {
           </p>
         </div>
 
-        <form onSubmit={handleSubmit} className="bg-white rounded-3xl shadow-xl p-8 md:p-12 space-y-8">
+        {submitStatus && (
+          <div className={`mb-8 p-4 rounded-xl ${
+            submitStatus.type === "success"
+              ? "bg-green-50 border border-green-200 text-green-800"
+              : "bg-red-50 border border-red-200 text-red-800"
+          }`}>
+            <p className="font-medium">{submitStatus.message}</p>
+          </div>
+        )}
+
+        <form onSubmit={handleSubmit} className="bg-white rounded-3xl shadow-xl p-8 md:p-12 space-y-6">
+          {/* Honeypot - hidden from users */}
+          <input
+            type="text"
+            name="website"
+            value={formData.website}
+            onChange={(e) => updateField("website", e.target.value)}
+            className="absolute opacity-0 pointer-events-none"
+            tabIndex={-1}
+            autoComplete="off"
+          />
+
           {/* Seller Type */}
           <div>
-            <label className="block text-sm font-semibold text-[#0a0a0a] mb-3">Ich bin...</label>
+            <label className="block text-sm font-semibold text-[#0a0a0a] mb-3">
+              Ich bin... <span className="text-[#f14011]">*</span>
+            </label>
             <div className="grid grid-cols-2 gap-4">
-              {["Privatverkäufer", "Händler/Gewerbe"].map((type) => (
+              {[
+                { value: "private", label: "Privatverkäufer" },
+                { value: "dealer", label: "Händler/Gewerbe" },
+              ].map((type) => (
                 <button
-                  key={type}
+                  key={type.value}
                   type="button"
-                  onClick={() => setFormData({ ...formData, sellerType: type })}
+                  onClick={() => updateField("sellerType", type.value as "private" | "dealer")}
                   className={`p-4 rounded-xl border-2 text-left transition-all ${
-                    formData.sellerType === type
+                    formData.sellerType === type.value
                       ? "border-[#f14011] bg-[#fef2ef]"
                       : "border-[#e5e5e5] hover:border-[#d4d4d4]"
                   }`}
                 >
-                  <span className={`font-semibold ${formData.sellerType === type ? "text-[#f14011]" : "text-[#0a0a0a]"}`}>
-                    {type}
+                  <span className={`font-semibold ${formData.sellerType === type.value ? "text-[#f14011]" : "text-[#0a0a0a]"}`}>
+                    {type.label}
                   </span>
                 </button>
               ))}
@@ -683,116 +1512,530 @@ function SubmitFormSection() {
           </div>
 
           {/* Contact Info */}
-          <div className="grid md:grid-cols-2 gap-6">
-            <div>
-              <label className="block text-sm font-semibold text-[#0a0a0a] mb-2">Vollständiger Name</label>
-              <input
+          <div className="pt-6 border-t border-[#e5e5e5]">
+            <h3 className="font-display text-2xl text-[#0a0a0a] mb-6">Kontaktdaten</h3>
+            <div className="grid md:grid-cols-2 gap-6 mb-6">
+              <FormInput
+                label="Vollständiger Name"
+                required
                 type="text"
-                required
-                className="input"
                 placeholder="Max Mustermann"
-                value={formData.name}
-                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                value={formData.contactName}
+                onChange={(e) => updateField("contactName", e.target.value)}
               />
-            </div>
-            <div>
-              <label className="block text-sm font-semibold text-[#0a0a0a] mb-2">E-Mail</label>
-              <input
-                type="email"
+              <FormInput
+                label="E-Mail"
                 required
-                className="input"
+                type="email"
                 placeholder="max@beispiel.de"
-                value={formData.email}
-                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                value={formData.contactEmail}
+                onChange={(e) => updateField("contactEmail", e.target.value)}
               />
             </div>
-          </div>
-
-          <div>
-            <label className="block text-sm font-semibold text-[#0a0a0a] mb-2">Telefonnummer</label>
-            <input
-              type="tel"
+            <FormInput
+              label="Telefonnummer"
               required
-              className="input"
+              type="tel"
               placeholder="+49 170 1234567"
-              value={formData.phone}
-              onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+              value={formData.contactPhone}
+              onChange={(e) => updateField("contactPhone", e.target.value)}
             />
           </div>
 
-          {/* Vehicle Info */}
+          {/* Basic Vehicle Info - Always visible */}
           <div className="pt-6 border-t border-[#e5e5e5]">
             <h3 className="font-display text-2xl text-[#0a0a0a] mb-6">Fahrzeugdaten</h3>
-
             <div className="grid md:grid-cols-2 gap-6 mb-6">
-              <div>
-                <label className="block text-sm font-semibold text-[#0a0a0a] mb-2">Marke</label>
-                <input
-                  type="text"
-                  required
-                  className="input"
-                  placeholder="z.B. BMW, VW, Mercedes"
-                  value={formData.carMake}
-                  onChange={(e) => setFormData({ ...formData, carMake: e.target.value })}
+              <FormCombobox
+                label="Marke"
+                required
+                placeholder="Marke auswählen oder eingeben"
+                options={CAR_BRANDS}
+                value={formData.brand}
+                onChange={(value) => {
+                  updateField("brand", value);
+                  // Reset model when brand changes
+                  if (formData.model && !CAR_BRANDS_MODELS[value]?.includes(formData.model)) {
+                    updateField("model", "");
+                  }
+                }}
+              />
+              <FormCombobox
+                label="Modell"
+                required
+                placeholder={formData.brand ? "Modell auswählen oder eingeben" : "Zuerst Marke wählen"}
+                options={formData.brand && CAR_BRANDS_MODELS[formData.brand] ? CAR_BRANDS_MODELS[formData.brand] : []}
+                value={formData.model}
+                onChange={(value) => updateField("model", value)}
+                disabled={!formData.brand}
+              />
+            </div>
+            <div className="grid md:grid-cols-3 gap-6 mb-6">
+              <FormInput
+                label="Variante"
+                type="text"
+                placeholder="z.B. Competition, GTI"
+                value={formData.variant}
+                onChange={(e) => updateField("variant", e.target.value)}
+              />
+              <FormSelect
+                label="Fahrzeugtyp"
+                options={VEHICLE_TYPE_OPTIONS}
+                value={formData.vehicleType}
+                onChange={(e) => updateField("vehicleType", e.target.value)}
+              />
+              <FormSelect
+                label="Karosserieform"
+                options={VEHICLE_CATEGORY_OPTIONS}
+                value={formData.vehicleCategory}
+                onChange={(e) => updateField("vehicleCategory", e.target.value)}
+              />
+            </div>
+            <div className="grid md:grid-cols-2 gap-6 mb-6">
+              <FormInput
+                label="Preis (€)"
+                required
+                type="number"
+                placeholder="50000"
+                min="0"
+                value={formData.price}
+                onChange={(e) => updateField("price", e.target.value)}
+              />
+              <div className="flex items-end gap-6">
+                <FormCheckbox
+                  label="Preis verhandelbar"
+                  checked={formData.priceNegotiable}
+                  onChange={(checked) => updateField("priceNegotiable", checked)}
                 />
-              </div>
-              <div>
-                <label className="block text-sm font-semibold text-[#0a0a0a] mb-2">Modell</label>
-                <input
-                  type="text"
-                  required
-                  className="input"
-                  placeholder="z.B. M4, Golf, C-Klasse"
-                  value={formData.carModel}
-                  onChange={(e) => setFormData({ ...formData, carModel: e.target.value })}
+                <FormCheckbox
+                  label="MwSt. ausweisbar"
+                  checked={formData.vatDeductible}
+                  onChange={(checked) => updateField("vatDeductible", checked)}
                 />
               </div>
             </div>
-
-            <div className="grid md:grid-cols-2 gap-6 mb-6">
-              <div>
-                <label className="block text-sm font-semibold text-[#0a0a0a] mb-2">Baujahr</label>
-                <input
-                  type="number"
-                  required
-                  className="input"
-                  placeholder="2024"
-                  min="1900"
-                  max="2025"
-                  value={formData.year}
-                  onChange={(e) => setFormData({ ...formData, year: e.target.value })}
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-semibold text-[#0a0a0a] mb-2">Preis (€)</label>
-                <input
-                  type="number"
-                  required
-                  className="input"
-                  placeholder="50000"
-                  min="0"
-                  value={formData.price}
-                  onChange={(e) => setFormData({ ...formData, price: e.target.value })}
-                />
-              </div>
-            </div>
-
-            <div>
-              <label className="block text-sm font-semibold text-[#0a0a0a] mb-2">Beschreibung</label>
-              <textarea
-                rows={4}
-                className="input !rounded-2xl resize-none"
-                placeholder="Erzähl uns mehr über dein Fahrzeug: Kilometerstand, Zustand, Ausstattung, etc."
-                value={formData.description}
-                onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+            <div className="grid md:grid-cols-3 gap-6">
+              <FormInput
+                label="PLZ"
+                required
+                type="text"
+                placeholder="80331"
+                value={formData.zip}
+                onChange={(e) => updateField("zip", e.target.value)}
+              />
+              <FormInput
+                label="Stadt"
+                required
+                type="text"
+                placeholder="München"
+                value={formData.city}
+                onChange={(e) => updateField("city", e.target.value)}
+              />
+              <FormInput
+                label="Land"
+                type="text"
+                placeholder="Deutschland"
+                value={formData.country}
+                onChange={(e) => updateField("country", e.target.value)}
               />
             </div>
           </div>
 
+          {/* Expandable Sections */}
+          <div className="pt-6 border-t border-[#e5e5e5] space-y-4">
+            <p className="text-sm text-[#737373] mb-2">Weitere Details (optional)</p>
+
+            {/* Vehicle Details */}
+            <FormSection title="Fahrzeugdetails" icon="🚗">
+              <div className="grid md:grid-cols-3 gap-6">
+                <FormInput
+                  label="Baujahr"
+                  type="number"
+                  placeholder="2024"
+                  min="1900"
+                  max={new Date().getFullYear() + 1}
+                  value={formData.constructionYear}
+                  onChange={(e) => updateField("constructionYear", e.target.value)}
+                />
+                <FormInput
+                  label="Erstzulassung"
+                  type="month"
+                  value={formData.firstRegistration}
+                  onChange={(e) => updateField("firstRegistration", e.target.value)}
+                />
+                <FormInput
+                  label="HU gültig bis"
+                  type="month"
+                  value={formData.huValidUntil}
+                  onChange={(e) => updateField("huValidUntil", e.target.value)}
+                />
+              </div>
+              <div className="grid md:grid-cols-3 gap-6">
+                <FormInput
+                  label="Kilometerstand"
+                  type="number"
+                  placeholder="50000"
+                  min="0"
+                  value={formData.mileage}
+                  onChange={(e) => updateField("mileage", e.target.value)}
+                />
+                <FormInput
+                  label="Vorbesitzer"
+                  type="number"
+                  placeholder="1"
+                  min="0"
+                  value={formData.previousOwners}
+                  onChange={(e) => updateField("previousOwners", e.target.value)}
+                />
+                <FormSelect
+                  label="Zustand"
+                  options={CONDITION_OPTIONS}
+                  value={formData.condition}
+                  onChange={(e) => updateField("condition", e.target.value)}
+                />
+              </div>
+              <FormInput
+                label="FIN / VIN"
+                type="text"
+                placeholder="WVWZZZ3CZWE123456"
+                maxLength={17}
+                value={formData.vin}
+                onChange={(e) => updateField("vin", e.target.value.toUpperCase())}
+              />
+            </FormSection>
+
+            {/* Technical Data */}
+            <FormSection title="Technische Daten" icon="⚙️">
+              <div className="grid md:grid-cols-3 gap-6">
+                <FormSelect
+                  label="Kraftstoff"
+                  options={FUEL_TYPE_OPTIONS}
+                  value={formData.fuelType}
+                  onChange={(e) => updateField("fuelType", e.target.value)}
+                />
+                <FormInput
+                  label="Leistung (PS)"
+                  type="number"
+                  placeholder="300"
+                  min="0"
+                  value={formData.powerPs}
+                  onChange={(e) => updateField("powerPs", e.target.value)}
+                />
+                <FormSelect
+                  label="Getriebe"
+                  options={TRANSMISSION_OPTIONS}
+                  value={formData.transmission}
+                  onChange={(e) => updateField("transmission", e.target.value)}
+                />
+              </div>
+              <div className="grid md:grid-cols-3 gap-6">
+                <FormSelect
+                  label="Antrieb"
+                  options={DRIVE_TYPE_OPTIONS}
+                  value={formData.driveType}
+                  onChange={(e) => updateField("driveType", e.target.value)}
+                />
+                <FormInput
+                  label="Zylinder"
+                  type="number"
+                  placeholder="6"
+                  min="0"
+                  value={formData.cylinders}
+                  onChange={(e) => updateField("cylinders", e.target.value)}
+                />
+                <FormInput
+                  label="Hubraum (ccm)"
+                  type="number"
+                  placeholder="2998"
+                  min="0"
+                  value={formData.engineSize}
+                  onChange={(e) => updateField("engineSize", e.target.value)}
+                />
+              </div>
+              <div className="grid md:grid-cols-3 gap-6">
+                <FormInput
+                  label="Tankgröße (L)"
+                  type="number"
+                  placeholder="60"
+                  min="0"
+                  value={formData.tankSize}
+                  onChange={(e) => updateField("tankSize", e.target.value)}
+                />
+                <FormInput
+                  label="Leergewicht (kg)"
+                  type="number"
+                  placeholder="1500"
+                  min="0"
+                  value={formData.weight}
+                  onChange={(e) => updateField("weight", e.target.value)}
+                />
+              </div>
+            </FormSection>
+
+            {/* Emissions */}
+            <FormSection title="Umwelt & Emissionen" icon="🌱">
+              <div className="grid md:grid-cols-3 gap-6">
+                <FormSelect
+                  label="Emissionsklasse"
+                  options={EMISSION_CLASS_OPTIONS}
+                  value={formData.emissionClass}
+                  onChange={(e) => updateField("emissionClass", e.target.value)}
+                />
+                <FormSelect
+                  label="Umweltplakette"
+                  options={ENVIRONMENTAL_BADGE_OPTIONS}
+                  value={formData.environmentalBadge}
+                  onChange={(e) => updateField("environmentalBadge", e.target.value)}
+                />
+                <FormInput
+                  label="CO₂-Emission (g/km)"
+                  type="number"
+                  placeholder="150"
+                  min="0"
+                  value={formData.co2Emission}
+                  onChange={(e) => updateField("co2Emission", e.target.value)}
+                />
+              </div>
+              <FormTriState
+                label="Partikelfilter"
+                value={formData.particleFilter}
+                onChange={(val) => updateField("particleFilter", val)}
+              />
+            </FormSection>
+
+            {/* Exterior & Interior */}
+            <FormSection title="Exterieur & Interieur" icon="🎨">
+              <div className="grid md:grid-cols-2 gap-6">
+                <FormSelect
+                  label="Außenfarbe"
+                  options={COLOR_OPTIONS}
+                  value={formData.colorGeneral}
+                  onChange={(e) => updateField("colorGeneral", e.target.value)}
+                />
+                <FormInput
+                  label="Herstellerfarbe"
+                  type="text"
+                  placeholder="z.B. Alpinweiß, Tansanitblau"
+                  value={formData.colorManufacturer}
+                  onChange={(e) => updateField("colorManufacturer", e.target.value)}
+                />
+              </div>
+              <div className="grid md:grid-cols-4 gap-6">
+                <FormInput
+                  label="Türen"
+                  type="number"
+                  placeholder="4"
+                  min="1"
+                  max="6"
+                  value={formData.doors}
+                  onChange={(e) => updateField("doors", e.target.value)}
+                />
+                <FormInput
+                  label="Sitze"
+                  type="number"
+                  placeholder="5"
+                  min="1"
+                  max="9"
+                  value={formData.seats}
+                  onChange={(e) => updateField("seats", e.target.value)}
+                />
+                <FormSelect
+                  label="Innenfarbe"
+                  options={COLOR_OPTIONS}
+                  value={formData.interiorColor}
+                  onChange={(e) => updateField("interiorColor", e.target.value)}
+                />
+                <FormSelect
+                  label="Sitzmaterial"
+                  options={SEAT_MATERIAL_OPTIONS}
+                  value={formData.seatMaterial}
+                  onChange={(e) => updateField("seatMaterial", e.target.value)}
+                />
+              </div>
+              <div className="grid md:grid-cols-3 gap-6">
+                <FormInput
+                  label="Klimazonen"
+                  type="number"
+                  placeholder="2"
+                  min="0"
+                  max="4"
+                  value={formData.climateZones}
+                  onChange={(e) => updateField("climateZones", e.target.value)}
+                />
+                <FormInput
+                  label="Felgengröße (Zoll)"
+                  type="number"
+                  placeholder="19"
+                  min="10"
+                  max="24"
+                  value={formData.rimSize}
+                  onChange={(e) => updateField("rimSize", e.target.value)}
+                />
+              </div>
+            </FormSection>
+
+            {/* Condition & History */}
+            <FormSection title="Zustand & Historie" icon="📜">
+              <div className="grid md:grid-cols-2 gap-6">
+                <FormSelect
+                  label="Reifenzustand vorne"
+                  options={TIRE_CONDITION_OPTIONS}
+                  value={formData.tireConditionFront}
+                  onChange={(e) => updateField("tireConditionFront", e.target.value)}
+                />
+                <FormSelect
+                  label="Reifenzustand hinten"
+                  options={TIRE_CONDITION_OPTIONS}
+                  value={formData.tireConditionRear}
+                  onChange={(e) => updateField("tireConditionRear", e.target.value)}
+                />
+              </div>
+              <div className="grid md:grid-cols-2 gap-6">
+                <FormTriState
+                  label="Steinschlagschutzfolie"
+                  value={formData.stoneguardFilm}
+                  onChange={(val) => updateField("stoneguardFilm", val)}
+                />
+              </div>
+              <div className="grid md:grid-cols-3 gap-6">
+                <FormTriState
+                  label="Unfallfrei"
+                  value={formData.accidentFree}
+                  onChange={(val) => updateField("accidentFree", val)}
+                />
+                <FormTriState
+                  label="Nachlackierungsfrei"
+                  value={formData.repaintFree}
+                  onChange={(val) => updateField("repaintFree", val)}
+                />
+                <FormTriState
+                  label="Scheckheftgepflegt"
+                  value={formData.serviceHistory}
+                  onChange={(val) => updateField("serviceHistory", val)}
+                />
+              </div>
+              <div className="grid md:grid-cols-2 gap-6">
+                <FormInput
+                  label="Service bei"
+                  type="text"
+                  placeholder="z.B. BMW Niederlassung München"
+                  value={formData.serviceHistoryAt}
+                  onChange={(e) => updateField("serviceHistoryAt", e.target.value)}
+                />
+                <FormInput
+                  label="Garantie bis"
+                  type="month"
+                  value={formData.warrantyUntil}
+                  onChange={(e) => updateField("warrantyUntil", e.target.value)}
+                />
+              </div>
+              <FormInput
+                label="Herstellergarantie bis"
+                type="month"
+                value={formData.manufacturerWarrantyUntil}
+                onChange={(e) => updateField("manufacturerWarrantyUntil", e.target.value)}
+              />
+            </FormSection>
+
+            {/* Safety */}
+            <FormSection title="Sicherheit" icon="🛡️">
+              <div className="grid md:grid-cols-2 gap-6">
+                <FormSelect
+                  label="Airbags"
+                  options={AIRBAGS_OPTIONS}
+                  value={formData.airbags}
+                  onChange={(e) => updateField("airbags", e.target.value)}
+                />
+                <FormSelect
+                  label="Einparkhilfe"
+                  options={PARKING_AID_OPTIONS}
+                  value={formData.parkingAid}
+                  onChange={(e) => updateField("parkingAid", e.target.value)}
+                />
+              </div>
+              <FormFeatureSelect
+                label="Sicherheitsausstattung"
+                features={SAFETY_FEATURES}
+                selected={formData.safetyFeatures}
+                onChange={(selected) => updateField("safetyFeatures", selected)}
+              />
+            </FormSection>
+
+            {/* Features */}
+            <FormSection title="Ausstattung" icon="✨">
+              <FormFeatureSelect
+                label="Komfort"
+                features={COMFORT_FEATURES}
+                selected={formData.comfortFeatures}
+                onChange={(selected) => updateField("comfortFeatures", selected)}
+              />
+              <FormFeatureSelect
+                label="Exterieur"
+                features={EXTERIOR_FEATURES}
+                selected={formData.exteriorFeatures}
+                onChange={(selected) => updateField("exteriorFeatures", selected)}
+              />
+              <FormFeatureSelect
+                label="Multimedia"
+                features={MULTIMEDIA_FEATURES}
+                selected={formData.multimediaFeatures}
+                onChange={(selected) => updateField("multimediaFeatures", selected)}
+              />
+            </FormSection>
+
+            {/* Images */}
+            <FormSection title="Bilder" icon="📷" defaultOpen>
+              <ImageUpload images={images} onChange={setImages} />
+            </FormSection>
+
+            {/* Description */}
+            <FormSection title="Beschreibung" icon="📝" defaultOpen>
+              <div>
+                <label className="block text-sm font-semibold text-[#0a0a0a] mb-2">Fahrzeugbeschreibung</label>
+                <textarea
+                  rows={5}
+                  className="input !rounded-2xl resize-none"
+                  placeholder="Erzähl uns mehr über dein Fahrzeug: besondere Ausstattung, Wartungshistorie, Gründe für den Verkauf, etc."
+                  value={formData.description}
+                  onChange={(e) => updateField("description", e.target.value)}
+                  maxLength={5000}
+                />
+                <p className="text-sm text-[#737373] mt-1">{formData.description.length}/5000 Zeichen</p>
+              </div>
+              <div>
+                <label className="block text-sm font-semibold text-[#0a0a0a] mb-2">Extras / Sonderausstattung</label>
+                <textarea
+                  rows={3}
+                  className="input !rounded-2xl resize-none"
+                  placeholder="Weitere Extras, die nicht in den Kategorien oben aufgeführt sind..."
+                  value={formData.extras}
+                  onChange={(e) => updateField("extras", e.target.value)}
+                  maxLength={2000}
+                />
+              </div>
+            </FormSection>
+          </div>
+
           {/* Submit */}
-          <button type="submit" className="btn btn-primary btn-xl w-full">
-            Zur Prüfung einreichen
-            <ChevronRightIcon className="w-5 h-5" />
+          <button
+            type="submit"
+            disabled={isSubmitting}
+            className="btn btn-primary btn-xl w-full disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {isSubmitting ? (
+              <>
+                <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                Wird gesendet...
+              </>
+            ) : (
+              <>
+                Zur Prüfung einreichen
+                <ChevronRightIcon className="w-5 h-5" />
+              </>
+            )}
           </button>
 
           <p className="text-center text-sm text-[#737373]">
