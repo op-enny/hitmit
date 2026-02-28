@@ -100,6 +100,7 @@ interface VehicleSubmissionDto {
   comfortOther?: string;
   exteriorOther?: string;
   multimediaOther?: string;
+  currentlyDamaged?: boolean;
   damageMap?: Record<string, string>;
   paintThicknessAvailable?: boolean;
   paintThickness?: Record<string, string>;
@@ -477,9 +478,15 @@ function generateEmailHtml(data: VehicleSubmissionDto, imageUrls: string[], pain
       </div>
       ` : ""}
 
-      ${data.damageMap && Object.keys(data.damageMap).length > 0 ? `
+      ${data.currentlyDamaged !== undefined ? `
       <div class="section">
         <div class="section-title">🔍 Schadenskarte</div>
+        <div style="margin-bottom: 10px;"><strong>Fahrzeug aktuell beschädigt:</strong> ${data.currentlyDamaged ? "Ja" : "Nein"}</div>
+      </div>
+      ` : ""}
+
+      ${data.currentlyDamaged && data.damageMap && Object.keys(data.damageMap).length > 0 ? `
+      <div class="section">
         ${Object.entries(data.damageMap).map(([zone, desc]) => `<div style="margin-bottom: 5px;"><strong>${s(zone)}:</strong> ${s(desc as string)}${data.paintThicknessAvailable && data.paintThickness?.[zone] ? ` <span style="color: #888;">(${s(data.paintThickness[zone])} µm)</span>` : ""}</div>`).join("")}
         ${data.paintThicknessAvailable !== undefined ? `<div style="margin-top: 10px;"><strong>Lackdickenmessung:</strong> ${data.paintThicknessAvailable ? "Ja" : "Nein"}</div>` : ""}
         ${paintThicknessImageUrl ? `<div style="margin-top: 10px;"><strong>Messprotokoll:</strong><br/><a href="${paintThicknessImageUrl}" target="_blank"><img src="${paintThicknessImageUrl}" alt="Messprotokoll" style="max-width: 200px; border-radius: 8px; margin-top: 5px;" /></a></div>` : ""}

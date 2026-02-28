@@ -695,6 +695,7 @@ interface VehicleFormData {
   exteriorOther: string;
   multimediaOther: string;
   // Damage map
+  currentlyDamaged: boolean | null;
   damageMap: Record<string, string>;
   paintThicknessAvailable: boolean | null;
   paintThickness: Record<string, string>;
@@ -770,6 +771,7 @@ const initialFormData: VehicleFormData = {
   comfortOther: "",
   exteriorOther: "",
   multimediaOther: "",
+  currentlyDamaged: null,
   damageMap: {},
   paintThicknessAvailable: null,
   paintThickness: {},
@@ -2294,6 +2296,80 @@ function SubmitFormSection() {
                 value={formData.manufacturerWarrantyUntil}
                 onChange={(e) => updateField("manufacturerWarrantyUntil", e.target.value)}
               />
+
+              {/* Schadenskarte */}
+              <div className="pt-4 border-t border-[#e5e5e5]">
+                <FormBinaryState
+                  label="Fahrzeug aktuell beschädigt"
+                  value={formData.currentlyDamaged}
+                  onChange={(val) => updateField("currentlyDamaged", val)}
+                />
+              </div>
+              {formData.currentlyDamaged === true && (
+                <>
+                  <DamageMap
+                    damageMap={formData.damageMap}
+                    onChange={(map) => updateField("damageMap", map)}
+                    paintThicknessAvailable={formData.paintThicknessAvailable}
+                    paintThickness={formData.paintThickness}
+                    onPaintThicknessChange={(map) => updateField("paintThickness", map)}
+                  />
+                  <FormBinaryState
+                    label="Lackdickenmessung vorhanden"
+                    value={formData.paintThicknessAvailable}
+                    onChange={(val) => updateField("paintThicknessAvailable", val)}
+                  />
+                  {formData.paintThicknessAvailable === true && (
+                    <div>
+                      <label className="block text-sm font-semibold text-[#0a0a0a] mb-2">Messprotokoll-Foto</label>
+                      <p className="text-sm text-[#737373] mb-2">Foto des Lackdickenmessprotokolls hochladen</p>
+                      {formData.paintThicknessImage ? (
+                        <div className="relative inline-block">
+                          <img
+                            src={formData.paintThicknessImage}
+                            alt="Messprotokoll"
+                            className="w-32 h-32 object-cover rounded-xl border border-[#e5e5e5]"
+                          />
+                          <button
+                            type="button"
+                            className="absolute -top-2 -right-2 w-6 h-6 bg-[#f14011] text-white rounded-full text-xs flex items-center justify-center hover:bg-[#d63a0f]"
+                            onClick={() => updateField("paintThicknessImage", "")}
+                          >
+                            ✕
+                          </button>
+                        </div>
+                      ) : (
+                        <label className="flex items-center justify-center w-32 h-32 border-2 border-dashed border-[#d4d4d4] rounded-xl cursor-pointer hover:border-[#f14011] transition-colors">
+                          <input
+                            type="file"
+                            accept="image/*"
+                            className="hidden"
+                            onChange={async (e) => {
+                              const file = e.target.files?.[0];
+                              if (!file) return;
+                              if (file.size > 5 * 1024 * 1024) {
+                                alert("Bild darf maximal 5MB groß sein");
+                                return;
+                              }
+                              const reader = new FileReader();
+                              reader.onload = () => {
+                                if (typeof reader.result === "string") {
+                                  updateField("paintThicknessImage", reader.result);
+                                }
+                              };
+                              reader.readAsDataURL(file);
+                            }}
+                          />
+                          <div className="text-center">
+                            <CameraIcon className="w-6 h-6 mx-auto text-[#a3a3a3] mb-1" />
+                            <span className="text-xs text-[#a3a3a3]">Foto</span>
+                          </div>
+                        </label>
+                      )}
+                    </div>
+                  )}
+                </>
+              )}
             </FormSection>
 
             {/* Safety */}
@@ -2358,72 +2434,6 @@ function SubmitFormSection() {
                 otherValue={formData.multimediaOther}
                 onOtherChange={(val) => updateField("multimediaOther", val)}
               />
-            </FormSection>
-
-            {/* Images */}
-            {/* Damage Map */}
-            <FormSection title="Schadenskarte" icon="🔍">
-              <DamageMap
-                damageMap={formData.damageMap}
-                onChange={(map) => updateField("damageMap", map)}
-                paintThicknessAvailable={formData.paintThicknessAvailable}
-                paintThickness={formData.paintThickness}
-                onPaintThicknessChange={(map) => updateField("paintThickness", map)}
-              />
-              <FormBinaryState
-                label="Lackdickenmessung vorhanden"
-                value={formData.paintThicknessAvailable}
-                onChange={(val) => updateField("paintThicknessAvailable", val)}
-              />
-              {formData.paintThicknessAvailable === true && (
-                <div>
-                  <label className="block text-sm font-semibold text-[#0a0a0a] mb-2">Messprotokoll-Foto</label>
-                  <p className="text-sm text-[#737373] mb-2">Foto des Lackdickenmessprotokolls hochladen</p>
-                  {formData.paintThicknessImage ? (
-                    <div className="relative inline-block">
-                      <img
-                        src={formData.paintThicknessImage}
-                        alt="Messprotokoll"
-                        className="w-32 h-32 object-cover rounded-xl border border-[#e5e5e5]"
-                      />
-                      <button
-                        type="button"
-                        className="absolute -top-2 -right-2 w-6 h-6 bg-[#f14011] text-white rounded-full text-xs flex items-center justify-center hover:bg-[#d63a0f]"
-                        onClick={() => updateField("paintThicknessImage", "")}
-                      >
-                        ✕
-                      </button>
-                    </div>
-                  ) : (
-                    <label className="flex items-center justify-center w-32 h-32 border-2 border-dashed border-[#d4d4d4] rounded-xl cursor-pointer hover:border-[#f14011] transition-colors">
-                      <input
-                        type="file"
-                        accept="image/*"
-                        className="hidden"
-                        onChange={async (e) => {
-                          const file = e.target.files?.[0];
-                          if (!file) return;
-                          if (file.size > 5 * 1024 * 1024) {
-                            alert("Bild darf maximal 5MB groß sein");
-                            return;
-                          }
-                          const reader = new FileReader();
-                          reader.onload = () => {
-                            if (typeof reader.result === "string") {
-                              updateField("paintThicknessImage", reader.result);
-                            }
-                          };
-                          reader.readAsDataURL(file);
-                        }}
-                      />
-                      <div className="text-center">
-                        <CameraIcon className="w-6 h-6 mx-auto text-[#a3a3a3] mb-1" />
-                        <span className="text-xs text-[#a3a3a3]">Foto</span>
-                      </div>
-                    </label>
-                  )}
-                </div>
-              )}
             </FormSection>
 
             <FormSection title="Bilder" icon="📷" defaultOpen>
