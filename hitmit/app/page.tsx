@@ -795,7 +795,7 @@ const TRANSMISSION_OPTIONS = [
 const DRIVE_TYPE_OPTIONS = [
   { value: "", label: "Bitte wählen" },
   { value: "fwd", label: "Frontantrieb" },
-  { value: "rwd", label: "Heckantrieb" },
+  { value: "rwd", label: "Hinterradantrieb" },
   { value: "awd", label: "Allrad" },
 ];
 
