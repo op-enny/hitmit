@@ -695,7 +695,9 @@ interface VehicleFormData {
   multimediaOther: string;
   // Damage map
   damageMap: Record<string, string>;
-  paintThickness: boolean | null;
+  paintThicknessAvailable: boolean | null;
+  paintThickness: Record<string, string>;
+  paintThicknessImage: string;
   // Honeypot
   website: string;
 }
@@ -767,7 +769,9 @@ const initialFormData: VehicleFormData = {
   exteriorOther: "",
   multimediaOther: "",
   damageMap: {},
-  paintThickness: null,
+  paintThicknessAvailable: null,
+  paintThickness: {},
+  paintThicknessImage: "",
   website: "",
 };
 
@@ -1432,25 +1436,31 @@ function FormFeatureSelect({
 }
 
 const DAMAGE_ZONES = [
-  { id: "frontLeft", label: "Vorne links", x: 15, y: 20 },
+  { id: "frontLeft", label: "Vorne links", x: 62, y: 18 },
   { id: "frontCenter", label: "Vorne Mitte", x: 50, y: 10 },
-  { id: "frontRight", label: "Vorne rechts", x: 85, y: 20 },
-  { id: "leftFront", label: "Seite links vorne", x: 10, y: 40 },
-  { id: "leftRear", label: "Seite links hinten", x: 10, y: 60 },
-  { id: "rightFront", label: "Seite rechts vorne", x: 90, y: 40 },
-  { id: "rightRear", label: "Seite rechts hinten", x: 90, y: 60 },
+  { id: "frontRight", label: "Vorne rechts", x: 38, y: 18 },
+  { id: "leftFront", label: "Seite links vorne", x: 72, y: 38 },
+  { id: "leftRear", label: "Seite links hinten", x: 72, y: 62 },
+  { id: "rightFront", label: "Seite rechts vorne", x: 28, y: 38 },
+  { id: "rightRear", label: "Seite rechts hinten", x: 28, y: 62 },
   { id: "roof", label: "Dach", x: 50, y: 50 },
-  { id: "rearLeft", label: "Hinten links", x: 15, y: 80 },
+  { id: "rearLeft", label: "Hinten links", x: 62, y: 82 },
   { id: "rearCenter", label: "Hinten Mitte", x: 50, y: 90 },
-  { id: "rearRight", label: "Hinten rechts", x: 85, y: 80 },
+  { id: "rearRight", label: "Hinten rechts", x: 38, y: 82 },
 ];
 
 function DamageMap({
   damageMap,
   onChange,
+  paintThicknessAvailable,
+  paintThickness,
+  onPaintThicknessChange,
 }: {
   damageMap: Record<string, string>;
   onChange: (map: Record<string, string>) => void;
+  paintThicknessAvailable: boolean | null;
+  paintThickness: Record<string, string>;
+  onPaintThicknessChange: (map: Record<string, string>) => void;
 }) {
   const [selectedZone, setSelectedZone] = useState<string | null>(null);
 
@@ -1458,13 +1468,93 @@ function DamageMap({
     <div>
       <label className="block text-sm font-semibold text-[#0a0a0a] mb-3">Schadenskarte</label>
       <p className="text-sm text-[#737373] mb-3">Klicke auf eine Zone um Schäden einzutragen</p>
-      <div className="relative bg-[#f5f5f5] rounded-2xl p-4" style={{ minHeight: 300 }}>
-        {/* Car outline SVG */}
-        <svg viewBox="0 0 100 100" className="w-full max-w-[300px] mx-auto" style={{ height: 260 }}>
-          {/* Simple car outline */}
-          <rect x="20" y="15" width="60" height="70" rx="12" fill="none" stroke="#d4d4d4" strokeWidth="1.5" />
-          <rect x="25" y="8" width="50" height="20" rx="8" fill="none" stroke="#d4d4d4" strokeWidth="1" />
-          <rect x="25" y="72" width="50" height="20" rx="8" fill="none" stroke="#d4d4d4" strokeWidth="1" />
+      <div className="relative bg-[#f5f5f5] rounded-2xl p-4" style={{ minHeight: 320 }}>
+        <svg viewBox="0 0 100 100" className="w-full max-w-[320px] mx-auto" style={{ height: 280 }}>
+          <defs>
+            <linearGradient id="carBody" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor="#e8e8e8" />
+              <stop offset="100%" stopColor="#d4d4d4" />
+            </linearGradient>
+            <linearGradient id="glass" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor="#bfdbfe" />
+              <stop offset="100%" stopColor="#93c5fd" />
+            </linearGradient>
+          </defs>
+
+          {/* Car body outline */}
+          <path
+            d="M 35 8 Q 35 5 38 5 L 62 5 Q 65 5 65 8
+               L 67 20 Q 68 22 70 23 L 72 24 Q 74 25 74 28
+               L 74 72 Q 74 75 72 76 L 70 77 Q 68 78 67 80
+               L 65 92 Q 65 95 62 95 L 38 95 Q 35 95 35 92
+               L 33 80 Q 32 78 30 77 L 28 76 Q 26 75 26 72
+               L 26 28 Q 26 25 28 24 L 30 23 Q 32 22 33 20 Z"
+            fill="url(#carBody)" stroke="#a3a3a3" strokeWidth="0.8"
+          />
+
+          {/* Hood */}
+          <path
+            d="M 37 8 Q 37 6 39 6 L 61 6 Q 63 6 63 8 L 64 18 Q 64 19 63 19 L 37 19 Q 36 19 36 18 Z"
+            fill="#d4d4d4" stroke="#b0b0b0" strokeWidth="0.4"
+          />
+
+          {/* Windshield */}
+          <path
+            d="M 36 20 L 64 20 Q 65 20 65 21 L 66 29 Q 66 30 65 30 L 35 30 Q 34 30 34 29 L 35 21 Q 35 20 36 20 Z"
+            fill="url(#glass)" stroke="#7daadb" strokeWidth="0.5" opacity="0.85"
+          />
+
+          {/* Roof */}
+          <path
+            d="M 35 31 L 65 31 Q 66 31 66 32 L 66 68 Q 66 69 65 69 L 35 69 Q 34 69 34 68 L 34 32 Q 34 31 35 31 Z"
+            fill="#d9d9d9" stroke="#b0b0b0" strokeWidth="0.4"
+          />
+
+          {/* Rear window */}
+          <path
+            d="M 35 70 L 65 70 Q 66 70 66 71 L 65 79 Q 65 80 64 80 L 36 80 Q 35 80 34 79 L 34 71 Q 34 70 35 70 Z"
+            fill="url(#glass)" stroke="#7daadb" strokeWidth="0.5" opacity="0.85"
+          />
+
+          {/* Trunk */}
+          <path
+            d="M 36 81 L 64 81 Q 64 81 64 82 L 63 92 Q 63 93 62 93 L 38 93 Q 37 93 37 92 L 36 82 Q 36 81 36 81 Z"
+            fill="#d4d4d4" stroke="#b0b0b0" strokeWidth="0.4"
+          />
+
+          {/* Left mirror */}
+          <ellipse cx="74" cy="26" rx="3" ry="2" fill="#c0c0c0" stroke="#a0a0a0" strokeWidth="0.4" />
+          {/* Right mirror */}
+          <ellipse cx="26" cy="26" rx="3" ry="2" fill="#c0c0c0" stroke="#a0a0a0" strokeWidth="0.4" />
+
+          {/* Wheels */}
+          <rect x="70" y="14" width="7" height="14" rx="2.5" fill="#404040" stroke="#333" strokeWidth="0.5" />
+          <rect x="70" y="72" width="7" height="14" rx="2.5" fill="#404040" stroke="#333" strokeWidth="0.5" />
+          <rect x="23" y="14" width="7" height="14" rx="2.5" fill="#404040" stroke="#333" strokeWidth="0.5" />
+          <rect x="23" y="72" width="7" height="14" rx="2.5" fill="#404040" stroke="#333" strokeWidth="0.5" />
+
+          {/* Wheel rims */}
+          <rect x="71.5" y="18" width="4" height="6" rx="1.5" fill="#666" stroke="#555" strokeWidth="0.3" />
+          <rect x="71.5" y="76" width="4" height="6" rx="1.5" fill="#666" stroke="#555" strokeWidth="0.3" />
+          <rect x="24.5" y="18" width="4" height="6" rx="1.5" fill="#666" stroke="#555" strokeWidth="0.3" />
+          <rect x="24.5" y="76" width="4" height="6" rx="1.5" fill="#666" stroke="#555" strokeWidth="0.3" />
+
+          {/* Headlights */}
+          <ellipse cx="40" cy="7" rx="3" ry="1.2" fill="#fef08a" stroke="#eab308" strokeWidth="0.3" opacity="0.7" />
+          <ellipse cx="60" cy="7" rx="3" ry="1.2" fill="#fef08a" stroke="#eab308" strokeWidth="0.3" opacity="0.7" />
+
+          {/* Taillights */}
+          <ellipse cx="40" cy="93" rx="3" ry="1.2" fill="#fca5a5" stroke="#ef4444" strokeWidth="0.3" opacity="0.7" />
+          <ellipse cx="60" cy="93" rx="3" ry="1.2" fill="#fca5a5" stroke="#ef4444" strokeWidth="0.3" opacity="0.7" />
+
+          {/* A-pillar lines */}
+          <line x1="36" y1="20" x2="34" y2="31" stroke="#b0b0b0" strokeWidth="0.3" />
+          <line x1="64" y1="20" x2="66" y2="31" stroke="#b0b0b0" strokeWidth="0.3" />
+
+          {/* C-pillar lines */}
+          <line x1="36" y1="80" x2="34" y2="69" stroke="#b0b0b0" strokeWidth="0.3" />
+          <line x1="64" y1="80" x2="66" y2="69" stroke="#b0b0b0" strokeWidth="0.3" />
+
           {/* Zone markers */}
           {DAMAGE_ZONES.map((zone) => (
             <g key={zone.id}>
@@ -1472,14 +1562,14 @@ function DamageMap({
                 cx={zone.x}
                 cy={zone.y}
                 r={damageMap[zone.id] ? 4 : 3}
-                fill={damageMap[zone.id] ? "#f14011" : "#a3a3a3"}
+                fill={damageMap[zone.id] ? "#f14011" : "rgba(120,120,120,0.5)"}
                 stroke="white"
                 strokeWidth="1"
                 className="cursor-pointer hover:opacity-80 transition-opacity"
                 onClick={() => setSelectedZone(selectedZone === zone.id ? null : zone.id)}
               />
               {damageMap[zone.id] && (
-                <text x={zone.x} y={zone.y - 6} textAnchor="middle" fontSize="3" fill="#f14011" fontWeight="bold">!</text>
+                <text x={zone.x} y={zone.y - 6} textAnchor="middle" fontSize="3.5" fill="#f14011" fontWeight="bold">!</text>
               )}
             </g>
           ))}
@@ -1505,6 +1595,26 @@ function DamageMap({
               onChange(newMap);
             }}
           />
+          {paintThicknessAvailable === true && (
+            <div className="mt-2">
+              <label className="block text-xs font-medium text-[#737373] mb-1">Lackdicke (µm)</label>
+              <input
+                type="number"
+                className="input"
+                placeholder="z.B. 120"
+                value={paintThickness[selectedZone] || ""}
+                onChange={(e) => {
+                  const newMap = { ...paintThickness };
+                  if (e.target.value) {
+                    newMap[selectedZone] = e.target.value;
+                  } else {
+                    delete newMap[selectedZone];
+                  }
+                  onPaintThicknessChange(newMap);
+                }}
+              />
+            </div>
+          )}
         </div>
       )}
       {Object.keys(damageMap).length > 0 && (
@@ -1512,7 +1622,12 @@ function DamageMap({
           <p className="text-sm font-semibold text-[#0a0a0a]">Eingetragene Schäden:</p>
           {Object.entries(damageMap).map(([zoneId, desc]) => (
             <div key={zoneId} className="flex items-center justify-between text-sm bg-[#fef2f2] rounded-lg px-3 py-1.5">
-              <span><strong>{DAMAGE_ZONES.find((z) => z.id === zoneId)?.label}:</strong> {desc}</span>
+              <span>
+                <strong>{DAMAGE_ZONES.find((z) => z.id === zoneId)?.label}:</strong> {desc}
+                {paintThicknessAvailable === true && paintThickness[zoneId] && (
+                  <span className="ml-2 text-[#737373]">({paintThickness[zoneId]} µm)</span>
+                )}
+              </span>
               <button
                 type="button"
                 className="text-[#f14011] hover:text-[#d63a0f] ml-2"
@@ -2238,12 +2353,64 @@ function SubmitFormSection() {
               <DamageMap
                 damageMap={formData.damageMap}
                 onChange={(map) => updateField("damageMap", map)}
+                paintThicknessAvailable={formData.paintThicknessAvailable}
+                paintThickness={formData.paintThickness}
+                onPaintThicknessChange={(map) => updateField("paintThickness", map)}
               />
               <FormBinaryState
                 label="Lackdickenmessung vorhanden"
-                value={formData.paintThickness}
-                onChange={(val) => updateField("paintThickness", val)}
+                value={formData.paintThicknessAvailable}
+                onChange={(val) => updateField("paintThicknessAvailable", val)}
               />
+              {formData.paintThicknessAvailable === true && (
+                <div>
+                  <label className="block text-sm font-semibold text-[#0a0a0a] mb-2">Messprotokoll-Foto</label>
+                  <p className="text-sm text-[#737373] mb-2">Foto des Lackdickenmessprotokolls hochladen</p>
+                  {formData.paintThicknessImage ? (
+                    <div className="relative inline-block">
+                      <img
+                        src={formData.paintThicknessImage}
+                        alt="Messprotokoll"
+                        className="w-32 h-32 object-cover rounded-xl border border-[#e5e5e5]"
+                      />
+                      <button
+                        type="button"
+                        className="absolute -top-2 -right-2 w-6 h-6 bg-[#f14011] text-white rounded-full text-xs flex items-center justify-center hover:bg-[#d63a0f]"
+                        onClick={() => updateField("paintThicknessImage", "")}
+                      >
+                        ✕
+                      </button>
+                    </div>
+                  ) : (
+                    <label className="flex items-center justify-center w-32 h-32 border-2 border-dashed border-[#d4d4d4] rounded-xl cursor-pointer hover:border-[#f14011] transition-colors">
+                      <input
+                        type="file"
+                        accept="image/*"
+                        className="hidden"
+                        onChange={async (e) => {
+                          const file = e.target.files?.[0];
+                          if (!file) return;
+                          if (file.size > 5 * 1024 * 1024) {
+                            alert("Bild darf maximal 5MB groß sein");
+                            return;
+                          }
+                          const reader = new FileReader();
+                          reader.onload = () => {
+                            if (typeof reader.result === "string") {
+                              updateField("paintThicknessImage", reader.result);
+                            }
+                          };
+                          reader.readAsDataURL(file);
+                        }}
+                      />
+                      <div className="text-center">
+                        <CameraIcon className="w-6 h-6 mx-auto text-[#a3a3a3] mb-1" />
+                        <span className="text-xs text-[#a3a3a3]">Foto</span>
+                      </div>
+                    </label>
+                  )}
+                </div>
+              )}
             </FormSection>
 
             <FormSection title="Bilder" icon="📷" defaultOpen>

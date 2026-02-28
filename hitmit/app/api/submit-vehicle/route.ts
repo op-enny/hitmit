@@ -100,7 +100,9 @@ interface VehicleSubmissionDto {
   exteriorOther?: string;
   multimediaOther?: string;
   damageMap?: Record<string, string>;
-  paintThickness?: boolean;
+  paintThicknessAvailable?: boolean;
+  paintThickness?: Record<string, string>;
+  paintThicknessImage?: string;
 
   // Images (base64 encoded)
   images?: string[];
@@ -243,7 +245,7 @@ async function uploadToCloudinary(base64Image: string, index: number): Promise<s
 // EMAIL TEMPLATE
 // ============================================================================
 
-function generateEmailHtml(data: VehicleSubmissionDto, imageUrls: string[]): string {
+function generateEmailHtml(data: VehicleSubmissionDto, imageUrls: string[], paintThicknessImageUrl: string | null = null): string {
   const sellerTypeLabel = data.sellerType === "dealer" ? "Händler/Gewerbe" : "Privatverkäufer";
   const s = (val: string | undefined) => sanitizeHtml(val || "-");
   const n = (val: number | undefined) => val !== undefined ? formatNumber(val) : "-";
@@ -469,8 +471,9 @@ function generateEmailHtml(data: VehicleSubmissionDto, imageUrls: string[]): str
       ${data.damageMap && Object.keys(data.damageMap).length > 0 ? `
       <div class="section">
         <div class="section-title">🔍 Schadenskarte</div>
-        ${Object.entries(data.damageMap).map(([zone, desc]) => `<div style="margin-bottom: 5px;"><strong>${s(zone)}:</strong> ${s(desc as string)}</div>`).join("")}
-        ${data.paintThickness !== undefined ? `<div style="margin-top: 10px;"><strong>Lackdickenmessung:</strong> ${data.paintThickness ? "Ja" : "Nein"}</div>` : ""}
+        ${Object.entries(data.damageMap).map(([zone, desc]) => `<div style="margin-bottom: 5px;"><strong>${s(zone)}:</strong> ${s(desc as string)}${data.paintThicknessAvailable && data.paintThickness?.[zone] ? ` <span style="color: #888;">(${s(data.paintThickness[zone])} µm)</span>` : ""}</div>`).join("")}
+        ${data.paintThicknessAvailable !== undefined ? `<div style="margin-top: 10px;"><strong>Lackdickenmessung:</strong> ${data.paintThicknessAvailable ? "Ja" : "Nein"}</div>` : ""}
+        ${paintThicknessImageUrl ? `<div style="margin-top: 10px;"><strong>Messprotokoll:</strong><br/><a href="${paintThicknessImageUrl}" target="_blank"><img src="${paintThicknessImageUrl}" alt="Messprotokoll" style="max-width: 200px; border-radius: 8px; margin-top: 5px;" /></a></div>` : ""}
       </div>
       ` : ""}
 
@@ -659,6 +662,15 @@ export async function POST(request: NextRequest) {
       imageUrls = results.filter((url): url is string => url !== null);
     }
 
+    // Upload paint thickness measurement image
+    let paintThicknessImageUrl: string | null = null;
+    if (data.paintThicknessImage && process.env.CLOUDINARY_CLOUD_NAME) {
+      const imgValidation = validateImageBase64(data.paintThicknessImage);
+      if (imgValidation.valid) {
+        paintThicknessImageUrl = await uploadToCloudinary(data.paintThicknessImage, 99);
+      }
+    }
+
     // Send email via Resend
     const recipientEmail = process.env.SUBMISSION_EMAIL || "team@hitmit.de";
     const fromEmail = process.env.RESEND_FROM_EMAIL || "onboarding@resend.dev";
@@ -668,7 +680,7 @@ export async function POST(request: NextRequest) {
       to: [recipientEmail],
       replyTo: data.contactEmail,
       subject: `🚗 Neue Einreichung: ${data.brand} ${data.model} - ${formatPrice(data.price)}`,
-      html: generateEmailHtml(data, imageUrls),
+      html: generateEmailHtml(data, imageUrls, paintThicknessImageUrl),
     });
 
     if (error) {
