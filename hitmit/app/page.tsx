@@ -903,6 +903,7 @@ interface VehicleFormData {
   showContactName: boolean;
   contactEmail: string;
   contactPhone: string;
+  showContactPhone: boolean;
   // Required Vehicle
   brand: string;
   model: string;
@@ -984,6 +985,7 @@ const initialFormData: VehicleFormData = {
   showContactName: true,
   contactEmail: "",
   contactPhone: "",
+  showContactPhone: true,
   brand: "",
   model: "",
   price: "",
@@ -2185,13 +2187,26 @@ function SubmitFormSection() {
                 onChange={(e) => updateField("contactEmail", e.target.value)}
               />
             </div>
-            <FormInput
-              label="Telefonnummer"
-              type="tel"
-              placeholder="+49 170 1234567"
-              value={formData.contactPhone}
-              onChange={(e) => updateField("contactPhone", e.target.value)}
-            />
+            <div>
+              <FormInput
+                label="Telefonnummer"
+                type="tel"
+                placeholder="+49 170 1234567"
+                value={formData.contactPhone}
+                onChange={(e) => updateField("contactPhone", e.target.value)}
+              />
+              {formData.contactPhone && (
+                <label className="flex items-center gap-2 mt-2 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={formData.showContactPhone}
+                    onChange={(e) => updateField("showContactPhone", e.target.checked)}
+                    className="w-4 h-4 rounded border-[#d4d4d4] text-[#f14011] focus:ring-[#f14011]"
+                  />
+                  <span className="text-sm text-[#737373]">Telefonnummer öffentlich anzeigen</span>
+                </label>
+              )}
+            </div>
           </div>
 
           {/* Basic Vehicle Info - Always visible */}

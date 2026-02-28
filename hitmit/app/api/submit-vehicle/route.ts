@@ -35,6 +35,7 @@ interface VehicleSubmissionDto {
   showContactName?: boolean;
   contactEmail: string;
   contactPhone?: string;
+  showContactPhone?: boolean;
 
   // Required Vehicle Fields
   brand: string;
@@ -334,7 +335,7 @@ function generateEmailHtml(data: VehicleSubmissionDto, imageUrls: string[], pain
               ${data.contactPhone ? `
               <div class="grid-cell">
                 <div class="label">Telefon</div>
-                <div class="value"><a href="tel:${s(data.contactPhone)}">${s(data.contactPhone)}</a></div>
+                <div class="value"><a href="tel:${s(data.contactPhone)}">${s(data.contactPhone)}</a> ${data.showContactPhone === false ? '<span style="color: #999; font-size: 11px;">(nicht öffentlich)</span>' : ""}</div>
               </div>
               ` : ""}
             </div>
@@ -342,7 +343,7 @@ function generateEmailHtml(data: VehicleSubmissionDto, imageUrls: string[], pain
             <div class="grid-row">
               <div class="grid-cell">
                 <div class="label">Telefon</div>
-                <div class="value"><a href="tel:${s(data.contactPhone)}">${s(data.contactPhone)}</a></div>
+                <div class="value"><a href="tel:${s(data.contactPhone)}">${s(data.contactPhone)}</a> ${data.showContactPhone === false ? '<span style="color: #999; font-size: 11px;">(nicht öffentlich)</span>' : ""}</div>
               </div>
             </div>
             ` : ""}
