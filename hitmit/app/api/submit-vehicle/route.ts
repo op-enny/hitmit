@@ -70,7 +70,6 @@ interface VehicleSubmissionDto {
   condition?: string;
   accidentFree?: boolean;
   repaintFree?: boolean;
-  damageMap?: Record<string, unknown>;
   serviceHistory?: boolean;
   serviceHistoryAt?: string;
   warrantyUntil?: string;
@@ -82,7 +81,9 @@ interface VehicleSubmissionDto {
   exteriorFeatures?: string[];
   multimediaFeatures?: string[];
   airbags?: string;
-  parkingAid?: string;
+  parkingAid?: string[];
+  cameraFront?: boolean;
+  cameraRear?: boolean;
   climateZones?: number;
   rimSize?: number;
   tireConditionFront?: string;
@@ -94,6 +95,12 @@ interface VehicleSubmissionDto {
   lng?: number;
   description?: string;
   extras?: string;
+  safetyOther?: string;
+  comfortOther?: string;
+  exteriorOther?: string;
+  multimediaOther?: string;
+  damageMap?: Record<string, string>;
+  paintThickness?: boolean;
 
   // Images (base64 encoded)
   images?: string[];
@@ -149,8 +156,8 @@ const MAX_DESCRIPTION_LENGTH = 5000;
 
 const FUEL_TYPES = ["petrol", "diesel", "electric", "hybrid", "pluginHybrid", "lpg", "cng", "hydrogen", "other"];
 const TRANSMISSIONS = ["manual", "automatic", "semiAutomatic"];
-const DRIVE_TYPES = ["fwd", "rwd", "awd", "4wd"];
-const CONDITIONS = ["new", "used", "classic", "damaged"];
+const DRIVE_TYPES = ["fwd", "rwd", "awd"];
+const CONDITIONS = ["new", "used", "yearOld", "demo", "dayReg"];
 
 // ============================================================================
 // HELPER FUNCTIONS
@@ -377,7 +384,7 @@ function generateEmailHtml(data: VehicleSubmissionDto, imageUrls: string[]): str
             <div class="grid-cell"><div class="label">Hubraum</div><div class="value">${data.engineSize !== undefined ? `${formatNumber(data.engineSize)} ccm` : "-"}</div></div>
           </div>
           <div class="grid-row">
-            <div class="grid-cell"><div class="label">Tankgröße</div><div class="value">${data.tankSize !== undefined ? `${n(data.tankSize)} L` : "-"}</div></div>
+            <div class="grid-cell"><div class="label">Tankvolumen</div><div class="value">${data.tankSize !== undefined ? `${n(data.tankSize)} L` : "-"}</div></div>
             <div class="grid-cell"><div class="label">Gewicht</div><div class="value">${data.weight !== undefined ? `${formatNumber(data.weight)} kg` : "-"}</div></div>
           </div>
         </div>
@@ -431,7 +438,7 @@ function generateEmailHtml(data: VehicleSubmissionDto, imageUrls: string[]): str
           </div>
           <div class="grid-row">
             <div class="grid-cell"><div class="label">Scheckheftgepflegt</div><div class="value">${b(data.serviceHistory)}</div></div>
-            <div class="grid-cell"><div class="label">Service bei</div><div class="value">${s(data.serviceHistoryAt)}</div></div>
+            <div class="grid-cell"><div class="label">Letzter Service bei</div><div class="value">${s(data.serviceHistoryAt)}</div></div>
           </div>
           <div class="grid-row">
             <div class="grid-cell"><div class="label">Garantie bis</div><div class="value">${s(data.warrantyUntil)}</div></div>
@@ -448,12 +455,22 @@ function generateEmailHtml(data: VehicleSubmissionDto, imageUrls: string[]): str
       ${(data.comfortFeatures?.length || data.safetyFeatures?.length || data.exteriorFeatures?.length || data.multimediaFeatures?.length) ? `
       <div class="section">
         <div class="section-title">✨ Ausstattung</div>
-        ${data.comfortFeatures?.length ? `<div style="margin-bottom: 10px;"><strong>Komfort:</strong> ${arr(data.comfortFeatures)}</div>` : ""}
-        ${data.safetyFeatures?.length ? `<div style="margin-bottom: 10px;"><strong>Sicherheit:</strong> ${arr(data.safetyFeatures)}</div>` : ""}
-        ${data.exteriorFeatures?.length ? `<div style="margin-bottom: 10px;"><strong>Exterieur:</strong> ${arr(data.exteriorFeatures)}</div>` : ""}
-        ${data.multimediaFeatures?.length ? `<div style="margin-bottom: 10px;"><strong>Multimedia:</strong> ${arr(data.multimediaFeatures)}</div>` : ""}
+        ${data.comfortFeatures?.length ? `<div style="margin-bottom: 10px;"><strong>Komfort:</strong> ${arr(data.comfortFeatures)}${data.comfortOther ? `, Sonstige: ${s(data.comfortOther)}` : ""}</div>` : ""}
+        ${data.safetyFeatures?.length ? `<div style="margin-bottom: 10px;"><strong>Sicherheit:</strong> ${arr(data.safetyFeatures)}${data.safetyOther ? `, Sonstige: ${s(data.safetyOther)}` : ""}</div>` : ""}
+        ${data.exteriorFeatures?.length ? `<div style="margin-bottom: 10px;"><strong>Exterieur:</strong> ${arr(data.exteriorFeatures)}${data.exteriorOther ? `, Sonstige: ${s(data.exteriorOther)}` : ""}</div>` : ""}
+        ${data.multimediaFeatures?.length ? `<div style="margin-bottom: 10px;"><strong>Multimedia:</strong> ${arr(data.multimediaFeatures)}${data.multimediaOther ? `, Sonstige: ${s(data.multimediaOther)}` : ""}</div>` : ""}
         ${data.airbags ? `<div style="margin-bottom: 10px;"><strong>Airbags:</strong> ${s(data.airbags)}</div>` : ""}
-        ${data.parkingAid ? `<div style="margin-bottom: 10px;"><strong>Einparkhilfe:</strong> ${s(data.parkingAid)}</div>` : ""}
+        ${data.parkingAid && data.parkingAid.length > 0 ? `<div style="margin-bottom: 10px;"><strong>Einparkhilfe:</strong> ${data.parkingAid.map(s).join(", ")}</div>` : ""}
+        ${data.cameraFront !== undefined ? `<div style="margin-bottom: 10px;"><strong>Kamera vorne:</strong> ${data.cameraFront ? "Ja" : "Nein"}</div>` : ""}
+        ${data.cameraRear !== undefined ? `<div style="margin-bottom: 10px;"><strong>Kamera hinten:</strong> ${data.cameraRear ? "Ja" : "Nein"}</div>` : ""}
+      </div>
+      ` : ""}
+
+      ${data.damageMap && Object.keys(data.damageMap).length > 0 ? `
+      <div class="section">
+        <div class="section-title">🔍 Schadenskarte</div>
+        ${Object.entries(data.damageMap).map(([zone, desc]) => `<div style="margin-bottom: 5px;"><strong>${s(zone)}:</strong> ${s(desc as string)}</div>`).join("")}
+        ${data.paintThickness !== undefined ? `<div style="margin-top: 10px;"><strong>Lackdickenmessung:</strong> ${data.paintThickness ? "Ja" : "Nein"}</div>` : ""}
       </div>
       ` : ""}
 

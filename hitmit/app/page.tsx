@@ -676,7 +676,9 @@ interface VehicleFormData {
   exteriorFeatures: string[];
   multimediaFeatures: string[];
   airbags: string;
-  parkingAid: string;
+  parkingAid: string[];
+  cameraFront: boolean | null;
+  cameraRear: boolean | null;
   climateZones: string;
   rimSize: string;
   tireConditionFront: string;
@@ -686,6 +688,14 @@ interface VehicleFormData {
   country: string;
   description: string;
   extras: string;
+  // Sonstige text fields for each feature category
+  safetyOther: string;
+  comfortOther: string;
+  exteriorOther: string;
+  multimediaOther: string;
+  // Damage map
+  damageMap: Record<string, string>;
+  paintThickness: boolean | null;
   // Honeypot
   website: string;
 }
@@ -740,7 +750,9 @@ const initialFormData: VehicleFormData = {
   exteriorFeatures: [],
   multimediaFeatures: [],
   airbags: "",
-  parkingAid: "",
+  parkingAid: [],
+  cameraFront: null,
+  cameraRear: null,
   climateZones: "",
   rimSize: "",
   tireConditionFront: "",
@@ -750,6 +762,12 @@ const initialFormData: VehicleFormData = {
   country: "Deutschland",
   description: "",
   extras: "",
+  safetyOther: "",
+  comfortOther: "",
+  exteriorOther: "",
+  multimediaOther: "",
+  damageMap: {},
+  paintThickness: null,
   website: "",
 };
 
@@ -778,16 +796,16 @@ const DRIVE_TYPE_OPTIONS = [
   { value: "", label: "Bitte wählen" },
   { value: "fwd", label: "Frontantrieb" },
   { value: "rwd", label: "Heckantrieb" },
-  { value: "awd", label: "Allrad (AWD)" },
-  { value: "4wd", label: "Allrad (4WD)" },
+  { value: "awd", label: "Allrad" },
 ];
 
 const CONDITION_OPTIONS = [
   { value: "", label: "Bitte wählen" },
   { value: "new", label: "Neuwagen" },
   { value: "used", label: "Gebraucht" },
-  { value: "classic", label: "Oldtimer" },
-  { value: "damaged", label: "Unfallfahrzeug" },
+  { value: "yearOld", label: "Jahreswagen" },
+  { value: "demo", label: "Vorführwagen" },
+  { value: "dayReg", label: "Tageszulassung" },
 ];
 
 const VEHICLE_TYPE_OPTIONS = [
@@ -915,15 +933,30 @@ const AIRBAGS_OPTIONS = [
   { value: "none", label: "Keine" },
 ];
 
-const PARKING_AID_OPTIONS = [
+const PARKING_AID_FEATURES = [
+  "Einparkhilfe vorne",
+  "Einparkhilfe hinten",
+  "360°-Grad-Kamera",
+  "Selbstparkend",
+];
+
+const CYLINDER_OPTIONS = [
   { value: "", label: "Bitte wählen" },
-  { value: "rear", label: "Hinten" },
-  { value: "front", label: "Vorne" },
-  { value: "both", label: "Vorne und hinten" },
-  { value: "camera", label: "Kamera" },
-  { value: "camera360", label: "360°-Grad-Kamera" },
-  { value: "self", label: "Selbstparkend" },
-  { value: "none", label: "Keine" },
+  { value: "3", label: "3" },
+  { value: "4", label: "4" },
+  { value: "5", label: "5" },
+  { value: "6", label: "6" },
+  { value: "8", label: "8" },
+  { value: "10", label: "10" },
+  { value: "12", label: "12" },
+  { value: "16", label: "16" },
+];
+
+const DOOR_OPTIONS = [
+  { value: "", label: "Bitte wählen" },
+  { value: "2/3", label: "2/3" },
+  { value: "4/5", label: "4/5" },
+  { value: "6/7", label: "6/7" },
 ];
 
 const TIRE_CONDITION_OPTIONS = [
@@ -1253,6 +1286,109 @@ function FormTriState({
   );
 }
 
+function FormBinaryState({
+  label,
+  value,
+  onChange,
+}: {
+  label: string;
+  value: boolean | null;
+  onChange: (value: boolean | null) => void;
+}) {
+  return (
+    <div>
+      <label className="block text-sm font-semibold text-[#0a0a0a] mb-2">{label}</label>
+      <div className="flex gap-2">
+        {[
+          { val: true, label: "Ja" },
+          { val: false, label: "Nein" },
+        ].map((opt) => (
+          <button
+            key={String(opt.val)}
+            type="button"
+            onClick={() => onChange(value === opt.val ? null : opt.val)}
+            className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+              value === opt.val
+                ? "bg-[#f14011] text-white"
+                : "bg-[#f5f5f5] text-[#525252] hover:bg-[#e5e5e5]"
+            }`}
+          >
+            {opt.label}
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function FormFeatureSelectWithOther({
+  label,
+  features,
+  selected,
+  onChange,
+  otherValue,
+  onOtherChange,
+}: {
+  label: string;
+  features: string[];
+  selected: string[];
+  onChange: (selected: string[]) => void;
+  otherValue: string;
+  onOtherChange: (value: string) => void;
+}) {
+  const toggleFeature = (feature: string) => {
+    if (selected.includes(feature)) {
+      onChange(selected.filter((f) => f !== feature));
+    } else {
+      onChange([...selected, feature]);
+    }
+  };
+
+  const [showOther, setShowOther] = useState(false);
+
+  return (
+    <div>
+      <label className="block text-sm font-semibold text-[#0a0a0a] mb-3">{label}</label>
+      <div className="flex flex-wrap gap-2">
+        {features.map((feature) => (
+          <button
+            key={feature}
+            type="button"
+            onClick={() => toggleFeature(feature)}
+            className={`px-3 py-1.5 rounded-full text-sm transition-all ${
+              selected.includes(feature)
+                ? "bg-[#f14011] text-white"
+                : "bg-[#f5f5f5] text-[#525252] hover:bg-[#e5e5e5]"
+            }`}
+          >
+            {feature}
+          </button>
+        ))}
+        <button
+          type="button"
+          onClick={() => setShowOther(!showOther)}
+          className={`px-3 py-1.5 rounded-full text-sm transition-all ${
+            showOther || otherValue
+              ? "bg-[#f14011] text-white"
+              : "bg-[#f5f5f5] text-[#525252] hover:bg-[#e5e5e5]"
+          }`}
+        >
+          Sonstige
+        </button>
+      </div>
+      {(showOther || otherValue) && (
+        <input
+          type="text"
+          className="input mt-2"
+          placeholder="Weitere Ausstattung eingeben..."
+          value={otherValue}
+          onChange={(e) => onOtherChange(e.target.value)}
+        />
+      )}
+    </div>
+  );
+}
+
 function FormFeatureSelect({
   label,
   features,
@@ -1291,6 +1427,107 @@ function FormFeatureSelect({
           </button>
         ))}
       </div>
+    </div>
+  );
+}
+
+const DAMAGE_ZONES = [
+  { id: "frontLeft", label: "Vorne links", x: 15, y: 20 },
+  { id: "frontCenter", label: "Vorne Mitte", x: 50, y: 10 },
+  { id: "frontRight", label: "Vorne rechts", x: 85, y: 20 },
+  { id: "leftFront", label: "Seite links vorne", x: 10, y: 40 },
+  { id: "leftRear", label: "Seite links hinten", x: 10, y: 60 },
+  { id: "rightFront", label: "Seite rechts vorne", x: 90, y: 40 },
+  { id: "rightRear", label: "Seite rechts hinten", x: 90, y: 60 },
+  { id: "roof", label: "Dach", x: 50, y: 50 },
+  { id: "rearLeft", label: "Hinten links", x: 15, y: 80 },
+  { id: "rearCenter", label: "Hinten Mitte", x: 50, y: 90 },
+  { id: "rearRight", label: "Hinten rechts", x: 85, y: 80 },
+];
+
+function DamageMap({
+  damageMap,
+  onChange,
+}: {
+  damageMap: Record<string, string>;
+  onChange: (map: Record<string, string>) => void;
+}) {
+  const [selectedZone, setSelectedZone] = useState<string | null>(null);
+
+  return (
+    <div>
+      <label className="block text-sm font-semibold text-[#0a0a0a] mb-3">Schadenskarte</label>
+      <p className="text-sm text-[#737373] mb-3">Klicke auf eine Zone um Schäden einzutragen</p>
+      <div className="relative bg-[#f5f5f5] rounded-2xl p-4" style={{ minHeight: 300 }}>
+        {/* Car outline SVG */}
+        <svg viewBox="0 0 100 100" className="w-full max-w-[300px] mx-auto" style={{ height: 260 }}>
+          {/* Simple car outline */}
+          <rect x="20" y="15" width="60" height="70" rx="12" fill="none" stroke="#d4d4d4" strokeWidth="1.5" />
+          <rect x="25" y="8" width="50" height="20" rx="8" fill="none" stroke="#d4d4d4" strokeWidth="1" />
+          <rect x="25" y="72" width="50" height="20" rx="8" fill="none" stroke="#d4d4d4" strokeWidth="1" />
+          {/* Zone markers */}
+          {DAMAGE_ZONES.map((zone) => (
+            <g key={zone.id}>
+              <circle
+                cx={zone.x}
+                cy={zone.y}
+                r={damageMap[zone.id] ? 4 : 3}
+                fill={damageMap[zone.id] ? "#f14011" : "#a3a3a3"}
+                stroke="white"
+                strokeWidth="1"
+                className="cursor-pointer hover:opacity-80 transition-opacity"
+                onClick={() => setSelectedZone(selectedZone === zone.id ? null : zone.id)}
+              />
+              {damageMap[zone.id] && (
+                <text x={zone.x} y={zone.y - 6} textAnchor="middle" fontSize="3" fill="#f14011" fontWeight="bold">!</text>
+              )}
+            </g>
+          ))}
+        </svg>
+      </div>
+      {selectedZone && (
+        <div className="mt-3 p-3 bg-[#fafafa] rounded-xl border border-[#e5e5e5]">
+          <label className="block text-sm font-semibold text-[#0a0a0a] mb-1">
+            {DAMAGE_ZONES.find((z) => z.id === selectedZone)?.label}
+          </label>
+          <input
+            type="text"
+            className="input"
+            placeholder="Schaden beschreiben (z.B. Kratzer, Delle, Lackschaden)"
+            value={damageMap[selectedZone] || ""}
+            onChange={(e) => {
+              const newMap = { ...damageMap };
+              if (e.target.value) {
+                newMap[selectedZone] = e.target.value;
+              } else {
+                delete newMap[selectedZone];
+              }
+              onChange(newMap);
+            }}
+          />
+        </div>
+      )}
+      {Object.keys(damageMap).length > 0 && (
+        <div className="mt-3 space-y-1">
+          <p className="text-sm font-semibold text-[#0a0a0a]">Eingetragene Schäden:</p>
+          {Object.entries(damageMap).map(([zoneId, desc]) => (
+            <div key={zoneId} className="flex items-center justify-between text-sm bg-[#fef2f2] rounded-lg px-3 py-1.5">
+              <span><strong>{DAMAGE_ZONES.find((z) => z.id === zoneId)?.label}:</strong> {desc}</span>
+              <button
+                type="button"
+                className="text-[#f14011] hover:text-[#d63a0f] ml-2"
+                onClick={() => {
+                  const newMap = { ...damageMap };
+                  delete newMap[zoneId];
+                  onChange(newMap);
+                }}
+              >
+                ✕
+              </button>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
@@ -1598,6 +1835,7 @@ function SubmitFormSection() {
                 type="number"
                 placeholder="50000"
                 min="0"
+                step="1000"
                 value={formData.price}
                 onChange={(e) => updateField("price", e.target.value)}
               />
@@ -1676,6 +1914,7 @@ function SubmitFormSection() {
                   type="number"
                   placeholder="50000"
                   min="0"
+                  step="10000"
                   value={formData.mileage}
                   onChange={(e) => updateField("mileage", e.target.value)}
                 />
@@ -1715,9 +1954,9 @@ function SubmitFormSection() {
                 />
                 <FormInput
                   label="Leistung (PS)"
-                  type="number"
+                  type="text"
+                  inputMode="numeric"
                   placeholder="300"
-                  min="0"
                   value={formData.powerPs}
                   onChange={(e) => updateField("powerPs", e.target.value)}
                 />
@@ -1735,37 +1974,35 @@ function SubmitFormSection() {
                   value={formData.driveType}
                   onChange={(e) => updateField("driveType", e.target.value)}
                 />
-                <FormInput
+                <FormSelect
                   label="Zylinder"
-                  type="number"
-                  placeholder="6"
-                  min="0"
+                  options={CYLINDER_OPTIONS}
                   value={formData.cylinders}
                   onChange={(e) => updateField("cylinders", e.target.value)}
                 />
                 <FormInput
                   label="Hubraum (ccm)"
-                  type="number"
+                  type="text"
+                  inputMode="numeric"
                   placeholder="2998"
-                  min="0"
                   value={formData.engineSize}
                   onChange={(e) => updateField("engineSize", e.target.value)}
                 />
               </div>
               <div className="grid md:grid-cols-3 gap-6">
                 <FormInput
-                  label="Tankgröße (L)"
-                  type="number"
+                  label="Tankvolumen (L)"
+                  type="text"
+                  inputMode="numeric"
                   placeholder="60"
-                  min="0"
                   value={formData.tankSize}
                   onChange={(e) => updateField("tankSize", e.target.value)}
                 />
                 <FormInput
                   label="Leergewicht (kg)"
-                  type="number"
+                  type="text"
+                  inputMode="numeric"
                   placeholder="1500"
-                  min="0"
                   value={formData.weight}
                   onChange={(e) => updateField("weight", e.target.value)}
                 />
@@ -1789,14 +2026,14 @@ function SubmitFormSection() {
                 />
                 <FormInput
                   label="CO₂-Emission (g/km)"
-                  type="number"
+                  type="text"
+                  inputMode="numeric"
                   placeholder="150"
-                  min="0"
                   value={formData.co2Emission}
                   onChange={(e) => updateField("co2Emission", e.target.value)}
                 />
               </div>
-              <FormTriState
+              <FormBinaryState
                 label="Partikelfilter"
                 value={formData.particleFilter}
                 onChange={(val) => updateField("particleFilter", val)}
@@ -1821,21 +2058,17 @@ function SubmitFormSection() {
                 />
               </div>
               <div className="grid md:grid-cols-4 gap-6">
-                <FormInput
+                <FormSelect
                   label="Türen"
-                  type="number"
-                  placeholder="4"
-                  min="1"
-                  max="6"
+                  options={DOOR_OPTIONS}
                   value={formData.doors}
                   onChange={(e) => updateField("doors", e.target.value)}
                 />
                 <FormInput
                   label="Sitze"
-                  type="number"
+                  type="text"
+                  inputMode="numeric"
                   placeholder="5"
-                  min="1"
-                  max="9"
                   value={formData.seats}
                   onChange={(e) => updateField("seats", e.target.value)}
                 />
@@ -1855,19 +2088,17 @@ function SubmitFormSection() {
               <div className="grid md:grid-cols-3 gap-6">
                 <FormInput
                   label="Klimazonen"
-                  type="number"
+                  type="text"
+                  inputMode="numeric"
                   placeholder="2"
-                  min="0"
-                  max="4"
                   value={formData.climateZones}
                   onChange={(e) => updateField("climateZones", e.target.value)}
                 />
                 <FormInput
                   label="Felgengröße (Zoll)"
-                  type="number"
+                  type="text"
+                  inputMode="numeric"
                   placeholder="19"
-                  min="10"
-                  max="24"
                   value={formData.rimSize}
                   onChange={(e) => updateField("rimSize", e.target.value)}
                 />
@@ -1891,24 +2122,24 @@ function SubmitFormSection() {
                 />
               </div>
               <div className="grid md:grid-cols-2 gap-6">
-                <FormTriState
+                <FormBinaryState
                   label="Steinschlagschutzfolie"
                   value={formData.stoneguardFilm}
                   onChange={(val) => updateField("stoneguardFilm", val)}
                 />
               </div>
               <div className="grid md:grid-cols-3 gap-6">
-                <FormTriState
+                <FormBinaryState
                   label="Unfallfrei"
                   value={formData.accidentFree}
                   onChange={(val) => updateField("accidentFree", val)}
                 />
-                <FormTriState
+                <FormBinaryState
                   label="Nachlackierungsfrei"
                   value={formData.repaintFree}
                   onChange={(val) => updateField("repaintFree", val)}
                 />
-                <FormTriState
+                <FormBinaryState
                   label="Scheckheftgepflegt"
                   value={formData.serviceHistory}
                   onChange={(val) => updateField("serviceHistory", val)}
@@ -1916,7 +2147,7 @@ function SubmitFormSection() {
               </div>
               <div className="grid md:grid-cols-2 gap-6">
                 <FormInput
-                  label="Service bei"
+                  label="Letzter Service bei"
                   type="text"
                   placeholder="z.B. BMW Niederlassung München"
                   value={formData.serviceHistoryAt}
@@ -1939,51 +2170,82 @@ function SubmitFormSection() {
 
             {/* Safety */}
             <FormSection title="Sicherheit" icon="🛡️">
+              <FormSelect
+                label="Airbags"
+                options={AIRBAGS_OPTIONS}
+                value={formData.airbags}
+                onChange={(e) => updateField("airbags", e.target.value)}
+              />
+              <FormFeatureSelect
+                label="Einparkhilfe"
+                features={PARKING_AID_FEATURES}
+                selected={formData.parkingAid}
+                onChange={(selected) => updateField("parkingAid", selected)}
+              />
               <div className="grid md:grid-cols-2 gap-6">
-                <FormSelect
-                  label="Airbags"
-                  options={AIRBAGS_OPTIONS}
-                  value={formData.airbags}
-                  onChange={(e) => updateField("airbags", e.target.value)}
+                <FormBinaryState
+                  label="Kamera vorne"
+                  value={formData.cameraFront}
+                  onChange={(val) => updateField("cameraFront", val)}
                 />
-                <FormSelect
-                  label="Einparkhilfe"
-                  options={PARKING_AID_OPTIONS}
-                  value={formData.parkingAid}
-                  onChange={(e) => updateField("parkingAid", e.target.value)}
+                <FormBinaryState
+                  label="Kamera hinten"
+                  value={formData.cameraRear}
+                  onChange={(val) => updateField("cameraRear", val)}
                 />
               </div>
-              <FormFeatureSelect
+              <FormFeatureSelectWithOther
                 label="Sicherheitsausstattung"
                 features={SAFETY_FEATURES}
                 selected={formData.safetyFeatures}
                 onChange={(selected) => updateField("safetyFeatures", selected)}
+                otherValue={formData.safetyOther}
+                onOtherChange={(val) => updateField("safetyOther", val)}
               />
             </FormSection>
 
             {/* Features */}
             <FormSection title="Ausstattung" icon="✨">
-              <FormFeatureSelect
+              <FormFeatureSelectWithOther
                 label="Komfort"
                 features={COMFORT_FEATURES}
                 selected={formData.comfortFeatures}
                 onChange={(selected) => updateField("comfortFeatures", selected)}
+                otherValue={formData.comfortOther}
+                onOtherChange={(val) => updateField("comfortOther", val)}
               />
-              <FormFeatureSelect
+              <FormFeatureSelectWithOther
                 label="Exterieur"
                 features={EXTERIOR_FEATURES}
                 selected={formData.exteriorFeatures}
                 onChange={(selected) => updateField("exteriorFeatures", selected)}
+                otherValue={formData.exteriorOther}
+                onOtherChange={(val) => updateField("exteriorOther", val)}
               />
-              <FormFeatureSelect
+              <FormFeatureSelectWithOther
                 label="Multimedia"
                 features={MULTIMEDIA_FEATURES}
                 selected={formData.multimediaFeatures}
                 onChange={(selected) => updateField("multimediaFeatures", selected)}
+                otherValue={formData.multimediaOther}
+                onOtherChange={(val) => updateField("multimediaOther", val)}
               />
             </FormSection>
 
             {/* Images */}
+            {/* Damage Map */}
+            <FormSection title="Schadenskarte" icon="🔍">
+              <DamageMap
+                damageMap={formData.damageMap}
+                onChange={(map) => updateField("damageMap", map)}
+              />
+              <FormBinaryState
+                label="Lackdickenmessung vorhanden"
+                value={formData.paintThickness}
+                onChange={(val) => updateField("paintThickness", val)}
+              />
+            </FormSection>
+
             <FormSection title="Bilder" icon="📷" defaultOpen>
               <ImageUpload images={images} onChange={setImages} />
             </FormSection>
