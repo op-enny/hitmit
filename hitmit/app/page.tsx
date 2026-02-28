@@ -2305,20 +2305,18 @@ function SubmitFormSection() {
                   onChange={(val) => updateField("currentlyDamaged", val)}
                 />
               </div>
-              {formData.currentlyDamaged === true && (
-                <>
-                  <DamageMap
-                    damageMap={formData.damageMap}
-                    onChange={(map) => updateField("damageMap", map)}
-                    paintThicknessAvailable={formData.paintThicknessAvailable}
-                    paintThickness={formData.paintThickness}
-                    onPaintThicknessChange={(map) => updateField("paintThickness", map)}
-                  />
-                  <FormBinaryState
-                    label="Lackdickenmessung vorhanden"
-                    value={formData.paintThicknessAvailable}
-                    onChange={(val) => updateField("paintThicknessAvailable", val)}
-                  />
+              <DamageMap
+                damageMap={formData.damageMap}
+                onChange={(map) => updateField("damageMap", map)}
+                paintThicknessAvailable={formData.paintThicknessAvailable}
+                paintThickness={formData.paintThickness}
+                onPaintThicknessChange={(map) => updateField("paintThickness", map)}
+              />
+              <FormBinaryState
+                label="Lackdickenmessung vorhanden"
+                value={formData.paintThicknessAvailable}
+                onChange={(val) => updateField("paintThicknessAvailable", val)}
+              />
                   {formData.paintThicknessAvailable === true && (
                     <div>
                       <label className="block text-sm font-semibold text-[#0a0a0a] mb-2">Messprotokoll-Foto</label>
@@ -2368,8 +2366,6 @@ function SubmitFormSection() {
                       )}
                     </div>
                   )}
-                </>
-              )}
             </FormSection>
 
             {/* Safety */}
