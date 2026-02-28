@@ -120,10 +120,245 @@ function AnimatedCounter({ end, suffix = "", duration = 2000 }: { end: number; s
 }
 
 // ============================================================================
+// AUTH MODAL COMPONENT
+// ============================================================================
+
+function AuthModal({
+  isOpen,
+  onClose,
+  onLogin,
+}: {
+  isOpen: boolean;
+  onClose: () => void;
+  onLogin: (user: { name: string; email: string }) => void;
+}) {
+  const [activeTab, setActiveTab] = useState<"login" | "register">("login");
+  const [loginEmail, setLoginEmail] = useState("");
+  const [loginPassword, setLoginPassword] = useState("");
+  const [regName, setRegName] = useState("");
+  const [regEmail, setRegEmail] = useState("");
+  const [regPassword, setRegPassword] = useState("");
+  const [regPasswordConfirm, setRegPasswordConfirm] = useState("");
+  const [agbAccepted, setAgbAccepted] = useState(false);
+  const [error, setError] = useState("");
+
+  if (!isOpen) return null;
+
+  const handleLogin = (e: React.FormEvent) => {
+    e.preventDefault();
+    setError("");
+    if (!loginEmail || !loginPassword) {
+      setError("Bitte alle Felder ausfüllen.");
+      return;
+    }
+    onLogin({ name: loginEmail.split("@")[0], email: loginEmail });
+    setLoginEmail("");
+    setLoginPassword("");
+    onClose();
+  };
+
+  const handleRegister = (e: React.FormEvent) => {
+    e.preventDefault();
+    setError("");
+    if (!regName || !regEmail || !regPassword || !regPasswordConfirm) {
+      setError("Bitte alle Felder ausfüllen.");
+      return;
+    }
+    if (regPassword !== regPasswordConfirm) {
+      setError("Passwörter stimmen nicht überein.");
+      return;
+    }
+    if (!agbAccepted) {
+      setError("Bitte AGB akzeptieren.");
+      return;
+    }
+    onLogin({ name: regName, email: regEmail });
+    setRegName("");
+    setRegEmail("");
+    setRegPassword("");
+    setRegPasswordConfirm("");
+    setAgbAccepted(false);
+    onClose();
+  };
+
+  const inputClass =
+    "w-full px-4 py-3 rounded-xl border border-[#e5e5e5] bg-white text-[#0a0a0a] text-sm focus:outline-none focus:ring-2 focus:ring-[#f14011]/30 focus:border-[#f14011] transition-all";
+
+  return (
+    <div
+      className="fixed inset-0 z-[100] flex items-center justify-center"
+      onClick={onClose}
+    >
+      {/* Overlay */}
+      <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" />
+
+      {/* Modal */}
+      <div
+        className="relative bg-white rounded-2xl shadow-2xl w-full max-w-md mx-4 overflow-hidden animate-scale-in"
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* Close button */}
+        <button
+          onClick={onClose}
+          className="absolute top-4 right-4 p-1 text-[#737373] hover:text-[#0a0a0a] transition-colors"
+        >
+          <CloseIcon className="w-5 h-5" />
+        </button>
+
+        {/* Tabs */}
+        <div className="flex border-b border-[#e5e5e5]">
+          <button
+            className={`flex-1 py-4 text-sm font-semibold transition-colors ${
+              activeTab === "login"
+                ? "text-[#f14011] border-b-2 border-[#f14011]"
+                : "text-[#737373] hover:text-[#0a0a0a]"
+            }`}
+            onClick={() => { setActiveTab("login"); setError(""); }}
+          >
+            Anmelden
+          </button>
+          <button
+            className={`flex-1 py-4 text-sm font-semibold transition-colors ${
+              activeTab === "register"
+                ? "text-[#f14011] border-b-2 border-[#f14011]"
+                : "text-[#737373] hover:text-[#0a0a0a]"
+            }`}
+            onClick={() => { setActiveTab("register"); setError(""); }}
+          >
+            Registrieren
+          </button>
+        </div>
+
+        <div className="p-6">
+          {error && (
+            <div className="mb-4 p-3 rounded-xl bg-red-50 text-red-600 text-sm">
+              {error}
+            </div>
+          )}
+
+          {activeTab === "login" ? (
+            <form onSubmit={handleLogin} className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-[#0a0a0a] mb-1">
+                  E-Mail
+                </label>
+                <input
+                  type="email"
+                  value={loginEmail}
+                  onChange={(e) => setLoginEmail(e.target.value)}
+                  className={inputClass}
+                  placeholder="name@beispiel.de"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-[#0a0a0a] mb-1">
+                  Passwort
+                </label>
+                <input
+                  type="password"
+                  value={loginPassword}
+                  onChange={(e) => setLoginPassword(e.target.value)}
+                  className={inputClass}
+                  placeholder="••••••••"
+                />
+              </div>
+              <div className="text-right">
+                <button type="button" className="text-xs text-[#f14011] hover:underline">
+                  Passwort vergessen?
+                </button>
+              </div>
+              <button type="submit" className="btn btn-primary btn-lg w-full">
+                Anmelden
+              </button>
+            </form>
+          ) : (
+            <form onSubmit={handleRegister} className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-[#0a0a0a] mb-1">
+                  Name
+                </label>
+                <input
+                  type="text"
+                  value={regName}
+                  onChange={(e) => setRegName(e.target.value)}
+                  className={inputClass}
+                  placeholder="Max Mustermann"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-[#0a0a0a] mb-1">
+                  E-Mail
+                </label>
+                <input
+                  type="email"
+                  value={regEmail}
+                  onChange={(e) => setRegEmail(e.target.value)}
+                  className={inputClass}
+                  placeholder="name@beispiel.de"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-[#0a0a0a] mb-1">
+                  Passwort
+                </label>
+                <input
+                  type="password"
+                  value={regPassword}
+                  onChange={(e) => setRegPassword(e.target.value)}
+                  className={inputClass}
+                  placeholder="••••••••"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-[#0a0a0a] mb-1">
+                  Passwort bestätigen
+                </label>
+                <input
+                  type="password"
+                  value={regPasswordConfirm}
+                  onChange={(e) => setRegPasswordConfirm(e.target.value)}
+                  className={inputClass}
+                  placeholder="••••••••"
+                />
+              </div>
+              <label className="flex items-start gap-2 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={agbAccepted}
+                  onChange={(e) => setAgbAccepted(e.target.checked)}
+                  className="mt-1 accent-[#f14011]"
+                />
+                <span className="text-xs text-[#737373]">
+                  Ich akzeptiere die{" "}
+                  <span className="text-[#f14011] hover:underline cursor-pointer">AGB</span>{" "}
+                  und{" "}
+                  <span className="text-[#f14011] hover:underline cursor-pointer">Datenschutzrichtlinien</span>.
+                </span>
+              </label>
+              <button type="submit" className="btn btn-primary btn-lg w-full">
+                Registrieren
+              </button>
+            </form>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ============================================================================
 // HEADER COMPONENT
 // ============================================================================
 
-function Header() {
+function Header({
+  authUser,
+  onLoginClick,
+  onLogout,
+}: {
+  authUser: { name: string; email: string } | null;
+  onLoginClick: () => void;
+  onLogout: () => void;
+}) {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
@@ -178,6 +413,28 @@ function Header() {
             <a href="#contact" className="text-[#0a0a0a] font-semibold text-sm hover:text-[#f14011] transition-colors">
               Kontakt
             </a>
+            {authUser ? (
+              <>
+                <div className="w-9 h-9 rounded-full bg-[#f14011] flex items-center justify-center">
+                  <span className="text-white text-sm font-bold">
+                    {authUser.name.slice(0, 2).toUpperCase()}
+                  </span>
+                </div>
+                <button
+                  onClick={onLogout}
+                  className="text-[#525252] font-semibold text-sm hover:text-[#f14011] transition-colors"
+                >
+                  Abmelden
+                </button>
+              </>
+            ) : (
+              <button
+                onClick={onLoginClick}
+                className="text-[#0a0a0a] font-semibold text-sm hover:text-[#f14011] transition-colors"
+              >
+                Anmelden
+              </button>
+            )}
             <a
               href="#submit"
               className="btn btn-primary btn-md"
@@ -209,7 +466,22 @@ function Header() {
                   {item.label}
                 </a>
               ))}
-              <div className="pt-4 border-t border-[#e5e5e5]">
+              <div className="pt-4 border-t border-[#e5e5e5] space-y-3">
+                {authUser ? (
+                  <button
+                    onClick={() => { onLogout(); setIsMobileMenuOpen(false); }}
+                    className="block w-full text-left text-[#525252] font-medium text-lg hover:text-[#f14011] transition-colors"
+                  >
+                    Abmelden ({authUser.name})
+                  </button>
+                ) : (
+                  <button
+                    onClick={() => { onLoginClick(); setIsMobileMenuOpen(false); }}
+                    className="block w-full text-left text-[#525252] font-medium text-lg hover:text-[#f14011] transition-colors"
+                  >
+                    Anmelden
+                  </button>
+                )}
                 <a
                   href="#submit"
                   className="btn btn-primary btn-lg w-full"
@@ -2626,9 +2898,21 @@ function Footer() {
 // ============================================================================
 
 export default function Home() {
+  const [authUser, setAuthUser] = useState<{ name: string; email: string } | null>(null);
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+
   return (
     <main className="min-h-screen">
-      <Header />
+      <Header
+        authUser={authUser}
+        onLoginClick={() => setIsAuthModalOpen(true)}
+        onLogout={() => setAuthUser(null)}
+      />
+      <AuthModal
+        isOpen={isAuthModalOpen}
+        onClose={() => setIsAuthModalOpen(false)}
+        onLogin={(user) => setAuthUser(user)}
+      />
       <HeroSection />
       <HowItWorksSection />
       <SellerTypesSection />
