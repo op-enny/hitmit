@@ -31,9 +31,10 @@ interface VehicleSubmissionDto {
   // Contact Information (not in CreateVehicleDto but needed for email)
   sellerType: "private" | "dealer";
   companyName?: string;
-  contactName: string;
+  contactName?: string;
+  showContactName?: boolean;
   contactEmail: string;
-  contactPhone: string;
+  contactPhone?: string;
 
   // Required Vehicle Fields
   brand: string;
@@ -324,16 +325,27 @@ function generateEmailHtml(data: VehicleSubmissionDto, imageUrls: string[], pain
               </div>
             </div>
             ` : ""}
+            ${data.contactName ? `
             <div class="grid-row">
               <div class="grid-cell">
                 <div class="label">${data.companyName ? "Ansprechpartner" : "Name"}</div>
-                <div class="value">${s(data.contactName)}</div>
+                <div class="value">${s(data.contactName)} ${data.showContactName === false ? '<span style="color: #999; font-size: 11px;">(nicht öffentlich)</span>' : ""}</div>
               </div>
+              ${data.contactPhone ? `
+              <div class="grid-cell">
+                <div class="label">Telefon</div>
+                <div class="value"><a href="tel:${s(data.contactPhone)}">${s(data.contactPhone)}</a></div>
+              </div>
+              ` : ""}
+            </div>
+            ` : data.contactPhone ? `
+            <div class="grid-row">
               <div class="grid-cell">
                 <div class="label">Telefon</div>
                 <div class="value"><a href="tel:${s(data.contactPhone)}">${s(data.contactPhone)}</a></div>
               </div>
             </div>
+            ` : ""}
             <div class="grid-row">
               <div class="grid-cell">
                 <div class="label">E-Mail</div>
@@ -554,9 +566,7 @@ function validateSubmission(data: VehicleSubmissionDto): ValidationResult {
   }
 
   // Required fields
-  if (!data.contactName?.trim()) errors.push("Name ist erforderlich");
   if (!data.contactEmail?.trim()) errors.push("E-Mail ist erforderlich");
-  if (!data.contactPhone?.trim()) errors.push("Telefonnummer ist erforderlich");
   if (!data.brand?.trim()) errors.push("Marke ist erforderlich");
   if (!data.model?.trim()) errors.push("Modell ist erforderlich");
   if (data.price === undefined || data.price <= 0) errors.push("Gültiger Preis ist erforderlich");

@@ -628,6 +628,7 @@ interface VehicleFormData {
   sellerType: "private" | "dealer" | "";
   companyName: string;
   contactName: string;
+  showContactName: boolean;
   contactEmail: string;
   contactPhone: string;
   // Required Vehicle
@@ -708,6 +709,7 @@ const initialFormData: VehicleFormData = {
   sellerType: "",
   companyName: "",
   contactName: "",
+  showContactName: true,
   contactEmail: "",
   contactPhone: "",
   brand: "",
@@ -1882,14 +1884,26 @@ function SubmitFormSection() {
               </div>
             )}
             <div className="grid md:grid-cols-2 gap-6 mb-6">
-              <FormInput
-                label="Ansprechpartner"
-                required
-                type="text"
-                placeholder="Max Mustermann"
-                value={formData.contactName}
-                onChange={(e) => updateField("contactName", e.target.value)}
-              />
+              <div>
+                <FormInput
+                  label="Ansprechpartner"
+                  type="text"
+                  placeholder="Max Mustermann"
+                  value={formData.contactName}
+                  onChange={(e) => updateField("contactName", e.target.value)}
+                />
+                {formData.contactName && (
+                  <label className="flex items-center gap-2 mt-2 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={formData.showContactName}
+                      onChange={(e) => updateField("showContactName", e.target.checked)}
+                      className="w-4 h-4 rounded border-[#d4d4d4] text-[#f14011] focus:ring-[#f14011]"
+                    />
+                    <span className="text-sm text-[#737373]">Name öffentlich anzeigen</span>
+                  </label>
+                )}
+              </div>
               <FormInput
                 label="E-Mail"
                 required
@@ -1901,7 +1915,6 @@ function SubmitFormSection() {
             </div>
             <FormInput
               label="Telefonnummer"
-              required
               type="tel"
               placeholder="+49 170 1234567"
               value={formData.contactPhone}
