@@ -626,6 +626,7 @@ function SocialCTASection() {
 interface VehicleFormData {
   // Contact
   sellerType: "private" | "dealer" | "";
+  companyName: string;
   contactName: string;
   contactEmail: string;
   contactPhone: string;
@@ -704,6 +705,7 @@ interface VehicleFormData {
 
 const initialFormData: VehicleFormData = {
   sellerType: "",
+  companyName: "",
   contactName: "",
   contactEmail: "",
   contactPhone: "",
@@ -1866,9 +1868,20 @@ function SubmitFormSection() {
           {/* Contact Info */}
           <div className="pt-6 border-t border-[#e5e5e5]">
             <h3 className="font-display text-2xl text-[#0a0a0a] mb-6">Kontaktdaten</h3>
+            {formData.sellerType === "dealer" && (
+              <div className="mb-6">
+                <FormInput
+                  label="Unternehmen"
+                  type="text"
+                  placeholder="Autohaus Mustermann GmbH"
+                  value={formData.companyName}
+                  onChange={(e) => updateField("companyName", e.target.value)}
+                />
+              </div>
+            )}
             <div className="grid md:grid-cols-2 gap-6 mb-6">
               <FormInput
-                label="Vollständiger Name"
+                label="Ansprechpartner"
                 required
                 type="text"
                 placeholder="Max Mustermann"

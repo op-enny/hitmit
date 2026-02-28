@@ -30,6 +30,7 @@ function configureCloudinary() {
 interface VehicleSubmissionDto {
   // Contact Information (not in CreateVehicleDto but needed for email)
   sellerType: "private" | "dealer";
+  companyName?: string;
   contactName: string;
   contactEmail: string;
   contactPhone: string;
@@ -314,9 +315,17 @@ function generateEmailHtml(data: VehicleSubmissionDto, imageUrls: string[], pain
         <div class="section-title">👤 Kontaktdaten</div>
         <div class="contact-box">
           <div class="grid">
+            ${data.companyName ? `
             <div class="grid-row">
               <div class="grid-cell">
-                <div class="label">Name</div>
+                <div class="label">Unternehmen</div>
+                <div class="value">${s(data.companyName)}</div>
+              </div>
+            </div>
+            ` : ""}
+            <div class="grid-row">
+              <div class="grid-cell">
+                <div class="label">${data.companyName ? "Ansprechpartner" : "Name"}</div>
                 <div class="value">${s(data.contactName)}</div>
               </div>
               <div class="grid-cell">
