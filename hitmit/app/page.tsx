@@ -75,6 +75,79 @@ const ChevronRightIcon = ({ className = "w-5 h-5" }: { className?: string }) => 
 );
 
 // ============================================================================
+// PAINT THICKNESS INFO BUTTON
+// ============================================================================
+
+function PaintThicknessInfoButton() {
+  const [isOpen, setIsOpen] = useState(false);
+
+  return (
+    <div className="relative inline-block">
+      <button
+        type="button"
+        onClick={() => setIsOpen(!isOpen)}
+        className="inline-flex items-center gap-1.5 text-xs font-medium text-[#525252] hover:text-[#f14011] transition-colors mt-1"
+      >
+        <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+          <circle cx="12" cy="12" r="10" />
+          <path strokeLinecap="round" d="M12 16v-4M12 8h.01" />
+        </svg>
+        Was bedeuten die Werte?
+      </button>
+      {isOpen && (
+        <div className="mt-2 bg-[#fafafa] border border-[#e5e5e5] rounded-xl p-4 animate-fade-in">
+          <div className="flex items-center justify-between mb-3">
+            <h4 className="text-sm font-semibold text-[#0a0a0a]">Referenztabelle Lackdickenmessung</h4>
+            <button
+              type="button"
+              onClick={() => setIsOpen(false)}
+              className="text-[#737373] hover:text-[#0a0a0a] transition-colors"
+            >
+              <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="border-b border-[#e5e5e5]">
+                  <th className="text-left py-2 pr-4 font-semibold text-[#525252]">Wert (µm)</th>
+                  <th className="text-left py-2 font-semibold text-[#525252]">Bedeutung</th>
+                </tr>
+              </thead>
+              <tbody className="text-[#525252]">
+                <tr className="border-b border-[#f5f5f5]">
+                  <td className="py-2 pr-4 font-mono font-semibold text-[#10b981]">80 – 130</td>
+                  <td className="py-2">Werkslackierung (Originallack)</td>
+                </tr>
+                <tr className="border-b border-[#f5f5f5]">
+                  <td className="py-2 pr-4 font-mono font-semibold text-[#f59e0b]">130 – 250</td>
+                  <td className="py-2">Nachlackiert (einfache Schicht)</td>
+                </tr>
+                <tr className="border-b border-[#f5f5f5]">
+                  <td className="py-2 pr-4 font-mono font-semibold text-[#f14011]">250 – 400</td>
+                  <td className="py-2">Mehrfach nachlackiert oder gespachtelt</td>
+                </tr>
+                <tr className="border-b border-[#f5f5f5]">
+                  <td className="py-2 pr-4 font-mono font-semibold text-[#ef4444]">&gt; 400</td>
+                  <td className="py-2">Starke Spachtelarbeiten / Unfallschaden</td>
+                </tr>
+                <tr>
+                  <td className="py-2 pr-4 font-mono font-semibold text-[#737373]">&lt; 80</td>
+                  <td className="py-2">Möglicher Schliff oder Polierung</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <p className="text-xs text-[#a3a3a3] mt-3">Hinweis: Werte können je nach Hersteller und Fahrzeugtyp leicht variieren.</p>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ============================================================================
 // ANIMATED COUNTER COMPONENT
 // ============================================================================
 
@@ -2619,6 +2692,9 @@ function SubmitFormSection() {
                 value={formData.paintThicknessAvailable}
                 onChange={(val) => updateField("paintThicknessAvailable", val)}
               />
+                  {formData.paintThicknessAvailable === true && (
+                    <PaintThicknessInfoButton />
+                  )}
                   {formData.paintThicknessAvailable === true && (
                     <div>
                       <label className="block text-sm font-semibold text-[#0a0a0a] mb-2">Messprotokoll-Foto</label>

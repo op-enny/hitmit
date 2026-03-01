@@ -40,6 +40,7 @@ interface Vehicle {
   safetyFeatures: string[];
   exteriorFeatures: string[];
   multimediaFeatures: string[];
+  paintThickness?: Record<string, string>;
   gradient: string;
 }
 
@@ -81,6 +82,7 @@ const vehicles: Vehicle[] = [
     safetyFeatures: ["Spurhalteassistent", "Totwinkelwarner", "Notbremsassistent"],
     exteriorFeatures: ["M Carbon Dach", "M Carbon Paket", "LED Scheinwerfer", "19/20 Zoll M Felgen"],
     multimediaFeatures: ["Harman Kardon", "Apple CarPlay", "Android Auto", "Navigation"],
+    paintThickness: { "Motorhaube": "105", "Kotflügel vorne links": "112", "Fahrertür": "98", "Kotflügel hinten rechts": "185", "Heckklappe": "102" },
     gradient: "from-blue-600 via-blue-800 to-gray-900",
   },
   {
@@ -272,6 +274,77 @@ const priceRanges = [
 ];
 
 // ============================================================================
+// PAINT THICKNESS INFO BUTTON
+// ============================================================================
+
+function PaintThicknessInfoButton() {
+  const [isOpen, setIsOpen] = useState(false);
+
+  return (
+    <div className="relative inline-block">
+      <button
+        type="button"
+        onClick={(e) => { e.stopPropagation(); setIsOpen(!isOpen); }}
+        className="inline-flex items-center gap-1.5 text-xs font-medium text-gray-500 hover:text-[#f14011] transition-colors"
+      >
+        <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+          <circle cx="12" cy="12" r="10" />
+          <path strokeLinecap="round" d="M12 16v-4M12 8h.01" />
+        </svg>
+        Was bedeuten die Werte?
+      </button>
+      {isOpen && (
+        <div className="mt-2 bg-gray-50 border border-gray-200 rounded-xl p-4 animate-fade-in">
+          <div className="flex items-center justify-between mb-3">
+            <h4 className="text-sm font-semibold text-gray-900">Referenztabelle Lackdickenmessung</h4>
+            <button
+              type="button"
+              onClick={(e) => { e.stopPropagation(); setIsOpen(false); }}
+              className="text-gray-400 hover:text-gray-900 transition-colors"
+            >
+              <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+          <table className="w-full text-sm">
+            <thead>
+              <tr className="border-b border-gray-200">
+                <th className="text-left py-2 pr-4 font-semibold text-gray-500">Wert (µm)</th>
+                <th className="text-left py-2 font-semibold text-gray-500">Bedeutung</th>
+              </tr>
+            </thead>
+            <tbody className="text-gray-600">
+              <tr className="border-b border-gray-100">
+                <td className="py-2 pr-4 font-mono font-semibold text-green-600">80 – 130</td>
+                <td className="py-2">Werkslackierung (Originallack)</td>
+              </tr>
+              <tr className="border-b border-gray-100">
+                <td className="py-2 pr-4 font-mono font-semibold text-yellow-600">130 – 250</td>
+                <td className="py-2">Nachlackiert (einfache Schicht)</td>
+              </tr>
+              <tr className="border-b border-gray-100">
+                <td className="py-2 pr-4 font-mono font-semibold text-orange-600">250 – 400</td>
+                <td className="py-2">Mehrfach nachlackiert oder gespachtelt</td>
+              </tr>
+              <tr className="border-b border-gray-100">
+                <td className="py-2 pr-4 font-mono font-semibold text-red-600">&gt; 400</td>
+                <td className="py-2">Starke Spachtelarbeiten / Unfallschaden</td>
+              </tr>
+              <tr>
+                <td className="py-2 pr-4 font-mono font-semibold text-gray-500">&lt; 80</td>
+                <td className="py-2">Möglicher Schliff oder Polierung</td>
+              </tr>
+            </tbody>
+          </table>
+          <p className="text-xs text-gray-400 mt-3">Hinweis: Werte können je nach Hersteller und Fahrzeugtyp leicht variieren.</p>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ============================================================================
 // ICONS
 // ============================================================================
 
@@ -399,6 +472,33 @@ function DetailModal({ vehicle, onClose }: { vehicle: Vehicle; onClose: () => vo
                   </div>
                 </div>
               )
+          )}
+
+          {/* Paint Thickness */}
+          {vehicle.paintThickness && Object.keys(vehicle.paintThickness).length > 0 && (
+            <div>
+              <h3 className="font-semibold text-gray-900 mb-2">Lackdickenmessung</h3>
+              <div className="space-y-1.5">
+                {Object.entries(vehicle.paintThickness).map(([zone, value]) => {
+                  const num = parseInt(value);
+                  let color = "text-gray-600";
+                  if (num < 80) color = "text-gray-500";
+                  else if (num <= 130) color = "text-green-600";
+                  else if (num <= 250) color = "text-yellow-600";
+                  else if (num <= 400) color = "text-orange-600";
+                  else color = "text-red-600";
+                  return (
+                    <div key={zone} className="flex items-center justify-between text-sm bg-gray-50 rounded-lg px-3 py-2">
+                      <span className="text-gray-700">{zone}</span>
+                      <span className={`font-mono font-semibold ${color}`}>{value} µm</span>
+                    </div>
+                  );
+                })}
+              </div>
+              <div className="mt-2">
+                <PaintThicknessInfoButton />
+              </div>
+            </div>
           )}
 
           {/* Location & Contact */}
