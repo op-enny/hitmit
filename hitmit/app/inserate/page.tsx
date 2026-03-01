@@ -328,11 +328,11 @@ function PaintThicknessInfoButton() {
                 <td className="py-2">Mehrfach nachlackiert oder gespachtelt</td>
               </tr>
               <tr className="border-b border-gray-100">
-                <td className="py-2 pr-4 font-mono font-semibold text-red-600">&gt; 400</td>
+                <td className="py-2 pr-4 font-mono font-semibold text-red-600">über 400</td>
                 <td className="py-2">Starke Spachtelarbeiten / Unfallschaden</td>
               </tr>
               <tr>
-                <td className="py-2 pr-4 font-mono font-semibold text-gray-500">&lt; 80</td>
+                <td className="py-2 pr-4 font-mono font-semibold text-gray-500">unter 80</td>
                 <td className="py-2">Möglicher Schliff oder Polierung</td>
               </tr>
             </tbody>
