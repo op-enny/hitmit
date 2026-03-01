@@ -160,7 +160,7 @@ const MAX_IMAGE_SIZE = 5 * 1024 * 1024; // 5MB per image
 const MAX_IMAGES = 10;
 const MAX_DESCRIPTION_LENGTH = 5000;
 
-const FUEL_TYPES = ["petrol", "diesel", "electric", "hybrid", "pluginHybrid", "lpg", "cng", "hydrogen", "other"];
+const FUEL_TYPES = ["petrol", "diesel", "electric", "hybrid", "pluginHybrid", "pluginHybridDiesel", "lpg", "cng", "hydrogen", "other"];
 const TRANSMISSIONS = ["manual", "automatic", "semiAutomatic"];
 const DRIVE_TYPES = ["fwd", "rwd", "awd"];
 const CONDITIONS = ["new", "used", "yearOld", "demo", "dayReg"];

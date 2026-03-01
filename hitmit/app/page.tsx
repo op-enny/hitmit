@@ -1064,6 +1064,7 @@ const FUEL_TYPE_OPTIONS = [
   { value: "electric", label: "Elektro" },
   { value: "hybrid", label: "Hybrid" },
   { value: "pluginHybrid", label: "Plug-in-Hybrid" },
+  { value: "pluginHybridDiesel", label: "Plug-in-Hybrid (Diesel)" },
   { value: "lpg", label: "LPG (Autogas)" },
   { value: "cng", label: "CNG (Erdgas)" },
   { value: "hydrogen", label: "Wasserstoff" },
