@@ -1955,7 +1955,7 @@ function DamageMap({
               <label className="block text-xs font-medium text-[#737373] mb-1">Lackdicke (µm)</label>
               <input
                 type="number"
-                className="input"
+                className="input [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none [-moz-appearance:textfield]"
                 placeholder="z.B. 120"
                 value={paintThickness[selectedZone] || ""}
                 onChange={(e) => {
