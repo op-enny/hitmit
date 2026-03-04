@@ -618,7 +618,7 @@ function DetailModal({ vehicle, onClose, isDealer }: { vehicle: Vehicle; onClose
           {/* Description */}
           <div>
             <h3 className="font-semibold text-gray-900 mb-2">Beschreibung</h3>
-            <p className="text-gray-600 text-sm leading-relaxed">{vehicle.description}</p>
+            <p className="text-gray-600 text-sm leading-relaxed whitespace-pre-line">{vehicle.description}</p>
           </div>
 
           {/* Features */}
