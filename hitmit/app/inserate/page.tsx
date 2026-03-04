@@ -1,8 +1,10 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { calculateValuation, PRICE_RATING_INFO } from "../valuation";
+import type { ValuationBreakdown, PriceRating } from "../valuation";
 
 // ============================================================================
 // TYPES
@@ -361,10 +363,177 @@ const ChevronDownIcon = ({ className = "w-4 h-4" }: { className?: string }) => (
 );
 
 // ============================================================================
+// PRICE RATING BADGE (public — for all users)
+// ============================================================================
+
+function PriceRatingBadge({ vehicle }: { vehicle: Vehicle }) {
+  const v = calculateValuation({
+    brand: vehicle.brand,
+    model: vehicle.model,
+    year: vehicle.year,
+    mileage: vehicle.mileage,
+    fuelType: vehicle.fuelType,
+    accidentFree: vehicle.accidentFree,
+    askingPrice: vehicle.price,
+  });
+
+  const info = PRICE_RATING_INFO[v.preisRating];
+  const minPrice = Math.round(v.marktwert * 0.82);
+  const maxPrice = Math.round(v.marktwert * 1.18);
+  const range = maxPrice - minPrice;
+  // Clamp marker position between 2% and 98%
+  const markerPct = Math.max(2, Math.min(98, ((vehicle.price - minPrice) / range) * 100));
+
+  return (
+    <div className="bg-gray-50 rounded-xl p-4">
+      <div className="flex items-center gap-2 mb-3">
+        <span className={`px-3 py-1 rounded-full text-sm font-semibold ${info.bgColor} ${info.color}`}>
+          {info.label}
+        </span>
+        <span className="text-sm text-gray-500">
+          Marktwert ca. {v.marktwert.toLocaleString("de-DE")} €
+        </span>
+      </div>
+      {/* Price bar */}
+      <div className="relative h-3 rounded-full overflow-hidden bg-gradient-to-r from-green-400 via-yellow-300 to-red-400">
+        <div
+          className="absolute top-1/2 -translate-y-1/2 w-4 h-4 bg-white border-2 border-gray-800 rounded-full shadow-md -ml-2"
+          style={{ left: `${markerPct}%` }}
+        />
+      </div>
+      {/* Labels */}
+      <div className="flex justify-between mt-1.5 text-xs text-gray-400">
+        <span>{minPrice.toLocaleString("de-DE")} €</span>
+        <span className="font-medium text-gray-500">{v.marktwert.toLocaleString("de-DE")} €</span>
+        <span>{maxPrice.toLocaleString("de-DE")} €</span>
+      </div>
+    </div>
+  );
+}
+
+// ============================================================================
+// DEALER PURCHASE PANEL (only for logged-in dealers)
+// ============================================================================
+
+function DealerPurchasePanel({ vehicle }: { vehicle: Vehicle }) {
+  const [showDetails, setShowDetails] = useState(false);
+
+  const v = calculateValuation({
+    brand: vehicle.brand,
+    model: vehicle.model,
+    year: vehicle.year,
+    mileage: vehicle.mileage,
+    fuelType: vehicle.fuelType,
+    accidentFree: vehicle.accidentFree,
+    askingPrice: vehicle.price,
+  });
+
+  const fuelLabel =
+    vehicle.fuelType.toLowerCase() === "elektro"
+      ? "Elektro"
+      : vehicle.fuelType.toLowerCase() === "diesel"
+      ? "Diesel"
+      : vehicle.fuelType.toLowerCase().includes("hybrid")
+      ? "Plug-in-Hybrid"
+      : "Benzin";
+
+  return (
+    <div className="border border-blue-200 bg-blue-50/60 rounded-xl p-4">
+      <div className="flex items-center gap-2 mb-3">
+        <span className="px-2 py-0.5 bg-blue-600 text-white text-xs font-semibold rounded">
+          Händler
+        </span>
+        <span className="text-sm font-medium text-blue-900">Geschätzter Einkaufspreis</span>
+      </div>
+
+      <p className="text-3xl font-bold text-blue-900">
+        {v.einkaufspreis.toLocaleString("de-DE")} €
+      </p>
+      <p className="text-sm text-blue-700 mt-1">
+        Spanne: {v.einkaufMin.toLocaleString("de-DE")} € – {v.einkaufMax.toLocaleString("de-DE")} €
+      </p>
+
+      <button
+        onClick={(e) => { e.stopPropagation(); setShowDetails(!showDetails); }}
+        className="mt-3 text-sm font-medium text-blue-700 hover:text-blue-900 transition-colors flex items-center gap-1"
+      >
+        {showDetails ? "Details ausblenden" : "Details anzeigen"}
+        <svg
+          className={`w-4 h-4 transition-transform ${showDetails ? "rotate-180" : ""}`}
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+        >
+          <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+        </svg>
+      </button>
+
+      {showDetails && (
+        <div className="mt-3 bg-white rounded-lg border border-blue-100 overflow-hidden">
+          <table className="w-full text-sm">
+            <tbody>
+              <tr className="border-b border-blue-50">
+                <td className="px-3 py-2 text-gray-600">Neupreis (ca.)</td>
+                <td className="px-3 py-2 text-right font-mono text-gray-800">
+                  {v.neupreis.toLocaleString("de-DE")} €
+                </td>
+              </tr>
+              <tr className="border-b border-blue-50">
+                <td className="px-3 py-2 text-gray-600">
+                  Alter ({v.alter} {v.alter === 1 ? "Jahr" : "Jahre"}, -{Math.round((1 - v.altersFaktor) * 100)}%)
+                </td>
+                <td className="px-3 py-2 text-right font-mono text-red-600">
+                  -{v.abschreibungBetrag.toLocaleString("de-DE")} €
+                </td>
+              </tr>
+              <tr className="border-b border-blue-50">
+                <td className="px-3 py-2 text-gray-600">
+                  km-Korrektur ({v.kmDifferenz >= 0 ? "+" : ""}{v.kmDifferenz.toLocaleString("de-DE")} km)
+                </td>
+                <td className={`px-3 py-2 text-right font-mono ${v.kmKorrekturBetrag >= 0 ? "text-green-600" : "text-red-600"}`}>
+                  {v.kmKorrekturBetrag >= 0 ? "+" : ""}{v.kmKorrekturBetrag.toLocaleString("de-DE")} €
+                </td>
+              </tr>
+              <tr className="border-b border-blue-50">
+                <td className="px-3 py-2 text-gray-600">Kraftstoff ({fuelLabel})</td>
+                <td className={`px-3 py-2 text-right font-mono ${v.kraftstoffBetrag >= 0 ? "text-green-600" : v.kraftstoffBetrag < 0 ? "text-red-600" : "text-gray-600"}`}>
+                  {v.kraftstoffBetrag === 0 ? "±0" : (v.kraftstoffBetrag > 0 ? "+" : "") + v.kraftstoffBetrag.toLocaleString("de-DE")} €
+                </td>
+              </tr>
+              <tr className="border-b border-blue-50">
+                <td className="px-3 py-2 text-gray-600">
+                  {vehicle.accidentFree ? "Unfallfrei" : "Unfallwagen"}
+                </td>
+                <td className={`px-3 py-2 text-right font-mono ${v.unfallBetrag >= 0 ? "text-green-600" : "text-red-600"}`}>
+                  {v.unfallBetrag >= 0 ? "+" : ""}{v.unfallBetrag.toLocaleString("de-DE")} €
+                </td>
+              </tr>
+              <tr className="border-b border-blue-100 bg-gray-50">
+                <td className="px-3 py-2 font-semibold text-gray-900">Geschätzter Marktwert</td>
+                <td className="px-3 py-2 text-right font-mono font-semibold text-gray-900">
+                  {v.marktwert.toLocaleString("de-DE")} €
+                </td>
+              </tr>
+              <tr className="bg-blue-50">
+                <td className="px-3 py-2 font-semibold text-blue-900">Händler-Einkaufspreis (~78%)</td>
+                <td className="px-3 py-2 text-right font-mono font-bold text-blue-900">
+                  {v.einkaufspreis.toLocaleString("de-DE")} €
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ============================================================================
 // DETAIL MODAL
 // ============================================================================
 
-function DetailModal({ vehicle, onClose }: { vehicle: Vehicle; onClose: () => void }) {
+function DetailModal({ vehicle, onClose, isDealer }: { vehicle: Vehicle; onClose: () => void; isDealer: boolean }) {
   return (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in"
@@ -411,6 +580,9 @@ function DetailModal({ vehicle, onClose }: { vehicle: Vehicle; onClose: () => vo
               {vehicle.price.toLocaleString("de-DE")} €
             </p>
           </div>
+
+          {/* Price Rating (public) */}
+          <PriceRatingBadge vehicle={vehicle} />
 
           {/* Key specs */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
@@ -538,6 +710,9 @@ function DetailModal({ vehicle, onClose }: { vehicle: Vehicle; onClose: () => vo
             </div>
           </div>
 
+          {/* Dealer Purchase Panel (only for logged-in dealers) */}
+          {isDealer && <DealerPurchasePanel vehicle={vehicle} />}
+
           {/* CTA */}
           <button
             onClick={() => (window.location.href = `mailto:${vehicle.contactEmail}?subject=Anfrage: ${vehicle.brand} ${vehicle.model}`)}
@@ -619,6 +794,19 @@ export default function InseratePage() {
   const [fuelFilter, setFuelFilter] = useState("Alle Kraftstoffe");
   const [priceFilter, setPriceFilter] = useState(0);
   const [selectedVehicle, setSelectedVehicle] = useState<Vehicle | null>(null);
+  const [isDealer, setIsDealer] = useState(false);
+
+  // Persist dealer login state in localStorage
+  useEffect(() => {
+    const stored = localStorage.getItem("hitmit_dealer");
+    if (stored === "true") setIsDealer(true);
+  }, []);
+
+  const toggleDealer = () => {
+    const next = !isDealer;
+    setIsDealer(next);
+    localStorage.setItem("hitmit_dealer", String(next));
+  };
 
   const filtered = vehicles.filter((v) => {
     if (brandFilter !== "Alle Marken" && v.brand !== brandFilter) return false;
@@ -637,12 +825,24 @@ export default function InseratePage() {
             <Image src="/hitmit-logo.png" alt="HITMIT" width={40} height={40} className="rounded-lg" />
             <span className="font-display text-2xl tracking-wider text-gray-900">HITMIT</span>
           </Link>
-          <Link
-            href="/"
-            className="text-sm font-medium text-gray-500 hover:text-[#f14011] transition-colors"
-          >
-            ← Zurück zur Startseite
-          </Link>
+          <div className="flex items-center gap-4">
+            <button
+              onClick={toggleDealer}
+              className={`text-xs font-medium px-3 py-1.5 rounded-full border transition-colors ${
+                isDealer
+                  ? "bg-blue-600 text-white border-blue-600"
+                  : "bg-white text-gray-500 border-gray-200 hover:border-gray-400"
+              }`}
+            >
+              {isDealer ? "Händler ✓" : "Händler-Login"}
+            </button>
+            <Link
+              href="/"
+              className="text-sm font-medium text-gray-500 hover:text-[#f14011] transition-colors"
+            >
+              ← Zurück
+            </Link>
+          </div>
         </div>
       </header>
 
@@ -754,7 +954,7 @@ export default function InseratePage() {
 
       {/* Detail Modal */}
       {selectedVehicle && (
-        <DetailModal vehicle={selectedVehicle} onClose={() => setSelectedVehicle(null)} />
+        <DetailModal vehicle={selectedVehicle} onClose={() => setSelectedVehicle(null)} isDealer={isDealer} />
       )}
     </div>
   );
