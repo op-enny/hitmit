@@ -5,6 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { calculateValuation, PRICE_RATING_INFO } from "../valuation";
 import type { ValuationBreakdown, PriceRating } from "../valuation";
+import { calculateTireScore, TIRE_RATING_INFO } from "../tire-score";
 
 // ============================================================================
 // TYPES
@@ -44,6 +45,12 @@ interface Vehicle {
   multimediaFeatures: string[];
   paintThickness?: Record<string, string>;
   vehicleOrigin?: string;
+  tireDepthFront?: string;
+  tireDepthRear?: string;
+  tireAgeFront?: string;
+  tireAgeRear?: string;
+  tireDamageFront?: boolean;
+  tireDamageRear?: boolean;
   gradient: string;
 }
 
@@ -412,6 +419,51 @@ function PriceRatingBadge({ vehicle }: { vehicle: Vehicle }) {
   );
 }
 
+function TireScoreBadge({ vehicle }: { vehicle: Vehicle }) {
+  const frontRating = calculateTireScore(
+    vehicle.tireDepthFront ?? "",
+    vehicle.tireAgeFront ?? "",
+    vehicle.tireDamageFront ?? null,
+  );
+  const rearRating = calculateTireScore(
+    vehicle.tireDepthRear ?? "",
+    vehicle.tireAgeRear ?? "",
+    vehicle.tireDamageRear ?? null,
+  );
+
+  if (!frontRating && !rearRating) return null;
+
+  return (
+    <div className="bg-gray-50 rounded-xl p-4">
+      <h4 className="text-sm font-semibold text-gray-700 mb-3">Reifenzustand</h4>
+      <div className="flex flex-wrap gap-3">
+        {frontRating && (() => {
+          const info = TIRE_RATING_INFO[frontRating];
+          return (
+            <div className="flex items-center gap-2">
+              <span className="text-xs text-gray-500">Vorne:</span>
+              <span className={`px-3 py-1 rounded-full text-sm font-semibold ${info.bgColor} ${info.color}`}>
+                {info.label}
+              </span>
+            </div>
+          );
+        })()}
+        {rearRating && (() => {
+          const info = TIRE_RATING_INFO[rearRating];
+          return (
+            <div className="flex items-center gap-2">
+              <span className="text-xs text-gray-500">Hinten:</span>
+              <span className={`px-3 py-1 rounded-full text-sm font-semibold ${info.bgColor} ${info.color}`}>
+                {info.label}
+              </span>
+            </div>
+          );
+        })()}
+      </div>
+    </div>
+  );
+}
+
 // ============================================================================
 // DEALER PURCHASE PANEL (only for logged-in dealers)
 // ============================================================================
@@ -615,6 +667,9 @@ function DetailModal({ vehicle, onClose, isDealer }: { vehicle: Vehicle; onClose
               </span>
             )}
           </div>
+
+          {/* Tire Score */}
+          <TireScoreBadge vehicle={vehicle} />
 
           {/* Description */}
           <div>

@@ -148,6 +148,75 @@ function PaintThicknessInfoButton() {
   );
 }
 
+function TireConditionInfoButton() {
+  const [isOpen, setIsOpen] = useState(false);
+
+  return (
+    <div className="relative inline-block">
+      <button
+        type="button"
+        onClick={() => setIsOpen(!isOpen)}
+        className="inline-flex items-center gap-1.5 text-xs font-medium text-[#525252] hover:text-[#f14011] transition-colors mt-1"
+      >
+        <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+          <circle cx="12" cy="12" r="10" />
+          <path strokeLinecap="round" d="M12 16v-4M12 8h.01" />
+        </svg>
+        Reifenprofiltiefe — Was bedeuten die Werte?
+      </button>
+      {isOpen && (
+        <div className="mt-2 bg-[#fafafa] border border-[#e5e5e5] rounded-xl p-4 animate-fade-in">
+          <div className="flex items-center justify-between mb-3">
+            <h4 className="text-sm font-semibold text-[#0a0a0a]">Referenztabelle Reifenprofiltiefe</h4>
+            <button
+              type="button"
+              onClick={() => setIsOpen(false)}
+              className="text-[#737373] hover:text-[#0a0a0a] transition-colors"
+            >
+              <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="border-b border-[#e5e5e5]">
+                  <th className="text-left py-2 pr-4 font-semibold text-[#525252]">Profiltiefe</th>
+                  <th className="text-left py-2 font-semibold text-[#525252]">Bewertung</th>
+                </tr>
+              </thead>
+              <tbody className="text-[#525252]">
+                <tr className="border-b border-[#f5f5f5]">
+                  <td className="py-2 pr-4 font-mono font-semibold text-[#10b981]">&gt; 7 mm</td>
+                  <td className="py-2">Neu</td>
+                </tr>
+                <tr className="border-b border-[#f5f5f5]">
+                  <td className="py-2 pr-4 font-mono font-semibold text-[#34d399]">&gt; 6 mm</td>
+                  <td className="py-2">Sehr gut</td>
+                </tr>
+                <tr className="border-b border-[#f5f5f5]">
+                  <td className="py-2 pr-4 font-mono font-semibold text-[#f59e0b]">4 – 6 mm</td>
+                  <td className="py-2">Gut</td>
+                </tr>
+                <tr className="border-b border-[#f5f5f5]">
+                  <td className="py-2 pr-4 font-mono font-semibold text-[#f97316]">2 – 4 mm</td>
+                  <td className="py-2">Gebraucht</td>
+                </tr>
+                <tr>
+                  <td className="py-2 pr-4 font-mono font-semibold text-[#ef4444]">&lt; 2 mm</td>
+                  <td className="py-2">Erneuerungsbedürftig</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <p className="text-xs text-[#a3a3a3] mt-3">Hinweis: Gesetzliches Minimum in Deutschland ist 1,6 mm. Empfohlen wird ein Wechsel ab 3 mm.</p>
+        </div>
+      )}
+    </div>
+  );
+}
+
 // ============================================================================
 // ANIMATED COUNTER COMPONENT
 // ============================================================================
@@ -1033,6 +1102,12 @@ interface VehicleFormData {
   rimSize: string;
   tireConditionFront: string;
   tireConditionRear: string;
+  tireDepthFront: string;
+  tireDepthRear: string;
+  tireAgeFront: string;
+  tireAgeRear: string;
+  tireDamageFront: boolean | null;
+  tireDamageRear: boolean | null;
   priceNegotiable: boolean;
   vatDeductible: boolean;
   vehicleOrigin: string;
@@ -1114,6 +1189,12 @@ const initialFormData: VehicleFormData = {
   rimSize: "",
   tireConditionFront: "",
   tireConditionRear: "",
+  tireDepthFront: "",
+  tireDepthRear: "",
+  tireAgeFront: "",
+  tireAgeRear: "",
+  tireDamageFront: null,
+  tireDamageRear: null,
   priceNegotiable: false,
   vatDeductible: false,
   vehicleOrigin: "",
@@ -2637,6 +2718,51 @@ function SubmitFormSection() {
                   options={TIRE_CONDITION_OPTIONS}
                   value={formData.tireConditionRear}
                   onChange={(e) => updateField("tireConditionRear", e.target.value)}
+                />
+              </div>
+              <TireConditionInfoButton />
+              <div className="grid md:grid-cols-2 gap-6">
+                <FormInput
+                  label="Profiltiefe vorne (mm)"
+                  type="number"
+                  placeholder="z.B. 5.5"
+                  value={formData.tireDepthFront}
+                  onChange={(e) => updateField("tireDepthFront", e.target.value)}
+                />
+                <FormInput
+                  label="Profiltiefe hinten (mm)"
+                  type="number"
+                  placeholder="z.B. 5.5"
+                  value={formData.tireDepthRear}
+                  onChange={(e) => updateField("tireDepthRear", e.target.value)}
+                />
+              </div>
+              <div className="grid md:grid-cols-2 gap-6">
+                <FormInput
+                  label="Reifenalter vorne (Jahre)"
+                  type="number"
+                  placeholder="z.B. 2"
+                  value={formData.tireAgeFront}
+                  onChange={(e) => updateField("tireAgeFront", e.target.value)}
+                />
+                <FormInput
+                  label="Reifenalter hinten (Jahre)"
+                  type="number"
+                  placeholder="z.B. 2"
+                  value={formData.tireAgeRear}
+                  onChange={(e) => updateField("tireAgeRear", e.target.value)}
+                />
+              </div>
+              <div className="grid md:grid-cols-2 gap-6">
+                <FormBinaryState
+                  label="Reifen schadensfrei vorne"
+                  value={formData.tireDamageFront}
+                  onChange={(val) => updateField("tireDamageFront", val)}
+                />
+                <FormBinaryState
+                  label="Reifen schadensfrei hinten"
+                  value={formData.tireDamageRear}
+                  onChange={(val) => updateField("tireDamageRear", val)}
                 />
               </div>
               <div className="grid md:grid-cols-2 gap-6">
