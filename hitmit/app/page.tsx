@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import Image from "next/image";
+import { generateDescription, checkCompleteness } from "./description-generator";
 
 // ============================================================================
 // SVG ICONS
@@ -2818,8 +2819,56 @@ function SubmitFormSection() {
             <FormSection title="Beschreibung" icon="📝" defaultOpen>
               <div>
                 <label className="block text-sm font-semibold text-[#0a0a0a] mb-2">Fahrzeugbeschreibung</label>
+                <div className="flex flex-wrap gap-2 mb-3">
+                  <button
+                    type="button"
+                    disabled={!formData.brand || !formData.model}
+                    onClick={() => {
+                      if (formData.description.trim()) {
+                        if (!window.confirm("Bestehende Beschreibung ersetzen?")) return;
+                      }
+                      const text = generateDescription(formData, images.length);
+                      updateField("description", text);
+                    }}
+                    className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-semibold text-white bg-gradient-to-r from-purple-500 to-indigo-500 hover:from-purple-600 hover:to-indigo-600 transition-all disabled:opacity-40 disabled:cursor-not-allowed shadow-sm"
+                  >
+                    <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.455 2.456L21.75 6l-1.036.259a3.375 3.375 0 00-2.455 2.456z" />
+                    </svg>
+                    Beschreibung generieren
+                  </button>
+                  {formData.description.trim() && (
+                    <button
+                      type="button"
+                      disabled={!formData.brand || !formData.model}
+                      onClick={() => {
+                        const text = generateDescription(formData, images.length);
+                        updateField("description", text);
+                      }}
+                      className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-sm font-medium text-[#525252] bg-[#f5f5f5] hover:bg-[#e5e5e5] transition-colors"
+                    >
+                      <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.992 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182" />
+                      </svg>
+                      Neu generieren
+                    </button>
+                  )}
+                </div>
+                {!formData.brand || !formData.model ? (
+                  <p className="text-sm text-amber-600 mb-3">Bitte zuerst Marke und Modell auswählen, um eine Beschreibung zu generieren.</p>
+                ) : (() => {
+                  const completeness = checkCompleteness(formData);
+                  if (completeness.missingTips.length > 0 && !formData.description.trim()) {
+                    return (
+                      <p className="text-sm text-[#737373] mb-3">
+                        💡 Tipp: Fülle weitere Felder aus für eine bessere Beschreibung ({completeness.missingTips.slice(0, 3).join(", ")})
+                      </p>
+                    );
+                  }
+                  return null;
+                })()}
                 <textarea
-                  rows={5}
+                  rows={8}
                   className="input !rounded-2xl resize-none"
                   placeholder="Erzähl uns mehr über dein Fahrzeug: besondere Ausstattung, Wartungshistorie, Gründe für den Verkauf, etc."
                   value={formData.description}
