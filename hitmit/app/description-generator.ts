@@ -42,6 +42,7 @@ interface GeneratorInput {
   warrantyUntil: string;
   manufacturerWarrantyUntil: string;
   parkingAid: string[];
+  vehicleOrigin: string;
 }
 
 // ============================================================================
@@ -101,6 +102,14 @@ const SEAT_LABELS: Record<string, string> = {
   fabric: "Stoff",
   alcantara: "Alcantara",
   velour: "Velours",
+};
+
+const ORIGIN_LABELS: Record<string, string> = {
+  euImport: "der EU",
+  schweizImport: "der Schweiz",
+  usaImport: "den USA",
+  ukImport: "Großbritannien",
+  sonstige: "dem Ausland",
 };
 
 const INTERIOR_COLOR_LABELS: Record<string, string> = {
@@ -271,6 +280,14 @@ function buildHistory(d: GeneratorInput, rand: () => number): string {
       `Das Serviceheft wurde lückenlos geführt${at ? ` — zuletzt bei ${at}` : ""}.`,
       `Alle Wartungen wurden${at ? ` bei ${at}` : ""} regelmäßig durchgeführt.`,
     ], rand));
+  }
+
+  // Vehicle origin
+  if (hasValue(d.vehicleOrigin) && d.vehicleOrigin !== "deutschland") {
+    const originLabel = label(ORIGIN_LABELS, d.vehicleOrigin);
+    if (originLabel) {
+      parts.push(`Das Fahrzeug wurde aus ${originLabel} importiert.`);
+    }
   }
 
   // HU

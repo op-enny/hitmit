@@ -1035,6 +1035,7 @@ interface VehicleFormData {
   tireConditionRear: string;
   priceNegotiable: boolean;
   vatDeductible: boolean;
+  vehicleOrigin: string;
   country: string;
   description: string;
   extras: string;
@@ -1115,6 +1116,7 @@ const initialFormData: VehicleFormData = {
   tireConditionRear: "",
   priceNegotiable: false,
   vatDeductible: false,
+  vehicleOrigin: "",
   country: "Deutschland",
   description: "",
   extras: "",
@@ -1166,6 +1168,16 @@ const CONDITION_OPTIONS = [
   { value: "yearOld", label: "Jahreswagen" },
   { value: "demo", label: "Vorführwagen" },
   { value: "dayReg", label: "Tageszulassung" },
+];
+
+const VEHICLE_ORIGIN_OPTIONS = [
+  { value: "", label: "Bitte wählen" },
+  { value: "deutschland", label: "Deutschland" },
+  { value: "euImport", label: "EU-Import" },
+  { value: "schweizImport", label: "Schweiz-Import" },
+  { value: "usaImport", label: "USA-Import" },
+  { value: "ukImport", label: "UK-Import" },
+  { value: "sonstige", label: "Sonstige" },
 ];
 
 const VEHICLE_TYPE_OPTIONS = [
@@ -2649,6 +2661,14 @@ function SubmitFormSection() {
                   label="Scheckheftgepflegt"
                   value={formData.serviceHistory}
                   onChange={(val) => updateField("serviceHistory", val)}
+                />
+              </div>
+              <div className="grid md:grid-cols-2 gap-6">
+                <FormSelect
+                  label="Fahrzeugherkunft"
+                  options={VEHICLE_ORIGIN_OPTIONS}
+                  value={formData.vehicleOrigin}
+                  onChange={(e) => updateField("vehicleOrigin", e.target.value)}
                 />
               </div>
               <div className="grid md:grid-cols-2 gap-6">

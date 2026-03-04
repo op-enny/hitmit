@@ -43,6 +43,7 @@ interface Vehicle {
   exteriorFeatures: string[];
   multimediaFeatures: string[];
   paintThickness?: Record<string, string>;
+  vehicleOrigin?: string;
   gradient: string;
 }
 
