@@ -1044,8 +1044,9 @@ interface VehicleFormData {
   // Contact
   sellerType: "private" | "dealer" | "";
   companyName: string;
-  contactName: string;
-  showContactName: boolean;
+  contactFirstName: string;
+  contactLastName: string;
+  showContactName: "visible" | "hidden";
   contactEmail: string;
   contactPhone: string;
   showContactPhone: boolean;
@@ -1134,8 +1135,9 @@ interface VehicleFormData {
 const initialFormData: VehicleFormData = {
   sellerType: "",
   companyName: "",
-  contactName: "",
-  showContactName: true,
+  contactFirstName: "",
+  contactLastName: "",
+  showContactName: "visible",
   contactEmail: "",
   contactPhone: "",
   showContactPhone: true,
@@ -2195,19 +2197,43 @@ function SubmitFormSection() {
   const [images, setImages] = useState<string[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<{ type: "success" | "error"; message: string } | null>(null);
+  const [nameError, setNameError] = useState<string | null>(null);
 
   const updateField = <K extends keyof VehicleFormData>(field: K, value: VehicleFormData[K]) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
+    if (field === "contactFirstName" || field === "contactLastName") {
+      setNameError(null);
+    }
+  };
+
+  const validateName = (name: string): boolean => {
+    const trimmed = name.trim();
+    if (trimmed.length < 2) return false;
+    if (/^(.)\1+$/.test(trimmed)) return false;
+    if (!/^[a-zA-ZÀ-ÿäöüÄÖÜß\s'-]+$/.test(trimmed)) return false;
+    return true;
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    const firstName = formData.contactFirstName.trim();
+    const lastName = formData.contactLastName.trim();
+
+    if (!validateName(firstName) || !validateName(lastName)) {
+      setNameError("Bitte gib einen gültigen Vor- und Nachnamen ein (jeweils mindestens 2 Buchstaben).");
+      return;
+    }
+
     setIsSubmitting(true);
     setSubmitStatus(null);
 
     try {
+      const { contactFirstName, contactLastName, ...rest } = formData;
       const payload = {
-        ...formData,
+        ...rest,
+        contactName: `${contactFirstName.trim()} ${contactLastName.trim()}`,
+        showContactName: formData.showContactName === "visible",
         sellerType: formData.sellerType || "private",
         price: parseFloat(formData.price) || 0,
         constructionYear: formData.constructionYear ? parseInt(formData.constructionYear) : undefined,
@@ -2331,26 +2357,42 @@ function SubmitFormSection() {
               </div>
             )}
             <div className="grid md:grid-cols-2 gap-6 mb-6">
-              <div>
-                <FormInput
-                  label="Ansprechpartner"
-                  type="text"
-                  placeholder="Max Mustermann"
-                  value={formData.contactName}
-                  onChange={(e) => updateField("contactName", e.target.value)}
-                />
-                {formData.contactName && (
-                  <label className="flex items-center gap-2 mt-2 cursor-pointer">
-                    <input
-                      type="checkbox"
-                      checked={formData.showContactName}
-                      onChange={(e) => updateField("showContactName", e.target.checked)}
-                      className="w-4 h-4 rounded border-[#d4d4d4] dark:border-[#3d3d3d] text-[#f14011] focus:ring-[#f14011]"
-                    />
-                    <span className="text-sm text-[#737373] dark:text-[#8a8a8a]">Name öffentlich anzeigen</span>
-                  </label>
-                )}
+              <FormInput
+                label="Vorname"
+                required
+                type="text"
+                placeholder="Max"
+                value={formData.contactFirstName}
+                onChange={(e) => updateField("contactFirstName", e.target.value)}
+              />
+              <FormInput
+                label="Nachname"
+                required
+                type="text"
+                placeholder="Mustermann"
+                value={formData.contactLastName}
+                onChange={(e) => updateField("contactLastName", e.target.value)}
+              />
+            </div>
+            {nameError && (
+              <p className="text-sm text-[#ef4444] mb-4">{nameError}</p>
+            )}
+            {formData.sellerType === "private" && (formData.contactFirstName || formData.contactLastName) && (
+              <div className="mb-6">
+                <label className="block text-sm font-semibold text-[#0a0a0a] dark:text-[#ededed] mb-2">
+                  Name öffentlich sichtbar?
+                </label>
+                <select
+                  value={formData.showContactName}
+                  onChange={(e) => updateField("showContactName", e.target.value as "visible" | "hidden")}
+                  className="input appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23737373%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E')] bg-[length:12px] bg-[right_1rem_center] bg-no-repeat pr-10"
+                >
+                  <option value="visible">Ja, Name im Inserat anzeigen</option>
+                  <option value="hidden">Nein, Name nicht öffentlich anzeigen</option>
+                </select>
               </div>
+            )}
+            <div className="grid md:grid-cols-2 gap-6 mb-6">
               <FormInput
                 label="E-Mail"
                 required
@@ -3094,7 +3136,6 @@ function Footer() {
       links: [
         { label: "Über uns", href: "#about" },
         { label: "So funktioniert's", href: "#how-it-works" },
-        { label: "Karriere", href: "#" },
         { label: "Presse", href: "#" },
       ],
     },
@@ -3104,7 +3145,6 @@ function Footer() {
         { label: "Fahrzeug einreichen", href: "#submit" },
         { label: "Preise", href: "#" },
         { label: "Für Händler", href: "#sellers" },
-        { label: "Erfolgsgeschichten", href: "#" },
       ],
     },
     {
