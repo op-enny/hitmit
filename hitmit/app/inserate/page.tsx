@@ -883,7 +883,6 @@ export default function InseratePage() {
             <span className="font-display text-2xl tracking-wider text-gray-900">HITMIT</span>
           </Link>
           <div className="flex items-center gap-4">
-            <ThemeToggle />
             <button
               onClick={toggleDealer}
               className={`text-xs font-medium px-3 py-1.5 rounded-full border transition-colors ${
@@ -900,6 +899,7 @@ export default function InseratePage() {
             >
               ← Zurück
             </Link>
+            <ThemeToggle />
           </div>
         </div>
       </header>

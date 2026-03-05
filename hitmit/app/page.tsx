@@ -555,7 +555,6 @@ function Header({
 
           {/* Desktop CTA */}
           <div className="hidden lg:flex items-center gap-4">
-            <ThemeToggle />
             <a href="#contact" className="text-[#0a0a0a] dark:text-[#ededed] font-semibold text-sm hover:text-[#f14011] transition-colors">
               Kontakt
             </a>
@@ -587,17 +586,18 @@ function Header({
             >
               Auto einreichen
             </a>
+            <ThemeToggle />
           </div>
 
           {/* Mobile Menu Button */}
           <div className="lg:hidden flex items-center gap-2">
-            <ThemeToggle />
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               className="p-2 text-[#0a0a0a] dark:text-[#ededed]"
             >
               {isMobileMenuOpen ? <CloseIcon /> : <MenuIcon />}
             </button>
+            <ThemeToggle />
           </div>
         </nav>
 
