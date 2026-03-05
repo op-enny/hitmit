@@ -2710,20 +2710,6 @@ function SubmitFormSection() {
             {/* Condition & History */}
             <FormSection title="Zustand & Historie" icon="📜">
               <div className="grid md:grid-cols-2 gap-6">
-                <FormSelect
-                  label="Reifenzustand vorne"
-                  options={TIRE_CONDITION_OPTIONS}
-                  value={formData.tireConditionFront}
-                  onChange={(e) => updateField("tireConditionFront", e.target.value)}
-                />
-                <FormSelect
-                  label="Reifenzustand hinten"
-                  options={TIRE_CONDITION_OPTIONS}
-                  value={formData.tireConditionRear}
-                  onChange={(e) => updateField("tireConditionRear", e.target.value)}
-                />
-              </div>
-              <div className="grid md:grid-cols-2 gap-6">
                 <FormBinaryState
                   label="Steinschlagschutzfolie"
                   value={formData.stoneguardFilm}
@@ -2787,6 +2773,20 @@ function SubmitFormSection() {
               />
 
               {/* Reifendetails */}
+              <div className="grid md:grid-cols-2 gap-6">
+                <FormSelect
+                  label="Reifenzustand vorne"
+                  options={TIRE_CONDITION_OPTIONS}
+                  value={formData.tireConditionFront}
+                  onChange={(e) => updateField("tireConditionFront", e.target.value)}
+                />
+                <FormSelect
+                  label="Reifenzustand hinten"
+                  options={TIRE_CONDITION_OPTIONS}
+                  value={formData.tireConditionRear}
+                  onChange={(e) => updateField("tireConditionRear", e.target.value)}
+                />
+              </div>
               <TireConditionInfoButton />
               <div className="grid md:grid-cols-2 gap-6">
                 <FormInput
