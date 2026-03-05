@@ -555,6 +555,7 @@ function Header({
 
           {/* Desktop CTA */}
           <div className="hidden lg:flex items-center gap-4">
+            <ThemeToggle />
             <a href="#contact" className="text-[#0a0a0a] dark:text-[#ededed] font-semibold text-sm hover:text-[#f14011] transition-colors">
               Kontakt
             </a>
@@ -589,12 +590,15 @@ function Header({
           </div>
 
           {/* Mobile Menu Button */}
-          <button
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className="lg:hidden p-2 text-[#0a0a0a] dark:text-[#ededed]"
-          >
-            {isMobileMenuOpen ? <CloseIcon /> : <MenuIcon />}
-          </button>
+          <div className="lg:hidden flex items-center gap-2">
+            <ThemeToggle />
+            <button
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              className="p-2 text-[#0a0a0a] dark:text-[#ededed]"
+            >
+              {isMobileMenuOpen ? <CloseIcon /> : <MenuIcon />}
+            </button>
+          </div>
         </nav>
 
         {/* Mobile Menu */}
@@ -2198,6 +2202,7 @@ function SubmitFormSection() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<{ type: "success" | "error"; message: string } | null>(null);
   const [nameError, setNameError] = useState<string | null>(null);
+  const nameFieldRef = useRef<HTMLDivElement>(null);
 
   const updateField = <K extends keyof VehicleFormData>(field: K, value: VehicleFormData[K]) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
@@ -2222,6 +2227,7 @@ function SubmitFormSection() {
 
     if (!validateName(firstName) || !validateName(lastName)) {
       setNameError("Bitte gib einen gültigen Vor- und Nachnamen ein (jeweils mindestens 2 Buchstaben).");
+      nameFieldRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
       return;
     }
 
@@ -2356,7 +2362,7 @@ function SubmitFormSection() {
                 />
               </div>
             )}
-            <div className="grid md:grid-cols-2 gap-6 mb-6">
+            <div ref={nameFieldRef} className="grid md:grid-cols-2 gap-6 mb-6">
               <FormInput
                 label="Vorname"
                 required
@@ -3244,7 +3250,6 @@ export default function Home() {
 
   return (
     <main className="min-h-screen">
-      <ThemeToggle />
       <Header
         authUser={authUser}
         onLoginClick={() => setIsAuthModalOpen(true)}
