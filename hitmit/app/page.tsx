@@ -1260,6 +1260,7 @@ const VEHICLE_ORIGIN_OPTIONS = [
   { value: "schweizImport", label: "Schweiz-Import" },
   { value: "usaImport", label: "USA-Import" },
   { value: "ukImport", label: "UK-Import" },
+  { value: "japanImport", label: "Japan-Import" },
   { value: "sonstige", label: "Sonstige" },
 ];
 
@@ -2722,51 +2723,6 @@ function SubmitFormSection() {
                   onChange={(e) => updateField("tireConditionRear", e.target.value)}
                 />
               </div>
-              <TireConditionInfoButton />
-              <div className="grid md:grid-cols-2 gap-6">
-                <FormInput
-                  label="Profiltiefe vorne (mm)"
-                  type="number"
-                  placeholder="z.B. 5.5"
-                  value={formData.tireDepthFront}
-                  onChange={(e) => updateField("tireDepthFront", e.target.value)}
-                />
-                <FormInput
-                  label="Profiltiefe hinten (mm)"
-                  type="number"
-                  placeholder="z.B. 5.5"
-                  value={formData.tireDepthRear}
-                  onChange={(e) => updateField("tireDepthRear", e.target.value)}
-                />
-              </div>
-              <div className="grid md:grid-cols-2 gap-6">
-                <FormInput
-                  label="Reifenalter vorne (Jahre)"
-                  type="number"
-                  placeholder="z.B. 2"
-                  value={formData.tireAgeFront}
-                  onChange={(e) => updateField("tireAgeFront", e.target.value)}
-                />
-                <FormInput
-                  label="Reifenalter hinten (Jahre)"
-                  type="number"
-                  placeholder="z.B. 2"
-                  value={formData.tireAgeRear}
-                  onChange={(e) => updateField("tireAgeRear", e.target.value)}
-                />
-              </div>
-              <div className="grid md:grid-cols-2 gap-6">
-                <FormBinaryState
-                  label="Reifen schadensfrei vorne"
-                  value={formData.tireDamageFront}
-                  onChange={(val) => updateField("tireDamageFront", val)}
-                />
-                <FormBinaryState
-                  label="Reifen schadensfrei hinten"
-                  value={formData.tireDamageRear}
-                  onChange={(val) => updateField("tireDamageRear", val)}
-                />
-              </div>
               <div className="grid md:grid-cols-2 gap-6">
                 <FormBinaryState
                   label="Steinschlagschutzfolie"
@@ -2829,6 +2785,53 @@ function SubmitFormSection() {
                 value={formData.manufacturerWarrantyUntil}
                 onChange={(e) => updateField("manufacturerWarrantyUntil", e.target.value)}
               />
+
+              {/* Reifendetails */}
+              <TireConditionInfoButton />
+              <div className="grid md:grid-cols-2 gap-6">
+                <FormInput
+                  label="Profiltiefe vorne (mm)"
+                  type="number"
+                  placeholder="z.B. 5.5"
+                  value={formData.tireDepthFront}
+                  onChange={(e) => updateField("tireDepthFront", e.target.value)}
+                />
+                <FormInput
+                  label="Profiltiefe hinten (mm)"
+                  type="number"
+                  placeholder="z.B. 5.5"
+                  value={formData.tireDepthRear}
+                  onChange={(e) => updateField("tireDepthRear", e.target.value)}
+                />
+              </div>
+              <div className="grid md:grid-cols-2 gap-6">
+                <FormInput
+                  label="Reifenalter vorne (Jahre)"
+                  type="number"
+                  placeholder="z.B. 2"
+                  value={formData.tireAgeFront}
+                  onChange={(e) => updateField("tireAgeFront", e.target.value)}
+                />
+                <FormInput
+                  label="Reifenalter hinten (Jahre)"
+                  type="number"
+                  placeholder="z.B. 2"
+                  value={formData.tireAgeRear}
+                  onChange={(e) => updateField("tireAgeRear", e.target.value)}
+                />
+              </div>
+              <div className="grid md:grid-cols-2 gap-6">
+                <FormBinaryState
+                  label="Reifen schadensfrei vorne"
+                  value={formData.tireDamageFront}
+                  onChange={(val) => updateField("tireDamageFront", val)}
+                />
+                <FormBinaryState
+                  label="Reifen schadensfrei hinten"
+                  value={formData.tireDamageRear}
+                  onChange={(val) => updateField("tireDamageRear", val)}
+                />
+              </div>
 
               {/* Schadenskarte */}
               <div className="pt-4 border-t border-[#e5e5e5]">
