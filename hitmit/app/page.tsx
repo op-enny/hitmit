@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import { generateDescription, checkCompleteness } from "./description-generator";
+import { ThemeToggle } from "./theme-toggle";
 
 // ============================================================================
 // SVG ICONS
@@ -87,7 +88,7 @@ function PaintThicknessInfoButton() {
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
-        className="inline-flex items-center gap-1.5 text-xs font-medium text-[#525252] hover:text-[#f14011] transition-colors mt-1"
+        className="inline-flex items-center gap-1.5 text-xs font-medium text-[#525252] dark:text-[#a3a3a3] hover:text-[#f14011] transition-colors mt-1"
       >
         <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
           <circle cx="12" cy="12" r="10" />
@@ -96,13 +97,13 @@ function PaintThicknessInfoButton() {
         Was bedeuten die Werte?
       </button>
       {isOpen && (
-        <div className="mt-2 bg-[#fafafa] border border-[#e5e5e5] rounded-xl p-4 animate-fade-in">
+        <div className="mt-2 bg-[#fafafa] dark:bg-[#1a1a1a] border border-[#e5e5e5] dark:border-[#2a2a2a] rounded-xl p-4 animate-fade-in">
           <div className="flex items-center justify-between mb-3">
-            <h4 className="text-sm font-semibold text-[#0a0a0a]">Referenztabelle Lackdickenmessung</h4>
+            <h4 className="text-sm font-semibold text-[#0a0a0a] dark:text-[#ededed]">Referenztabelle Lackdickenmessung</h4>
             <button
               type="button"
               onClick={() => setIsOpen(false)}
-              className="text-[#737373] hover:text-[#0a0a0a] transition-colors"
+              className="text-[#737373] dark:text-[#8a8a8a] hover:text-[#0a0a0a] dark:hover:text-[#ededed] transition-colors"
             >
               <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
@@ -112,12 +113,12 @@ function PaintThicknessInfoButton() {
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b border-[#e5e5e5]">
-                  <th className="text-left py-2 pr-4 font-semibold text-[#525252]">Wert (µm)</th>
-                  <th className="text-left py-2 font-semibold text-[#525252]">Bedeutung</th>
+                <tr className="border-b border-[#e5e5e5] dark:border-[#2a2a2a]">
+                  <th className="text-left py-2 pr-4 font-semibold text-[#525252] dark:text-[#a3a3a3]">Wert (µm)</th>
+                  <th className="text-left py-2 font-semibold text-[#525252] dark:text-[#a3a3a3]">Bedeutung</th>
                 </tr>
               </thead>
-              <tbody className="text-[#525252]">
+              <tbody className="text-[#525252] dark:text-[#a3a3a3]">
                 <tr className="border-b border-[#f5f5f5]">
                   <td className="py-2 pr-4 font-mono font-semibold text-[#10b981]">80 – 130</td>
                   <td className="py-2">Werkslackierung (Originallack)</td>
@@ -135,13 +136,13 @@ function PaintThicknessInfoButton() {
                   <td className="py-2">Starke Spachtelarbeiten / Unfallschaden</td>
                 </tr>
                 <tr>
-                  <td className="py-2 pr-4 font-mono font-semibold text-[#737373]">unter 80</td>
+                  <td className="py-2 pr-4 font-mono font-semibold text-[#737373] dark:text-[#8a8a8a]">unter 80</td>
                   <td className="py-2">Möglicher Schliff oder Polierung</td>
                 </tr>
               </tbody>
             </table>
           </div>
-          <p className="text-xs text-[#a3a3a3] mt-3">Hinweis: Werte können je nach Hersteller und Fahrzeugtyp leicht variieren.</p>
+          <p className="text-xs text-[#a3a3a3] dark:text-[#737373] mt-3">Hinweis: Werte können je nach Hersteller und Fahrzeugtyp leicht variieren.</p>
         </div>
       )}
     </div>
@@ -156,7 +157,7 @@ function TireConditionInfoButton() {
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
-        className="inline-flex items-center gap-1.5 text-xs font-medium text-[#525252] hover:text-[#f14011] transition-colors mt-1"
+        className="inline-flex items-center gap-1.5 text-xs font-medium text-[#525252] dark:text-[#a3a3a3] hover:text-[#f14011] transition-colors mt-1"
       >
         <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
           <circle cx="12" cy="12" r="10" />
@@ -165,13 +166,13 @@ function TireConditionInfoButton() {
         Reifenprofiltiefe — Was bedeuten die Werte?
       </button>
       {isOpen && (
-        <div className="mt-2 bg-[#fafafa] border border-[#e5e5e5] rounded-xl p-4 animate-fade-in">
+        <div className="mt-2 bg-[#fafafa] dark:bg-[#1a1a1a] border border-[#e5e5e5] dark:border-[#2a2a2a] rounded-xl p-4 animate-fade-in">
           <div className="flex items-center justify-between mb-3">
-            <h4 className="text-sm font-semibold text-[#0a0a0a]">Referenztabelle Reifenprofiltiefe</h4>
+            <h4 className="text-sm font-semibold text-[#0a0a0a] dark:text-[#ededed]">Referenztabelle Reifenprofiltiefe</h4>
             <button
               type="button"
               onClick={() => setIsOpen(false)}
-              className="text-[#737373] hover:text-[#0a0a0a] transition-colors"
+              className="text-[#737373] dark:text-[#8a8a8a] hover:text-[#0a0a0a] dark:hover:text-[#ededed] transition-colors"
             >
               <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
@@ -181,12 +182,12 @@ function TireConditionInfoButton() {
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b border-[#e5e5e5]">
-                  <th className="text-left py-2 pr-4 font-semibold text-[#525252]">Profiltiefe</th>
-                  <th className="text-left py-2 font-semibold text-[#525252]">Bewertung</th>
+                <tr className="border-b border-[#e5e5e5] dark:border-[#2a2a2a]">
+                  <th className="text-left py-2 pr-4 font-semibold text-[#525252] dark:text-[#a3a3a3]">Profiltiefe</th>
+                  <th className="text-left py-2 font-semibold text-[#525252] dark:text-[#a3a3a3]">Bewertung</th>
                 </tr>
               </thead>
-              <tbody className="text-[#525252]">
+              <tbody className="text-[#525252] dark:text-[#a3a3a3]">
                 <tr className="border-b border-[#f5f5f5]">
                   <td className="py-2 pr-4 font-mono font-semibold text-[#10b981]">&gt; 7 mm</td>
                   <td className="py-2">Neu</td>
@@ -210,7 +211,7 @@ function TireConditionInfoButton() {
               </tbody>
             </table>
           </div>
-          <p className="text-xs text-[#a3a3a3] mt-3">Hinweis: Gesetzliches Minimum in Deutschland ist 1,6 mm. Empfohlen wird ein Wechsel ab 3 mm.</p>
+          <p className="text-xs text-[#a3a3a3] dark:text-[#737373] mt-3">Hinweis: Gesetzliches Minimum in Deutschland ist 1,6 mm. Empfohlen wird ein Wechsel ab 3 mm.</p>
         </div>
       )}
     </div>
@@ -325,7 +326,7 @@ function AuthModal({
   };
 
   const inputClass =
-    "w-full px-4 py-3 rounded-xl border border-[#e5e5e5] bg-white text-[#0a0a0a] text-sm focus:outline-none focus:ring-2 focus:ring-[#f14011]/30 focus:border-[#f14011] transition-all";
+    "w-full px-4 py-3 rounded-xl border border-[#e5e5e5] dark:border-[#2a2a2a] bg-white dark:bg-[#141414] text-[#0a0a0a] dark:text-[#ededed] text-sm focus:outline-none focus:ring-2 focus:ring-[#f14011]/30 focus:border-[#f14011] transition-all";
 
   return (
     <div
@@ -337,24 +338,24 @@ function AuthModal({
 
       {/* Modal */}
       <div
-        className="relative bg-white rounded-2xl shadow-2xl w-full max-w-md mx-4 overflow-hidden animate-scale-in"
+        className="relative bg-white dark:bg-[#141414] rounded-2xl shadow-2xl w-full max-w-md mx-4 overflow-hidden animate-scale-in"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Close button */}
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 p-1 text-[#737373] hover:text-[#0a0a0a] transition-colors"
+          className="absolute top-4 right-4 p-1 text-[#737373] dark:text-[#8a8a8a] hover:text-[#0a0a0a] dark:hover:text-[#ededed] transition-colors"
         >
           <CloseIcon className="w-5 h-5" />
         </button>
 
         {/* Tabs */}
-        <div className="flex border-b border-[#e5e5e5]">
+        <div className="flex border-b border-[#e5e5e5] dark:border-[#2a2a2a]">
           <button
             className={`flex-1 py-4 text-sm font-semibold transition-colors ${
               activeTab === "login"
                 ? "text-[#f14011] border-b-2 border-[#f14011]"
-                : "text-[#737373] hover:text-[#0a0a0a]"
+                : "text-[#737373] dark:text-[#8a8a8a] hover:text-[#0a0a0a] dark:hover:text-[#ededed]"
             }`}
             onClick={() => { setActiveTab("login"); setError(""); }}
           >
@@ -364,7 +365,7 @@ function AuthModal({
             className={`flex-1 py-4 text-sm font-semibold transition-colors ${
               activeTab === "register"
                 ? "text-[#f14011] border-b-2 border-[#f14011]"
-                : "text-[#737373] hover:text-[#0a0a0a]"
+                : "text-[#737373] dark:text-[#8a8a8a] hover:text-[#0a0a0a] dark:hover:text-[#ededed]"
             }`}
             onClick={() => { setActiveTab("register"); setError(""); }}
           >
@@ -382,7 +383,7 @@ function AuthModal({
           {activeTab === "login" ? (
             <form onSubmit={handleLogin} className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-[#0a0a0a] mb-1">
+                <label className="block text-sm font-medium text-[#0a0a0a] dark:text-[#ededed] mb-1">
                   E-Mail
                 </label>
                 <input
@@ -394,7 +395,7 @@ function AuthModal({
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-[#0a0a0a] mb-1">
+                <label className="block text-sm font-medium text-[#0a0a0a] dark:text-[#ededed] mb-1">
                   Passwort
                 </label>
                 <input
@@ -417,7 +418,7 @@ function AuthModal({
           ) : (
             <form onSubmit={handleRegister} className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-[#0a0a0a] mb-1">
+                <label className="block text-sm font-medium text-[#0a0a0a] dark:text-[#ededed] mb-1">
                   Name
                 </label>
                 <input
@@ -429,7 +430,7 @@ function AuthModal({
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-[#0a0a0a] mb-1">
+                <label className="block text-sm font-medium text-[#0a0a0a] dark:text-[#ededed] mb-1">
                   E-Mail
                 </label>
                 <input
@@ -441,7 +442,7 @@ function AuthModal({
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-[#0a0a0a] mb-1">
+                <label className="block text-sm font-medium text-[#0a0a0a] dark:text-[#ededed] mb-1">
                   Passwort
                 </label>
                 <input
@@ -453,7 +454,7 @@ function AuthModal({
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-[#0a0a0a] mb-1">
+                <label className="block text-sm font-medium text-[#0a0a0a] dark:text-[#ededed] mb-1">
                   Passwort bestätigen
                 </label>
                 <input
@@ -471,7 +472,7 @@ function AuthModal({
                   onChange={(e) => setAgbAccepted(e.target.checked)}
                   className="mt-1 accent-[#f14011]"
                 />
-                <span className="text-xs text-[#737373]">
+                <span className="text-xs text-[#737373] dark:text-[#8a8a8a]">
                   Ich akzeptiere die{" "}
                   <span className="text-[#f14011] hover:underline cursor-pointer">AGB</span>{" "}
                   und{" "}
@@ -536,7 +537,7 @@ function Header({
             <div className="w-10 h-10 bg-[#0a0a0a] rounded-xl flex items-center justify-center group-hover:bg-[#f14011] transition-colors duration-300">
               <span className="text-white font-display text-lg tracking-wider">H</span>
             </div>
-            <span className="font-display text-2xl tracking-wide text-[#0a0a0a]">HITMIT</span>
+            <span className="font-display text-2xl tracking-wide text-[#0a0a0a] dark:text-[#ededed]">HITMIT</span>
           </a>
 
           {/* Desktop Navigation */}
@@ -545,7 +546,7 @@ function Header({
               <a
                 key={item.label}
                 href={item.href}
-                className="text-[#525252] font-medium text-sm hover:text-[#f14011] transition-colors duration-200"
+                className="text-[#525252] dark:text-[#a3a3a3] font-medium text-sm hover:text-[#f14011] transition-colors duration-200"
               >
                 {item.label}
               </a>
@@ -554,7 +555,7 @@ function Header({
 
           {/* Desktop CTA */}
           <div className="hidden lg:flex items-center gap-4">
-            <a href="#contact" className="text-[#0a0a0a] font-semibold text-sm hover:text-[#f14011] transition-colors">
+            <a href="#contact" className="text-[#0a0a0a] dark:text-[#ededed] font-semibold text-sm hover:text-[#f14011] transition-colors">
               Kontakt
             </a>
             {authUser ? (
@@ -566,7 +567,7 @@ function Header({
                 </div>
                 <button
                   onClick={onLogout}
-                  className="text-[#525252] font-semibold text-sm hover:text-[#f14011] transition-colors"
+                  className="text-[#525252] dark:text-[#a3a3a3] font-semibold text-sm hover:text-[#f14011] transition-colors"
                 >
                   Abmelden
                 </button>
@@ -574,7 +575,7 @@ function Header({
             ) : (
               <button
                 onClick={onLoginClick}
-                className="text-[#0a0a0a] font-semibold text-sm hover:text-[#f14011] transition-colors"
+                className="text-[#0a0a0a] dark:text-[#ededed] font-semibold text-sm hover:text-[#f14011] transition-colors"
               >
                 Anmelden
               </button>
@@ -590,7 +591,7 @@ function Header({
           {/* Mobile Menu Button */}
           <button
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className="lg:hidden p-2 text-[#0a0a0a]"
+            className="lg:hidden p-2 text-[#0a0a0a] dark:text-[#ededed]"
           >
             {isMobileMenuOpen ? <CloseIcon /> : <MenuIcon />}
           </button>
@@ -598,30 +599,30 @@ function Header({
 
         {/* Mobile Menu */}
         {isMobileMenuOpen && (
-          <div className="lg:hidden absolute top-[72px] left-0 right-0 bg-white border-t border-[#e5e5e5] shadow-xl animate-fade-in-down">
+          <div className="lg:hidden absolute top-[72px] left-0 right-0 bg-white dark:bg-[#141414] border-t border-[#e5e5e5] dark:border-[#2a2a2a] shadow-xl animate-fade-in-down">
             <div className="px-6 py-6 space-y-4">
               {navItems.map((item) => (
                 <a
                   key={item.label}
                   href={item.href}
-                  className="block text-[#525252] font-medium text-lg hover:text-[#f14011] transition-colors"
+                  className="block text-[#525252] dark:text-[#a3a3a3] font-medium text-lg hover:text-[#f14011] transition-colors"
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
                   {item.label}
                 </a>
               ))}
-              <div className="pt-4 border-t border-[#e5e5e5] space-y-3">
+              <div className="pt-4 border-t border-[#e5e5e5] dark:border-[#2a2a2a] space-y-3">
                 {authUser ? (
                   <button
                     onClick={() => { onLogout(); setIsMobileMenuOpen(false); }}
-                    className="block w-full text-left text-[#525252] font-medium text-lg hover:text-[#f14011] transition-colors"
+                    className="block w-full text-left text-[#525252] dark:text-[#a3a3a3] font-medium text-lg hover:text-[#f14011] transition-colors"
                   >
                     Abmelden ({authUser.name})
                   </button>
                 ) : (
                   <button
                     onClick={() => { onLoginClick(); setIsMobileMenuOpen(false); }}
-                    className="block w-full text-left text-[#525252] font-medium text-lg hover:text-[#f14011] transition-colors"
+                    className="block w-full text-left text-[#525252] dark:text-[#a3a3a3] font-medium text-lg hover:text-[#f14011] transition-colors"
                   >
                     Anmelden
                   </button>
@@ -655,7 +656,7 @@ function HeroSection() {
 
       {/* Background text watermark */}
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none overflow-hidden">
-        <span className="font-display text-[20vw] text-[#0a0a0a]/[0.02] tracking-tight">
+        <span className="font-display text-[20vw] text-[#0a0a0a] dark:text-[#ededed]/[0.02] tracking-tight">
           HITMIT
         </span>
       </div>
@@ -674,17 +675,17 @@ function HeroSection() {
 
             {/* Headline */}
             <h1 className="animate-fade-in-up opacity-0" style={{ animationDelay: "100ms", animationFillMode: "forwards" }}>
-              <span className="font-display text-6xl sm:text-7xl lg:text-8xl xl:text-[7rem] leading-[0.9] tracking-tight text-[#0a0a0a] block">
+              <span className="font-display text-6xl sm:text-7xl lg:text-8xl xl:text-[7rem] leading-[0.9] tracking-tight text-[#0a0a0a] dark:text-[#ededed] block">
                 VERKAUFE DEIN
               </span>
               <span className="font-display text-6xl sm:text-7xl lg:text-8xl xl:text-[7rem] leading-[0.9] tracking-tight block">
-                <span className="text-[#0a0a0a]">AUTO </span>
+                <span className="text-[#0a0a0a] dark:text-[#ededed]">AUTO </span>
                 <span className="italic text-[#f14011]">SCHNELL</span>
               </span>
             </h1>
 
             {/* Subheadline */}
-            <p className="text-lg sm:text-xl text-[#525252] max-w-lg leading-relaxed animate-fade-in-up opacity-0" style={{ animationDelay: "200ms", animationFillMode: "forwards" }}>
+            <p className="text-lg sm:text-xl text-[#525252] dark:text-[#a3a3a3] max-w-lg leading-relaxed animate-fade-in-up opacity-0" style={{ animationDelay: "200ms", animationFillMode: "forwards" }}>
               Reiche dein Fahrzeug ein und erreiche tausende potenzielle Käufer über unsere TikTok- und Instagram-Kanäle.
               Privatverkäufer und Händler willkommen.
             </p>
@@ -714,8 +715,8 @@ function HeroSection() {
                 ))}
               </div>
               <div>
-                <p className="text-sm font-semibold text-[#0a0a0a]">500+ Fahrzeuge verkauft</p>
-                <p className="text-xs text-[#737373]">Werde Teil zufriedener Verkäufer</p>
+                <p className="text-sm font-semibold text-[#0a0a0a] dark:text-[#ededed]">500+ Fahrzeuge verkauft</p>
+                <p className="text-xs text-[#737373] dark:text-[#8a8a8a]">Werde Teil zufriedener Verkäufer</p>
               </div>
             </div>
           </div>
@@ -725,7 +726,7 @@ function HeroSection() {
             {/* Main car showcase */}
             <div className="relative">
               {/* Decorative ring */}
-              <div className="absolute -inset-8 border-2 border-dashed border-[#e5e5e5] rounded-full opacity-50" />
+              <div className="absolute -inset-8 border-2 border-dashed border-[#e5e5e5] dark:border-[#2a2a2a] rounded-full opacity-50" />
 
               {/* Car placeholder - replace with actual image */}
               <div className="relative bg-gradient-to-br from-[#f5f5f5] to-white rounded-3xl p-8 shadow-2xl">
@@ -745,14 +746,14 @@ function HeroSection() {
                   HIGHLIGHT
                 </div>
 
-                <div className="absolute -bottom-4 -left-4 bg-white px-4 py-3 rounded-xl shadow-lg border border-[#e5e5e5]">
+                <div className="absolute -bottom-4 -left-4 bg-white dark:bg-[#141414] px-4 py-3 rounded-xl shadow-lg border border-[#e5e5e5] dark:border-[#2a2a2a]">
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 bg-[#10b981]/10 rounded-lg flex items-center justify-center">
                       <CheckIcon className="w-5 h-5 text-[#10b981]" />
                     </div>
                     <div>
-                      <p className="text-xs text-[#737373]">Durchschn. Verkaufszeit</p>
-                      <p className="font-mono font-bold text-[#0a0a0a]">7 Tage</p>
+                      <p className="text-xs text-[#737373] dark:text-[#8a8a8a]">Durchschn. Verkaufszeit</p>
+                      <p className="font-mono font-bold text-[#0a0a0a] dark:text-[#ededed]">7 Tage</p>
                     </div>
                   </div>
                 </div>
@@ -762,7 +763,7 @@ function HeroSection() {
         </div>
 
         {/* Stats Bar */}
-        <div className="mt-20 lg:mt-32 grid grid-cols-2 md:grid-cols-4 gap-8 py-8 border-t border-b border-[#e5e5e5]">
+        <div className="mt-20 lg:mt-32 grid grid-cols-2 md:grid-cols-4 gap-8 py-8 border-t border-b border-[#e5e5e5] dark:border-[#2a2a2a]">
           {[
             { value: 50, suffix: "+", label: "Verkäufe pro Monat" },
             { value: 30, suffix: "+", label: "Automarken" },
@@ -770,10 +771,10 @@ function HeroSection() {
             { value: 98, suffix: "%", label: "Zufriedene Verkäufer" },
           ].map((stat, index) => (
             <div key={index} className="text-center">
-              <p className="font-display text-4xl md:text-5xl text-[#0a0a0a]">
+              <p className="font-display text-4xl md:text-5xl text-[#0a0a0a] dark:text-[#ededed]">
                 <AnimatedCounter end={stat.value} suffix={stat.suffix} />
               </p>
-              <p className="text-sm text-[#737373] mt-1">{stat.label}</p>
+              <p className="text-sm text-[#737373] dark:text-[#8a8a8a] mt-1">{stat.label}</p>
             </div>
           ))}
         </div>
@@ -815,17 +816,17 @@ function HowItWorksSection() {
   ];
 
   return (
-    <section id="how-it-works" className="py-24 lg:py-32 bg-white">
+    <section id="how-it-works" className="py-24 lg:py-32 bg-white dark:bg-[#141414]">
       <div className="max-w-7xl mx-auto px-6">
         {/* Section Header */}
         <div className="text-center max-w-2xl mx-auto mb-16">
           <span className="inline-block px-4 py-1.5 bg-[#fdd8d0] text-[#b72b0b] rounded-full text-sm font-semibold mb-4">
             Einfacher Prozess
           </span>
-          <h2 className="font-display text-5xl md:text-6xl text-[#0a0a0a] mb-4">
+          <h2 className="font-display text-5xl md:text-6xl text-[#0a0a0a] dark:text-[#ededed] mb-4">
             SO <span className="italic text-[#f14011]">FUNKTIONIERT&apos;S</span>
           </h2>
-          <p className="text-lg text-[#525252]">
+          <p className="text-lg text-[#525252] dark:text-[#a3a3a3]">
             Auto verkaufen war noch nie so einfach. Unser optimierter Prozess bringt dein Fahrzeug vor tausende potenzielle Käufer.
           </p>
         </div>
@@ -835,7 +836,7 @@ function HowItWorksSection() {
           {steps.map((step, index) => (
             <div
               key={index}
-              className="group relative p-8 rounded-2xl bg-[#fafafa] border border-[#e5e5e5] hover:border-[#f14011] transition-all duration-300 hover:shadow-xl"
+              className="group relative p-8 rounded-2xl bg-[#fafafa] dark:bg-[#1a1a1a] border border-[#e5e5e5] dark:border-[#2a2a2a] hover:border-[#f14011] transition-all duration-300 hover:shadow-xl"
             >
               {/* Step number */}
               <span className="absolute -top-4 -right-2 font-display text-7xl text-[#f14011]/10 group-hover:text-[#f14011]/20 transition-colors">
@@ -848,12 +849,12 @@ function HowItWorksSection() {
               </div>
 
               {/* Content */}
-              <h3 className="font-display text-xl text-[#0a0a0a] mb-3">{step.title}</h3>
-              <p className="text-[#525252] leading-relaxed">{step.description}</p>
+              <h3 className="font-display text-xl text-[#0a0a0a] dark:text-[#ededed] mb-3">{step.title}</h3>
+              <p className="text-[#525252] dark:text-[#a3a3a3] leading-relaxed">{step.description}</p>
 
               {/* Connector line (hidden on last item and mobile) */}
               {index < steps.length - 1 && (
-                <div className="hidden lg:block absolute top-1/2 -right-4 w-8 border-t-2 border-dashed border-[#e5e5e5]" />
+                <div className="hidden lg:block absolute top-1/2 -right-4 w-8 border-t-2 border-dashed border-[#e5e5e5] dark:border-[#2a2a2a]" />
               )}
             </div>
           ))}
@@ -885,7 +886,7 @@ function SellerTypesSection() {
               PRIVATVERKÄUFER <span className="italic text-[#f14011]">&</span><br />
               HÄNDLER
             </h2>
-            <p className="text-lg text-[#a3a3a3] mb-8 max-w-lg">
+            <p className="text-lg text-[#a3a3a3] dark:text-[#737373] mb-8 max-w-lg">
               Ob du dein privates Fahrzeug verkaufst oder ein Autohaus-Inventar verwaltest –
               HITMIT bietet die perfekte Plattform, um engagierte Käufer zu erreichen.
             </p>
@@ -924,7 +925,7 @@ function SellerTypesSection() {
                 </div>
                 <div>
                   <h3 className="font-display text-2xl text-white mb-2">Privatverkäufer</h3>
-                  <p className="text-[#a3a3a3]">
+                  <p className="text-[#a3a3a3] dark:text-[#737373]">
                     Du verkaufst dein privates Fahrzeug? Erreiche maximale Sichtbarkeit ohne Einstellgebühren.
                     Reiche einfach dein Auto ein und lass uns das Marketing übernehmen.
                   </p>
@@ -942,7 +943,7 @@ function SellerTypesSection() {
                 </div>
                 <div>
                   <h3 className="font-display text-2xl text-white mb-2">Autohäuser & Händler</h3>
-                  <p className="text-[#a3a3a3]">
+                  <p className="text-[#a3a3a3] dark:text-[#737373]">
                     Verkaufe dein Inventar schneller mit unseren Händler-Paketen. Sammeleinreichungen, bevorzugte Platzierung
                     und dedizierter Account-Support.
                   </p>
@@ -971,12 +972,12 @@ function SocialCTASection() {
           Werde Teil der Community
         </span>
 
-        <h2 className="font-display text-5xl md:text-6xl lg:text-7xl text-[#0a0a0a] mb-6">
+        <h2 className="font-display text-5xl md:text-6xl lg:text-7xl text-[#0a0a0a] dark:text-[#ededed] mb-6">
           FOLGE UNS AUF<br />
           <span className="italic text-[#f14011]">SOCIAL MEDIA</span>
         </h2>
 
-        <p className="text-lg text-[#525252] mb-10 max-w-2xl mx-auto">
+        <p className="text-lg text-[#525252] dark:text-[#a3a3a3] mb-10 max-w-2xl mx-auto">
           Bleib auf dem Laufenden mit den neuesten Angeboten, Erfolgsgeschichten und Auto-Content.
           Werde Teil tausender Auto-Enthusiasten auf unseren Social-Kanälen.
         </p>
@@ -1009,20 +1010,20 @@ function SocialCTASection() {
 
         {/* Social proof */}
         <div className="mt-12 flex items-center justify-center gap-8 flex-wrap">
-          <div className="flex items-center gap-2 text-[#525252]">
+          <div className="flex items-center gap-2 text-[#525252] dark:text-[#a3a3a3]">
             <svg className="w-5 h-5 text-[#f14011]" viewBox="0 0 24 24" fill="currentColor">
               <path d="M11.645 20.91l-.007-.003-.022-.012a15.247 15.247 0 01-.383-.218 25.18 25.18 0 01-4.244-3.17C4.688 15.36 2.25 12.174 2.25 8.25 2.25 5.322 4.714 3 7.688 3A5.5 5.5 0 0112 5.052 5.5 5.5 0 0116.313 3c2.973 0 5.437 2.322 5.437 5.25 0 3.925-2.438 7.111-4.739 9.256a25.175 25.175 0 01-4.244 3.17 15.247 15.247 0 01-.383.219l-.022.012-.007.004-.003.001a.752.752 0 01-.704 0l-.003-.001z" />
             </svg>
             <span className="text-sm font-medium">50K+ Likes</span>
           </div>
-          <div className="flex items-center gap-2 text-[#525252]">
+          <div className="flex items-center gap-2 text-[#525252] dark:text-[#a3a3a3]">
             <svg className="w-5 h-5 text-[#f14011]" viewBox="0 0 24 24" fill="currentColor">
               <path d="M4.5 3.75a3 3 0 00-3 3v.75h21v-.75a3 3 0 00-3-3h-15z" />
               <path fillRule="evenodd" d="M1.5 9.75v6.75a3 3 0 003 3h15a3 3 0 003-3V9.75H1.5zm1.5 4.5a1.5 1.5 0 011.5-1.5h1.5a1.5 1.5 0 010 3H4.5a1.5 1.5 0 01-1.5-1.5z" clipRule="evenodd" />
             </svg>
             <span className="text-sm font-medium">1M+ Aufrufe</span>
           </div>
-          <div className="flex items-center gap-2 text-[#525252]">
+          <div className="flex items-center gap-2 text-[#525252] dark:text-[#a3a3a3]">
             <svg className="w-5 h-5 text-[#f14011]" viewBox="0 0 24 24" fill="currentColor">
               <path fillRule="evenodd" d="M8.25 6.75a3.75 3.75 0 117.5 0 3.75 3.75 0 01-7.5 0zM15.75 9.75a3 3 0 116 0 3 3 0 01-6 0zM2.25 9.75a3 3 0 116 0 3 3 0 01-6 0zM6.31 15.117A6.745 6.745 0 0112 12a6.745 6.745 0 016.709 7.498.75.75 0 01-.372.568A12.696 12.696 0 0112 21.75c-2.305 0-4.47-.612-6.337-1.684a.75.75 0 01-.372-.568 6.787 6.787 0 011.019-4.38z" clipRule="evenodd" />
               <path d="M5.082 14.254a8.287 8.287 0 00-1.308 5.135 9.687 9.687 0 01-1.764-.44l-.115-.04a.563.563 0 01-.373-.487l-.01-.121a3.75 3.75 0 013.57-4.047zM20.226 19.389a8.287 8.287 0 00-1.308-5.135 3.75 3.75 0 013.57 4.047l-.01.121a.563.563 0 01-.373.486l-.115.04c-.567.2-1.156.349-1.764.441z" />
@@ -1503,20 +1504,20 @@ function FormSection({
   const [isOpen, setIsOpen] = useState(defaultOpen);
 
   return (
-    <div className="border border-[#e5e5e5] rounded-2xl overflow-hidden">
+    <div className="border border-[#e5e5e5] dark:border-[#2a2a2a] rounded-2xl overflow-hidden">
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
-        className="w-full flex items-center justify-between p-5 bg-[#fafafa] hover:bg-[#f5f5f5] transition-colors"
+        className="w-full flex items-center justify-between p-5 bg-[#fafafa] dark:bg-[#1a1a1a] hover:bg-[#f5f5f5] dark:hover:bg-[#1f1f1f] transition-colors"
       >
-        <span className="flex items-center gap-3 font-semibold text-[#0a0a0a]">
+        <span className="flex items-center gap-3 font-semibold text-[#0a0a0a] dark:text-[#ededed]">
           <span className="text-xl">{icon}</span>
           {title}
         </span>
-        <ChevronRightIcon className={`w-5 h-5 text-[#737373] transition-transform ${isOpen ? "rotate-90" : ""}`} />
+        <ChevronRightIcon className={`w-5 h-5 text-[#737373] dark:text-[#8a8a8a] transition-transform ${isOpen ? "rotate-90" : ""}`} />
       </button>
       {isOpen && (
-        <div className="p-6 space-y-6 border-t border-[#e5e5e5]">
+        <div className="p-6 space-y-6 border-t border-[#e5e5e5] dark:border-[#2a2a2a]">
           {children}
         </div>
       )}
@@ -1534,7 +1535,7 @@ function FormInput({
 } & React.InputHTMLAttributes<HTMLInputElement>) {
   return (
     <div>
-      <label className="block text-sm font-semibold text-[#0a0a0a] mb-2">
+      <label className="block text-sm font-semibold text-[#0a0a0a] dark:text-[#ededed] mb-2">
         {label}
         {required && <span className="text-[#f14011] ml-1">*</span>}
       </label>
@@ -1555,7 +1556,7 @@ function FormSelect({
 } & React.SelectHTMLAttributes<HTMLSelectElement>) {
   return (
     <div>
-      <label className="block text-sm font-semibold text-[#0a0a0a] mb-2">
+      <label className="block text-sm font-semibold text-[#0a0a0a] dark:text-[#ededed] mb-2">
         {label}
         {required && <span className="text-[#f14011] ml-1">*</span>}
       </label>
@@ -1629,7 +1630,7 @@ function FormCombobox({
 
   return (
     <div className="relative">
-      <label className="block text-sm font-semibold text-[#0a0a0a] mb-2">
+      <label className="block text-sm font-semibold text-[#0a0a0a] dark:text-[#ededed] mb-2">
         {label}
         {required && <span className="text-[#f14011] ml-1">*</span>}
       </label>
@@ -1649,7 +1650,7 @@ function FormCombobox({
         <button
           type="button"
           onClick={() => setIsOpen(!isOpen)}
-          className="absolute right-3 top-1/2 -translate-y-1/2 text-[#737373] hover:text-[#525252]"
+          className="absolute right-3 top-1/2 -translate-y-1/2 text-[#737373] dark:text-[#8a8a8a] hover:text-[#525252] dark:hover:text-[#a3a3a3]"
           disabled={disabled}
         >
           <svg className={`w-5 h-5 transition-transform ${isOpen ? "rotate-180" : ""}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -1660,15 +1661,15 @@ function FormCombobox({
       {isOpen && filteredOptions.length > 0 && (
         <div
           ref={dropdownRef}
-          className="absolute z-50 w-full mt-1 bg-white border border-[#e5e5e5] rounded-xl shadow-lg max-h-60 overflow-y-auto"
+          className="absolute z-50 w-full mt-1 bg-white dark:bg-[#141414] border border-[#e5e5e5] dark:border-[#2a2a2a] rounded-xl shadow-lg max-h-60 overflow-y-auto"
         >
           {filteredOptions.map((option) => (
             <button
               key={option}
               type="button"
               onClick={() => handleSelect(option)}
-              className={`w-full px-4 py-2.5 text-left hover:bg-[#f5f5f5] transition-colors ${
-                value === option ? "bg-[#fef2ef] text-[#f14011] font-medium" : "text-[#0a0a0a]"
+              className={`w-full px-4 py-2.5 text-left hover:bg-[#f5f5f5] dark:hover:bg-[#1f1f1f] transition-colors ${
+                value === option ? "bg-[#fef2ef] text-[#f14011] font-medium" : "text-[#0a0a0a] dark:text-[#ededed]"
               }`}
             >
               {option}
@@ -1692,7 +1693,7 @@ function FormCheckbox({
   return (
     <label className="flex items-center gap-3 cursor-pointer group">
       <div className={`w-5 h-5 rounded border-2 flex items-center justify-center transition-all ${
-        checked ? "bg-[#f14011] border-[#f14011]" : "border-[#d4d4d4] group-hover:border-[#a3a3a3]"
+        checked ? "bg-[#f14011] border-[#f14011]" : "border-[#d4d4d4] dark:border-[#3d3d3d] group-hover:border-[#a3a3a3]"
       }`}>
         {checked && (
           <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
@@ -1700,7 +1701,7 @@ function FormCheckbox({
           </svg>
         )}
       </div>
-      <span className="text-sm text-[#525252]">{label}</span>
+      <span className="text-sm text-[#525252] dark:text-[#a3a3a3]">{label}</span>
       <input type="checkbox" className="sr-only" checked={checked} onChange={(e) => onChange(e.target.checked)} />
     </label>
   );
@@ -1717,7 +1718,7 @@ function FormTriState({
 }) {
   return (
     <div>
-      <label className="block text-sm font-semibold text-[#0a0a0a] mb-2">{label}</label>
+      <label className="block text-sm font-semibold text-[#0a0a0a] dark:text-[#ededed] mb-2">{label}</label>
       <div className="flex gap-2">
         {[
           { val: true, label: "Ja" },
@@ -1731,7 +1732,7 @@ function FormTriState({
             className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
               value === opt.val
                 ? "bg-[#f14011] text-white"
-                : "bg-[#f5f5f5] text-[#525252] hover:bg-[#e5e5e5]"
+                : "bg-[#f5f5f5] dark:bg-[#1f1f1f] text-[#525252] dark:text-[#a3a3a3] hover:bg-[#e5e5e5]"
             }`}
           >
             {opt.label}
@@ -1753,7 +1754,7 @@ function FormBinaryState({
 }) {
   return (
     <div>
-      <label className="block text-sm font-semibold text-[#0a0a0a] mb-2">{label}</label>
+      <label className="block text-sm font-semibold text-[#0a0a0a] dark:text-[#ededed] mb-2">{label}</label>
       <div className="flex gap-2">
         {[
           { val: true, label: "Ja" },
@@ -1766,7 +1767,7 @@ function FormBinaryState({
             className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
               value === opt.val
                 ? "bg-[#f14011] text-white"
-                : "bg-[#f5f5f5] text-[#525252] hover:bg-[#e5e5e5]"
+                : "bg-[#f5f5f5] dark:bg-[#1f1f1f] text-[#525252] dark:text-[#a3a3a3] hover:bg-[#e5e5e5]"
             }`}
           >
             {opt.label}
@@ -1804,7 +1805,7 @@ function FormFeatureSelectWithOther({
 
   return (
     <div>
-      <label className="block text-sm font-semibold text-[#0a0a0a] mb-3">{label}</label>
+      <label className="block text-sm font-semibold text-[#0a0a0a] dark:text-[#ededed] mb-3">{label}</label>
       <div className="flex flex-wrap gap-2">
         {features.map((feature) => (
           <button
@@ -1814,7 +1815,7 @@ function FormFeatureSelectWithOther({
             className={`px-3 py-1.5 rounded-full text-sm transition-all ${
               selected.includes(feature)
                 ? "bg-[#f14011] text-white"
-                : "bg-[#f5f5f5] text-[#525252] hover:bg-[#e5e5e5]"
+                : "bg-[#f5f5f5] dark:bg-[#1f1f1f] text-[#525252] dark:text-[#a3a3a3] hover:bg-[#e5e5e5]"
             }`}
           >
             {feature}
@@ -1826,7 +1827,7 @@ function FormFeatureSelectWithOther({
           className={`px-3 py-1.5 rounded-full text-sm transition-all ${
             showOther || otherValue
               ? "bg-[#f14011] text-white"
-              : "bg-[#f5f5f5] text-[#525252] hover:bg-[#e5e5e5]"
+              : "bg-[#f5f5f5] dark:bg-[#1f1f1f] text-[#525252] dark:text-[#a3a3a3] hover:bg-[#e5e5e5]"
           }`}
         >
           Sonstige
@@ -1866,7 +1867,7 @@ function FormFeatureSelect({
 
   return (
     <div>
-      <label className="block text-sm font-semibold text-[#0a0a0a] mb-3">{label}</label>
+      <label className="block text-sm font-semibold text-[#0a0a0a] dark:text-[#ededed] mb-3">{label}</label>
       <div className="flex flex-wrap gap-2">
         {features.map((feature) => (
           <button
@@ -1876,7 +1877,7 @@ function FormFeatureSelect({
             className={`px-3 py-1.5 rounded-full text-sm transition-all ${
               selected.includes(feature)
                 ? "bg-[#f14011] text-white"
-                : "bg-[#f5f5f5] text-[#525252] hover:bg-[#e5e5e5]"
+                : "bg-[#f5f5f5] dark:bg-[#1f1f1f] text-[#525252] dark:text-[#a3a3a3] hover:bg-[#e5e5e5]"
             }`}
           >
             {feature}
@@ -1918,9 +1919,9 @@ function DamageMap({
 
   return (
     <div>
-      <label className="block text-sm font-semibold text-[#0a0a0a] mb-3">Schadenskarte</label>
-      <p className="text-sm text-[#737373] mb-3">Klicke auf eine Zone um Schäden einzutragen</p>
-      <div className="relative bg-[#f5f5f5] rounded-2xl p-4" style={{ minHeight: 320 }}>
+      <label className="block text-sm font-semibold text-[#0a0a0a] dark:text-[#ededed] mb-3">Schadenskarte</label>
+      <p className="text-sm text-[#737373] dark:text-[#8a8a8a] mb-3">Klicke auf eine Zone um Schäden einzutragen</p>
+      <div className="relative bg-[#f5f5f5] dark:bg-[#1f1f1f] rounded-2xl p-4" style={{ minHeight: 320 }}>
         <svg viewBox="0 0 100 100" className="w-full max-w-[320px] mx-auto" style={{ height: 280 }}>
           <defs>
             <linearGradient id="carBody" x1="0" y1="0" x2="0" y2="1">
@@ -2028,8 +2029,8 @@ function DamageMap({
         </svg>
       </div>
       {selectedZone && (
-        <div className="mt-3 p-3 bg-[#fafafa] rounded-xl border border-[#e5e5e5]">
-          <label className="block text-sm font-semibold text-[#0a0a0a] mb-1">
+        <div className="mt-3 p-3 bg-[#fafafa] dark:bg-[#1a1a1a] rounded-xl border border-[#e5e5e5] dark:border-[#2a2a2a]">
+          <label className="block text-sm font-semibold text-[#0a0a0a] dark:text-[#ededed] mb-1">
             {DAMAGE_ZONES.find((z) => z.id === selectedZone)?.label}
           </label>
           <input
@@ -2049,7 +2050,7 @@ function DamageMap({
           />
           {paintThicknessAvailable === true && (
             <div className="mt-2">
-              <label className="block text-xs font-medium text-[#737373] mb-1">Lackdicke (µm)</label>
+              <label className="block text-xs font-medium text-[#737373] dark:text-[#8a8a8a] mb-1">Lackdicke (µm)</label>
               <input
                 type="number"
                 className="input [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none [-moz-appearance:textfield]"
@@ -2071,13 +2072,13 @@ function DamageMap({
       )}
       {Object.keys(damageMap).length > 0 && (
         <div className="mt-3 space-y-1">
-          <p className="text-sm font-semibold text-[#0a0a0a]">Eingetragene Schäden:</p>
+          <p className="text-sm font-semibold text-[#0a0a0a] dark:text-[#ededed]">Eingetragene Schäden:</p>
           {Object.entries(damageMap).map(([zoneId, desc]) => (
             <div key={zoneId} className="flex items-center justify-between text-sm bg-[#fef2f2] rounded-lg px-3 py-1.5">
               <span>
                 <strong>{DAMAGE_ZONES.find((z) => z.id === zoneId)?.label}:</strong> {desc}
                 {paintThicknessAvailable === true && paintThickness[zoneId] && (
-                  <span className="ml-2 text-[#737373]">({paintThickness[zoneId]} µm)</span>
+                  <span className="ml-2 text-[#737373] dark:text-[#8a8a8a]">({paintThickness[zoneId]} µm)</span>
                 )}
               </span>
               <button
@@ -2142,12 +2143,12 @@ function ImageUpload({
 
   return (
     <div>
-      <label className="block text-sm font-semibold text-[#0a0a0a] mb-3">
-        Bilder <span className="font-normal text-[#737373]">(max. {MAX_IMAGES}, je max. {MAX_SIZE_MB}MB)</span>
+      <label className="block text-sm font-semibold text-[#0a0a0a] dark:text-[#ededed] mb-3">
+        Bilder <span className="font-normal text-[#737373] dark:text-[#8a8a8a]">(max. {MAX_IMAGES}, je max. {MAX_SIZE_MB}MB)</span>
       </label>
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {images.map((img, index) => (
-          <div key={index} className="relative aspect-square rounded-xl overflow-hidden bg-[#f5f5f5] group">
+          <div key={index} className="relative aspect-square rounded-xl overflow-hidden bg-[#f5f5f5] dark:bg-[#1f1f1f] group">
             <img src={img} alt={`Bild ${index + 1}`} className="w-full h-full object-cover" />
             <button
               type="button"
@@ -2164,7 +2165,7 @@ function ImageUpload({
           <button
             type="button"
             onClick={() => fileInputRef.current?.click()}
-            className="aspect-square rounded-xl border-2 border-dashed border-[#d4d4d4] hover:border-[#f14011] flex flex-col items-center justify-center gap-2 text-[#737373] hover:text-[#f14011] transition-colors"
+            className="aspect-square rounded-xl border-2 border-dashed border-[#d4d4d4] dark:border-[#3d3d3d] hover:border-[#f14011] flex flex-col items-center justify-center gap-2 text-[#737373] dark:text-[#8a8a8a] hover:text-[#f14011] transition-colors"
           >
             <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
@@ -2251,16 +2252,16 @@ function SubmitFormSection() {
   };
 
   return (
-    <section id="submit" className="py-24 lg:py-32 bg-[#fafafa]">
+    <section id="submit" className="py-24 lg:py-32 bg-[#fafafa] dark:bg-[#1a1a1a]">
       <div className="max-w-4xl mx-auto px-6">
         <div className="text-center mb-12">
           <span className="inline-block px-4 py-1.5 bg-[#fdd8d0] text-[#b72b0b] rounded-full text-sm font-semibold mb-4">
             Jetzt verkaufen
           </span>
-          <h2 className="font-display text-5xl md:text-6xl text-[#0a0a0a] mb-4">
+          <h2 className="font-display text-5xl md:text-6xl text-[#0a0a0a] dark:text-[#ededed] mb-4">
             FAHRZEUG <span className="italic text-[#f14011]">EINREICHEN</span>
           </h2>
-          <p className="text-lg text-[#525252] max-w-2xl mx-auto">
+          <p className="text-lg text-[#525252] dark:text-[#a3a3a3] max-w-2xl mx-auto">
             Fülle das Formular aus und unser Team prüft deine Einreichung innerhalb von 24 Stunden.
           </p>
         </div>
@@ -2275,7 +2276,7 @@ function SubmitFormSection() {
           </div>
         )}
 
-        <form onSubmit={handleSubmit} className="bg-white rounded-3xl shadow-xl p-8 md:p-12 space-y-6">
+        <form onSubmit={handleSubmit} className="bg-white dark:bg-[#141414] rounded-3xl shadow-xl p-8 md:p-12 space-y-6">
           {/* Honeypot - hidden from users */}
           <input
             type="text"
@@ -2289,7 +2290,7 @@ function SubmitFormSection() {
 
           {/* Seller Type */}
           <div>
-            <label className="block text-sm font-semibold text-[#0a0a0a] mb-3">
+            <label className="block text-sm font-semibold text-[#0a0a0a] dark:text-[#ededed] mb-3">
               Ich bin... <span className="text-[#f14011]">*</span>
             </label>
             <div className="grid grid-cols-2 gap-4">
@@ -2304,10 +2305,10 @@ function SubmitFormSection() {
                   className={`p-4 rounded-xl border-2 text-left transition-all ${
                     formData.sellerType === type.value
                       ? "border-[#f14011] bg-[#fef2ef]"
-                      : "border-[#e5e5e5] hover:border-[#d4d4d4]"
+                      : "border-[#e5e5e5] dark:border-[#2a2a2a] hover:border-[#d4d4d4] dark:hover:border-[#3d3d3d]"
                   }`}
                 >
-                  <span className={`font-semibold ${formData.sellerType === type.value ? "text-[#f14011]" : "text-[#0a0a0a]"}`}>
+                  <span className={`font-semibold ${formData.sellerType === type.value ? "text-[#f14011]" : "text-[#0a0a0a] dark:text-[#ededed]"}`}>
                     {type.label}
                   </span>
                 </button>
@@ -2316,8 +2317,8 @@ function SubmitFormSection() {
           </div>
 
           {/* Contact Info */}
-          <div className="pt-6 border-t border-[#e5e5e5]">
-            <h3 className="font-display text-2xl text-[#0a0a0a] mb-6">Kontaktdaten</h3>
+          <div className="pt-6 border-t border-[#e5e5e5] dark:border-[#2a2a2a]">
+            <h3 className="font-display text-2xl text-[#0a0a0a] dark:text-[#ededed] mb-6">Kontaktdaten</h3>
             {formData.sellerType === "dealer" && (
               <div className="mb-6">
                 <FormInput
@@ -2344,9 +2345,9 @@ function SubmitFormSection() {
                       type="checkbox"
                       checked={formData.showContactName}
                       onChange={(e) => updateField("showContactName", e.target.checked)}
-                      className="w-4 h-4 rounded border-[#d4d4d4] text-[#f14011] focus:ring-[#f14011]"
+                      className="w-4 h-4 rounded border-[#d4d4d4] dark:border-[#3d3d3d] text-[#f14011] focus:ring-[#f14011]"
                     />
-                    <span className="text-sm text-[#737373]">Name öffentlich anzeigen</span>
+                    <span className="text-sm text-[#737373] dark:text-[#8a8a8a]">Name öffentlich anzeigen</span>
                   </label>
                 )}
               </div>
@@ -2373,17 +2374,17 @@ function SubmitFormSection() {
                     type="checkbox"
                     checked={formData.showContactPhone}
                     onChange={(e) => updateField("showContactPhone", e.target.checked)}
-                    className="w-4 h-4 rounded border-[#d4d4d4] text-[#f14011] focus:ring-[#f14011]"
+                    className="w-4 h-4 rounded border-[#d4d4d4] dark:border-[#3d3d3d] text-[#f14011] focus:ring-[#f14011]"
                   />
-                  <span className="text-sm text-[#737373]">Telefonnummer öffentlich anzeigen</span>
+                  <span className="text-sm text-[#737373] dark:text-[#8a8a8a]">Telefonnummer öffentlich anzeigen</span>
                 </label>
               )}
             </div>
           </div>
 
           {/* Basic Vehicle Info - Always visible */}
-          <div className="pt-6 border-t border-[#e5e5e5]">
-            <h3 className="font-display text-2xl text-[#0a0a0a] mb-6">Fahrzeugdaten</h3>
+          <div className="pt-6 border-t border-[#e5e5e5] dark:border-[#2a2a2a]">
+            <h3 className="font-display text-2xl text-[#0a0a0a] dark:text-[#ededed] mb-6">Fahrzeugdaten</h3>
             <div className="grid md:grid-cols-2 gap-6 mb-6">
               <FormCombobox
                 label="Marke"
@@ -2482,8 +2483,8 @@ function SubmitFormSection() {
           </div>
 
           {/* Expandable Sections */}
-          <div className="pt-6 border-t border-[#e5e5e5] space-y-4">
-            <p className="text-sm text-[#737373] mb-2">Weitere Details (optional)</p>
+          <div className="pt-6 border-t border-[#e5e5e5] dark:border-[#2a2a2a] space-y-4">
+            <p className="text-sm text-[#737373] dark:text-[#8a8a8a] mb-2">Weitere Details (optional)</p>
 
             {/* Vehicle Details */}
             <FormSection title="Fahrzeugdetails" icon="🚗">
@@ -2834,7 +2835,7 @@ function SubmitFormSection() {
               </div>
 
               {/* Schadenskarte */}
-              <div className="pt-4 border-t border-[#e5e5e5]">
+              <div className="pt-4 border-t border-[#e5e5e5] dark:border-[#2a2a2a]">
                 <FormBinaryState
                   label="Fahrzeug aktuell beschädigt"
                   value={formData.currentlyDamaged}
@@ -2858,14 +2859,14 @@ function SubmitFormSection() {
                   )}
                   {formData.paintThicknessAvailable === true && (
                     <div>
-                      <label className="block text-sm font-semibold text-[#0a0a0a] mb-2">Messprotokoll-Foto</label>
-                      <p className="text-sm text-[#737373] mb-2">Foto des Lackdickenmessprotokolls hochladen</p>
+                      <label className="block text-sm font-semibold text-[#0a0a0a] dark:text-[#ededed] mb-2">Messprotokoll-Foto</label>
+                      <p className="text-sm text-[#737373] dark:text-[#8a8a8a] mb-2">Foto des Lackdickenmessprotokolls hochladen</p>
                       {formData.paintThicknessImage ? (
                         <div className="relative inline-block">
                           <img
                             src={formData.paintThicknessImage}
                             alt="Messprotokoll"
-                            className="w-32 h-32 object-cover rounded-xl border border-[#e5e5e5]"
+                            className="w-32 h-32 object-cover rounded-xl border border-[#e5e5e5] dark:border-[#2a2a2a]"
                           />
                           <button
                             type="button"
@@ -2876,7 +2877,7 @@ function SubmitFormSection() {
                           </button>
                         </div>
                       ) : (
-                        <label className="flex items-center justify-center w-32 h-32 border-2 border-dashed border-[#d4d4d4] rounded-xl cursor-pointer hover:border-[#f14011] transition-colors">
+                        <label className="flex items-center justify-center w-32 h-32 border-2 border-dashed border-[#d4d4d4] dark:border-[#3d3d3d] rounded-xl cursor-pointer hover:border-[#f14011] transition-colors">
                           <input
                             type="file"
                             accept="image/*"
@@ -2898,8 +2899,8 @@ function SubmitFormSection() {
                             }}
                           />
                           <div className="text-center">
-                            <CameraIcon className="w-6 h-6 mx-auto text-[#a3a3a3] mb-1" />
-                            <span className="text-xs text-[#a3a3a3]">Foto</span>
+                            <CameraIcon className="w-6 h-6 mx-auto text-[#a3a3a3] dark:text-[#737373] mb-1" />
+                            <span className="text-xs text-[#a3a3a3] dark:text-[#737373]">Foto</span>
                           </div>
                         </label>
                       )}
@@ -2978,7 +2979,7 @@ function SubmitFormSection() {
             {/* Description */}
             <FormSection title="Beschreibung" icon="📝" defaultOpen>
               <div>
-                <label className="block text-sm font-semibold text-[#0a0a0a] mb-2">Fahrzeugbeschreibung</label>
+                <label className="block text-sm font-semibold text-[#0a0a0a] dark:text-[#ededed] mb-2">Fahrzeugbeschreibung</label>
                 <div className="flex flex-wrap gap-2 mb-3">
                   <button
                     type="button"
@@ -3005,7 +3006,7 @@ function SubmitFormSection() {
                         const text = generateDescription(formData, images.length);
                         updateField("description", text);
                       }}
-                      className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-sm font-medium text-[#525252] bg-[#f5f5f5] hover:bg-[#e5e5e5] transition-colors"
+                      className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-sm font-medium text-[#525252] dark:text-[#a3a3a3] bg-[#f5f5f5] dark:bg-[#1f1f1f] hover:bg-[#e5e5e5] transition-colors"
                     >
                       <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.992 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182" />
@@ -3020,7 +3021,7 @@ function SubmitFormSection() {
                   const completeness = checkCompleteness(formData);
                   if (completeness.missingTips.length > 0 && !formData.description.trim()) {
                     return (
-                      <p className="text-sm text-[#737373] mb-3">
+                      <p className="text-sm text-[#737373] dark:text-[#8a8a8a] mb-3">
                         💡 Tipp: Fülle weitere Felder aus für eine bessere Beschreibung ({completeness.missingTips.slice(0, 3).join(", ")})
                       </p>
                     );
@@ -3035,10 +3036,10 @@ function SubmitFormSection() {
                   onChange={(e) => updateField("description", e.target.value)}
                   maxLength={5000}
                 />
-                <p className="text-sm text-[#737373] mt-1">{formData.description.length}/5000 Zeichen</p>
+                <p className="text-sm text-[#737373] dark:text-[#8a8a8a] mt-1">{formData.description.length}/5000 Zeichen</p>
               </div>
               <div>
-                <label className="block text-sm font-semibold text-[#0a0a0a] mb-2">Extras / Sonderausstattung</label>
+                <label className="block text-sm font-semibold text-[#0a0a0a] dark:text-[#ededed] mb-2">Extras / Sonderausstattung</label>
                 <textarea
                   rows={3}
                   className="input !rounded-2xl resize-none"
@@ -3073,7 +3074,7 @@ function SubmitFormSection() {
             )}
           </button>
 
-          <p className="text-center text-sm text-[#737373]">
+          <p className="text-center text-sm text-[#737373] dark:text-[#8a8a8a]">
             Mit der Einreichung stimmst du unseren AGB und Datenschutzbestimmungen zu.
           </p>
         </form>
@@ -3129,7 +3130,7 @@ function Footer() {
               </div>
               <span className="font-display text-2xl tracking-wide">HITMIT</span>
             </div>
-            <p className="text-[#a3a3a3] mb-6 max-w-sm">
+            <p className="text-[#a3a3a3] dark:text-[#737373] mb-6 max-w-sm">
               Der moderne Auto-Marktplatz. Verkaufe dein Fahrzeug über die Kraft von Social Media.
               Erreiche tausende Käufer auf TikTok und Instagram.
             </p>
@@ -3162,7 +3163,7 @@ function Footer() {
                   <li key={link.label}>
                     <a
                       href={link.href}
-                      className="text-[#a3a3a3] hover:text-[#f14011] transition-colors text-sm"
+                      className="text-[#a3a3a3] dark:text-[#737373] hover:text-[#f14011] transition-colors text-sm"
                     >
                       {link.label}
                     </a>
@@ -3175,17 +3176,17 @@ function Footer() {
 
         {/* Bottom bar */}
         <div className="mt-16 pt-8 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-4">
-          <p className="text-[#737373] text-sm">
+          <p className="text-[#737373] dark:text-[#8a8a8a] text-sm">
             &copy; {new Date().getFullYear()} HITMIT. Alle Rechte vorbehalten.
           </p>
           <div className="flex gap-6">
-            <a href="#" className="text-[#737373] hover:text-white text-sm transition-colors">
+            <a href="#" className="text-[#737373] dark:text-[#8a8a8a] hover:text-white text-sm transition-colors">
               Datenschutz
             </a>
-            <a href="#" className="text-[#737373] hover:text-white text-sm transition-colors">
+            <a href="#" className="text-[#737373] dark:text-[#8a8a8a] hover:text-white text-sm transition-colors">
               AGB
             </a>
-            <a href="#" className="text-[#737373] hover:text-white text-sm transition-colors">
+            <a href="#" className="text-[#737373] dark:text-[#8a8a8a] hover:text-white text-sm transition-colors">
               Cookie-Richtlinie
             </a>
           </div>
@@ -3205,6 +3206,7 @@ export default function Home() {
 
   return (
     <main className="min-h-screen">
+      <ThemeToggle />
       <Header
         authUser={authUser}
         onLoginClick={() => setIsAuthModalOpen(true)}

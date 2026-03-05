@@ -6,6 +6,7 @@ import Image from "next/image";
 import { calculateValuation, PRICE_RATING_INFO } from "../valuation";
 import type { ValuationBreakdown, PriceRating } from "../valuation";
 import { calculateTireScore, TIRE_RATING_INFO } from "../tire-score";
+import { ThemeToggle } from "../theme-toggle";
 
 // ============================================================================
 // TYPES
@@ -405,7 +406,7 @@ function PriceRatingBadge({ vehicle }: { vehicle: Vehicle }) {
       {/* Price bar */}
       <div className="relative h-3 rounded-full overflow-hidden bg-gradient-to-r from-green-400 via-yellow-300 to-red-400">
         <div
-          className="absolute top-1/2 -translate-y-1/2 w-4 h-4 bg-white border-2 border-gray-800 rounded-full shadow-md -ml-2"
+          className="absolute top-1/2 -translate-y-1/2 w-4 h-4 bg-white dark:bg-[#141414] border-2 border-gray-800 rounded-full shadow-md -ml-2"
           style={{ left: `${markerPct}%` }}
         />
       </div>
@@ -523,7 +524,7 @@ function DealerPurchasePanel({ vehicle }: { vehicle: Vehicle }) {
       </button>
 
       {showDetails && (
-        <div className="mt-3 bg-white rounded-lg border border-blue-100 overflow-hidden">
+        <div className="mt-3 bg-white dark:bg-[#141414] rounded-lg border border-blue-100 overflow-hidden">
           <table className="w-full text-sm">
             <tbody>
               <tr className="border-b border-blue-50">
@@ -593,7 +594,7 @@ function DetailModal({ vehicle, onClose, isDealer }: { vehicle: Vehicle; onClose
       onClick={onClose}
     >
       <div
-        className="bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-2xl animate-scale-in"
+        className="bg-white dark:bg-[#141414] rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-2xl animate-scale-in"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Image Placeholder */}
@@ -874,6 +875,7 @@ export default function InseratePage() {
 
   return (
     <div className="min-h-screen bg-mesh">
+      <ThemeToggle />
       {/* Header */}
       <header className="sticky top-0 z-40 bg-white/80 backdrop-blur-md border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
@@ -887,7 +889,7 @@ export default function InseratePage() {
               className={`text-xs font-medium px-3 py-1.5 rounded-full border transition-colors ${
                 isDealer
                   ? "bg-blue-600 text-white border-blue-600"
-                  : "bg-white text-gray-500 border-gray-200 hover:border-gray-400"
+                  : "bg-white dark:bg-[#141414] text-gray-500 border-gray-200 hover:border-gray-400"
               }`}
             >
               {isDealer ? "Händler ✓" : "Händler-Login"}
@@ -920,7 +922,7 @@ export default function InseratePage() {
             <select
               value={brandFilter}
               onChange={(e) => setBrandFilter(e.target.value)}
-              className="appearance-none bg-white border border-gray-200 rounded-full px-5 py-2.5 pr-10 text-sm font-medium text-gray-700 hover:border-[#f14011] focus:border-[#f14011] focus:outline-none transition-colors cursor-pointer"
+              className="appearance-none bg-white dark:bg-[#141414] border border-gray-200 rounded-full px-5 py-2.5 pr-10 text-sm font-medium text-gray-700 hover:border-[#f14011] focus:border-[#f14011] focus:outline-none transition-colors cursor-pointer"
             >
               {brandOptions.map((b) => (
                 <option key={b} value={b}>
@@ -936,7 +938,7 @@ export default function InseratePage() {
             <select
               value={priceFilter}
               onChange={(e) => setPriceFilter(Number(e.target.value))}
-              className="appearance-none bg-white border border-gray-200 rounded-full px-5 py-2.5 pr-10 text-sm font-medium text-gray-700 hover:border-[#f14011] focus:border-[#f14011] focus:outline-none transition-colors cursor-pointer"
+              className="appearance-none bg-white dark:bg-[#141414] border border-gray-200 rounded-full px-5 py-2.5 pr-10 text-sm font-medium text-gray-700 hover:border-[#f14011] focus:border-[#f14011] focus:outline-none transition-colors cursor-pointer"
             >
               {priceRanges.map((r, i) => (
                 <option key={r.label} value={i}>
@@ -952,7 +954,7 @@ export default function InseratePage() {
             <select
               value={fuelFilter}
               onChange={(e) => setFuelFilter(e.target.value)}
-              className="appearance-none bg-white border border-gray-200 rounded-full px-5 py-2.5 pr-10 text-sm font-medium text-gray-700 hover:border-[#f14011] focus:border-[#f14011] focus:outline-none transition-colors cursor-pointer"
+              className="appearance-none bg-white dark:bg-[#141414] border border-gray-200 rounded-full px-5 py-2.5 pr-10 text-sm font-medium text-gray-700 hover:border-[#f14011] focus:border-[#f14011] focus:outline-none transition-colors cursor-pointer"
             >
               {fuelOptions.map((f) => (
                 <option key={f} value={f}>
