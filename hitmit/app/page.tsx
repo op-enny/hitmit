@@ -1111,6 +1111,7 @@ interface VehicleFormData {
   priceNegotiable: boolean;
   vatDeductible: boolean;
   vehicleOrigin: string;
+  vehicleOriginOther: string;
   country: string;
   description: string;
   extras: string;
@@ -1198,6 +1199,7 @@ const initialFormData: VehicleFormData = {
   priceNegotiable: false,
   vatDeductible: false,
   vehicleOrigin: "",
+  vehicleOriginOther: "",
   country: "Deutschland",
   description: "",
   extras: "",
@@ -2796,6 +2798,15 @@ function SubmitFormSection() {
                   value={formData.vehicleOrigin}
                   onChange={(e) => updateField("vehicleOrigin", e.target.value)}
                 />
+                {formData.vehicleOrigin === "sonstige" && (
+                  <FormInput
+                    label="Herkunftsland"
+                    type="text"
+                    placeholder="z.B. Japan, Kanada, Australien"
+                    value={formData.vehicleOriginOther}
+                    onChange={(e) => updateField("vehicleOriginOther", e.target.value)}
+                  />
+                )}
               </div>
               <div className="grid md:grid-cols-2 gap-6">
                 <FormInput
