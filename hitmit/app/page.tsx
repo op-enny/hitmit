@@ -2744,7 +2744,7 @@ function SubmitFormSection() {
                   <FormInput
                     label="Herkunftsland"
                     type="text"
-                    placeholder="z.B. Japan, Kanada, Australien"
+                    placeholder="z.B. Südkorea, Kanada, Australien"
                     value={formData.vehicleOriginOther}
                     onChange={(e) => updateField("vehicleOriginOther", e.target.value)}
                   />
