@@ -515,6 +515,7 @@ function Header({
   }, []);
 
   const navItems = [
+    { label: "Suchen", href: "/suchen" },
     { label: "Inserate", href: "/inserate" },
     { label: "Gespeichert", href: "/gespeichert" },
     { label: "So funktioniert's", href: "#how-it-works" },
@@ -527,7 +528,7 @@ function Header({
     <header
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         isScrolled
-          ? "bg-white/95 backdrop-blur-md shadow-lg"
+          ? "bg-white/95 dark:bg-[#0a0a0a]/95 backdrop-blur-md shadow-lg"
           : "bg-transparent"
       }`}
     >
@@ -661,7 +662,7 @@ function HeroSection() {
 
       {/* Background text watermark */}
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none overflow-hidden">
-        <span className="font-display text-[20vw] text-[#0a0a0a] dark:text-[#ededed]/[0.02] tracking-tight">
+        <span className="font-display text-[20vw] text-[#0a0a0a]/[0.03] dark:text-[#ededed]/[0.02] tracking-tight">
           HITMIT
         </span>
       </div>
@@ -701,7 +702,7 @@ function HeroSection() {
                 Auto einreichen
                 <ChevronRightIcon className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
               </a>
-              <a href="/inserate" className="btn btn-ghost btn-xl group">
+              <a href="/suchen" className="btn btn-ghost btn-xl group">
                 <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                   <circle cx="11" cy="11" r="8" />
                   <path strokeLinecap="round" d="M21 21l-4.35-4.35" />
