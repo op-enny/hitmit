@@ -24,6 +24,7 @@ export interface SavedSearch {
     doorFilter: string;
     seatFilter: string;
     modelFilter: string;
+    motorizationFilter: string;
     variantFilter: string;
     vehicleTypeFilter: string;
     vehicleCategoryFilter: string;

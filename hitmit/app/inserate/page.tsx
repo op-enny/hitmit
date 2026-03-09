@@ -24,6 +24,7 @@ import {
   doorOptions,
   seatOptions,
   CAR_BRANDS_MODELS,
+  MERCEDES_MOTORIZATIONS,
 } from "../vehicles-data";
 import type { Vehicle } from "../vehicles-data";
 import { useSavedData } from "../use-saved-data";
@@ -654,6 +655,7 @@ function InseratePageInner() {
   const searchParams = useSearchParams();
   const [brandFilter, setBrandFilter] = useState("Alle Marken");
   const [modelFilter, setModelFilter] = useState("");
+  const [motorizationFilter, setMotorizationFilter] = useState("");
   const [fuelFilter, setFuelFilter] = useState("Alle Kraftstoffe");
   const [priceFilter, setPriceFilter] = useState(0);
   const [yearFrom, setYearFrom] = useState("");
@@ -701,6 +703,8 @@ function InseratePageInner() {
     if (brand && brandOptions.includes(brand)) setBrandFilter(brand);
     const mdl = searchParams.get("model");
     if (mdl) setModelFilter(mdl);
+    const mot = searchParams.get("motorization");
+    if (mot) setMotorizationFilter(mot);
     if (fuel && fuelOptions.includes(fuel)) setFuelFilter(fuel);
     if (price !== null) {
       const idx = Number(price);
@@ -750,7 +754,14 @@ function InseratePageInner() {
 
   const filtered = vehicles.filter((v) => {
     if (brandFilter !== "Alle Marken" && v.brand !== brandFilter) return false;
-    if (modelFilter !== "" && !v.model.toLowerCase().includes(modelFilter.toLowerCase())) return false;
+    if (modelFilter !== "") {
+      if (brandFilter === "Mercedes-Benz" && MERCEDES_MOTORIZATIONS[modelFilter]) {
+        if (!MERCEDES_MOTORIZATIONS[modelFilter].some((m) => v.model.toLowerCase().includes(m.toLowerCase()))) return false;
+      } else {
+        if (!v.model.toLowerCase().includes(modelFilter.toLowerCase())) return false;
+      }
+    }
+    if (motorizationFilter !== "" && !v.model.toLowerCase().includes(motorizationFilter.toLowerCase())) return false;
     if (fuelFilter !== "Alle Kraftstoffe" && v.fuelType !== fuelFilter) return false;
     const range = priceRanges[priceFilter];
     if (v.price < range.min || v.price >= range.max) return false;
@@ -840,7 +851,7 @@ function InseratePageInner() {
           <div className="relative">
             <select
               value={brandFilter}
-              onChange={(e) => { setBrandFilter(e.target.value); setModelFilter(""); }}
+              onChange={(e) => { setBrandFilter(e.target.value); setModelFilter(""); setMotorizationFilter(""); }}
               className="appearance-none bg-white dark:bg-[#141414] border border-gray-200 rounded-full px-5 py-2.5 pr-10 text-sm font-medium text-gray-700 hover:border-[#f14011] focus:border-[#f14011] focus:outline-none transition-colors cursor-pointer"
             >
               {brandOptions.map((b) => (
@@ -856,7 +867,7 @@ function InseratePageInner() {
           <div className="relative">
             <select
               value={modelFilter}
-              onChange={(e) => setModelFilter(e.target.value)}
+              onChange={(e) => { setModelFilter(e.target.value); setMotorizationFilter(""); }}
               className="appearance-none bg-white dark:bg-[#141414] border border-gray-200 rounded-full px-5 py-2.5 pr-10 text-sm font-medium text-gray-700 hover:border-[#f14011] focus:border-[#f14011] focus:outline-none transition-colors cursor-pointer"
             >
               <option value="">Alle Modelle</option>
@@ -868,6 +879,23 @@ function InseratePageInner() {
             </select>
             <ChevronDownIcon className="w-4 h-4 text-gray-400 absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
           </div>
+
+          {/* Motorisierung (Mercedes only) */}
+          {brandFilter === "Mercedes-Benz" && modelFilter !== "" && MERCEDES_MOTORIZATIONS[modelFilter] && (
+            <div className="relative">
+              <select
+                value={motorizationFilter}
+                onChange={(e) => setMotorizationFilter(e.target.value)}
+                className="appearance-none bg-white dark:bg-[#141414] border border-gray-200 rounded-full px-5 py-2.5 pr-10 text-sm font-medium text-gray-700 hover:border-[#f14011] focus:border-[#f14011] focus:outline-none transition-colors cursor-pointer"
+              >
+                <option value="">Alle Motorisierungen</option>
+                {MERCEDES_MOTORIZATIONS[modelFilter].map((m) => (
+                  <option key={m} value={m}>{m}</option>
+                ))}
+              </select>
+              <ChevronDownIcon className="w-4 h-4 text-gray-400 absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+            </div>
+          )}
 
           {/* Price */}
           <div className="relative">
@@ -934,6 +962,7 @@ function InseratePageInner() {
                 const parts: string[] = [];
                 if (brandFilter !== "Alle Marken") parts.push(brandFilter);
                 if (modelFilter) parts.push(modelFilter);
+                if (motorizationFilter) parts.push(motorizationFilter);
                 if (fuelFilter !== "Alle Kraftstoffe") parts.push(fuelFilter);
                 if (priceFilter !== 0) parts.push(priceRanges[priceFilter].label);
                 if (yearFrom) parts.push(`ab ${yearFrom}`);
@@ -961,7 +990,7 @@ function InseratePageInner() {
                     cityFilter,
                     colorFilter, conditionFilter,
                     doorFilter, seatFilter,
-                    modelFilter, variantFilter: "",
+                    modelFilter, motorizationFilter, variantFilter: "",
                     vehicleTypeFilter: "Alle", vehicleCategoryFilter: "Alle",
                     mwstFilter: "Alle", firstRegFrom: "", firstRegTo: "",
                     huFilter: "Alle", previousOwnersFilter: "Alle",

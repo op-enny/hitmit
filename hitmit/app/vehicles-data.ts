@@ -391,44 +391,12 @@ export const CAR_BRANDS_MODELS: Record<string, string[]> = {
   "Maserati": ["Ghibli", "Quattroporte", "Levante", "MC20", "Grecale", "GranTurismo"],
   "Mazda": ["2", "3", "6", "CX-3", "CX-30", "CX-5", "CX-60", "MX-5", "MX-30"],
   "Mercedes-Benz": [
-    // A-Klasse
-    "A 160", "A 180", "A 180 d", "A 200", "A 200 d", "A 220", "A 220 d", "A 250", "A 250 e", "A 35 AMG", "A 45 AMG", "A 45 S AMG",
-    // B-Klasse
-    "B 160", "B 180", "B 180 d", "B 200", "B 200 d", "B 220 d", "B 250 e",
-    // C-Klasse
-    "C 160", "C 180", "C 180 d", "C 200", "C 200 d", "C 220 d", "C 250 d", "C 300", "C 300 d", "C 300 e", "C 300 de", "C 400 d", "C 43 AMG", "C 63 AMG", "C 63 S AMG",
-    // E-Klasse
-    "E 200", "E 200 d", "E 220 d", "E 300", "E 300 d", "E 300 e", "E 300 de", "E 350", "E 350 d", "E 400 d", "E 450", "E 53 AMG", "E 63 AMG", "E 63 S AMG",
-    // S-Klasse
-    "S 350 d", "S 400 d", "S 450", "S 500", "S 580", "S 580 e", "S 680", "S 63 AMG", "S 63 S AMG",
-    // CLA
-    "CLA 180", "CLA 200", "CLA 200 d", "CLA 220 d", "CLA 250", "CLA 250 e", "CLA 35 AMG", "CLA 45 AMG", "CLA 45 S AMG",
-    // CLS
-    "CLS 220 d", "CLS 300 d", "CLS 350 d", "CLS 400 d", "CLS 450", "CLS 53 AMG",
-    // GLA
-    "GLA 180", "GLA 200", "GLA 200 d", "GLA 220 d", "GLA 250", "GLA 250 e", "GLA 35 AMG", "GLA 45 AMG", "GLA 45 S AMG",
-    // GLB
-    "GLB 180", "GLB 200", "GLB 200 d", "GLB 220 d", "GLB 250", "GLB 35 AMG",
-    // GLC
-    "GLC 200", "GLC 200 d", "GLC 220 d", "GLC 250 d", "GLC 300", "GLC 300 d", "GLC 300 e", "GLC 300 de", "GLC 350 d", "GLC 350 e", "GLC 400 d", "GLC 400 e", "GLC 43 AMG", "GLC 63 AMG", "GLC 63 S AMG",
-    // GLE
-    "GLE 300 d", "GLE 350", "GLE 350 d", "GLE 350 de", "GLE 400 d", "GLE 400 e", "GLE 450", "GLE 53 AMG", "GLE 63 AMG", "GLE 63 S AMG",
-    // GLS
-    "GLS 350 d", "GLS 400 d", "GLS 450", "GLS 580", "GLS 600 Maybach", "GLS 63 AMG",
-    // G-Klasse
-    "G 350 d", "G 400 d", "G 450 d", "G 500", "G 63 AMG",
-    // EQ-Reihe
-    "EQA 250", "EQA 250+", "EQA 300", "EQA 350",
-    "EQB 250", "EQB 250+", "EQB 300", "EQB 350",
-    "EQC 400",
-    "EQE 300", "EQE 350", "EQE 350+", "EQE 500", "EQE 43 AMG", "EQE 53 AMG",
-    "EQS 350", "EQS 450", "EQS 450+", "EQS 500", "EQS 580", "EQS 53 AMG",
-    // AMG GT
-    "AMG GT", "AMG GT S", "AMG GT R", "AMG GT C", "AMG GT 43", "AMG GT 53", "AMG GT 63", "AMG GT 63 S",
-    // SL
-    "SL 43", "SL 55 AMG", "SL 63 AMG",
-    // Transporter
-    "Vito", "V 220 d", "V 250 d", "V 300 d", "EQV", "Sprinter",
+    "A-Klasse", "B-Klasse", "C-Klasse", "E-Klasse", "S-Klasse",
+    "CLA", "CLS",
+    "GLA", "GLB", "GLC", "GLE", "GLS", "G-Klasse",
+    "EQA", "EQB", "EQC", "EQE", "EQS",
+    "AMG GT", "SL",
+    "V-Klasse", "Vito", "Sprinter",
   ],
   "Mini": ["3-Türer", "5-Türer", "Cabrio", "Clubman", "Countryman", "Electric"],
   "Mitsubishi": ["Space Star", "ASX", "Eclipse Cross", "Outlander", "L200"],
@@ -447,6 +415,32 @@ export const CAR_BRANDS_MODELS: Record<string, string[]> = {
   "VW": ["Polo", "Golf", "ID.3", "ID.4", "ID.5", "ID.7", "ID. Buzz", "T-Cross", "T-Roc", "Tiguan", "Touareg", "Passat", "Arteon", "Taigo", "up!", "Caddy", "Multivan", "Transporter", "Amarok"],
   "Volvo": ["XC40", "XC60", "XC90", "C40", "S60", "S90", "V60", "V90", "EX30", "EX90"],
   "Sonstige": ["Anderes Modell"],
+};
+
+export const MERCEDES_MOTORIZATIONS: Record<string, string[]> = {
+  "A-Klasse": ["A 160", "A 180", "A 180 d", "A 200", "A 200 d", "A 220", "A 220 d", "A 250", "A 250 e", "A 35 AMG", "A 45 AMG", "A 45 S AMG"],
+  "B-Klasse": ["B 160", "B 180", "B 180 d", "B 200", "B 200 d", "B 220 d", "B 250 e"],
+  "C-Klasse": ["C 160", "C 180", "C 180 d", "C 200", "C 200 d", "C 220 d", "C 250 d", "C 300", "C 300 d", "C 300 e", "C 300 de", "C 400 d", "C 43 AMG", "C 63 AMG", "C 63 S AMG"],
+  "E-Klasse": ["E 200", "E 200 d", "E 220 d", "E 300", "E 300 d", "E 300 e", "E 300 de", "E 350", "E 350 d", "E 400 d", "E 450", "E 53 AMG", "E 63 AMG", "E 63 S AMG"],
+  "S-Klasse": ["S 350 d", "S 400 d", "S 450", "S 500", "S 580", "S 580 e", "S 680", "S 63 AMG", "S 63 S AMG"],
+  "CLA": ["CLA 180", "CLA 200", "CLA 200 d", "CLA 220 d", "CLA 250", "CLA 250 e", "CLA 35 AMG", "CLA 45 AMG", "CLA 45 S AMG"],
+  "CLS": ["CLS 220 d", "CLS 300 d", "CLS 350 d", "CLS 400 d", "CLS 450", "CLS 53 AMG"],
+  "GLA": ["GLA 180", "GLA 200", "GLA 200 d", "GLA 220 d", "GLA 250", "GLA 250 e", "GLA 35 AMG", "GLA 45 AMG", "GLA 45 S AMG"],
+  "GLB": ["GLB 180", "GLB 200", "GLB 200 d", "GLB 220 d", "GLB 250", "GLB 35 AMG"],
+  "GLC": ["GLC 200", "GLC 200 d", "GLC 220 d", "GLC 250 d", "GLC 300", "GLC 300 d", "GLC 300 e", "GLC 300 de", "GLC 350 d", "GLC 350 e", "GLC 400 d", "GLC 400 e", "GLC 43 AMG", "GLC 63 AMG", "GLC 63 S AMG"],
+  "GLE": ["GLE 300 d", "GLE 350", "GLE 350 d", "GLE 350 de", "GLE 400 d", "GLE 400 e", "GLE 450", "GLE 53 AMG", "GLE 63 AMG", "GLE 63 S AMG"],
+  "GLS": ["GLS 350 d", "GLS 400 d", "GLS 450", "GLS 580", "GLS 600 Maybach", "GLS 63 AMG"],
+  "G-Klasse": ["G 350 d", "G 400 d", "G 450 d", "G 500", "G 63 AMG"],
+  "EQA": ["EQA 250", "EQA 250+", "EQA 300", "EQA 350"],
+  "EQB": ["EQB 250", "EQB 250+", "EQB 300", "EQB 350"],
+  "EQC": ["EQC 400"],
+  "EQE": ["EQE 300", "EQE 350", "EQE 350+", "EQE 500", "EQE 43 AMG", "EQE 53 AMG"],
+  "EQS": ["EQS 350", "EQS 450", "EQS 450+", "EQS 500", "EQS 580", "EQS 53 AMG"],
+  "AMG GT": ["AMG GT", "AMG GT S", "AMG GT R", "AMG GT C", "AMG GT 43", "AMG GT 53", "AMG GT 63", "AMG GT 63 S"],
+  "SL": ["SL 43", "SL 55 AMG", "SL 63 AMG"],
+  "V-Klasse": ["V 220 d", "V 250 d", "V 300 d", "EQV"],
+  "Vito": ["Vito"],
+  "Sprinter": ["Sprinter"],
 };
 
 export const brandOptions = ["Alle Marken", ...Object.keys(CAR_BRANDS_MODELS).sort()];
