@@ -32,6 +32,7 @@ import {
   rimSizeOptions,
   SAFETY_FEATURE_LIST,
   EQUIPMENT_FEATURE_LIST,
+  CAR_BRANDS_MODELS,
 } from "../vehicles-data";
 import type { Vehicle } from "../vehicles-data";
 import { useSavedData } from "../use-saved-data";
@@ -514,19 +515,20 @@ export default function SuchenPage() {
             <FilterSelect
               label="Marke"
               value={brandFilter}
-              onChange={setBrandFilter}
+              onChange={(v) => { setBrandFilter(v); setModelFilter(""); }}
               options={brandOptions.map((b) => ({ value: b, label: b }))}
             />
-            <div>
-              <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1.5">Modell</label>
-              <input
-                type="text"
-                value={modelFilter}
-                onChange={(e) => setModelFilter(e.target.value)}
-                placeholder="z.B. M4, Golf"
-                className="w-full bg-white dark:bg-[#1a1a1a] border border-gray-200 dark:border-[#2a2a2a] rounded-xl px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 placeholder:text-gray-400 hover:border-[#f14011] focus:border-[#f14011] focus:outline-none transition-colors"
-              />
-            </div>
+            <FilterSelect
+              label="Modell"
+              value={modelFilter}
+              onChange={setModelFilter}
+              options={[
+                { value: "", label: "Alle Modelle" },
+                ...(brandFilter !== "Alle Marken" && CAR_BRANDS_MODELS[brandFilter]
+                  ? CAR_BRANDS_MODELS[brandFilter].map((m) => ({ value: m, label: m }))
+                  : []),
+              ]}
+            />
             <div>
               <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1.5">Variante</label>
               <input
