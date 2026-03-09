@@ -177,7 +177,8 @@ export default function SuchenPage() {
   const [doorFilter, setDoorFilter] = useState("Alle");
   const [seatFilter, setSeatFilter] = useState("Alle");
 
-  // Search saved state
+  // Search state
+  const [hasSearched, setHasSearched] = useState(false);
   const [searchSaved, setSearchSaved] = useState(false);
   const { mounted, saveSearch } = useSavedData();
 
@@ -445,13 +446,17 @@ export default function SuchenPage() {
 
           {/* Actions */}
           <div className="flex flex-wrap items-center gap-3 pt-4 border-t border-gray-100 dark:border-gray-800">
-            <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
-              <span className="font-display text-2xl text-[#f14011]">{filtered.length}</span>
-              <span>{filtered.length === 1 ? "Fahrzeug" : "Fahrzeuge"} gefunden</span>
-            </div>
+            <button
+              onClick={() => setHasSearched(true)}
+              className="btn btn-primary btn-lg group"
+            >
+              <SearchIcon className="w-5 h-5" />
+              Suchen
+              <span className="ml-1 px-2 py-0.5 bg-white/20 rounded-full text-xs font-bold">{filtered.length}</span>
+            </button>
 
             {activeFilterCount > 0 && (
-              <button onClick={resetAll} className="text-sm text-[#f14011] font-semibold hover:underline">
+              <button onClick={() => { resetAll(); setHasSearched(false); }} className="text-sm text-[#f14011] font-semibold hover:underline">
                 Alle Filter zurücksetzen
               </button>
             )}
@@ -489,29 +494,31 @@ export default function SuchenPage() {
       </section>
 
       {/* Results */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 pb-16">
-        {filtered.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filtered.map((vehicle, index) => (
-              <div
-                key={vehicle.id}
-                className="animate-fade-in-up"
-                style={{ opacity: 0, animationDelay: `${(index + 4) * 100}ms` }}
-              >
-                <ResultCard vehicle={vehicle} />
-              </div>
-            ))}
-          </div>
-        ) : (
-          <div className="text-center py-20">
-            <SearchIcon className="w-16 h-16 mx-auto text-gray-200 dark:text-gray-700 mb-4" />
-            <p className="text-gray-400 text-lg">Keine Fahrzeuge gefunden.</p>
-            <button onClick={resetAll} className="mt-4 text-[#f14011] font-semibold hover:underline">
-              Filter zurücksetzen
-            </button>
-          </div>
-        )}
-      </section>
+      {hasSearched && (
+        <section className="max-w-7xl mx-auto px-4 sm:px-6 pb-16">
+          {filtered.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {filtered.map((vehicle, index) => (
+                <div
+                  key={vehicle.id}
+                  className="animate-fade-in-up"
+                  style={{ opacity: 0, animationDelay: `${(index + 4) * 100}ms` }}
+                >
+                  <ResultCard vehicle={vehicle} />
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-20">
+              <SearchIcon className="w-16 h-16 mx-auto text-gray-200 dark:text-gray-700 mb-4" />
+              <p className="text-gray-400 text-lg">Keine Fahrzeuge gefunden.</p>
+              <button onClick={() => { resetAll(); setHasSearched(false); }} className="mt-4 text-[#f14011] font-semibold hover:underline">
+                Filter zurücksetzen
+              </button>
+            </div>
+          )}
+        </section>
+      )}
 
       {/* Footer */}
       <footer className="border-t border-gray-200 dark:border-[#2a2a2a] py-8">
