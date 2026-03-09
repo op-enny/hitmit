@@ -386,6 +386,8 @@ function DetailModal({ vehicle, onClose, isDealer }: { vehicle: Vehicle; onClose
           {/* Key specs */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
             {[
+              { label: "Modell", value: vehicle.model },
+              { label: "Variante", value: vehicle.variant },
               { label: "Kilometer", value: `${vehicle.mileage.toLocaleString("de-DE")} km` },
               { label: "Leistung", value: `${vehicle.powerPs} PS` },
               { label: "Kraftstoff", value: vehicle.fuelType },
@@ -394,6 +396,18 @@ function DetailModal({ vehicle, onClose, isDealer }: { vehicle: Vehicle; onClose
               { label: "Farbe", value: vehicle.color },
               { label: "Türen", value: vehicle.doors },
               { label: "Sitze", value: vehicle.seats },
+              ...(vehicle.vehicleType ? [{ label: "Fahrzeugtyp", value: vehicle.vehicleType }] : []),
+              ...(vehicle.vehicleCategory ? [{ label: "Karosserie", value: vehicle.vehicleCategory }] : []),
+              ...(vehicle.cylinders ? [{ label: "Zylinder", value: String(vehicle.cylinders) }] : []),
+              ...(vehicle.engineDisplacement ? [{ label: "Hubraum", value: `${vehicle.engineDisplacement.toLocaleString("de-DE")} ccm` }] : []),
+              ...(vehicle.tankVolume ? [{ label: "Tankvolumen", value: `${vehicle.tankVolume} l` }] : []),
+              ...(vehicle.interiorColor ? [{ label: "Innenfarbe", value: vehicle.interiorColor }] : []),
+              ...(vehicle.seatMaterial ? [{ label: "Sitzmaterial", value: vehicle.seatMaterial }] : []),
+              ...(vehicle.climateZones ? [{ label: "Klimazonen", value: String(vehicle.climateZones) }] : []),
+              ...(vehicle.rimSize ? [{ label: "Felgengröße", value: `${vehicle.rimSize} Zoll` }] : []),
+              { label: "Erstzulassung", value: vehicle.firstRegistration },
+              ...(vehicle.hu ? [{ label: "HU", value: vehicle.hu }] : []),
+              ...(vehicle.previousOwners !== undefined ? [{ label: "Vorbesitzer", value: String(vehicle.previousOwners) }] : []),
             ].map((spec) => (
               <div key={spec.label} className="bg-gray-50 rounded-xl p-3">
                 <p className="text-xs text-gray-400 uppercase tracking-wider">{spec.label}</p>
@@ -410,6 +424,31 @@ function DetailModal({ vehicle, onClose, isDealer }: { vehicle: Vehicle; onClose
             {vehicle.accidentFree && (
               <span className="px-3 py-1 bg-green-50 text-green-700 rounded-full text-sm font-medium">
                 Unfallfrei
+              </span>
+            )}
+            {vehicle.noRepaint && (
+              <span className="px-3 py-1 bg-green-50 text-green-700 rounded-full text-sm font-medium">
+                Nachlackierungsfrei
+              </span>
+            )}
+            {vehicle.serviceBookMaintained && (
+              <span className="px-3 py-1 bg-green-50 text-green-700 rounded-full text-sm font-medium">
+                Scheckheftgepflegt
+              </span>
+            )}
+            {vehicle.paintProtectionFilm && (
+              <span className="px-3 py-1 bg-blue-50 text-blue-700 rounded-full text-sm font-medium">
+                Steinschlagschutzfolie
+              </span>
+            )}
+            {vehicle.manufacturerWarranty && (
+              <span className="px-3 py-1 bg-blue-50 text-blue-700 rounded-full text-sm font-medium">
+                Herstellergarantie
+              </span>
+            )}
+            {vehicle.mwstAusweisbar && (
+              <span className="px-3 py-1 bg-blue-50 text-blue-700 rounded-full text-sm font-medium">
+                MwSt. ausweisbar
               </span>
             )}
           </div>
