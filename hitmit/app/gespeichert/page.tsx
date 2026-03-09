@@ -54,6 +54,14 @@ function applyFilters(filters: SavedSearch["filters"]): Vehicle[] {
     }
     if (filters.accidentFreeFilter === "Nur unfallfrei" && !v.accidentFree) return false;
     if (filters.cityFilter && !v.city.toLowerCase().includes(filters.cityFilter.toLowerCase())) return false;
+    if (filters.colorFilter && filters.colorFilter !== "Alle Farben" && !v.color.toLowerCase().includes(filters.colorFilter.toLowerCase())) return false;
+    if (filters.conditionFilter && filters.conditionFilter !== "Alle" && v.condition !== filters.conditionFilter) return false;
+    if (filters.doorFilter && filters.doorFilter !== "Alle") {
+      if (filters.doorFilter === "2/3" && !["2", "3"].includes(v.doors)) return false;
+      if (filters.doorFilter === "4/5" && !["4", "5"].includes(v.doors)) return false;
+      if (filters.doorFilter === "6/7" && !["6", "7"].includes(v.doors)) return false;
+    }
+    if (filters.seatFilter && filters.seatFilter !== "Alle" && v.seats !== filters.seatFilter) return false;
     return true;
   });
 }
@@ -80,6 +88,10 @@ function buildSearchUrl(filters: SavedSearch["filters"]): string {
   if (filters.sellerTypeFilter && filters.sellerTypeFilter !== "Alle") params.set("sellerType", filters.sellerTypeFilter);
   if (filters.accidentFreeFilter === "Nur unfallfrei") params.set("accidentFree", "ja");
   if (filters.cityFilter) params.set("city", filters.cityFilter);
+  if (filters.colorFilter && filters.colorFilter !== "Alle Farben") params.set("color", filters.colorFilter);
+  if (filters.conditionFilter && filters.conditionFilter !== "Alle") params.set("condition", filters.conditionFilter);
+  if (filters.doorFilter && filters.doorFilter !== "Alle") params.set("doors", filters.doorFilter);
+  if (filters.seatFilter && filters.seatFilter !== "Alle") params.set("seats", filters.seatFilter);
   const qs = params.toString();
   return qs ? `/inserate?${qs}` : "/inserate";
 }
@@ -116,6 +128,10 @@ function SearchCard({
   if (f.sellerTypeFilter && f.sellerTypeFilter !== "Alle") filterTags.push(f.sellerTypeFilter);
   if (f.accidentFreeFilter === "Nur unfallfrei") filterTags.push("Unfallfrei");
   if (f.cityFilter) filterTags.push(f.cityFilter);
+  if (f.colorFilter && f.colorFilter !== "Alle Farben") filterTags.push(f.colorFilter);
+  if (f.conditionFilter && f.conditionFilter !== "Alle") filterTags.push(f.conditionFilter);
+  if (f.doorFilter && f.doorFilter !== "Alle") filterTags.push(`${f.doorFilter} Türen`);
+  if (f.seatFilter && f.seatFilter !== "Alle") filterTags.push(`${f.seatFilter} Sitze`);
 
   return (
     <div className="card p-5">

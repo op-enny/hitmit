@@ -19,6 +19,10 @@ export interface SavedSearch {
     sellerTypeFilter: string;
     accidentFreeFilter: string;
     cityFilter: string;
+    colorFilter: string;
+    conditionFilter: string;
+    doorFilter: string;
+    seatFilter: string;
   };
   seenVehicleIds: number[];
 }

@@ -19,6 +19,10 @@ import {
   transmissionOptions,
   driveTypeOptions,
   sellerTypeOptions,
+  colorOptions,
+  conditionOptions,
+  doorOptions,
+  seatOptions,
 } from "../vehicles-data";
 import type { Vehicle } from "../vehicles-data";
 import { useSavedData } from "../use-saved-data";
@@ -620,6 +624,10 @@ function InseratePageInner() {
   const [sellerTypeFilter, setSellerTypeFilter] = useState("Alle");
   const [accidentFreeFilter, setAccidentFreeFilter] = useState("Alle");
   const [cityFilter, setCityFilter] = useState("");
+  const [colorFilter, setColorFilter] = useState("Alle Farben");
+  const [conditionFilter, setConditionFilter] = useState("Alle");
+  const [doorFilter, setDoorFilter] = useState("Alle");
+  const [seatFilter, setSeatFilter] = useState("Alle");
   const [showAdvanced, setShowAdvanced] = useState(false);
   const [selectedVehicle, setSelectedVehicle] = useState<Vehicle | null>(null);
   const [isDealer, setIsDealer] = useState(false);
@@ -638,6 +646,10 @@ function InseratePageInner() {
     sellerTypeFilter !== "Alle",
     accidentFreeFilter !== "Alle",
     cityFilter !== "",
+    colorFilter !== "Alle Farben",
+    conditionFilter !== "Alle",
+    doorFilter !== "Alle",
+    seatFilter !== "Alle",
   ].filter(Boolean).length;
 
   // Read query params for filter pre-fill (from gespeichert page)
@@ -669,8 +681,16 @@ function InseratePageInner() {
     if (st && sellerTypeOptions.includes(st)) setSellerTypeFilter(st);
     if (af === "ja") setAccidentFreeFilter("Nur unfallfrei");
     if (ct) setCityFilter(ct);
+    const co = searchParams.get("color");
+    const cn = searchParams.get("condition");
+    const dr = searchParams.get("doors");
+    const se = searchParams.get("seats");
+    if (co && colorOptions.includes(co)) setColorFilter(co);
+    if (cn && conditionOptions.includes(cn)) setConditionFilter(cn);
+    if (dr && doorOptions.includes(dr)) setDoorFilter(dr);
+    if (se && seatOptions.includes(se)) setSeatFilter(se);
     // Auto-open advanced section if any advanced param is set
-    if (yf || yt || ml || pw || tr || dt || st || af || ct) setShowAdvanced(true);
+    if (yf || yt || ml || pw || tr || dt || st || af || ct || co || cn || dr || se) setShowAdvanced(true);
   }, [searchParams]);
 
   // Persist dealer login state in localStorage
@@ -711,6 +731,14 @@ function InseratePageInner() {
     }
     if (accidentFreeFilter === "Nur unfallfrei" && !v.accidentFree) return false;
     if (cityFilter !== "" && !v.city.toLowerCase().includes(cityFilter.toLowerCase())) return false;
+    if (colorFilter !== "Alle Farben" && !v.color.toLowerCase().includes(colorFilter.toLowerCase())) return false;
+    if (conditionFilter !== "Alle" && v.condition !== conditionFilter) return false;
+    if (doorFilter !== "Alle") {
+      if (doorFilter === "2/3" && !["2", "3"].includes(v.doors)) return false;
+      if (doorFilter === "4/5" && !["4", "5"].includes(v.doors)) return false;
+      if (doorFilter === "6/7" && !["6", "7"].includes(v.doors)) return false;
+    }
+    if (seatFilter !== "Alle" && v.seats !== seatFilter) return false;
     return true;
   });
 
@@ -855,6 +883,10 @@ function InseratePageInner() {
                 if (sellerTypeFilter !== "Alle") parts.push(sellerTypeFilter);
                 if (accidentFreeFilter !== "Alle") parts.push("Unfallfrei");
                 if (cityFilter) parts.push(cityFilter);
+                if (colorFilter !== "Alle Farben") parts.push(colorFilter);
+                if (conditionFilter !== "Alle") parts.push(conditionFilter);
+                if (doorFilter !== "Alle") parts.push(`${doorFilter} Türen`);
+                if (seatFilter !== "Alle") parts.push(`${seatFilter} Sitze`);
                 const label = parts.length > 0 ? parts.join(", ") : "Alle Fahrzeuge";
                 saveSearch(
                   label,
@@ -865,6 +897,8 @@ function InseratePageInner() {
                     transmissionFilter, driveTypeFilter,
                     sellerTypeFilter, accidentFreeFilter,
                     cityFilter,
+                    colorFilter, conditionFilter,
+                    doorFilter, seatFilter,
                   },
                   filtered.map((v) => v.id),
                 );
@@ -1037,6 +1071,74 @@ function InseratePageInner() {
                 </div>
               </div>
 
+              {/* Color */}
+              <div>
+                <label className="block text-xs font-medium text-gray-500 mb-1.5">Farbe</label>
+                <div className="relative">
+                  <select
+                    value={colorFilter}
+                    onChange={(e) => setColorFilter(e.target.value)}
+                    className="w-full appearance-none bg-gray-50 dark:bg-[#1a1a1a] border border-gray-200 rounded-xl px-4 py-2.5 pr-9 text-sm text-gray-700 hover:border-[#f14011] focus:border-[#f14011] focus:outline-none transition-colors cursor-pointer"
+                  >
+                    {colorOptions.map((c) => (
+                      <option key={c} value={c}>{c}</option>
+                    ))}
+                  </select>
+                  <ChevronDownIcon className="w-4 h-4 text-gray-400 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+                </div>
+              </div>
+
+              {/* Condition */}
+              <div>
+                <label className="block text-xs font-medium text-gray-500 mb-1.5">Zustand</label>
+                <div className="relative">
+                  <select
+                    value={conditionFilter}
+                    onChange={(e) => setConditionFilter(e.target.value)}
+                    className="w-full appearance-none bg-gray-50 dark:bg-[#1a1a1a] border border-gray-200 rounded-xl px-4 py-2.5 pr-9 text-sm text-gray-700 hover:border-[#f14011] focus:border-[#f14011] focus:outline-none transition-colors cursor-pointer"
+                  >
+                    {conditionOptions.map((c) => (
+                      <option key={c} value={c}>{c}</option>
+                    ))}
+                  </select>
+                  <ChevronDownIcon className="w-4 h-4 text-gray-400 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+                </div>
+              </div>
+
+              {/* Doors */}
+              <div>
+                <label className="block text-xs font-medium text-gray-500 mb-1.5">Türen</label>
+                <div className="relative">
+                  <select
+                    value={doorFilter}
+                    onChange={(e) => setDoorFilter(e.target.value)}
+                    className="w-full appearance-none bg-gray-50 dark:bg-[#1a1a1a] border border-gray-200 rounded-xl px-4 py-2.5 pr-9 text-sm text-gray-700 hover:border-[#f14011] focus:border-[#f14011] focus:outline-none transition-colors cursor-pointer"
+                  >
+                    {doorOptions.map((d) => (
+                      <option key={d} value={d}>{d}</option>
+                    ))}
+                  </select>
+                  <ChevronDownIcon className="w-4 h-4 text-gray-400 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+                </div>
+              </div>
+
+              {/* Seats */}
+              <div>
+                <label className="block text-xs font-medium text-gray-500 mb-1.5">Sitze</label>
+                <div className="relative">
+                  <select
+                    value={seatFilter}
+                    onChange={(e) => setSeatFilter(e.target.value)}
+                    className="w-full appearance-none bg-gray-50 dark:bg-[#1a1a1a] border border-gray-200 rounded-xl px-4 py-2.5 pr-9 text-sm text-gray-700 hover:border-[#f14011] focus:border-[#f14011] focus:outline-none transition-colors cursor-pointer"
+                  >
+                    {seatOptions.map((s) => (
+                      <option key={s} value={s}>{s}</option>
+                    ))}
+                  </select>
+                  <ChevronDownIcon className="w-4 h-4 text-gray-400 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+                </div>
+              </div>
+
               {/* City */}
               <div className="col-span-2 sm:col-span-1">
                 <label className="block text-xs font-medium text-gray-500 mb-1.5">Standort (Stadt)</label>
@@ -1059,6 +1161,8 @@ function InseratePageInner() {
                   setTransmissionFilter("Alle"); setDriveTypeFilter("Alle");
                   setSellerTypeFilter("Alle"); setAccidentFreeFilter("Alle");
                   setCityFilter("");
+                  setColorFilter("Alle Farben"); setConditionFilter("Alle");
+                  setDoorFilter("Alle"); setSeatFilter("Alle");
                 }}
                 className="mt-4 text-sm text-[#f14011] font-semibold hover:underline"
               >
@@ -1101,6 +1205,8 @@ function InseratePageInner() {
                 setTransmissionFilter("Alle"); setDriveTypeFilter("Alle");
                 setSellerTypeFilter("Alle"); setAccidentFreeFilter("Alle");
                 setCityFilter("");
+                setColorFilter("Alle Farben"); setConditionFilter("Alle");
+                setDoorFilter("Alle"); setSeatFilter("Alle");
               }}
               className="mt-4 text-[#f14011] font-semibold hover:underline"
             >
