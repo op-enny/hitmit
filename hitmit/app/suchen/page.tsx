@@ -188,7 +188,8 @@ export default function SuchenPage() {
 
   // New filters
   const [modelFilter, setModelFilter] = useState("");
-  const [motorizationFilter, setMotorizationFilter] = useState("");
+  const [motorizationFilter, setMotorizationFilter] = useState<string[]>([]);
+  const [showMotorizationDropdown, setShowMotorizationDropdown] = useState(false);
   const [variantFilter, setVariantFilter] = useState("");
   const [vehicleTypeFilter, setVehicleTypeFilter] = useState("Alle");
   const [vehicleCategoryFilter, setVehicleCategoryFilter] = useState("Alle");
@@ -263,7 +264,7 @@ export default function SuchenPage() {
         if (!v.model.toLowerCase().includes(modelFilter.toLowerCase())) return false;
       }
     }
-    if (motorizationFilter !== "" && !v.model.toLowerCase().includes(motorizationFilter.toLowerCase())) return false;
+    if (motorizationFilter.length > 0 && !motorizationFilter.some((m) => v.model.toLowerCase().includes(m.toLowerCase()))) return false;
     if (variantFilter !== "" && !v.variant.toLowerCase().includes(variantFilter.toLowerCase())) return false;
     if (vehicleTypeFilter !== "Alle" && v.vehicleType !== vehicleTypeFilter) return false;
     if (vehicleCategoryFilter !== "Alle" && v.vehicleCategory !== vehicleCategoryFilter) return false;
@@ -361,7 +362,7 @@ export default function SuchenPage() {
     doorFilter !== "Alle",
     seatFilter !== "Alle",
     modelFilter !== "",
-    motorizationFilter !== "",
+    motorizationFilter.length > 0,
     variantFilter !== "",
     vehicleTypeFilter !== "Alle",
     vehicleCategoryFilter !== "Alle",
@@ -428,7 +429,7 @@ export default function SuchenPage() {
     if (doorFilter !== "Alle") parts.push(`${doorFilter} Türen`);
     if (seatFilter !== "Alle") parts.push(`${seatFilter} Sitze`);
     if (modelFilter) parts.push(modelFilter);
-    if (motorizationFilter) parts.push(motorizationFilter);
+    if (motorizationFilter.length > 0) parts.push(motorizationFilter.join(", "));
     if (variantFilter) parts.push(variantFilter);
     if (vehicleTypeFilter !== "Alle") parts.push(vehicleTypeFilter);
     if (vehicleCategoryFilter !== "Alle") parts.push(vehicleCategoryFilter);
@@ -526,13 +527,13 @@ export default function SuchenPage() {
             <FilterSelect
               label="Marke"
               value={brandFilter}
-              onChange={(v) => { setBrandFilter(v); setModelFilter(""); setMotorizationFilter(""); }}
+              onChange={(v) => { setBrandFilter(v); setModelFilter(""); setMotorizationFilter([]); }}
               options={brandOptions.map((b) => ({ value: b, label: b }))}
             />
             <FilterSelect
               label="Modell"
               value={modelFilter}
-              onChange={(v) => { setModelFilter(v); setMotorizationFilter(""); }}
+              onChange={(v) => { setModelFilter(v); setMotorizationFilter([]); }}
               options={[
                 { value: "", label: "Alle Modelle" },
                 ...(brandFilter !== "Alle Marken" && CAR_BRANDS_MODELS[brandFilter]
@@ -541,15 +542,42 @@ export default function SuchenPage() {
               ]}
             />
             {brandFilter === "Mercedes-Benz" && modelFilter !== "" && MERCEDES_MOTORIZATIONS[modelFilter] && (
-              <FilterSelect
-                label="Motorisierung"
-                value={motorizationFilter}
-                onChange={setMotorizationFilter}
-                options={[
-                  { value: "", label: "Alle Motorisierungen" },
-                  ...MERCEDES_MOTORIZATIONS[modelFilter].map((m) => ({ value: m, label: m })),
-                ]}
-              />
+              <div className="relative">
+                <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1.5">Motorisierung</label>
+                <button
+                  type="button"
+                  onClick={() => setShowMotorizationDropdown(!showMotorizationDropdown)}
+                  className="w-full flex items-center justify-between bg-white dark:bg-[#1a1a1a] border border-gray-200 dark:border-[#2a2a2a] rounded-xl px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:border-[#f14011] focus:border-[#f14011] focus:outline-none transition-colors"
+                >
+                  <span className="truncate">
+                    {motorizationFilter.length === 0
+                      ? "Alle Motorisierungen"
+                      : `${motorizationFilter.length} gewählt`}
+                  </span>
+                  <ChevronDownIcon className={`w-4 h-4 ml-2 shrink-0 transition-transform ${showMotorizationDropdown ? "rotate-180" : ""}`} />
+                </button>
+                {showMotorizationDropdown && (
+                  <div className="absolute z-50 mt-1 w-full bg-white dark:bg-[#1a1a1a] border border-gray-200 dark:border-[#2a2a2a] rounded-xl shadow-lg max-h-60 overflow-y-auto py-1">
+                    {MERCEDES_MOTORIZATIONS[modelFilter].map((m) => (
+                      <label key={m} className="flex items-center gap-2 px-3 py-1.5 cursor-pointer hover:bg-gray-50 dark:hover:bg-[#222]">
+                        <input
+                          type="checkbox"
+                          checked={motorizationFilter.includes(m)}
+                          onChange={(e) => {
+                            if (e.target.checked) {
+                              setMotorizationFilter([...motorizationFilter, m]);
+                            } else {
+                              setMotorizationFilter(motorizationFilter.filter((x) => x !== m));
+                            }
+                          }}
+                          className="w-4 h-4 rounded border-gray-300 dark:border-gray-600 text-[#f14011] focus:ring-[#f14011] cursor-pointer"
+                        />
+                        <span className="text-sm text-gray-700 dark:text-gray-300">{m}</span>
+                      </label>
+                    ))}
+                  </div>
+                )}
+              </div>
             )}
             <div>
               <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1.5">Variante</label>

@@ -65,7 +65,7 @@ function applyFilters(filters: SavedSearch["filters"]): Vehicle[] {
     }
     if (filters.seatFilter && filters.seatFilter !== "Alle" && v.seats !== filters.seatFilter) return false;
     if (filters.modelFilter && !v.model.toLowerCase().includes(filters.modelFilter.toLowerCase())) return false;
-    if (filters.motorizationFilter && !v.model.toLowerCase().includes(filters.motorizationFilter.toLowerCase())) return false;
+    if (filters.motorizationFilter && filters.motorizationFilter.length > 0 && !filters.motorizationFilter.some((m) => v.model.toLowerCase().includes(m.toLowerCase()))) return false;
     if (filters.variantFilter && !v.variant.toLowerCase().includes(filters.variantFilter.toLowerCase())) return false;
     if (filters.vehicleTypeFilter && filters.vehicleTypeFilter !== "Alle" && v.vehicleType !== filters.vehicleTypeFilter) return false;
     if (filters.vehicleCategoryFilter && filters.vehicleCategoryFilter !== "Alle" && v.vehicleCategory !== filters.vehicleCategoryFilter) return false;
@@ -178,7 +178,7 @@ function buildSearchUrl(filters: SavedSearch["filters"]): string {
   if (filters.doorFilter && filters.doorFilter !== "Alle") params.set("doors", filters.doorFilter);
   if (filters.seatFilter && filters.seatFilter !== "Alle") params.set("seats", filters.seatFilter);
   if (filters.modelFilter) params.set("model", filters.modelFilter);
-  if (filters.motorizationFilter) params.set("motorization", filters.motorizationFilter);
+  if (filters.motorizationFilter && filters.motorizationFilter.length > 0) params.set("motorization", filters.motorizationFilter.join(","));
   if (filters.variantFilter) params.set("variant", filters.variantFilter);
   if (filters.vehicleTypeFilter && filters.vehicleTypeFilter !== "Alle") params.set("vehicleType", filters.vehicleTypeFilter);
   if (filters.vehicleCategoryFilter && filters.vehicleCategoryFilter !== "Alle") params.set("vehicleCategory", filters.vehicleCategoryFilter);
@@ -242,7 +242,7 @@ function SearchCard({
   if (f.doorFilter && f.doorFilter !== "Alle") filterTags.push(`${f.doorFilter} Türen`);
   if (f.seatFilter && f.seatFilter !== "Alle") filterTags.push(`${f.seatFilter} Sitze`);
   if (f.modelFilter) filterTags.push(f.modelFilter);
-  if (f.motorizationFilter) filterTags.push(f.motorizationFilter);
+  if (f.motorizationFilter && f.motorizationFilter.length > 0) filterTags.push(f.motorizationFilter.join(", "));
   if (f.variantFilter) filterTags.push(f.variantFilter);
   if (f.vehicleTypeFilter && f.vehicleTypeFilter !== "Alle") filterTags.push(f.vehicleTypeFilter);
   if (f.vehicleCategoryFilter && f.vehicleCategoryFilter !== "Alle") filterTags.push(f.vehicleCategoryFilter);

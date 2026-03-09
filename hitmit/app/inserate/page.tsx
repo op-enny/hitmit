@@ -655,7 +655,8 @@ function InseratePageInner() {
   const searchParams = useSearchParams();
   const [brandFilter, setBrandFilter] = useState("Alle Marken");
   const [modelFilter, setModelFilter] = useState("");
-  const [motorizationFilter, setMotorizationFilter] = useState("");
+  const [motorizationFilter, setMotorizationFilter] = useState<string[]>([]);
+  const [showMotorizationDropdown, setShowMotorizationDropdown] = useState(false);
   const [fuelFilter, setFuelFilter] = useState("Alle Kraftstoffe");
   const [priceFilter, setPriceFilter] = useState(0);
   const [yearFrom, setYearFrom] = useState("");
@@ -704,7 +705,7 @@ function InseratePageInner() {
     const mdl = searchParams.get("model");
     if (mdl) setModelFilter(mdl);
     const mot = searchParams.get("motorization");
-    if (mot) setMotorizationFilter(mot);
+    if (mot) setMotorizationFilter(mot.split(","));
     if (fuel && fuelOptions.includes(fuel)) setFuelFilter(fuel);
     if (price !== null) {
       const idx = Number(price);
@@ -761,7 +762,7 @@ function InseratePageInner() {
         if (!v.model.toLowerCase().includes(modelFilter.toLowerCase())) return false;
       }
     }
-    if (motorizationFilter !== "" && !v.model.toLowerCase().includes(motorizationFilter.toLowerCase())) return false;
+    if (motorizationFilter.length > 0 && !motorizationFilter.some((m) => v.model.toLowerCase().includes(m.toLowerCase()))) return false;
     if (fuelFilter !== "Alle Kraftstoffe" && v.fuelType !== fuelFilter) return false;
     const range = priceRanges[priceFilter];
     if (v.price < range.min || v.price >= range.max) return false;
@@ -851,7 +852,7 @@ function InseratePageInner() {
           <div className="relative">
             <select
               value={brandFilter}
-              onChange={(e) => { setBrandFilter(e.target.value); setModelFilter(""); setMotorizationFilter(""); }}
+              onChange={(e) => { setBrandFilter(e.target.value); setModelFilter(""); setMotorizationFilter([]); }}
               className="appearance-none bg-white dark:bg-[#141414] border border-gray-200 rounded-full px-5 py-2.5 pr-10 text-sm font-medium text-gray-700 hover:border-[#f14011] focus:border-[#f14011] focus:outline-none transition-colors cursor-pointer"
             >
               {brandOptions.map((b) => (
@@ -867,7 +868,7 @@ function InseratePageInner() {
           <div className="relative">
             <select
               value={modelFilter}
-              onChange={(e) => { setModelFilter(e.target.value); setMotorizationFilter(""); }}
+              onChange={(e) => { setModelFilter(e.target.value); setMotorizationFilter([]); }}
               className="appearance-none bg-white dark:bg-[#141414] border border-gray-200 rounded-full px-5 py-2.5 pr-10 text-sm font-medium text-gray-700 hover:border-[#f14011] focus:border-[#f14011] focus:outline-none transition-colors cursor-pointer"
             >
               <option value="">Alle Modelle</option>
@@ -883,17 +884,37 @@ function InseratePageInner() {
           {/* Motorisierung (Mercedes only) */}
           {brandFilter === "Mercedes-Benz" && modelFilter !== "" && MERCEDES_MOTORIZATIONS[modelFilter] && (
             <div className="relative">
-              <select
-                value={motorizationFilter}
-                onChange={(e) => setMotorizationFilter(e.target.value)}
-                className="appearance-none bg-white dark:bg-[#141414] border border-gray-200 rounded-full px-5 py-2.5 pr-10 text-sm font-medium text-gray-700 hover:border-[#f14011] focus:border-[#f14011] focus:outline-none transition-colors cursor-pointer"
+              <button
+                type="button"
+                onClick={() => setShowMotorizationDropdown(!showMotorizationDropdown)}
+                className="appearance-none bg-white dark:bg-[#141414] border border-gray-200 rounded-full px-5 py-2.5 pr-10 text-sm font-medium text-gray-700 hover:border-[#f14011] focus:border-[#f14011] focus:outline-none transition-colors cursor-pointer flex items-center gap-1"
               >
-                <option value="">Alle Motorisierungen</option>
-                {MERCEDES_MOTORIZATIONS[modelFilter].map((m) => (
-                  <option key={m} value={m}>{m}</option>
-                ))}
-              </select>
-              <ChevronDownIcon className="w-4 h-4 text-gray-400 absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+                {motorizationFilter.length === 0
+                  ? "Alle Motorisierungen"
+                  : `${motorizationFilter.length} Motorisierung${motorizationFilter.length > 1 ? "en" : ""}`}
+              </button>
+              <ChevronDownIcon className={`w-4 h-4 text-gray-400 absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none transition-transform ${showMotorizationDropdown ? "rotate-180" : ""}`} />
+              {showMotorizationDropdown && (
+                <div className="absolute z-50 mt-1 min-w-[200px] bg-white dark:bg-[#141414] border border-gray-200 dark:border-[#2a2a2a] rounded-xl shadow-lg max-h-60 overflow-y-auto py-1">
+                  {MERCEDES_MOTORIZATIONS[modelFilter].map((m) => (
+                    <label key={m} className="flex items-center gap-2 px-3 py-1.5 cursor-pointer hover:bg-gray-50 dark:hover:bg-[#222]">
+                      <input
+                        type="checkbox"
+                        checked={motorizationFilter.includes(m)}
+                        onChange={(e) => {
+                          if (e.target.checked) {
+                            setMotorizationFilter([...motorizationFilter, m]);
+                          } else {
+                            setMotorizationFilter(motorizationFilter.filter((x) => x !== m));
+                          }
+                        }}
+                        className="w-4 h-4 rounded border-gray-300 dark:border-gray-600 text-[#f14011] focus:ring-[#f14011] cursor-pointer"
+                      />
+                      <span className="text-sm text-gray-700 dark:text-gray-300">{m}</span>
+                    </label>
+                  ))}
+                </div>
+              )}
             </div>
           )}
 
@@ -962,7 +983,7 @@ function InseratePageInner() {
                 const parts: string[] = [];
                 if (brandFilter !== "Alle Marken") parts.push(brandFilter);
                 if (modelFilter) parts.push(modelFilter);
-                if (motorizationFilter) parts.push(motorizationFilter);
+                if (motorizationFilter.length > 0) parts.push(motorizationFilter.join(", "));
                 if (fuelFilter !== "Alle Kraftstoffe") parts.push(fuelFilter);
                 if (priceFilter !== 0) parts.push(priceRanges[priceFilter].label);
                 if (yearFrom) parts.push(`ab ${yearFrom}`);
