@@ -4,7 +4,14 @@ import React, { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { ThemeToggle } from "../theme-toggle";
-import { vehicles, brandOptions, fuelOptions, priceRanges } from "../vehicles-data";
+import {
+  vehicles,
+  brandOptions,
+  fuelOptions,
+  priceRanges,
+  mileageOptions,
+  powerOptions,
+} from "../vehicles-data";
 import type { Vehicle } from "../vehicles-data";
 import { useSavedData } from "../use-saved-data";
 import type { SavedSearch } from "../use-saved-data";
@@ -19,6 +26,34 @@ function applyFilters(filters: SavedSearch["filters"]): Vehicle[] {
     if (filters.fuelFilter !== "Alle Kraftstoffe" && v.fuelType !== filters.fuelFilter) return false;
     const range = priceRanges[filters.priceFilter];
     if (range && (v.price < range.min || v.price >= range.max)) return false;
+    // New filters (backwards-compatible: old saved searches won't have these fields)
+    if (filters.yearFrom && v.year < Number(filters.yearFrom)) return false;
+    if (filters.yearTo && v.year > Number(filters.yearTo)) return false;
+    if (filters.mileageFilter && filters.mileageFilter !== 0) {
+      const ml = mileageOptions[filters.mileageFilter];
+      if (ml && v.mileage > ml.max) return false;
+    }
+    if (filters.powerFilter && filters.powerFilter !== 0) {
+      const pw = powerOptions[filters.powerFilter];
+      if (pw && v.powerPs < pw.min) return false;
+    }
+    if (filters.transmissionFilter && filters.transmissionFilter !== "Alle") {
+      const t = v.transmission.toLowerCase();
+      if (filters.transmissionFilter === "Automatik" && !t.includes("automatik") && !t.includes("dsg") && !t.includes("pdk") && !t.includes("tronic") && !t.includes("s tronic")) return false;
+      if (filters.transmissionFilter === "Schaltung" && (t.includes("automatik") || t.includes("dsg") || t.includes("pdk") || t.includes("tronic") || t.includes("s tronic"))) return false;
+    }
+    if (filters.driveTypeFilter && filters.driveTypeFilter !== "Alle") {
+      const d = v.driveType.toLowerCase();
+      if (filters.driveTypeFilter === "Frontantrieb" && !d.includes("front")) return false;
+      if (filters.driveTypeFilter === "Hinterradantrieb" && !d.includes("hinter")) return false;
+      if (filters.driveTypeFilter === "Allrad" && !d.includes("allrad") && !d.includes("quattro") && !d.includes("awd") && !d.includes("4wd")) return false;
+    }
+    if (filters.sellerTypeFilter && filters.sellerTypeFilter !== "Alle") {
+      if (filters.sellerTypeFilter === "Privat" && v.sellerType !== "private") return false;
+      if (filters.sellerTypeFilter === "Händler" && v.sellerType !== "dealer") return false;
+    }
+    if (filters.accidentFreeFilter === "Nur unfallfrei" && !v.accidentFree) return false;
+    if (filters.cityFilter && !v.city.toLowerCase().includes(filters.cityFilter.toLowerCase())) return false;
     return true;
   });
 }
@@ -36,6 +71,15 @@ function buildSearchUrl(filters: SavedSearch["filters"]): string {
   if (filters.brandFilter !== "Alle Marken") params.set("brand", filters.brandFilter);
   if (filters.fuelFilter !== "Alle Kraftstoffe") params.set("fuel", filters.fuelFilter);
   if (filters.priceFilter !== 0) params.set("price", String(filters.priceFilter));
+  if (filters.yearFrom) params.set("yearFrom", filters.yearFrom);
+  if (filters.yearTo) params.set("yearTo", filters.yearTo);
+  if (filters.mileageFilter && filters.mileageFilter !== 0) params.set("mileage", String(filters.mileageFilter));
+  if (filters.powerFilter && filters.powerFilter !== 0) params.set("power", String(filters.powerFilter));
+  if (filters.transmissionFilter && filters.transmissionFilter !== "Alle") params.set("transmission", filters.transmissionFilter);
+  if (filters.driveTypeFilter && filters.driveTypeFilter !== "Alle") params.set("driveType", filters.driveTypeFilter);
+  if (filters.sellerTypeFilter && filters.sellerTypeFilter !== "Alle") params.set("sellerType", filters.sellerTypeFilter);
+  if (filters.accidentFreeFilter === "Nur unfallfrei") params.set("accidentFree", "ja");
+  if (filters.cityFilter) params.set("city", filters.cityFilter);
   const qs = params.toString();
   return qs ? `/inserate?${qs}` : "/inserate";
 }
@@ -58,6 +102,21 @@ function SearchCard({
   const newIds = currentIds.filter((id) => !search.seenVehicleIds.includes(id));
   const newCount = newIds.length;
 
+  const filterTags: string[] = [];
+  const f = search.filters;
+  if (f.brandFilter !== "Alle Marken") filterTags.push(f.brandFilter);
+  if (f.fuelFilter !== "Alle Kraftstoffe") filterTags.push(f.fuelFilter);
+  if (f.priceFilter !== 0) filterTags.push(priceRanges[f.priceFilter]?.label ?? "");
+  if (f.yearFrom) filterTags.push(`ab ${f.yearFrom}`);
+  if (f.yearTo) filterTags.push(`bis ${f.yearTo}`);
+  if (f.mileageFilter && f.mileageFilter !== 0) filterTags.push(mileageOptions[f.mileageFilter]?.label ?? "");
+  if (f.powerFilter && f.powerFilter !== 0) filterTags.push(powerOptions[f.powerFilter]?.label ?? "");
+  if (f.transmissionFilter && f.transmissionFilter !== "Alle") filterTags.push(f.transmissionFilter);
+  if (f.driveTypeFilter && f.driveTypeFilter !== "Alle") filterTags.push(f.driveTypeFilter);
+  if (f.sellerTypeFilter && f.sellerTypeFilter !== "Alle") filterTags.push(f.sellerTypeFilter);
+  if (f.accidentFreeFilter === "Nur unfallfrei") filterTags.push("Unfallfrei");
+  if (f.cityFilter) filterTags.push(f.cityFilter);
+
   return (
     <div className="card p-5">
       <div className="flex items-start justify-between gap-3">
@@ -73,6 +132,15 @@ function SearchCard({
           <p className="text-sm text-gray-400 mt-1">
             Gespeichert am {formatDate(search.createdAt)} &middot; {currentMatches.length} {currentMatches.length === 1 ? "Treffer" : "Treffer"}
           </p>
+          {filterTags.length > 0 && (
+            <div className="flex flex-wrap gap-1.5 mt-2">
+              {filterTags.map((tag) => (
+                <span key={tag} className="px-2 py-0.5 bg-gray-100 text-gray-600 text-xs rounded-full">
+                  {tag}
+                </span>
+              ))}
+            </div>
+          )}
         </div>
         <button
           onClick={onRemove}

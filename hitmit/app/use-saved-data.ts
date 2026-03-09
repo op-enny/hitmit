@@ -10,6 +10,15 @@ export interface SavedSearch {
     brandFilter: string;
     fuelFilter: string;
     priceFilter: number;
+    yearFrom: string;
+    yearTo: string;
+    mileageFilter: number;
+    powerFilter: number;
+    transmissionFilter: string;
+    driveTypeFilter: string;
+    sellerTypeFilter: string;
+    accidentFreeFilter: string;
+    cityFilter: string;
   };
   seenVehicleIds: number[];
 }

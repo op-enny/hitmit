@@ -284,3 +284,29 @@ export const priceRanges = [
   { label: "70.000 – 100.000 €", min: 70000, max: 100000 },
   { label: "Über 100.000 €", min: 100000, max: Infinity },
 ];
+
+export const yearOptions: number[] = [];
+for (let y = 2026; y >= 2015; y--) yearOptions.push(y);
+
+export const mileageOptions = [
+  { label: "Alle", max: Infinity },
+  { label: "Bis 10.000 km", max: 10000 },
+  { label: "Bis 25.000 km", max: 25000 },
+  { label: "Bis 50.000 km", max: 50000 },
+  { label: "Bis 100.000 km", max: 100000 },
+  { label: "Bis 150.000 km", max: 150000 },
+];
+
+export const powerOptions = [
+  { label: "Alle", min: 0 },
+  { label: "Ab 100 PS", min: 100 },
+  { label: "Ab 150 PS", min: 150 },
+  { label: "Ab 200 PS", min: 200 },
+  { label: "Ab 300 PS", min: 300 },
+  { label: "Ab 400 PS", min: 400 },
+  { label: "Ab 500 PS", min: 500 },
+];
+
+export const transmissionOptions = ["Alle", "Automatik", "Schaltung"];
+export const driveTypeOptions = ["Alle", "Frontantrieb", "Hinterradantrieb", "Allrad"];
+export const sellerTypeOptions = ["Alle", "Privat", "Händler"];

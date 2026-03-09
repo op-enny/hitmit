@@ -8,7 +8,18 @@ import { calculateValuation, PRICE_RATING_INFO } from "../valuation";
 import type { ValuationBreakdown, PriceRating } from "../valuation";
 import { calculateTireScore, TIRE_RATING_INFO } from "../tire-score";
 import { ThemeToggle } from "../theme-toggle";
-import { vehicles, brandOptions, fuelOptions, priceRanges } from "../vehicles-data";
+import {
+  vehicles,
+  brandOptions,
+  fuelOptions,
+  priceRanges,
+  yearOptions,
+  mileageOptions,
+  powerOptions,
+  transmissionOptions,
+  driveTypeOptions,
+  sellerTypeOptions,
+} from "../vehicles-data";
 import type { Vehicle } from "../vehicles-data";
 import { useSavedData } from "../use-saved-data";
 
@@ -600,11 +611,34 @@ function InseratePageInner() {
   const [brandFilter, setBrandFilter] = useState("Alle Marken");
   const [fuelFilter, setFuelFilter] = useState("Alle Kraftstoffe");
   const [priceFilter, setPriceFilter] = useState(0);
+  const [yearFrom, setYearFrom] = useState("");
+  const [yearTo, setYearTo] = useState("");
+  const [mileageFilter, setMileageFilter] = useState(0);
+  const [powerFilter, setPowerFilter] = useState(0);
+  const [transmissionFilter, setTransmissionFilter] = useState("Alle");
+  const [driveTypeFilter, setDriveTypeFilter] = useState("Alle");
+  const [sellerTypeFilter, setSellerTypeFilter] = useState("Alle");
+  const [accidentFreeFilter, setAccidentFreeFilter] = useState("Alle");
+  const [cityFilter, setCityFilter] = useState("");
+  const [showAdvanced, setShowAdvanced] = useState(false);
   const [selectedVehicle, setSelectedVehicle] = useState<Vehicle | null>(null);
   const [isDealer, setIsDealer] = useState(false);
   const [searchSaved, setSearchSaved] = useState(false);
 
   const { mounted, saveSearch, toggleFavorite, isFavorite } = useSavedData();
+
+  // Count active advanced filters
+  const advancedCount = [
+    yearFrom !== "",
+    yearTo !== "",
+    mileageFilter !== 0,
+    powerFilter !== 0,
+    transmissionFilter !== "Alle",
+    driveTypeFilter !== "Alle",
+    sellerTypeFilter !== "Alle",
+    accidentFreeFilter !== "Alle",
+    cityFilter !== "",
+  ].filter(Boolean).length;
 
   // Read query params for filter pre-fill (from gespeichert page)
   useEffect(() => {
@@ -617,6 +651,26 @@ function InseratePageInner() {
       const idx = Number(price);
       if (idx >= 0 && idx < priceRanges.length) setPriceFilter(idx);
     }
+    const yf = searchParams.get("yearFrom");
+    const yt = searchParams.get("yearTo");
+    const ml = searchParams.get("mileage");
+    const pw = searchParams.get("power");
+    const tr = searchParams.get("transmission");
+    const dt = searchParams.get("driveType");
+    const st = searchParams.get("sellerType");
+    const af = searchParams.get("accidentFree");
+    const ct = searchParams.get("city");
+    if (yf) setYearFrom(yf);
+    if (yt) setYearTo(yt);
+    if (ml !== null) { const i = Number(ml); if (i >= 0 && i < mileageOptions.length) setMileageFilter(i); }
+    if (pw !== null) { const i = Number(pw); if (i >= 0 && i < powerOptions.length) setPowerFilter(i); }
+    if (tr && transmissionOptions.includes(tr)) setTransmissionFilter(tr);
+    if (dt && driveTypeOptions.includes(dt)) setDriveTypeFilter(dt);
+    if (st && sellerTypeOptions.includes(st)) setSellerTypeFilter(st);
+    if (af === "ja") setAccidentFreeFilter("Nur unfallfrei");
+    if (ct) setCityFilter(ct);
+    // Auto-open advanced section if any advanced param is set
+    if (yf || yt || ml || pw || tr || dt || st || af || ct) setShowAdvanced(true);
   }, [searchParams]);
 
   // Persist dealer login state in localStorage
@@ -636,6 +690,27 @@ function InseratePageInner() {
     if (fuelFilter !== "Alle Kraftstoffe" && v.fuelType !== fuelFilter) return false;
     const range = priceRanges[priceFilter];
     if (v.price < range.min || v.price >= range.max) return false;
+    if (yearFrom !== "" && v.year < Number(yearFrom)) return false;
+    if (yearTo !== "" && v.year > Number(yearTo)) return false;
+    if (mileageFilter !== 0 && v.mileage > mileageOptions[mileageFilter].max) return false;
+    if (powerFilter !== 0 && v.powerPs < powerOptions[powerFilter].min) return false;
+    if (transmissionFilter !== "Alle") {
+      const t = v.transmission.toLowerCase();
+      if (transmissionFilter === "Automatik" && !t.includes("automatik") && !t.includes("dsg") && !t.includes("pdk") && !t.includes("tronic") && !t.includes("s tronic")) return false;
+      if (transmissionFilter === "Schaltung" && (t.includes("automatik") || t.includes("dsg") || t.includes("pdk") || t.includes("tronic") || t.includes("s tronic"))) return false;
+    }
+    if (driveTypeFilter !== "Alle") {
+      const d = v.driveType.toLowerCase();
+      if (driveTypeFilter === "Frontantrieb" && !d.includes("front")) return false;
+      if (driveTypeFilter === "Hinterradantrieb" && !d.includes("hinter")) return false;
+      if (driveTypeFilter === "Allrad" && !d.includes("allrad") && !d.includes("quattro") && !d.includes("awd") && !d.includes("4wd")) return false;
+    }
+    if (sellerTypeFilter !== "Alle") {
+      if (sellerTypeFilter === "Privat" && v.sellerType !== "private") return false;
+      if (sellerTypeFilter === "Händler" && v.sellerType !== "dealer") return false;
+    }
+    if (accidentFreeFilter === "Nur unfallfrei" && !v.accidentFree) return false;
+    if (cityFilter !== "" && !v.city.toLowerCase().includes(cityFilter.toLowerCase())) return false;
     return true;
   });
 
@@ -737,6 +812,27 @@ function InseratePageInner() {
             <ChevronDownIcon className="w-4 h-4 text-gray-400 absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
           </div>
 
+          {/* More filters toggle */}
+          <button
+            onClick={() => setShowAdvanced(!showAdvanced)}
+            className={`flex items-center gap-2 px-4 py-2.5 rounded-full text-sm font-medium border transition-colors ${
+              showAdvanced || advancedCount > 0
+                ? "bg-[#f14011]/10 border-[#f14011] text-[#f14011]"
+                : "bg-white dark:bg-[#141414] border-gray-200 text-gray-600 hover:border-[#f14011] hover:text-[#f14011]"
+            }`}
+          >
+            <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
+            </svg>
+            Mehr Filter
+            {advancedCount > 0 && (
+              <span className="w-5 h-5 flex items-center justify-center bg-[#f14011] text-white text-xs font-bold rounded-full">
+                {advancedCount}
+              </span>
+            )}
+            <ChevronDownIcon className={`w-3.5 h-3.5 transition-transform ${showAdvanced ? "rotate-180" : ""}`} />
+          </button>
+
           {/* Result count */}
           <div className="flex items-center px-4 text-sm text-gray-400">
             {filtered.length} {filtered.length === 1 ? "Fahrzeug" : "Fahrzeuge"}
@@ -750,8 +846,28 @@ function InseratePageInner() {
                 if (brandFilter !== "Alle Marken") parts.push(brandFilter);
                 if (fuelFilter !== "Alle Kraftstoffe") parts.push(fuelFilter);
                 if (priceFilter !== 0) parts.push(priceRanges[priceFilter].label);
+                if (yearFrom) parts.push(`ab ${yearFrom}`);
+                if (yearTo) parts.push(`bis ${yearTo}`);
+                if (mileageFilter !== 0) parts.push(mileageOptions[mileageFilter].label);
+                if (powerFilter !== 0) parts.push(powerOptions[powerFilter].label);
+                if (transmissionFilter !== "Alle") parts.push(transmissionFilter);
+                if (driveTypeFilter !== "Alle") parts.push(driveTypeFilter);
+                if (sellerTypeFilter !== "Alle") parts.push(sellerTypeFilter);
+                if (accidentFreeFilter !== "Alle") parts.push("Unfallfrei");
+                if (cityFilter) parts.push(cityFilter);
                 const label = parts.length > 0 ? parts.join(", ") : "Alle Fahrzeuge";
-                saveSearch(label, { brandFilter, fuelFilter, priceFilter }, filtered.map((v) => v.id));
+                saveSearch(
+                  label,
+                  {
+                    brandFilter, fuelFilter, priceFilter,
+                    yearFrom, yearTo,
+                    mileageFilter, powerFilter,
+                    transmissionFilter, driveTypeFilter,
+                    sellerTypeFilter, accidentFreeFilter,
+                    cityFilter,
+                  },
+                  filtered.map((v) => v.id),
+                );
                 setSearchSaved(true);
                 setTimeout(() => setSearchSaved(false), 2000);
               }}
@@ -779,6 +895,178 @@ function InseratePageInner() {
             </button>
           )}
         </div>
+
+        {/* Advanced Filters */}
+        {showAdvanced && (
+          <div className="mt-4 p-5 bg-white dark:bg-[#141414] border border-gray-200 rounded-2xl animate-fade-in">
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+              {/* Year From */}
+              <div>
+                <label className="block text-xs font-medium text-gray-500 mb-1.5">Baujahr von</label>
+                <div className="relative">
+                  <select
+                    value={yearFrom}
+                    onChange={(e) => setYearFrom(e.target.value)}
+                    className="w-full appearance-none bg-gray-50 dark:bg-[#1a1a1a] border border-gray-200 rounded-xl px-4 py-2.5 pr-9 text-sm text-gray-700 hover:border-[#f14011] focus:border-[#f14011] focus:outline-none transition-colors cursor-pointer"
+                  >
+                    <option value="">Alle</option>
+                    {yearOptions.map((y) => (
+                      <option key={y} value={y}>{y}</option>
+                    ))}
+                  </select>
+                  <ChevronDownIcon className="w-4 h-4 text-gray-400 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+                </div>
+              </div>
+
+              {/* Year To */}
+              <div>
+                <label className="block text-xs font-medium text-gray-500 mb-1.5">Baujahr bis</label>
+                <div className="relative">
+                  <select
+                    value={yearTo}
+                    onChange={(e) => setYearTo(e.target.value)}
+                    className="w-full appearance-none bg-gray-50 dark:bg-[#1a1a1a] border border-gray-200 rounded-xl px-4 py-2.5 pr-9 text-sm text-gray-700 hover:border-[#f14011] focus:border-[#f14011] focus:outline-none transition-colors cursor-pointer"
+                  >
+                    <option value="">Alle</option>
+                    {yearOptions.map((y) => (
+                      <option key={y} value={y}>{y}</option>
+                    ))}
+                  </select>
+                  <ChevronDownIcon className="w-4 h-4 text-gray-400 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+                </div>
+              </div>
+
+              {/* Mileage */}
+              <div>
+                <label className="block text-xs font-medium text-gray-500 mb-1.5">Kilometerstand</label>
+                <div className="relative">
+                  <select
+                    value={mileageFilter}
+                    onChange={(e) => setMileageFilter(Number(e.target.value))}
+                    className="w-full appearance-none bg-gray-50 dark:bg-[#1a1a1a] border border-gray-200 rounded-xl px-4 py-2.5 pr-9 text-sm text-gray-700 hover:border-[#f14011] focus:border-[#f14011] focus:outline-none transition-colors cursor-pointer"
+                  >
+                    {mileageOptions.map((m, i) => (
+                      <option key={m.label} value={i}>{m.label}</option>
+                    ))}
+                  </select>
+                  <ChevronDownIcon className="w-4 h-4 text-gray-400 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+                </div>
+              </div>
+
+              {/* Power */}
+              <div>
+                <label className="block text-xs font-medium text-gray-500 mb-1.5">Leistung</label>
+                <div className="relative">
+                  <select
+                    value={powerFilter}
+                    onChange={(e) => setPowerFilter(Number(e.target.value))}
+                    className="w-full appearance-none bg-gray-50 dark:bg-[#1a1a1a] border border-gray-200 rounded-xl px-4 py-2.5 pr-9 text-sm text-gray-700 hover:border-[#f14011] focus:border-[#f14011] focus:outline-none transition-colors cursor-pointer"
+                  >
+                    {powerOptions.map((p, i) => (
+                      <option key={p.label} value={i}>{p.label}</option>
+                    ))}
+                  </select>
+                  <ChevronDownIcon className="w-4 h-4 text-gray-400 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+                </div>
+              </div>
+
+              {/* Transmission */}
+              <div>
+                <label className="block text-xs font-medium text-gray-500 mb-1.5">Getriebe</label>
+                <div className="relative">
+                  <select
+                    value={transmissionFilter}
+                    onChange={(e) => setTransmissionFilter(e.target.value)}
+                    className="w-full appearance-none bg-gray-50 dark:bg-[#1a1a1a] border border-gray-200 rounded-xl px-4 py-2.5 pr-9 text-sm text-gray-700 hover:border-[#f14011] focus:border-[#f14011] focus:outline-none transition-colors cursor-pointer"
+                  >
+                    {transmissionOptions.map((t) => (
+                      <option key={t} value={t}>{t}</option>
+                    ))}
+                  </select>
+                  <ChevronDownIcon className="w-4 h-4 text-gray-400 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+                </div>
+              </div>
+
+              {/* Drive Type */}
+              <div>
+                <label className="block text-xs font-medium text-gray-500 mb-1.5">Antrieb</label>
+                <div className="relative">
+                  <select
+                    value={driveTypeFilter}
+                    onChange={(e) => setDriveTypeFilter(e.target.value)}
+                    className="w-full appearance-none bg-gray-50 dark:bg-[#1a1a1a] border border-gray-200 rounded-xl px-4 py-2.5 pr-9 text-sm text-gray-700 hover:border-[#f14011] focus:border-[#f14011] focus:outline-none transition-colors cursor-pointer"
+                  >
+                    {driveTypeOptions.map((d) => (
+                      <option key={d} value={d}>{d}</option>
+                    ))}
+                  </select>
+                  <ChevronDownIcon className="w-4 h-4 text-gray-400 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+                </div>
+              </div>
+
+              {/* Seller Type */}
+              <div>
+                <label className="block text-xs font-medium text-gray-500 mb-1.5">Verkäufertyp</label>
+                <div className="relative">
+                  <select
+                    value={sellerTypeFilter}
+                    onChange={(e) => setSellerTypeFilter(e.target.value)}
+                    className="w-full appearance-none bg-gray-50 dark:bg-[#1a1a1a] border border-gray-200 rounded-xl px-4 py-2.5 pr-9 text-sm text-gray-700 hover:border-[#f14011] focus:border-[#f14011] focus:outline-none transition-colors cursor-pointer"
+                  >
+                    {sellerTypeOptions.map((s) => (
+                      <option key={s} value={s}>{s}</option>
+                    ))}
+                  </select>
+                  <ChevronDownIcon className="w-4 h-4 text-gray-400 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+                </div>
+              </div>
+
+              {/* Accident Free */}
+              <div>
+                <label className="block text-xs font-medium text-gray-500 mb-1.5">Unfallfrei</label>
+                <div className="relative">
+                  <select
+                    value={accidentFreeFilter}
+                    onChange={(e) => setAccidentFreeFilter(e.target.value)}
+                    className="w-full appearance-none bg-gray-50 dark:bg-[#1a1a1a] border border-gray-200 rounded-xl px-4 py-2.5 pr-9 text-sm text-gray-700 hover:border-[#f14011] focus:border-[#f14011] focus:outline-none transition-colors cursor-pointer"
+                  >
+                    <option value="Alle">Alle</option>
+                    <option value="Nur unfallfrei">Nur unfallfrei</option>
+                  </select>
+                  <ChevronDownIcon className="w-4 h-4 text-gray-400 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+                </div>
+              </div>
+
+              {/* City */}
+              <div className="col-span-2 sm:col-span-1">
+                <label className="block text-xs font-medium text-gray-500 mb-1.5">Standort (Stadt)</label>
+                <input
+                  type="text"
+                  value={cityFilter}
+                  onChange={(e) => setCityFilter(e.target.value)}
+                  placeholder="z.B. München"
+                  className="w-full bg-gray-50 dark:bg-[#1a1a1a] border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-gray-700 placeholder:text-gray-400 hover:border-[#f14011] focus:border-[#f14011] focus:outline-none transition-colors"
+                />
+              </div>
+            </div>
+
+            {/* Reset advanced filters */}
+            {advancedCount > 0 && (
+              <button
+                onClick={() => {
+                  setYearFrom(""); setYearTo("");
+                  setMileageFilter(0); setPowerFilter(0);
+                  setTransmissionFilter("Alle"); setDriveTypeFilter("Alle");
+                  setSellerTypeFilter("Alle"); setAccidentFreeFilter("Alle");
+                  setCityFilter("");
+                }}
+                className="mt-4 text-sm text-[#f14011] font-semibold hover:underline"
+              >
+                Erweiterte Filter zurücksetzen
+              </button>
+            )}
+          </div>
+        )}
       </section>
 
       {/* Vehicle Grid */}
@@ -808,6 +1096,11 @@ function InseratePageInner() {
                 setBrandFilter("Alle Marken");
                 setFuelFilter("Alle Kraftstoffe");
                 setPriceFilter(0);
+                setYearFrom(""); setYearTo("");
+                setMileageFilter(0); setPowerFilter(0);
+                setTransmissionFilter("Alle"); setDriveTypeFilter("Alle");
+                setSellerTypeFilter("Alle"); setAccidentFreeFilter("Alle");
+                setCityFilter("");
               }}
               className="mt-4 text-[#f14011] font-semibold hover:underline"
             >
