@@ -19,16 +19,17 @@ import {
   conditionOptions,
   doorOptions,
   seatOptions,
+  vehicleTypeOptions,
+  vehicleCategoryOptions,
+  cylinderOptions,
+  displacementOptions,
+  tankVolumeOptions,
+  previousOwnerOptions,
+  huOptions,
 } from "../vehicles-data";
 import type { Vehicle } from "../vehicles-data";
 import { useSavedData } from "../use-saved-data";
 import { calculateValuation, PRICE_RATING_INFO } from "../valuation";
-
-// ============================================================================
-// STATIC OPTIONS
-// ============================================================================
-
-const vehicleCategoryOptions = ["Alle", "Limousine", "Kombi", "Schrägheck", "SUV", "Geländewagen", "Sportwagen", "Coupé", "Cabrio", "Van / Minibus", "Pick-up"];
 
 // ============================================================================
 // ICONS
@@ -177,6 +178,20 @@ export default function SuchenPage() {
   const [doorFilter, setDoorFilter] = useState("Alle");
   const [seatFilter, setSeatFilter] = useState("Alle");
 
+  // New filters
+  const [modelFilter, setModelFilter] = useState("");
+  const [variantFilter, setVariantFilter] = useState("");
+  const [vehicleTypeFilter, setVehicleTypeFilter] = useState("Alle");
+  const [vehicleCategoryFilter, setVehicleCategoryFilter] = useState("Alle");
+  const [mwstFilter, setMwstFilter] = useState("Alle");
+  const [firstRegFrom, setFirstRegFrom] = useState("");
+  const [firstRegTo, setFirstRegTo] = useState("");
+  const [huFilter, setHuFilter] = useState("Alle");
+  const [previousOwnersFilter, setPreviousOwnersFilter] = useState("Alle");
+  const [cylinderFilter, setCylinderFilter] = useState("Alle");
+  const [displacementFilter, setDisplacementFilter] = useState(0);
+  const [tankVolumeFilter, setTankVolumeFilter] = useState(0);
+
   // Search state
   const [hasSearched, setHasSearched] = useState(false);
   const [searchSaved, setSearchSaved] = useState(false);
@@ -217,6 +232,54 @@ export default function SuchenPage() {
       if (doorFilter === "6/7" && !["6", "7"].includes(v.doors)) return false;
     }
     if (seatFilter !== "Alle" && v.seats !== seatFilter) return false;
+    if (modelFilter !== "" && !v.model.toLowerCase().includes(modelFilter.toLowerCase())) return false;
+    if (variantFilter !== "" && !v.variant.toLowerCase().includes(variantFilter.toLowerCase())) return false;
+    if (vehicleTypeFilter !== "Alle" && v.vehicleType !== vehicleTypeFilter) return false;
+    if (vehicleCategoryFilter !== "Alle" && v.vehicleCategory !== vehicleCategoryFilter) return false;
+    if (mwstFilter !== "Alle") {
+      if (mwstFilter === "Ja" && !v.mwstAusweisbar) return false;
+      if (mwstFilter === "Nein" && v.mwstAusweisbar) return false;
+    }
+    if (firstRegFrom !== "" || firstRegTo !== "") {
+      const [mStr, yStr] = v.firstRegistration.split("/");
+      const regDate = Number(yStr) * 100 + Number(mStr);
+      if (firstRegFrom !== "") {
+        const [fm, fy] = firstRegFrom.split("/");
+        if (regDate < Number(fy) * 100 + Number(fm)) return false;
+      }
+      if (firstRegTo !== "") {
+        const [tm, ty] = firstRegTo.split("/");
+        if (regDate > Number(ty) * 100 + Number(tm)) return false;
+      }
+    }
+    if (huFilter !== "Alle") {
+      if (!v.hu) return false;
+      const [hm, hy] = v.hu.split("/");
+      const huDate = new Date(Number(hy), Number(hm) - 1);
+      const now = new Date();
+      const in12 = new Date();
+      in12.setMonth(in12.getMonth() + 12);
+      if (huFilter === "Neu (mind. 12 Monate)" && huDate < in12) return false;
+      if (huFilter === "Abgelaufen" && huDate >= now) return false;
+    }
+    if (previousOwnersFilter !== "Alle") {
+      if (v.previousOwners === undefined) return false;
+      if (previousOwnersFilter === "4+") {
+        if (v.previousOwners < 4) return false;
+      } else {
+        if (v.previousOwners !== Number(previousOwnersFilter)) return false;
+      }
+    }
+    if (cylinderFilter !== "Alle" && v.cylinders !== Number(cylinderFilter)) return false;
+    if (displacementFilter !== 0) {
+      const opt = displacementOptions[displacementFilter];
+      if (opt.max === -1) {
+        if (!v.engineDisplacement || v.engineDisplacement <= 3000) return false;
+      } else {
+        if (!v.engineDisplacement || v.engineDisplacement > opt.max) return false;
+      }
+    }
+    if (tankVolumeFilter !== 0 && (!v.tankVolume || v.tankVolume < tankVolumeOptions[tankVolumeFilter].min)) return false;
     return true;
   });
 
@@ -237,6 +300,18 @@ export default function SuchenPage() {
     conditionFilter !== "Alle",
     doorFilter !== "Alle",
     seatFilter !== "Alle",
+    modelFilter !== "",
+    variantFilter !== "",
+    vehicleTypeFilter !== "Alle",
+    vehicleCategoryFilter !== "Alle",
+    mwstFilter !== "Alle",
+    firstRegFrom !== "",
+    firstRegTo !== "",
+    huFilter !== "Alle",
+    previousOwnersFilter !== "Alle",
+    cylinderFilter !== "Alle",
+    displacementFilter !== 0,
+    tankVolumeFilter !== 0,
   ].filter(Boolean).length;
 
   const resetAll = () => {
@@ -250,6 +325,11 @@ export default function SuchenPage() {
     setCityFilter("");
     setColorFilter("Alle Farben"); setConditionFilter("Alle");
     setDoorFilter("Alle"); setSeatFilter("Alle");
+    setModelFilter(""); setVariantFilter("");
+    setVehicleTypeFilter("Alle"); setVehicleCategoryFilter("Alle");
+    setMwstFilter("Alle"); setFirstRegFrom(""); setFirstRegTo("");
+    setHuFilter("Alle"); setPreviousOwnersFilter("Alle");
+    setCylinderFilter("Alle"); setDisplacementFilter(0); setTankVolumeFilter(0);
   };
 
   const handleSaveSearch = () => {
@@ -270,6 +350,18 @@ export default function SuchenPage() {
     if (conditionFilter !== "Alle") parts.push(conditionFilter);
     if (doorFilter !== "Alle") parts.push(`${doorFilter} Türen`);
     if (seatFilter !== "Alle") parts.push(`${seatFilter} Sitze`);
+    if (modelFilter) parts.push(modelFilter);
+    if (variantFilter) parts.push(variantFilter);
+    if (vehicleTypeFilter !== "Alle") parts.push(vehicleTypeFilter);
+    if (vehicleCategoryFilter !== "Alle") parts.push(vehicleCategoryFilter);
+    if (mwstFilter !== "Alle") parts.push(`MwSt: ${mwstFilter}`);
+    if (firstRegFrom) parts.push(`EZ ab ${firstRegFrom}`);
+    if (firstRegTo) parts.push(`EZ bis ${firstRegTo}`);
+    if (huFilter !== "Alle") parts.push(`HU: ${huFilter}`);
+    if (previousOwnersFilter !== "Alle") parts.push(`${previousOwnersFilter} Vorbesitzer`);
+    if (cylinderFilter !== "Alle") parts.push(`${cylinderFilter} Zylinder`);
+    if (displacementFilter !== 0) parts.push(displacementOptions[displacementFilter].label);
+    if (tankVolumeFilter !== 0) parts.push(tankVolumeOptions[tankVolumeFilter].label);
     const label = parts.length > 0 ? parts.join(", ") : "Alle Fahrzeuge";
     saveSearch(
       label,
@@ -282,6 +374,11 @@ export default function SuchenPage() {
         cityFilter,
         colorFilter, conditionFilter,
         doorFilter, seatFilter,
+        modelFilter, variantFilter,
+        vehicleTypeFilter, vehicleCategoryFilter,
+        mwstFilter, firstRegFrom, firstRegTo,
+        huFilter, previousOwnersFilter,
+        cylinderFilter, displacementFilter, tankVolumeFilter,
       },
       filtered.map((v) => v.id),
     );
@@ -338,6 +435,38 @@ export default function SuchenPage() {
               onChange={setBrandFilter}
               options={brandOptions.map((b) => ({ value: b, label: b }))}
             />
+            <div>
+              <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1.5">Modell</label>
+              <input
+                type="text"
+                value={modelFilter}
+                onChange={(e) => setModelFilter(e.target.value)}
+                placeholder="z.B. M4, Golf"
+                className="w-full bg-white dark:bg-[#1a1a1a] border border-gray-200 dark:border-[#2a2a2a] rounded-xl px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 placeholder:text-gray-400 hover:border-[#f14011] focus:border-[#f14011] focus:outline-none transition-colors"
+              />
+            </div>
+            <div>
+              <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1.5">Variante</label>
+              <input
+                type="text"
+                value={variantFilter}
+                onChange={(e) => setVariantFilter(e.target.value)}
+                placeholder="z.B. Clubsport, AMG"
+                className="w-full bg-white dark:bg-[#1a1a1a] border border-gray-200 dark:border-[#2a2a2a] rounded-xl px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 placeholder:text-gray-400 hover:border-[#f14011] focus:border-[#f14011] focus:outline-none transition-colors"
+              />
+            </div>
+            <FilterSelect
+              label="Fahrzeugtyp"
+              value={vehicleTypeFilter}
+              onChange={setVehicleTypeFilter}
+              options={vehicleTypeOptions.map((v) => ({ value: v, label: v }))}
+            />
+            <FilterSelect
+              label="Karosserieform"
+              value={vehicleCategoryFilter}
+              onChange={setVehicleCategoryFilter}
+              options={vehicleCategoryOptions.map((c) => ({ value: c, label: c }))}
+            />
             <FilterSelect
               label="Kraftstoff"
               value={fuelFilter}
@@ -384,6 +513,24 @@ export default function SuchenPage() {
               value={transmissionFilter}
               onChange={setTransmissionFilter}
               options={transmissionOptions.map((t) => ({ value: t, label: t }))}
+            />
+            <FilterSelect
+              label="Zylinder"
+              value={cylinderFilter}
+              onChange={setCylinderFilter}
+              options={cylinderOptions.map((c) => ({ value: c, label: c }))}
+            />
+            <FilterSelect
+              label="Hubraum"
+              value={displacementFilter}
+              onChange={(v) => setDisplacementFilter(Number(v))}
+              options={displacementOptions.map((d, i) => ({ value: i, label: d.label }))}
+            />
+            <FilterSelect
+              label="Tankvolumen"
+              value={tankVolumeFilter}
+              onChange={(v) => setTankVolumeFilter(Number(v))}
+              options={tankVolumeOptions.map((t, i) => ({ value: i, label: t.label }))}
             />
           </div>
 
@@ -442,6 +589,44 @@ export default function SuchenPage() {
                 className="w-full bg-white dark:bg-[#1a1a1a] border border-gray-200 dark:border-[#2a2a2a] rounded-xl px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 placeholder:text-gray-400 hover:border-[#f14011] focus:border-[#f14011] focus:outline-none transition-colors"
               />
             </div>
+            <div>
+              <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1.5">Erstzulassung von</label>
+              <input
+                type="text"
+                value={firstRegFrom}
+                onChange={(e) => setFirstRegFrom(e.target.value)}
+                placeholder="MM/JJJJ"
+                className="w-full bg-white dark:bg-[#1a1a1a] border border-gray-200 dark:border-[#2a2a2a] rounded-xl px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 placeholder:text-gray-400 hover:border-[#f14011] focus:border-[#f14011] focus:outline-none transition-colors"
+              />
+            </div>
+            <div>
+              <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1.5">Erstzulassung bis</label>
+              <input
+                type="text"
+                value={firstRegTo}
+                onChange={(e) => setFirstRegTo(e.target.value)}
+                placeholder="MM/JJJJ"
+                className="w-full bg-white dark:bg-[#1a1a1a] border border-gray-200 dark:border-[#2a2a2a] rounded-xl px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 placeholder:text-gray-400 hover:border-[#f14011] focus:border-[#f14011] focus:outline-none transition-colors"
+              />
+            </div>
+            <FilterSelect
+              label="HU"
+              value={huFilter}
+              onChange={setHuFilter}
+              options={huOptions.map((h) => ({ value: h, label: h }))}
+            />
+            <FilterSelect
+              label="Vorbesitzer"
+              value={previousOwnersFilter}
+              onChange={setPreviousOwnersFilter}
+              options={previousOwnerOptions.map((p) => ({ value: p, label: p }))}
+            />
+            <FilterSelect
+              label="MwSt. ausweisbar"
+              value={mwstFilter}
+              onChange={setMwstFilter}
+              options={[{ value: "Alle", label: "Alle" }, { value: "Ja", label: "Ja" }, { value: "Nein", label: "Nein" }]}
+            />
           </div>
 
           {/* Actions */}

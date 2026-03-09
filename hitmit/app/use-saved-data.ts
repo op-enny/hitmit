@@ -23,6 +23,18 @@ export interface SavedSearch {
     conditionFilter: string;
     doorFilter: string;
     seatFilter: string;
+    modelFilter: string;
+    variantFilter: string;
+    vehicleTypeFilter: string;
+    vehicleCategoryFilter: string;
+    mwstFilter: string;
+    firstRegFrom: string;
+    firstRegTo: string;
+    huFilter: string;
+    previousOwnersFilter: string;
+    cylinderFilter: string;
+    displacementFilter: number;
+    tankVolumeFilter: number;
   };
   seenVehicleIds: number[];
 }

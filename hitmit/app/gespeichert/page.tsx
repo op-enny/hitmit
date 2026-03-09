@@ -11,6 +11,8 @@ import {
   priceRanges,
   mileageOptions,
   powerOptions,
+  displacementOptions,
+  tankVolumeOptions,
 } from "../vehicles-data";
 import type { Vehicle } from "../vehicles-data";
 import { useSavedData } from "../use-saved-data";
@@ -62,6 +64,59 @@ function applyFilters(filters: SavedSearch["filters"]): Vehicle[] {
       if (filters.doorFilter === "6/7" && !["6", "7"].includes(v.doors)) return false;
     }
     if (filters.seatFilter && filters.seatFilter !== "Alle" && v.seats !== filters.seatFilter) return false;
+    if (filters.modelFilter && !v.model.toLowerCase().includes(filters.modelFilter.toLowerCase())) return false;
+    if (filters.variantFilter && !v.variant.toLowerCase().includes(filters.variantFilter.toLowerCase())) return false;
+    if (filters.vehicleTypeFilter && filters.vehicleTypeFilter !== "Alle" && v.vehicleType !== filters.vehicleTypeFilter) return false;
+    if (filters.vehicleCategoryFilter && filters.vehicleCategoryFilter !== "Alle" && v.vehicleCategory !== filters.vehicleCategoryFilter) return false;
+    if (filters.mwstFilter && filters.mwstFilter !== "Alle") {
+      if (filters.mwstFilter === "Ja" && !v.mwstAusweisbar) return false;
+      if (filters.mwstFilter === "Nein" && v.mwstAusweisbar) return false;
+    }
+    if (filters.firstRegFrom || filters.firstRegTo) {
+      const [mStr, yStr] = v.firstRegistration.split("/");
+      const regDate = Number(yStr) * 100 + Number(mStr);
+      if (filters.firstRegFrom) {
+        const [fm, fy] = filters.firstRegFrom.split("/");
+        if (regDate < Number(fy) * 100 + Number(fm)) return false;
+      }
+      if (filters.firstRegTo) {
+        const [tm, ty] = filters.firstRegTo.split("/");
+        if (regDate > Number(ty) * 100 + Number(tm)) return false;
+      }
+    }
+    if (filters.huFilter && filters.huFilter !== "Alle") {
+      if (!v.hu) return false;
+      const [hm, hy] = v.hu.split("/");
+      const huDate = new Date(Number(hy), Number(hm) - 1);
+      const now = new Date();
+      const in12 = new Date();
+      in12.setMonth(in12.getMonth() + 12);
+      if (filters.huFilter === "Neu (mind. 12 Monate)" && huDate < in12) return false;
+      if (filters.huFilter === "Abgelaufen" && huDate >= now) return false;
+    }
+    if (filters.previousOwnersFilter && filters.previousOwnersFilter !== "Alle") {
+      if (v.previousOwners === undefined) return false;
+      if (filters.previousOwnersFilter === "4+") {
+        if (v.previousOwners < 4) return false;
+      } else {
+        if (v.previousOwners !== Number(filters.previousOwnersFilter)) return false;
+      }
+    }
+    if (filters.cylinderFilter && filters.cylinderFilter !== "Alle" && v.cylinders !== Number(filters.cylinderFilter)) return false;
+    if (filters.displacementFilter && filters.displacementFilter !== 0) {
+      const opt = displacementOptions[filters.displacementFilter];
+      if (opt) {
+        if (opt.max === -1) {
+          if (!v.engineDisplacement || v.engineDisplacement <= 3000) return false;
+        } else {
+          if (!v.engineDisplacement || v.engineDisplacement > opt.max) return false;
+        }
+      }
+    }
+    if (filters.tankVolumeFilter && filters.tankVolumeFilter !== 0) {
+      const opt = tankVolumeOptions[filters.tankVolumeFilter];
+      if (opt && (!v.tankVolume || v.tankVolume < opt.min)) return false;
+    }
     return true;
   });
 }
@@ -92,6 +147,18 @@ function buildSearchUrl(filters: SavedSearch["filters"]): string {
   if (filters.conditionFilter && filters.conditionFilter !== "Alle") params.set("condition", filters.conditionFilter);
   if (filters.doorFilter && filters.doorFilter !== "Alle") params.set("doors", filters.doorFilter);
   if (filters.seatFilter && filters.seatFilter !== "Alle") params.set("seats", filters.seatFilter);
+  if (filters.modelFilter) params.set("model", filters.modelFilter);
+  if (filters.variantFilter) params.set("variant", filters.variantFilter);
+  if (filters.vehicleTypeFilter && filters.vehicleTypeFilter !== "Alle") params.set("vehicleType", filters.vehicleTypeFilter);
+  if (filters.vehicleCategoryFilter && filters.vehicleCategoryFilter !== "Alle") params.set("vehicleCategory", filters.vehicleCategoryFilter);
+  if (filters.mwstFilter && filters.mwstFilter !== "Alle") params.set("mwst", filters.mwstFilter);
+  if (filters.firstRegFrom) params.set("firstRegFrom", filters.firstRegFrom);
+  if (filters.firstRegTo) params.set("firstRegTo", filters.firstRegTo);
+  if (filters.huFilter && filters.huFilter !== "Alle") params.set("hu", filters.huFilter);
+  if (filters.previousOwnersFilter && filters.previousOwnersFilter !== "Alle") params.set("previousOwners", filters.previousOwnersFilter);
+  if (filters.cylinderFilter && filters.cylinderFilter !== "Alle") params.set("cylinders", filters.cylinderFilter);
+  if (filters.displacementFilter && filters.displacementFilter !== 0) params.set("displacement", String(filters.displacementFilter));
+  if (filters.tankVolumeFilter && filters.tankVolumeFilter !== 0) params.set("tankVolume", String(filters.tankVolumeFilter));
   const qs = params.toString();
   return qs ? `/inserate?${qs}` : "/inserate";
 }
@@ -132,6 +199,18 @@ function SearchCard({
   if (f.conditionFilter && f.conditionFilter !== "Alle") filterTags.push(f.conditionFilter);
   if (f.doorFilter && f.doorFilter !== "Alle") filterTags.push(`${f.doorFilter} Türen`);
   if (f.seatFilter && f.seatFilter !== "Alle") filterTags.push(`${f.seatFilter} Sitze`);
+  if (f.modelFilter) filterTags.push(f.modelFilter);
+  if (f.variantFilter) filterTags.push(f.variantFilter);
+  if (f.vehicleTypeFilter && f.vehicleTypeFilter !== "Alle") filterTags.push(f.vehicleTypeFilter);
+  if (f.vehicleCategoryFilter && f.vehicleCategoryFilter !== "Alle") filterTags.push(f.vehicleCategoryFilter);
+  if (f.mwstFilter && f.mwstFilter !== "Alle") filterTags.push(`MwSt: ${f.mwstFilter}`);
+  if (f.firstRegFrom) filterTags.push(`EZ ab ${f.firstRegFrom}`);
+  if (f.firstRegTo) filterTags.push(`EZ bis ${f.firstRegTo}`);
+  if (f.huFilter && f.huFilter !== "Alle") filterTags.push(`HU: ${f.huFilter}`);
+  if (f.previousOwnersFilter && f.previousOwnersFilter !== "Alle") filterTags.push(`${f.previousOwnersFilter} Vorbesitzer`);
+  if (f.cylinderFilter && f.cylinderFilter !== "Alle") filterTags.push(`${f.cylinderFilter} Zylinder`);
+  if (f.displacementFilter && f.displacementFilter !== 0) filterTags.push(displacementOptions[f.displacementFilter]?.label ?? "");
+  if (f.tankVolumeFilter && f.tankVolumeFilter !== 0) filterTags.push(tankVolumeOptions[f.tankVolumeFilter]?.label ?? "");
 
   return (
     <div className="card p-5">

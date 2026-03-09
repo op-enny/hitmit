@@ -42,6 +42,14 @@ export interface Vehicle {
   tireAgeRear?: string;
   tireDamageFront?: boolean;
   tireDamageRear?: boolean;
+  vehicleType?: string;
+  vehicleCategory?: string;
+  mwstAusweisbar?: boolean;
+  hu?: string;
+  previousOwners?: number;
+  cylinders?: number;
+  engineDisplacement?: number;
+  tankVolume?: number;
   gradient: string;
 }
 
@@ -80,6 +88,14 @@ export const vehicles: Vehicle[] = [
     exteriorFeatures: ["M Carbon Dach", "M Carbon Paket", "LED Scheinwerfer", "19/20 Zoll M Felgen"],
     multimediaFeatures: ["Harman Kardon", "Apple CarPlay", "Android Auto", "Navigation"],
     paintThickness: { "Motorhaube": "105", "Kotflügel vorne links": "112", "Fahrertür": "98", "Kotflügel hinten rechts": "185", "Heckklappe": "102" },
+    vehicleType: "PKW",
+    vehicleCategory: "Coupé",
+    mwstAusweisbar: true,
+    hu: "03/2026",
+    previousOwners: 1,
+    cylinders: 6,
+    engineDisplacement: 2993,
+    tankVolume: 59,
     gradient: "from-blue-600 via-blue-800 to-gray-900",
   },
   {
@@ -114,6 +130,14 @@ export const vehicles: Vehicle[] = [
     safetyFeatures: ["ACC", "Spurhalteassistent", "Notbremsassistent", "Müdigkeitserkennung"],
     exteriorFeatures: ["LED Matrix Scheinwerfer", "19 Zoll Felgen", "Heckspoiler"],
     multimediaFeatures: ["Discover Pro", "Apple CarPlay", "Android Auto", "Wireless Charging"],
+    vehicleType: "PKW",
+    vehicleCategory: "Schrägheck",
+    mwstAusweisbar: false,
+    hu: "01/2027",
+    previousOwners: 1,
+    cylinders: 4,
+    engineDisplacement: 1984,
+    tankVolume: 50,
     gradient: "from-red-500 via-red-700 to-gray-900",
   },
   {
@@ -149,6 +173,14 @@ export const vehicles: Vehicle[] = [
     safetyFeatures: ["360° Kamera", "Aktiver Bremsassistent", "Totwinkelassistent", "Parktronic"],
     exteriorFeatures: ["AMG Styling", "Multibeam LED", "19 Zoll AMG Felgen", "Panorama-Schiebedach"],
     multimediaFeatures: ["Burmester Surround", "MBUX", "Wireless CarPlay", "Head-Up Display"],
+    vehicleType: "PKW",
+    vehicleCategory: "Limousine",
+    mwstAusweisbar: true,
+    hu: "06/2025",
+    previousOwners: 1,
+    cylinders: 4,
+    engineDisplacement: 1999,
+    tankVolume: 66,
     gradient: "from-gray-700 via-gray-900 to-black",
   },
   {
@@ -183,6 +215,14 @@ export const vehicles: Vehicle[] = [
     safetyFeatures: ["PASM", "Porsche Stability Management", "Nachtsichtassistent"],
     exteriorFeatures: ["Sport Design Paket", "LED Matrix Scheinwerfer", "20/21 Zoll Carrera S Felgen"],
     multimediaFeatures: ["Bose Surround", "PCM 6.0", "Apple CarPlay", "Sport Chrono Display"],
+    vehicleType: "PKW",
+    vehicleCategory: "Sportwagen",
+    mwstAusweisbar: false,
+    hu: "09/2026",
+    previousOwners: 2,
+    cylinders: 6,
+    engineDisplacement: 2981,
+    tankVolume: 67,
     gradient: "from-indigo-600 via-indigo-900 to-gray-900",
   },
   {
@@ -217,6 +257,14 @@ export const vehicles: Vehicle[] = [
     safetyFeatures: ["Autopilot", "Notbremsassistent", "Spurhalteassistent", "8 Kameras"],
     exteriorFeatures: ["19 Zoll Sport Felgen", "Tönungsfolie", "Chrome Delete"],
     multimediaFeatures: ["15 Zoll Touchscreen", "Premium Audio", "Netflix/YouTube", "Spotify"],
+    vehicleType: "PKW",
+    vehicleCategory: "Limousine",
+    mwstAusweisbar: false,
+    hu: "03/2027",
+    previousOwners: 1,
+    cylinders: 0,
+    engineDisplacement: 0,
+    tankVolume: 0,
     gradient: "from-sky-400 via-sky-600 to-gray-900",
   },
   {
@@ -252,6 +300,14 @@ export const vehicles: Vehicle[] = [
     safetyFeatures: ["Audi Pre Sense", "Spurhalteassistent", "Adaptiver Tempomat"],
     exteriorFeatures: ["RS Heckspoiler", "Matrix LED", "19 Zoll RS Felgen", "RS Sportabgasanlage"],
     multimediaFeatures: ["B&O Sound System", "MMI Navigation Plus", "Audi Virtual Cockpit Plus", "Wireless CarPlay"],
+    vehicleType: "PKW",
+    vehicleCategory: "Schrägheck",
+    mwstAusweisbar: true,
+    hu: "07/2026",
+    previousOwners: 1,
+    cylinders: 5,
+    engineDisplacement: 2480,
+    tankVolume: 55,
     gradient: "from-gray-500 via-gray-700 to-gray-900",
   },
 ];
@@ -328,3 +384,25 @@ export const colorOptions = [
 export const conditionOptions = ["Alle", "Neuwagen", "Gebraucht", "Unfallwagen", "Tageszulassung"];
 export const doorOptions = ["Alle", "2/3", "4/5", "6/7"];
 export const seatOptions = ["Alle", "2", "4", "5", "7"];
+export const vehicleTypeOptions = ["Alle", "PKW", "Motorrad", "LKW", "Transporter", "Sonstige"];
+export const vehicleCategoryOptions = ["Alle", "Limousine", "Kombi", "Schrägheck", "SUV", "Geländewagen", "Sportwagen", "Coupé", "Cabrio", "Van / Minibus", "Pick-up"];
+export const cylinderOptions = ["Alle", "3", "4", "5", "6", "8", "10", "12", "16"];
+export const displacementOptions = [
+  { label: "Alle", max: Infinity },
+  { label: "Bis 1.000 ccm", max: 1000 },
+  { label: "Bis 1.500 ccm", max: 1500 },
+  { label: "Bis 2.000 ccm", max: 2000 },
+  { label: "Bis 2.500 ccm", max: 2500 },
+  { label: "Bis 3.000 ccm", max: 3000 },
+  { label: "Über 3.000 ccm", max: -1 },
+];
+export const tankVolumeOptions = [
+  { label: "Alle", min: 0 },
+  { label: "Ab 40 l", min: 40 },
+  { label: "Ab 50 l", min: 50 },
+  { label: "Ab 60 l", min: 60 },
+  { label: "Ab 70 l", min: 70 },
+  { label: "Ab 80 l", min: 80 },
+];
+export const previousOwnerOptions = ["Alle", "0", "1", "2", "3", "4+"];
+export const huOptions = ["Alle", "Neu (mind. 12 Monate)", "Abgelaufen"];

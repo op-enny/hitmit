@@ -899,6 +899,11 @@ function InseratePageInner() {
                     cityFilter,
                     colorFilter, conditionFilter,
                     doorFilter, seatFilter,
+                    modelFilter: "", variantFilter: "",
+                    vehicleTypeFilter: "Alle", vehicleCategoryFilter: "Alle",
+                    mwstFilter: "Alle", firstRegFrom: "", firstRegTo: "",
+                    huFilter: "Alle", previousOwnersFilter: "Alle",
+                    cylinderFilter: "Alle", displacementFilter: 0, tankVolumeFilter: 0,
                   },
                   filtered.map((v) => v.id),
                 );
