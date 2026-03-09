@@ -860,7 +860,7 @@ function InseratePageInner() {
       </section>
 
       {/* Filters */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 pb-8">
+      <section className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 pb-8">
         <div className="flex flex-wrap gap-3 animate-fade-in-up delay-200" style={{ opacity: 0 }}>
           {/* Brand */}
           <div className="relative">
