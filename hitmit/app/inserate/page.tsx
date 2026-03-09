@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, Suspense } from "react";
+import React, { useState, useEffect, useRef, Suspense } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useSearchParams } from "next/navigation";
@@ -657,6 +657,7 @@ function InseratePageInner() {
   const [modelFilter, setModelFilter] = useState("");
   const [motorizationFilter, setMotorizationFilter] = useState<string[]>([]);
   const [showMotorizationDropdown, setShowMotorizationDropdown] = useState(false);
+  const motorizationRef = useRef<HTMLDivElement>(null);
   const [fuelFilter, setFuelFilter] = useState("Alle Kraftstoffe");
   const [priceFilter, setPriceFilter] = useState(0);
   const [yearFrom, setYearFrom] = useState("");
@@ -740,6 +741,19 @@ function InseratePageInner() {
     // Auto-open advanced section if any advanced param is set
     if (yf || yt || ml || pw || tr || dt || st || af || ct || co || cn || dr || se) setShowAdvanced(true);
   }, [searchParams]);
+
+  // Close motorization dropdown on click outside
+  useEffect(() => {
+    function handleClick(e: MouseEvent) {
+      if (motorizationRef.current && !motorizationRef.current.contains(e.target as Node)) {
+        setShowMotorizationDropdown(false);
+      }
+    }
+    if (showMotorizationDropdown) {
+      document.addEventListener("mousedown", handleClick);
+      return () => document.removeEventListener("mousedown", handleClick);
+    }
+  }, [showMotorizationDropdown]);
 
   // Persist dealer login state in localStorage
   useEffect(() => {
@@ -883,7 +897,7 @@ function InseratePageInner() {
 
           {/* Motorisierung (Mercedes only) */}
           {brandFilter === "Mercedes-Benz" && modelFilter !== "" && MERCEDES_MOTORIZATIONS[modelFilter] && (
-            <div className="relative">
+            <div className="relative" ref={motorizationRef}>
               <button
                 type="button"
                 onClick={() => setShowMotorizationDropdown(!showMotorizationDropdown)}

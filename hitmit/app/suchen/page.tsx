@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { ThemeToggle } from "../theme-toggle";
@@ -190,6 +190,7 @@ export default function SuchenPage() {
   const [modelFilter, setModelFilter] = useState("");
   const [motorizationFilter, setMotorizationFilter] = useState<string[]>([]);
   const [showMotorizationDropdown, setShowMotorizationDropdown] = useState(false);
+  const motorizationRef = useRef<HTMLDivElement>(null);
   const [variantFilter, setVariantFilter] = useState("");
   const [vehicleTypeFilter, setVehicleTypeFilter] = useState("Alle");
   const [vehicleCategoryFilter, setVehicleCategoryFilter] = useState("Alle");
@@ -221,6 +222,19 @@ export default function SuchenPage() {
   const [hasSearched, setHasSearched] = useState(false);
   const [searchSaved, setSearchSaved] = useState(false);
   const { mounted, saveSearch } = useSavedData();
+
+  // Close motorization dropdown on click outside
+  useEffect(() => {
+    function handleClick(e: MouseEvent) {
+      if (motorizationRef.current && !motorizationRef.current.contains(e.target as Node)) {
+        setShowMotorizationDropdown(false);
+      }
+    }
+    if (showMotorizationDropdown) {
+      document.addEventListener("mousedown", handleClick);
+      return () => document.removeEventListener("mousedown", handleClick);
+    }
+  }, [showMotorizationDropdown]);
 
   // Filter logic
   const filtered = vehicles.filter((v) => {
@@ -542,7 +556,7 @@ export default function SuchenPage() {
               ]}
             />
             {brandFilter === "Mercedes-Benz" && modelFilter !== "" && MERCEDES_MOTORIZATIONS[modelFilter] && (
-              <div className="relative">
+              <div className="relative" ref={motorizationRef}>
                 <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1.5">Motorisierung</label>
                 <button
                   type="button"
