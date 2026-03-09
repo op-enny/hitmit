@@ -117,6 +117,35 @@ function applyFilters(filters: SavedSearch["filters"]): Vehicle[] {
       const opt = tankVolumeOptions[filters.tankVolumeFilter];
       if (opt && (!v.tankVolume || v.tankVolume < opt.min)) return false;
     }
+    if (filters.manufacturerColorFilter && !v.color.toLowerCase().includes(filters.manufacturerColorFilter.toLowerCase())) return false;
+    if (filters.interiorColorFilter && filters.interiorColorFilter !== "Alle Farben" && (!v.interiorColor || !v.interiorColor.toLowerCase().includes(filters.interiorColorFilter.toLowerCase()))) return false;
+    if (filters.seatMaterialFilter && filters.seatMaterialFilter !== "Alle" && v.seatMaterial !== filters.seatMaterialFilter) return false;
+    if (filters.climateZoneFilter && filters.climateZoneFilter !== "Alle" && v.climateZones !== Number(filters.climateZoneFilter)) return false;
+    if (filters.rimSizeFilter && filters.rimSizeFilter !== "Alle" && v.rimSize !== Number(filters.rimSizeFilter)) return false;
+    if (filters.paintProtectionFilmFilter && filters.paintProtectionFilmFilter !== "Alle") {
+      if (filters.paintProtectionFilmFilter === "Ja" && !v.paintProtectionFilm) return false;
+      if (filters.paintProtectionFilmFilter === "Nein" && v.paintProtectionFilm) return false;
+    }
+    if (filters.noRepaintFilter && filters.noRepaintFilter !== "Alle") {
+      if (filters.noRepaintFilter === "Ja" && !v.noRepaint) return false;
+      if (filters.noRepaintFilter === "Nein" && v.noRepaint) return false;
+    }
+    if (filters.serviceBookFilter && filters.serviceBookFilter !== "Alle") {
+      if (filters.serviceBookFilter === "Ja" && !v.serviceBookMaintained) return false;
+      if (filters.serviceBookFilter === "Nein" && v.serviceBookMaintained) return false;
+    }
+    if (filters.manufacturerWarrantyFilter && filters.manufacturerWarrantyFilter !== "Alle") {
+      if (filters.manufacturerWarrantyFilter === "Vorhanden" && !v.manufacturerWarranty) return false;
+      if (filters.manufacturerWarrantyFilter === "Nicht vorhanden" && v.manufacturerWarranty) return false;
+    }
+    if (filters.safetyFeaturesFilter && filters.safetyFeaturesFilter.length > 0) {
+      const allFeatures = [...v.safetyFeatures];
+      if (!filters.safetyFeaturesFilter.every((f: string) => allFeatures.some((vf) => vf.toLowerCase().includes(f.toLowerCase())))) return false;
+    }
+    if (filters.equipmentFeaturesFilter && filters.equipmentFeaturesFilter.length > 0) {
+      const allFeatures = [...v.comfortFeatures, ...v.exteriorFeatures, ...v.multimediaFeatures];
+      if (!filters.equipmentFeaturesFilter.every((f: string) => allFeatures.some((vf) => vf.toLowerCase().includes(f.toLowerCase())))) return false;
+    }
     return true;
   });
 }
@@ -159,6 +188,17 @@ function buildSearchUrl(filters: SavedSearch["filters"]): string {
   if (filters.cylinderFilter && filters.cylinderFilter !== "Alle") params.set("cylinders", filters.cylinderFilter);
   if (filters.displacementFilter && filters.displacementFilter !== 0) params.set("displacement", String(filters.displacementFilter));
   if (filters.tankVolumeFilter && filters.tankVolumeFilter !== 0) params.set("tankVolume", String(filters.tankVolumeFilter));
+  if (filters.manufacturerColorFilter) params.set("mfColor", filters.manufacturerColorFilter);
+  if (filters.interiorColorFilter && filters.interiorColorFilter !== "Alle Farben") params.set("interiorColor", filters.interiorColorFilter);
+  if (filters.seatMaterialFilter && filters.seatMaterialFilter !== "Alle") params.set("seatMaterial", filters.seatMaterialFilter);
+  if (filters.climateZoneFilter && filters.climateZoneFilter !== "Alle") params.set("climateZones", filters.climateZoneFilter);
+  if (filters.rimSizeFilter && filters.rimSizeFilter !== "Alle") params.set("rimSize", filters.rimSizeFilter);
+  if (filters.paintProtectionFilmFilter && filters.paintProtectionFilmFilter !== "Alle") params.set("ppf", filters.paintProtectionFilmFilter);
+  if (filters.noRepaintFilter && filters.noRepaintFilter !== "Alle") params.set("noRepaint", filters.noRepaintFilter);
+  if (filters.serviceBookFilter && filters.serviceBookFilter !== "Alle") params.set("serviceBook", filters.serviceBookFilter);
+  if (filters.manufacturerWarrantyFilter && filters.manufacturerWarrantyFilter !== "Alle") params.set("warranty", filters.manufacturerWarrantyFilter);
+  if (filters.safetyFeaturesFilter && filters.safetyFeaturesFilter.length > 0) params.set("safety", filters.safetyFeaturesFilter.join(","));
+  if (filters.equipmentFeaturesFilter && filters.equipmentFeaturesFilter.length > 0) params.set("equipment", filters.equipmentFeaturesFilter.join(","));
   const qs = params.toString();
   return qs ? `/inserate?${qs}` : "/inserate";
 }
@@ -211,6 +251,17 @@ function SearchCard({
   if (f.cylinderFilter && f.cylinderFilter !== "Alle") filterTags.push(`${f.cylinderFilter} Zylinder`);
   if (f.displacementFilter && f.displacementFilter !== 0) filterTags.push(displacementOptions[f.displacementFilter]?.label ?? "");
   if (f.tankVolumeFilter && f.tankVolumeFilter !== 0) filterTags.push(tankVolumeOptions[f.tankVolumeFilter]?.label ?? "");
+  if (f.manufacturerColorFilter) filterTags.push(`Farbe: ${f.manufacturerColorFilter}`);
+  if (f.interiorColorFilter && f.interiorColorFilter !== "Alle Farben") filterTags.push(`Innen: ${f.interiorColorFilter}`);
+  if (f.seatMaterialFilter && f.seatMaterialFilter !== "Alle") filterTags.push(f.seatMaterialFilter);
+  if (f.climateZoneFilter && f.climateZoneFilter !== "Alle") filterTags.push(`${f.climateZoneFilter}-Zonen Klima`);
+  if (f.rimSizeFilter && f.rimSizeFilter !== "Alle") filterTags.push(`${f.rimSizeFilter} Zoll`);
+  if (f.paintProtectionFilmFilter && f.paintProtectionFilmFilter !== "Alle") filterTags.push(`Steinschlagfolie: ${f.paintProtectionFilmFilter}`);
+  if (f.noRepaintFilter && f.noRepaintFilter !== "Alle") filterTags.push(`Nachlackierungsfrei: ${f.noRepaintFilter}`);
+  if (f.serviceBookFilter && f.serviceBookFilter !== "Alle") filterTags.push(`Scheckheft: ${f.serviceBookFilter}`);
+  if (f.manufacturerWarrantyFilter && f.manufacturerWarrantyFilter !== "Alle") filterTags.push(`Garantie: ${f.manufacturerWarrantyFilter}`);
+  if (f.safetyFeaturesFilter && f.safetyFeaturesFilter.length > 0) filterTags.push(`${f.safetyFeaturesFilter.length}x Sicherheit`);
+  if (f.equipmentFeaturesFilter && f.equipmentFeaturesFilter.length > 0) filterTags.push(`${f.equipmentFeaturesFilter.length}x Ausstattung`);
 
   return (
     <div className="card p-5">

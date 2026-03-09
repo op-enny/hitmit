@@ -904,6 +904,11 @@ function InseratePageInner() {
                     mwstFilter: "Alle", firstRegFrom: "", firstRegTo: "",
                     huFilter: "Alle", previousOwnersFilter: "Alle",
                     cylinderFilter: "Alle", displacementFilter: 0, tankVolumeFilter: 0,
+                    manufacturerColorFilter: "", interiorColorFilter: "Alle Farben",
+                    seatMaterialFilter: "Alle", climateZoneFilter: "Alle", rimSizeFilter: "Alle",
+                    paintProtectionFilmFilter: "Alle", noRepaintFilter: "Alle",
+                    serviceBookFilter: "Alle", manufacturerWarrantyFilter: "Alle",
+                    safetyFeaturesFilter: [], equipmentFeaturesFilter: [],
                   },
                   filtered.map((v) => v.id),
                 );

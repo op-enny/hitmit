@@ -35,6 +35,17 @@ export interface SavedSearch {
     cylinderFilter: string;
     displacementFilter: number;
     tankVolumeFilter: number;
+    manufacturerColorFilter: string;
+    interiorColorFilter: string;
+    seatMaterialFilter: string;
+    climateZoneFilter: string;
+    rimSizeFilter: string;
+    paintProtectionFilmFilter: string;
+    noRepaintFilter: string;
+    serviceBookFilter: string;
+    manufacturerWarrantyFilter: string;
+    safetyFeaturesFilter: string[];
+    equipmentFeaturesFilter: string[];
   };
   seenVehicleIds: number[];
 }

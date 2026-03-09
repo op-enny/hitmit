@@ -26,6 +26,12 @@ import {
   tankVolumeOptions,
   previousOwnerOptions,
   huOptions,
+  interiorColorOptions,
+  seatMaterialOptions,
+  climateZoneOptions,
+  rimSizeOptions,
+  SAFETY_FEATURE_LIST,
+  EQUIPMENT_FEATURE_LIST,
 } from "../vehicles-data";
 import type { Vehicle } from "../vehicles-data";
 import { useSavedData } from "../use-saved-data";
@@ -192,6 +198,21 @@ export default function SuchenPage() {
   const [displacementFilter, setDisplacementFilter] = useState(0);
   const [tankVolumeFilter, setTankVolumeFilter] = useState(0);
 
+  // Additional filters
+  const [manufacturerColorFilter, setManufacturerColorFilter] = useState("");
+  const [interiorColorFilter, setInteriorColorFilter] = useState("Alle Farben");
+  const [seatMaterialFilter, setSeatMaterialFilter] = useState("Alle");
+  const [climateZoneFilter, setClimateZoneFilter] = useState("Alle");
+  const [rimSizeFilter, setRimSizeFilter] = useState("Alle");
+  const [paintProtectionFilmFilter, setPaintProtectionFilmFilter] = useState("Alle");
+  const [noRepaintFilter, setNoRepaintFilter] = useState("Alle");
+  const [serviceBookFilter, setServiceBookFilter] = useState("Alle");
+  const [manufacturerWarrantyFilter, setManufacturerWarrantyFilter] = useState("Alle");
+  const [safetyFeaturesFilter, setSafetyFeaturesFilter] = useState<string[]>([]);
+  const [equipmentFeaturesFilter, setEquipmentFeaturesFilter] = useState<string[]>([]);
+  const [showSafetyFeatures, setShowSafetyFeatures] = useState(false);
+  const [showEquipmentFeatures, setShowEquipmentFeatures] = useState(false);
+
   // Search state
   const [hasSearched, setHasSearched] = useState(false);
   const [searchSaved, setSearchSaved] = useState(false);
@@ -280,6 +301,35 @@ export default function SuchenPage() {
       }
     }
     if (tankVolumeFilter !== 0 && (!v.tankVolume || v.tankVolume < tankVolumeOptions[tankVolumeFilter].min)) return false;
+    if (manufacturerColorFilter !== "" && !v.color.toLowerCase().includes(manufacturerColorFilter.toLowerCase())) return false;
+    if (interiorColorFilter !== "Alle Farben" && (!v.interiorColor || !v.interiorColor.toLowerCase().includes(interiorColorFilter.toLowerCase()))) return false;
+    if (seatMaterialFilter !== "Alle" && v.seatMaterial !== seatMaterialFilter) return false;
+    if (climateZoneFilter !== "Alle" && v.climateZones !== Number(climateZoneFilter)) return false;
+    if (rimSizeFilter !== "Alle" && v.rimSize !== Number(rimSizeFilter)) return false;
+    if (paintProtectionFilmFilter !== "Alle") {
+      if (paintProtectionFilmFilter === "Ja" && !v.paintProtectionFilm) return false;
+      if (paintProtectionFilmFilter === "Nein" && v.paintProtectionFilm) return false;
+    }
+    if (noRepaintFilter !== "Alle") {
+      if (noRepaintFilter === "Ja" && !v.noRepaint) return false;
+      if (noRepaintFilter === "Nein" && v.noRepaint) return false;
+    }
+    if (serviceBookFilter !== "Alle") {
+      if (serviceBookFilter === "Ja" && !v.serviceBookMaintained) return false;
+      if (serviceBookFilter === "Nein" && v.serviceBookMaintained) return false;
+    }
+    if (manufacturerWarrantyFilter !== "Alle") {
+      if (manufacturerWarrantyFilter === "Vorhanden" && !v.manufacturerWarranty) return false;
+      if (manufacturerWarrantyFilter === "Nicht vorhanden" && v.manufacturerWarranty) return false;
+    }
+    if (safetyFeaturesFilter.length > 0) {
+      const allFeatures = [...v.safetyFeatures];
+      if (!safetyFeaturesFilter.every((f) => allFeatures.some((vf) => vf.toLowerCase().includes(f.toLowerCase())))) return false;
+    }
+    if (equipmentFeaturesFilter.length > 0) {
+      const allFeatures = [...v.comfortFeatures, ...v.exteriorFeatures, ...v.multimediaFeatures];
+      if (!equipmentFeaturesFilter.every((f) => allFeatures.some((vf) => vf.toLowerCase().includes(f.toLowerCase())))) return false;
+    }
     return true;
   });
 
@@ -312,6 +362,17 @@ export default function SuchenPage() {
     cylinderFilter !== "Alle",
     displacementFilter !== 0,
     tankVolumeFilter !== 0,
+    manufacturerColorFilter !== "",
+    interiorColorFilter !== "Alle Farben",
+    seatMaterialFilter !== "Alle",
+    climateZoneFilter !== "Alle",
+    rimSizeFilter !== "Alle",
+    paintProtectionFilmFilter !== "Alle",
+    noRepaintFilter !== "Alle",
+    serviceBookFilter !== "Alle",
+    manufacturerWarrantyFilter !== "Alle",
+    safetyFeaturesFilter.length > 0,
+    equipmentFeaturesFilter.length > 0,
   ].filter(Boolean).length;
 
   const resetAll = () => {
@@ -330,6 +391,11 @@ export default function SuchenPage() {
     setMwstFilter("Alle"); setFirstRegFrom(""); setFirstRegTo("");
     setHuFilter("Alle"); setPreviousOwnersFilter("Alle");
     setCylinderFilter("Alle"); setDisplacementFilter(0); setTankVolumeFilter(0);
+    setManufacturerColorFilter(""); setInteriorColorFilter("Alle Farben");
+    setSeatMaterialFilter("Alle"); setClimateZoneFilter("Alle"); setRimSizeFilter("Alle");
+    setPaintProtectionFilmFilter("Alle"); setNoRepaintFilter("Alle");
+    setServiceBookFilter("Alle"); setManufacturerWarrantyFilter("Alle");
+    setSafetyFeaturesFilter([]); setEquipmentFeaturesFilter([]);
   };
 
   const handleSaveSearch = () => {
@@ -362,6 +428,17 @@ export default function SuchenPage() {
     if (cylinderFilter !== "Alle") parts.push(`${cylinderFilter} Zylinder`);
     if (displacementFilter !== 0) parts.push(displacementOptions[displacementFilter].label);
     if (tankVolumeFilter !== 0) parts.push(tankVolumeOptions[tankVolumeFilter].label);
+    if (manufacturerColorFilter) parts.push(`Farbe: ${manufacturerColorFilter}`);
+    if (interiorColorFilter !== "Alle Farben") parts.push(`Innen: ${interiorColorFilter}`);
+    if (seatMaterialFilter !== "Alle") parts.push(seatMaterialFilter);
+    if (climateZoneFilter !== "Alle") parts.push(`${climateZoneFilter}-Zonen Klima`);
+    if (rimSizeFilter !== "Alle") parts.push(`${rimSizeFilter} Zoll`);
+    if (paintProtectionFilmFilter !== "Alle") parts.push(`Steinschlagfolie: ${paintProtectionFilmFilter}`);
+    if (noRepaintFilter !== "Alle") parts.push(`Nachlackierungsfrei: ${noRepaintFilter}`);
+    if (serviceBookFilter !== "Alle") parts.push(`Scheckheft: ${serviceBookFilter}`);
+    if (manufacturerWarrantyFilter !== "Alle") parts.push(`Garantie: ${manufacturerWarrantyFilter}`);
+    if (safetyFeaturesFilter.length > 0) parts.push(`${safetyFeaturesFilter.length}x Sicherheit`);
+    if (equipmentFeaturesFilter.length > 0) parts.push(`${equipmentFeaturesFilter.length}x Ausstattung`);
     const label = parts.length > 0 ? parts.join(", ") : "Alle Fahrzeuge";
     saveSearch(
       label,
@@ -379,6 +456,11 @@ export default function SuchenPage() {
         mwstFilter, firstRegFrom, firstRegTo,
         huFilter, previousOwnersFilter,
         cylinderFilter, displacementFilter, tankVolumeFilter,
+        manufacturerColorFilter, interiorColorFilter,
+        seatMaterialFilter, climateZoneFilter, rimSizeFilter,
+        paintProtectionFilmFilter, noRepaintFilter,
+        serviceBookFilter, manufacturerWarrantyFilter,
+        safetyFeaturesFilter, equipmentFeaturesFilter,
       },
       filtered.map((v) => v.id),
     );
@@ -480,11 +562,21 @@ export default function SuchenPage() {
               options={conditionOptions.map((c) => ({ value: c, label: c }))}
             />
             <FilterSelect
-              label="Farbe"
+              label="Außenfarbe"
               value={colorFilter}
               onChange={setColorFilter}
               options={colorOptions.map((c) => ({ value: c, label: c }))}
             />
+            <div>
+              <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1.5">Herstellerfarbe</label>
+              <input
+                type="text"
+                value={manufacturerColorFilter}
+                onChange={(e) => setManufacturerColorFilter(e.target.value)}
+                placeholder="z.B. Nardograu"
+                className="w-full bg-white dark:bg-[#1a1a1a] border border-gray-200 dark:border-[#2a2a2a] rounded-xl px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 placeholder:text-gray-400 hover:border-[#f14011] focus:border-[#f14011] focus:outline-none transition-colors"
+              />
+            </div>
           </div>
 
           {/* Section: Preis & Leistung */}
@@ -627,6 +719,142 @@ export default function SuchenPage() {
               onChange={setMwstFilter}
               options={[{ value: "Alle", label: "Alle" }, { value: "Ja", label: "Ja" }, { value: "Nein", label: "Nein" }]}
             />
+          </div>
+
+          {/* Section: Interieur */}
+          <h3 className="text-sm font-semibold text-gray-900 dark:text-gray-100 uppercase tracking-wider mb-4">Interieur</h3>
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 mb-6">
+            <FilterSelect
+              label="Innenfarbe"
+              value={interiorColorFilter}
+              onChange={setInteriorColorFilter}
+              options={interiorColorOptions.map((c) => ({ value: c, label: c }))}
+            />
+            <FilterSelect
+              label="Sitzmaterial"
+              value={seatMaterialFilter}
+              onChange={setSeatMaterialFilter}
+              options={seatMaterialOptions.map((s) => ({ value: s, label: s }))}
+            />
+            <FilterSelect
+              label="Klimazonen"
+              value={climateZoneFilter}
+              onChange={setClimateZoneFilter}
+              options={climateZoneOptions.map((c) => ({ value: c, label: c }))}
+            />
+            <FilterSelect
+              label="Felgengröße (Zoll)"
+              value={rimSizeFilter}
+              onChange={setRimSizeFilter}
+              options={rimSizeOptions.map((r) => ({ value: r, label: r }))}
+            />
+          </div>
+
+          {/* Section: Zustand & Garantie */}
+          <h3 className="text-sm font-semibold text-gray-900 dark:text-gray-100 uppercase tracking-wider mb-4">Zustand & Garantie</h3>
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 mb-6">
+            <FilterSelect
+              label="Steinschlagschutzfolie"
+              value={paintProtectionFilmFilter}
+              onChange={setPaintProtectionFilmFilter}
+              options={[{ value: "Alle", label: "Alle" }, { value: "Ja", label: "Ja" }, { value: "Nein", label: "Nein" }]}
+            />
+            <FilterSelect
+              label="Nachlackierungsfrei"
+              value={noRepaintFilter}
+              onChange={setNoRepaintFilter}
+              options={[{ value: "Alle", label: "Alle" }, { value: "Ja", label: "Ja" }, { value: "Nein", label: "Nein" }]}
+            />
+            <FilterSelect
+              label="Scheckheftgepflegt"
+              value={serviceBookFilter}
+              onChange={setServiceBookFilter}
+              options={[{ value: "Alle", label: "Alle" }, { value: "Ja", label: "Ja" }, { value: "Nein", label: "Nein" }]}
+            />
+            <FilterSelect
+              label="Herstellergarantie"
+              value={manufacturerWarrantyFilter}
+              onChange={setManufacturerWarrantyFilter}
+              options={[{ value: "Alle", label: "Alle" }, { value: "Vorhanden", label: "Vorhanden" }, { value: "Nicht vorhanden", label: "Nicht vorhanden" }]}
+            />
+          </div>
+
+          {/* Section: Sicherheit */}
+          <div className="mb-6">
+            <button
+              onClick={() => setShowSafetyFeatures(!showSafetyFeatures)}
+              className="flex items-center gap-2 text-sm font-semibold text-gray-900 dark:text-gray-100 uppercase tracking-wider mb-4"
+            >
+              Sicherheit
+              {safetyFeaturesFilter.length > 0 && (
+                <span className="px-2 py-0.5 bg-[#f14011] text-white text-xs font-bold rounded-full normal-case tracking-normal">
+                  {safetyFeaturesFilter.length}
+                </span>
+              )}
+              <ChevronDownIcon className={`w-4 h-4 transition-transform ${showSafetyFeatures ? "rotate-180" : ""}`} />
+            </button>
+            {showSafetyFeatures && (
+              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2">
+                {SAFETY_FEATURE_LIST.map((feature) => (
+                  <label key={feature} className="flex items-center gap-2 cursor-pointer group">
+                    <input
+                      type="checkbox"
+                      checked={safetyFeaturesFilter.includes(feature)}
+                      onChange={(e) => {
+                        if (e.target.checked) {
+                          setSafetyFeaturesFilter([...safetyFeaturesFilter, feature]);
+                        } else {
+                          setSafetyFeaturesFilter(safetyFeaturesFilter.filter((f) => f !== feature));
+                        }
+                      }}
+                      className="w-4 h-4 rounded border-gray-300 dark:border-gray-600 text-[#f14011] focus:ring-[#f14011] cursor-pointer"
+                    />
+                    <span className="text-sm text-gray-600 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-gray-200 transition-colors">
+                      {feature}
+                    </span>
+                  </label>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* Section: Ausstattung */}
+          <div className="mb-6">
+            <button
+              onClick={() => setShowEquipmentFeatures(!showEquipmentFeatures)}
+              className="flex items-center gap-2 text-sm font-semibold text-gray-900 dark:text-gray-100 uppercase tracking-wider mb-4"
+            >
+              Ausstattung
+              {equipmentFeaturesFilter.length > 0 && (
+                <span className="px-2 py-0.5 bg-[#f14011] text-white text-xs font-bold rounded-full normal-case tracking-normal">
+                  {equipmentFeaturesFilter.length}
+                </span>
+              )}
+              <ChevronDownIcon className={`w-4 h-4 transition-transform ${showEquipmentFeatures ? "rotate-180" : ""}`} />
+            </button>
+            {showEquipmentFeatures && (
+              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2">
+                {EQUIPMENT_FEATURE_LIST.map((feature) => (
+                  <label key={feature} className="flex items-center gap-2 cursor-pointer group">
+                    <input
+                      type="checkbox"
+                      checked={equipmentFeaturesFilter.includes(feature)}
+                      onChange={(e) => {
+                        if (e.target.checked) {
+                          setEquipmentFeaturesFilter([...equipmentFeaturesFilter, feature]);
+                        } else {
+                          setEquipmentFeaturesFilter(equipmentFeaturesFilter.filter((f) => f !== feature));
+                        }
+                      }}
+                      className="w-4 h-4 rounded border-gray-300 dark:border-gray-600 text-[#f14011] focus:ring-[#f14011] cursor-pointer"
+                    />
+                    <span className="text-sm text-gray-600 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-gray-200 transition-colors">
+                      {feature}
+                    </span>
+                  </label>
+                ))}
+              </div>
+            )}
           </div>
 
           {/* Actions */}

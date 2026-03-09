@@ -50,6 +50,14 @@ export interface Vehicle {
   cylinders?: number;
   engineDisplacement?: number;
   tankVolume?: number;
+  interiorColor?: string;
+  seatMaterial?: string;
+  climateZones?: number;
+  rimSize?: number;
+  paintProtectionFilm?: boolean;
+  noRepaint?: boolean;
+  serviceBookMaintained?: boolean;
+  manufacturerWarranty?: boolean;
   gradient: string;
 }
 
@@ -96,6 +104,14 @@ export const vehicles: Vehicle[] = [
     cylinders: 6,
     engineDisplacement: 2993,
     tankVolume: 59,
+    interiorColor: "Schwarz",
+    seatMaterial: "Leder",
+    climateZones: 2,
+    rimSize: 19,
+    paintProtectionFilm: true,
+    noRepaint: true,
+    serviceBookMaintained: true,
+    manufacturerWarranty: false,
     gradient: "from-blue-600 via-blue-800 to-gray-900",
   },
   {
@@ -138,6 +154,14 @@ export const vehicles: Vehicle[] = [
     cylinders: 4,
     engineDisplacement: 1984,
     tankVolume: 50,
+    interiorColor: "Schwarz",
+    seatMaterial: "Stoff",
+    climateZones: 2,
+    rimSize: 19,
+    paintProtectionFilm: false,
+    noRepaint: true,
+    serviceBookMaintained: true,
+    manufacturerWarranty: false,
     gradient: "from-red-500 via-red-700 to-gray-900",
   },
   {
@@ -181,6 +205,14 @@ export const vehicles: Vehicle[] = [
     cylinders: 4,
     engineDisplacement: 1999,
     tankVolume: 66,
+    interiorColor: "Schwarz",
+    seatMaterial: "Leder",
+    climateZones: 3,
+    rimSize: 19,
+    paintProtectionFilm: false,
+    noRepaint: true,
+    serviceBookMaintained: true,
+    manufacturerWarranty: true,
     gradient: "from-gray-700 via-gray-900 to-black",
   },
   {
@@ -223,6 +255,14 @@ export const vehicles: Vehicle[] = [
     cylinders: 6,
     engineDisplacement: 2981,
     tankVolume: 67,
+    interiorColor: "Braun",
+    seatMaterial: "Leder",
+    climateZones: 2,
+    rimSize: 20,
+    paintProtectionFilm: true,
+    noRepaint: true,
+    serviceBookMaintained: true,
+    manufacturerWarranty: true,
     gradient: "from-indigo-600 via-indigo-900 to-gray-900",
   },
   {
@@ -265,6 +305,14 @@ export const vehicles: Vehicle[] = [
     cylinders: 0,
     engineDisplacement: 0,
     tankVolume: 0,
+    interiorColor: "Weiß",
+    seatMaterial: "Stoff",
+    climateZones: 1,
+    rimSize: 19,
+    paintProtectionFilm: true,
+    noRepaint: true,
+    serviceBookMaintained: false,
+    manufacturerWarranty: false,
     gradient: "from-sky-400 via-sky-600 to-gray-900",
   },
   {
@@ -308,6 +356,14 @@ export const vehicles: Vehicle[] = [
     cylinders: 5,
     engineDisplacement: 2480,
     tankVolume: 55,
+    interiorColor: "Schwarz",
+    seatMaterial: "Alcantara",
+    climateZones: 3,
+    rimSize: 19,
+    paintProtectionFilm: false,
+    noRepaint: true,
+    serviceBookMaintained: true,
+    manufacturerWarranty: true,
     gradient: "from-gray-500 via-gray-700 to-gray-900",
   },
 ];
@@ -406,3 +462,72 @@ export const tankVolumeOptions = [
 ];
 export const previousOwnerOptions = ["Alle", "0", "1", "2", "3", "4+"];
 export const huOptions = ["Alle", "Neu (mind. 12 Monate)", "Abgelaufen"];
+export const interiorColorOptions = [
+  "Alle Farben",
+  "Schwarz",
+  "Weiß",
+  "Grau",
+  "Braun",
+  "Beige",
+  "Rot",
+  "Blau",
+  "Sonstige",
+];
+export const seatMaterialOptions = ["Alle", "Leder", "Teilleder", "Stoff", "Alcantara", "Velours", "Sonstige"];
+export const climateZoneOptions = ["Alle", "1", "2", "3", "4"];
+export const rimSizeOptions = ["Alle", "15", "16", "17", "18", "19", "20", "21", "22"];
+
+export const SAFETY_FEATURE_LIST = [
+  "ABS",
+  "ESP",
+  "Traktionskontrolle",
+  "Spurhalteassistent",
+  "Totwinkelassistent",
+  "Notbremsassistent",
+  "Müdigkeitserkennung",
+  "Verkehrszeichenerkennung",
+  "Nachtsichtassistent",
+  "Head-up-Display",
+  "Reifendruckkontrolle",
+  "Querverkehrsassistent",
+  "Isofix",
+  "ACC",
+  "360° Kamera",
+  "Parktronic",
+  "Autopilot",
+];
+
+export const EQUIPMENT_FEATURE_LIST = [
+  "Klimaanlage",
+  "Klimaautomatik",
+  "Sitzheizung",
+  "Lenkradheizung",
+  "Elektrische Sitze",
+  "Massagesitze",
+  "Panoramadach",
+  "Schiebedach",
+  "Elektrische Heckklappe",
+  "Keyless Entry",
+  "Standheizung",
+  "Tempomat",
+  "Abstandsregeltempomat",
+  "Sitzbelüftung",
+  "LED-Scheinwerfer",
+  "Matrix-LED",
+  "Tagfahrlicht",
+  "Nebelscheinwerfer",
+  "Alufelgen",
+  "Dachreling",
+  "Anhängerkupplung",
+  "Sportpaket",
+  "Navigationssystem",
+  "Apple CarPlay",
+  "Android Auto",
+  "Bluetooth",
+  "DAB-Radio",
+  "Soundsystem",
+  "Rückfahrkamera",
+  "360°-Kamera",
+  "WLAN-Hotspot",
+  "Induktives Laden",
+];
