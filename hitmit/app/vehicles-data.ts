@@ -256,8 +256,27 @@ export const vehicles: Vehicle[] = [
   },
 ];
 
-export const brandOptions = ["Alle Marken", ...new Set(vehicles.map((v) => v.brand))];
-export const fuelOptions = ["Alle Kraftstoffe", ...new Set(vehicles.map((v) => v.fuelType))];
+export const brandOptions = [
+  "Alle Marken",
+  "Audi",
+  "BMW",
+  "Mercedes-Benz",
+  "Opel",
+  "Porsche",
+  "Tesla",
+  "Toyota",
+  "VW",
+];
+export const fuelOptions = [
+  "Alle Kraftstoffe",
+  "Benzin",
+  "Diesel",
+  "Elektro",
+  "Hybrid",
+  "Plug-in-Hybrid",
+  "Erdgas (CNG)",
+  "Wasserstoff",
+];
 export const priceRanges = [
   { label: "Alle Preise", min: 0, max: Infinity },
   { label: "Bis 40.000 €", min: 0, max: 40000 },
