@@ -71,20 +71,51 @@ function FilterSelect({
   onChange: (v: string) => void;
   options: { value: string | number; label: string }[];
 }) {
+  const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    function handleClick(e: MouseEvent) {
+      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
+    }
+    if (open) {
+      document.addEventListener("mousedown", handleClick);
+      return () => document.removeEventListener("mousedown", handleClick);
+    }
+  }, [open]);
+
+  const selected = options.find((o) => String(o.value) === String(value));
+
   return (
-    <div>
+    <div ref={ref}>
       <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1.5">{label}</label>
       <div className="relative">
-        <select
-          value={value}
-          onChange={(e) => onChange(e.target.value)}
-          className="w-full appearance-none bg-white dark:bg-[#1a1a1a] border border-gray-200 dark:border-[#2a2a2a] rounded-xl px-4 py-2.5 pr-9 text-sm text-gray-700 dark:text-gray-300 hover:border-[#f14011] focus:border-[#f14011] focus:outline-none transition-colors cursor-pointer"
+        <button
+          type="button"
+          onClick={() => setOpen(!open)}
+          className="w-full flex items-center justify-between bg-white dark:bg-[#1a1a1a] border border-gray-200 dark:border-[#2a2a2a] rounded-xl px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:border-[#f14011] focus:border-[#f14011] focus:outline-none transition-colors cursor-pointer text-left"
         >
-          {options.map((o) => (
-            <option key={String(o.value)} value={o.value}>{o.label}</option>
-          ))}
-        </select>
-        <ChevronDownIcon className="w-4 h-4 text-gray-400 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+          <span className="truncate">{selected?.label ?? ""}</span>
+          <ChevronDownIcon className={`w-4 h-4 text-gray-400 shrink-0 ml-2 transition-transform ${open ? "rotate-180" : ""}`} />
+        </button>
+        {open && (
+          <div className="absolute z-50 top-full mt-1 w-full bg-white dark:bg-[#1a1a1a] border border-gray-200 dark:border-[#2a2a2a] rounded-xl shadow-lg max-h-60 overflow-y-auto py-1">
+            {options.map((o) => (
+              <button
+                key={String(o.value)}
+                type="button"
+                onClick={() => { onChange(String(o.value)); setOpen(false); }}
+                className={`w-full text-left px-4 py-2 text-sm hover:bg-gray-50 dark:hover:bg-[#222] transition-colors ${
+                  String(o.value) === String(value)
+                    ? "text-[#f14011] font-medium"
+                    : "text-gray-700 dark:text-gray-300"
+                }`}
+              >
+                {o.label}
+              </button>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );
