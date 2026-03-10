@@ -3,11 +3,15 @@
 import React, { useState, useEffect, useRef, Suspense } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import dynamic from "next/dynamic";
 import { useSearchParams } from "next/navigation";
 import { calculateValuation, PRICE_RATING_INFO } from "../valuation";
 import type { ValuationBreakdown, PriceRating } from "../valuation";
 import { calculateTireScore, TIRE_RATING_INFO } from "../tire-score";
 import { SubpageHeader } from "../subpage-header";
+import { getCoordsByCity } from "../geocoding";
+
+const LocationMap = dynamic(() => import("../location-map"), { ssr: false });
 import {
   vehicles,
   brandOptions,
@@ -526,7 +530,9 @@ function DetailModal({ vehicle, onClose, isDealer }: { vehicle: Vehicle; onClose
               {vehicle.sellerType === "dealer" && vehicle.companyName && (
                 <p>
                   <span className="text-gray-400">Händler:</span>{" "}
-                  {vehicle.companyName}
+                  <Link href={`/haendler/${encodeURIComponent(vehicle.companyName)}`} className="text-[#f14011] hover:underline font-medium">
+                    {vehicle.companyName}
+                  </Link>
                 </p>
               )}
               {vehicle.showContactName && (
@@ -550,6 +556,14 @@ function DetailModal({ vehicle, onClose, isDealer }: { vehicle: Vehicle; onClose
                 </a>
               </p>
             </div>
+            {(() => {
+              const coords = getCoordsByCity(vehicle.city);
+              return coords ? (
+                <div className="mt-4">
+                  <LocationMap lat={coords.lat} lng={coords.lng} label={`${vehicle.zip} ${vehicle.city}`} />
+                </div>
+              ) : null;
+            })()}
           </div>
 
           {/* Dealer Purchase Panel (only for logged-in dealers) */}

@@ -9,6 +9,8 @@ import {
 import type { Vehicle } from "../vehicles-data";
 import { useSavedData } from "../use-saved-data";
 import type { SavedSearch } from "../use-saved-data";
+import { getDealers } from "../dealer-utils";
+import { StarRating } from "../star-rating";
 
 // ============================================================================
 // HELPERS
@@ -419,10 +421,12 @@ function FavoriteCard({
 // ============================================================================
 
 export default function GespeichertPage() {
-  const [activeTab, setActiveTab] = useState<"searches" | "favorites">("searches");
-  const { mounted, savedSearches, favorites, removeSearch, markSearchSeen, toggleFavorite } = useSavedData();
+  const [activeTab, setActiveTab] = useState<"searches" | "favorites" | "dealers">("searches");
+  const { mounted, savedSearches, favorites, savedDealers, dealerReviews, removeSearch, markSearchSeen, toggleFavorite, toggleSavedDealer } = useSavedData();
 
   const favoriteVehicles = vehicles.filter((v) => favorites.includes(v.id));
+  const allDealers = getDealers(dealerReviews);
+  const savedDealerInfos = allDealers.filter((d) => savedDealers.includes(d.companyName));
 
   if (!mounted) {
     return (
@@ -469,6 +473,16 @@ export default function GespeichertPage() {
           >
             Favoriten ({favoriteVehicles.length})
           </button>
+          <button
+            onClick={() => setActiveTab("dealers")}
+            className={`px-5 py-2.5 rounded-full text-sm font-semibold transition-colors ${
+              activeTab === "dealers"
+                ? "bg-[#f14011] text-white"
+                : "bg-white dark:bg-[#141414] border border-gray-200 text-gray-600 hover:border-[#f14011] hover:text-[#f14011]"
+            }`}
+          >
+            Händler ({savedDealerInfos.length})
+          </button>
         </div>
       </section>
 
@@ -505,32 +519,98 @@ export default function GespeichertPage() {
               </Link>
             </div>
           )
-        ) : favoriteVehicles.length > 0 ? (
+        ) : activeTab === "favorites" ? (
+          favoriteVehicles.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {favoriteVehicles.map((vehicle, index) => (
+                <div
+                  key={vehicle.id}
+                  className="animate-fade-in-up"
+                  style={{ opacity: 0, animationDelay: `${(index + 3) * 100}ms` }}
+                >
+                  <FavoriteCard
+                    vehicle={vehicle}
+                    onRemove={() => toggleFavorite(vehicle.id)}
+                  />
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-20">
+              <svg className="w-16 h-16 mx-auto text-gray-200 mb-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+              </svg>
+              <p className="text-gray-400 text-lg">Noch keine Favoriten gespeichert.</p>
+              <Link
+                href="/inserate"
+                className="mt-4 inline-block text-[#f14011] font-semibold hover:underline"
+              >
+                Jetzt Inserate entdecken &rarr;
+              </Link>
+            </div>
+          )
+        ) : savedDealerInfos.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {favoriteVehicles.map((vehicle, index) => (
+            {savedDealerInfos.map((dealer, index) => (
               <div
-                key={vehicle.id}
+                key={dealer.companyName}
                 className="animate-fade-in-up"
                 style={{ opacity: 0, animationDelay: `${(index + 3) * 100}ms` }}
               >
-                <FavoriteCard
-                  vehicle={vehicle}
-                  onRemove={() => toggleFavorite(vehicle.id)}
-                />
+                <div className="card p-5">
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="min-w-0 flex-1">
+                      <Link
+                        href={`/haendler/${encodeURIComponent(dealer.companyName)}`}
+                        className="font-semibold text-gray-900 hover:text-[#f14011] transition-colors"
+                      >
+                        {dealer.companyName}
+                      </Link>
+                      <p className="text-sm text-gray-400 mt-1">{dealer.zip} {dealer.city}</p>
+                    </div>
+                    <button
+                      onClick={() => toggleSavedDealer(dealer.companyName)}
+                      className="text-gray-300 hover:text-red-500 transition-colors shrink-0"
+                      aria-label="Händler entfernen"
+                    >
+                      <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                      </svg>
+                    </button>
+                  </div>
+                  <div className="flex items-center gap-2 mt-2">
+                    {dealer.averageRating > 0 ? (
+                      <>
+                        <StarRating rating={dealer.averageRating} size="sm" />
+                        <span className="text-sm text-gray-500">{dealer.averageRating.toFixed(1)}</span>
+                      </>
+                    ) : (
+                      <span className="text-sm text-gray-400">Keine Bewertungen</span>
+                    )}
+                  </div>
+                  <div className="mt-3 pt-3 border-t border-gray-100">
+                    <Link
+                      href={`/haendler/${encodeURIComponent(dealer.companyName)}`}
+                      className="text-sm text-[#f14011] font-semibold hover:underline"
+                    >
+                      Zum Händler &rarr;
+                    </Link>
+                  </div>
+                </div>
               </div>
             ))}
           </div>
         ) : (
           <div className="text-center py-20">
             <svg className="w-16 h-16 mx-auto text-gray-200 mb-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+              <path strokeLinecap="round" strokeLinejoin="round" d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" />
             </svg>
-            <p className="text-gray-400 text-lg">Noch keine Favoriten gespeichert.</p>
+            <p className="text-gray-400 text-lg">Noch keine Händler gespeichert.</p>
             <Link
-              href="/inserate"
+              href="/haendler"
               className="mt-4 inline-block text-[#f14011] font-semibold hover:underline"
             >
-              Jetzt Inserate entdecken &rarr;
+              Händler entdecken &rarr;
             </Link>
           </div>
         )}

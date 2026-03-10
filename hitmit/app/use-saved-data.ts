@@ -8,6 +8,7 @@ import {
   displacementOptions,
   tankVolumeOptions,
 } from "./vehicles-data";
+import type { DealerReview } from "./dealer-utils";
 
 export interface SavedSearch {
   id: string;
@@ -62,6 +63,8 @@ export interface SavedSearch {
 
 const SEARCHES_KEY = "hitmit_saved_searches";
 const FAVORITES_KEY = "hitmit_favorites";
+const SAVED_DEALERS_KEY = "hitmit_saved_dealers";
+const DEALER_REVIEWS_KEY = "hitmit_dealer_reviews";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function migrateSearch(raw: any): SavedSearch {
@@ -195,14 +198,36 @@ function loadFavorites(): number[] {
   }
 }
 
+function loadSavedDealers(): string[] {
+  try {
+    const raw = localStorage.getItem(SAVED_DEALERS_KEY);
+    return raw ? JSON.parse(raw) : [];
+  } catch {
+    return [];
+  }
+}
+
+function loadDealerReviews(): DealerReview[] {
+  try {
+    const raw = localStorage.getItem(DEALER_REVIEWS_KEY);
+    return raw ? JSON.parse(raw) : [];
+  } catch {
+    return [];
+  }
+}
+
 export function useSavedData() {
   const [mounted, setMounted] = useState(false);
   const [savedSearches, setSavedSearches] = useState<SavedSearch[]>([]);
   const [favorites, setFavorites] = useState<number[]>([]);
+  const [savedDealers, setSavedDealers] = useState<string[]>([]);
+  const [dealerReviews, setDealerReviews] = useState<DealerReview[]>([]);
 
   useEffect(() => {
     setSavedSearches(loadSearches());
     setFavorites(loadFavorites());
+    setSavedDealers(loadSavedDealers());
+    setDealerReviews(loadDealerReviews());
     setMounted(true);
   }, []);
 
@@ -291,10 +316,59 @@ export function useSavedData() {
     [favorites],
   );
 
+  // ---- Dealer methods ----
+
+  const persistSavedDealers = useCallback((next: string[]) => {
+    setSavedDealers(next);
+    localStorage.setItem(SAVED_DEALERS_KEY, JSON.stringify(next));
+  }, []);
+
+  const persistDealerReviews = useCallback((next: DealerReview[]) => {
+    setDealerReviews(next);
+    localStorage.setItem(DEALER_REVIEWS_KEY, JSON.stringify(next));
+  }, []);
+
+  const toggleSavedDealer = useCallback(
+    (companyName: string) => {
+      const current = loadSavedDealers();
+      const next = current.includes(companyName)
+        ? current.filter((n) => n !== companyName)
+        : [...current, companyName];
+      persistSavedDealers(next);
+    },
+    [persistSavedDealers],
+  );
+
+  const isSavedDealer = useCallback(
+    (companyName: string) => savedDealers.includes(companyName),
+    [savedDealers],
+  );
+
+  const addDealerReview = useCallback(
+    (review: Omit<DealerReview, "id" | "createdAt">) => {
+      const entry: DealerReview = {
+        ...review,
+        id: crypto.randomUUID(),
+        createdAt: new Date().toISOString(),
+      };
+      const next = [entry, ...loadDealerReviews()];
+      persistDealerReviews(next);
+    },
+    [persistDealerReviews],
+  );
+
+  const getDealerReviewsForDealer = useCallback(
+    (companyName: string) =>
+      dealerReviews.filter((r) => r.dealerCompanyName === companyName),
+    [dealerReviews],
+  );
+
   return {
     mounted,
     savedSearches,
     favorites,
+    savedDealers,
+    dealerReviews,
     saveSearch,
     removeSearch,
     markSearchSeen,
@@ -302,5 +376,9 @@ export function useSavedData() {
     isVehicleSavedInSearch,
     toggleFavorite,
     isFavorite,
+    toggleSavedDealer,
+    isSavedDealer,
+    addDealerReview,
+    getDealerReviewsForDealer,
   };
 }

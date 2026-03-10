@@ -518,6 +518,7 @@ function Header({
   const navItems = [
     { label: "Suchen", href: "/suchen" },
     { label: "Inserate", href: "/inserate" },
+    { label: "Händler", href: "/haendler" },
     { label: "Gespeichert", href: "/gespeichert" },
     { label: "So funktioniert's", href: "#how-it-works" },
     { label: "Für Verkäufer", href: "#sellers" },
