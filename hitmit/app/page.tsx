@@ -4,6 +4,7 @@ import React, { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import { generateDescription, checkCompleteness } from "./description-generator";
 import { ThemeToggle } from "./theme-toggle";
+import { CAR_BRANDS_MODELS } from "./vehicles-data";
 
 // ============================================================================
 // SVG ICONS
@@ -1281,49 +1282,6 @@ const VEHICLE_TYPE_OPTIONS = [
   { value: "van", label: "Transporter" },
   { value: "other", label: "Sonstige" },
 ];
-
-// Car brands and their models
-const CAR_BRANDS_MODELS: Record<string, string[]> = {
-  "Alfa Romeo": ["Giulia", "Stelvio", "Tonale", "Giulietta", "4C", "MiTo"],
-  "Audi": ["A1", "A3", "A4", "A5", "A6", "A7", "A8", "Q2", "Q3", "Q4 e-tron", "Q5", "Q7", "Q8", "e-tron", "e-tron GT", "RS3", "RS4", "RS5", "RS6", "RS7", "RS Q8", "S3", "S4", "S5", "S6", "S7", "S8", "TT", "R8"],
-  "BMW": ["1er", "2er", "3er", "4er", "5er", "6er", "7er", "8er", "X1", "X2", "X3", "X4", "X5", "X6", "X7", "XM", "Z4", "i3", "i4", "i5", "i7", "iX", "iX1", "iX3", "M2", "M3", "M4", "M5", "M8"],
-  "Chevrolet": ["Camaro", "Corvette", "Spark", "Trax", "Equinox", "Blazer", "Tahoe"],
-  "Citroën": ["C1", "C3", "C3 Aircross", "C4", "C4 X", "C5 Aircross", "C5 X", "Berlingo", "SpaceTourer", "ë-C4"],
-  "Cupra": ["Formentor", "Born", "Leon", "Ateca", "Tavascan"],
-  "Dacia": ["Sandero", "Duster", "Jogger", "Spring", "Logan"],
-  "DS": ["DS 3", "DS 4", "DS 7", "DS 9"],
-  "Ferrari": ["296 GTB", "296 GTS", "SF90", "F8", "Roma", "Portofino", "812", "Purosangue"],
-  "Fiat": ["500", "500X", "500L", "Panda", "Tipo", "Punto", "Ducato", "500e"],
-  "Ford": ["Fiesta", "Focus", "Puma", "Kuga", "Explorer", "Mustang", "Mustang Mach-E", "Ranger", "Transit", "Galaxy", "S-MAX", "Tourneo"],
-  "Honda": ["Civic", "Jazz", "HR-V", "CR-V", "ZR-V", "e:Ny1", "e"],
-  "Hyundai": ["i10", "i20", "i30", "Kona", "Tucson", "Santa Fe", "Ioniq 5", "Ioniq 6", "Nexo", "Bayon"],
-  "Jaguar": ["XE", "XF", "F-Type", "E-Pace", "F-Pace", "I-Pace"],
-  "Jeep": ["Renegade", "Compass", "Cherokee", "Grand Cherokee", "Wrangler", "Gladiator", "Avenger"],
-  "Kia": ["Picanto", "Rio", "Ceed", "ProCeed", "XCeed", "Sportage", "Sorento", "Niro", "EV6", "EV9", "Stinger"],
-  "Lamborghini": ["Huracán", "Urus", "Revuelto"],
-  "Land Rover": ["Defender", "Discovery", "Discovery Sport", "Range Rover", "Range Rover Sport", "Range Rover Velar", "Range Rover Evoque"],
-  "Lexus": ["UX", "NX", "RX", "LX", "ES", "IS", "LC", "LS", "RZ"],
-  "Maserati": ["Ghibli", "Quattroporte", "Levante", "MC20", "Grecale", "GranTurismo"],
-  "Mazda": ["2", "3", "6", "CX-3", "CX-30", "CX-5", "CX-60", "MX-5", "MX-30"],
-  "Mercedes-Benz": ["A-Klasse", "B-Klasse", "C-Klasse", "E-Klasse", "S-Klasse", "CLA", "CLS", "GLA", "GLB", "GLC", "GLE", "GLS", "G-Klasse", "EQA", "EQB", "EQC", "EQE", "EQS", "AMG GT", "SL", "Vito", "V-Klasse", "Sprinter"],
-  "Mini": ["3-Türer", "5-Türer", "Cabrio", "Clubman", "Countryman", "Electric"],
-  "Mitsubishi": ["Space Star", "ASX", "Eclipse Cross", "Outlander", "L200"],
-  "Nissan": ["Micra", "Juke", "Qashqai", "X-Trail", "Leaf", "Ariya", "GT-R", "Navara"],
-  "Opel": ["Corsa", "Astra", "Insignia", "Mokka", "Crossland", "Grandland", "Combo", "Vivaro", "Zafira"],
-  "Peugeot": ["208", "308", "408", "508", "2008", "3008", "5008", "Rifter", "Traveller", "e-208", "e-2008", "e-308"],
-  "Porsche": ["911", "718 Boxster", "718 Cayman", "Panamera", "Cayenne", "Macan", "Taycan"],
-  "Renault": ["Clio", "Captur", "Mégane", "Arkana", "Austral", "Espace", "Kangoo", "Zoe", "Mégane E-Tech", "Scenic E-Tech"],
-  "Seat": ["Ibiza", "Leon", "Arona", "Ateca", "Tarraco", "Alhambra"],
-  "Škoda": ["Fabia", "Scala", "Octavia", "Superb", "Kamiq", "Karoq", "Kodiaq", "Enyaq"],
-  "Smart": ["fortwo", "forfour", "#1", "#3"],
-  "Subaru": ["Impreza", "XV", "Forester", "Outback", "Solterra", "BRZ", "WRX"],
-  "Suzuki": ["Swift", "Ignis", "Vitara", "S-Cross", "Jimny", "Across"],
-  "Tesla": ["Model 3", "Model Y", "Model S", "Model X", "Cybertruck"],
-  "Toyota": ["Aygo X", "Yaris", "Yaris Cross", "Corolla", "Camry", "C-HR", "RAV4", "Highlander", "Land Cruiser", "Supra", "GR86", "bZ4X", "Proace"],
-  "Volkswagen": ["Polo", "Golf", "ID.3", "ID.4", "ID.5", "ID.7", "ID. Buzz", "T-Cross", "T-Roc", "Tiguan", "Touareg", "Passat", "Arteon", "Taigo", "up!", "Caddy", "Multivan", "Transporter", "Amarok"],
-  "Volvo": ["XC40", "XC60", "XC90", "C40", "S60", "S90", "V60", "V90", "EX30", "EX90"],
-  "Sonstige": ["Anderes Modell"],
-};
 
 const CAR_BRANDS = Object.keys(CAR_BRANDS_MODELS).sort();
 
