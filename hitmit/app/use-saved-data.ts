@@ -43,6 +43,7 @@ export interface SavedSearch {
     huFilter: string;
     previousOwnersFilter: string;
     cylinderFilter: string;
+    displacementMin: string;
     displacementMax: string;
     tankVolumeMin: string;
     manufacturerColorFilter: string;
@@ -159,6 +160,7 @@ function migrateSearch(raw: any): SavedSearch {
       huFilter: f.huFilter ?? "Alle",
       previousOwnersFilter: f.previousOwnersFilter ?? "Alle",
       cylinderFilter: f.cylinderFilter ?? "Alle",
+      displacementMin: f.displacementMin ?? "",
       displacementMax,
       tankVolumeMin,
       manufacturerColorFilter: f.manufacturerColorFilter ?? "",

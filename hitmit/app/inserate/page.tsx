@@ -1032,7 +1032,7 @@ function InseratePageInner() {
                     vehicleTypeFilter: "Alle", vehicleCategoryFilter: "Alle",
                     mwstFilter: "Alle", firstRegFrom: "", firstRegTo: "",
                     huFilter: "Alle", previousOwnersFilter: "Alle",
-                    cylinderFilter: "Alle", displacementMax: "", tankVolumeMin: "",
+                    cylinderFilter: "Alle", displacementMin: "", displacementMax: "", tankVolumeMin: "",
                     manufacturerColorFilter: "", interiorColorFilter: "Alle Farben",
                     seatMaterialFilter: "Alle", climateZoneFilter: "", rimSizeFilter: "",
                     paintProtectionFilmFilter: "Alle", noRepaintFilter: "Alle",

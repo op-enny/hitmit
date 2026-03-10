@@ -282,6 +282,7 @@ export default function SuchenPage() {
   const [huFilter, setHuFilter] = useState("Alle");
   const [previousOwnersFilter, setPreviousOwnersFilter] = useState("Alle");
   const [cylinderFilter, setCylinderFilter] = useState("Alle");
+  const [displacementMin, setDisplacementMin] = useState("");
   const [displacementMax, setDisplacementMax] = useState("");
   const [tankVolumeMin, setTankVolumeMin] = useState("");
 
@@ -400,6 +401,7 @@ export default function SuchenPage() {
       }
     }
     if (cylinderFilter !== "Alle" && v.cylinders !== Number(cylinderFilter)) return false;
+    if (displacementMin !== "" && (!v.engineDisplacement || v.engineDisplacement < Number(displacementMin))) return false;
     if (displacementMax !== "" && (!v.engineDisplacement || v.engineDisplacement > Number(displacementMax))) return false;
     if (tankVolumeMin !== "" && (!v.tankVolume || v.tankVolume < Number(tankVolumeMin))) return false;
     if (manufacturerColorFilter !== "" && !v.color.toLowerCase().includes(manufacturerColorFilter.toLowerCase())) return false;
@@ -463,6 +465,7 @@ export default function SuchenPage() {
     huFilter !== "Alle",
     previousOwnersFilter !== "Alle",
     cylinderFilter !== "Alle",
+    displacementMin !== "",
     displacementMax !== "",
     tankVolumeMin !== "",
     manufacturerColorFilter !== "",
@@ -493,7 +496,7 @@ export default function SuchenPage() {
     setVehicleTypeFilter("Alle"); setVehicleCategoryFilter("Alle");
     setMwstFilter("Alle"); setFirstRegFrom(""); setFirstRegTo("");
     setHuFilter("Alle"); setPreviousOwnersFilter("Alle");
-    setCylinderFilter("Alle"); setDisplacementMax(""); setTankVolumeMin("");
+    setCylinderFilter("Alle"); setDisplacementMin(""); setDisplacementMax(""); setTankVolumeMin("");
     setManufacturerColorFilter(""); setInteriorColorFilter("Alle Farben");
     setSeatMaterialFilter("Alle"); setClimateZoneFilter(""); setRimSizeFilter("");
     setPaintProtectionFilmFilter("Alle"); setNoRepaintFilter("Alle");
@@ -531,6 +534,7 @@ export default function SuchenPage() {
     if (huFilter !== "Alle") parts.push(`HU: ${huFilter}`);
     if (previousOwnersFilter !== "Alle") parts.push(`${previousOwnersFilter} Vorbesitzer`);
     if (cylinderFilter !== "Alle") parts.push(`${cylinderFilter} Zylinder`);
+    if (displacementMin !== "") parts.push(`ab ${Number(displacementMin).toLocaleString("de-DE")} ccm`);
     if (displacementMax !== "") parts.push(`bis ${Number(displacementMax).toLocaleString("de-DE")} ccm`);
     if (tankVolumeMin !== "") parts.push(`ab ${tankVolumeMin} L`);
     if (manufacturerColorFilter) parts.push(`Farbe: ${manufacturerColorFilter}`);
@@ -560,7 +564,7 @@ export default function SuchenPage() {
         vehicleTypeFilter, vehicleCategoryFilter,
         mwstFilter, firstRegFrom, firstRegTo,
         huFilter, previousOwnersFilter,
-        cylinderFilter, displacementMax, tankVolumeMin,
+        cylinderFilter, displacementMin, displacementMax, tankVolumeMin,
         manufacturerColorFilter, interiorColorFilter,
         seatMaterialFilter, climateZoneFilter, rimSizeFilter,
         paintProtectionFilmFilter, noRepaintFilter,
@@ -723,6 +727,7 @@ export default function SuchenPage() {
               onChange={setCylinderFilter}
               options={cylinderOptions.map((c) => ({ value: c, label: c }))}
             />
+            <NumericInput label="Hubraum von (ccm)" value={displacementMin} onChange={setDisplacementMin} placeholder="z.B. 1500" />
             <NumericInput label="Hubraum bis (ccm)" value={displacementMax} onChange={setDisplacementMax} placeholder="z.B. 3000" />
             <NumericInput label="Tankvolumen ab (L)" value={tankVolumeMin} onChange={setTankVolumeMin} placeholder="z.B. 50" />
           </div>

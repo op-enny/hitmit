@@ -95,6 +95,7 @@ function applyFilters(filters: SavedSearch["filters"]): Vehicle[] {
     }
     if (filters.cylinderFilter && filters.cylinderFilter !== "Alle" && v.cylinders !== Number(filters.cylinderFilter)) return false;
     // Displacement: direct comparison
+    if (filters.displacementMin !== "" && (!v.engineDisplacement || v.engineDisplacement < Number(filters.displacementMin))) return false;
     if (filters.displacementMax !== "" && (!v.engineDisplacement || v.engineDisplacement > Number(filters.displacementMax))) return false;
     // Tank volume: direct comparison
     if (filters.tankVolumeMin !== "" && (!v.tankVolume || v.tankVolume < Number(filters.tankVolumeMin))) return false;
@@ -169,6 +170,7 @@ function buildSearchUrl(filters: SavedSearch["filters"]): string {
   if (filters.huFilter && filters.huFilter !== "Alle") params.set("hu", filters.huFilter);
   if (filters.previousOwnersFilter && filters.previousOwnersFilter !== "Alle") params.set("previousOwners", filters.previousOwnersFilter);
   if (filters.cylinderFilter && filters.cylinderFilter !== "Alle") params.set("cylinders", filters.cylinderFilter);
+  if (filters.displacementMin !== "") params.set("displacementMin", filters.displacementMin);
   if (filters.displacementMax !== "") params.set("displacementMax", filters.displacementMax);
   if (filters.tankVolumeMin !== "") params.set("tankVolumeMin", filters.tankVolumeMin);
   if (filters.manufacturerColorFilter) params.set("mfColor", filters.manufacturerColorFilter);
@@ -238,6 +240,7 @@ function SearchCard({
   if (f.huFilter && f.huFilter !== "Alle") filterTags.push(`HU: ${f.huFilter}`);
   if (f.previousOwnersFilter && f.previousOwnersFilter !== "Alle") filterTags.push(`${f.previousOwnersFilter} Vorbesitzer`);
   if (f.cylinderFilter && f.cylinderFilter !== "Alle") filterTags.push(`${f.cylinderFilter} Zylinder`);
+  if (f.displacementMin !== "") filterTags.push(`ab ${Number(f.displacementMin).toLocaleString("de-DE")} ccm`);
   if (f.displacementMax !== "") filterTags.push(`bis ${Number(f.displacementMax).toLocaleString("de-DE")} ccm`);
   if (f.tankVolumeMin !== "") filterTags.push(`ab ${f.tankVolumeMin} L`);
   if (f.manufacturerColorFilter) filterTags.push(`Farbe: ${f.manufacturerColorFilter}`);
