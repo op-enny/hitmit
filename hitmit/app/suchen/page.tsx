@@ -7,28 +7,20 @@ import {
   vehicles,
   brandOptions,
   fuelOptions,
-  priceRanges,
   yearOptions,
-  mileageOptions,
-  powerOptions,
   transmissionOptions,
   driveTypeOptions,
   sellerTypeOptions,
   colorOptions,
   conditionOptions,
   doorOptions,
-  seatOptions,
   vehicleTypeOptions,
   vehicleCategoryOptions,
   cylinderOptions,
-  displacementOptions,
-  tankVolumeOptions,
   previousOwnerOptions,
   huOptions,
   interiorColorOptions,
   seatMaterialOptions,
-  climateZoneOptions,
-  rimSizeOptions,
   SAFETY_FEATURE_LIST,
   EQUIPMENT_FEATURE_LIST,
   CAR_BRANDS_MODELS,
@@ -52,6 +44,12 @@ const SearchIcon = ({ className = "w-5 h-5" }: { className?: string }) => (
   <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
     <circle cx="11" cy="11" r="8" />
     <path strokeLinecap="round" d="M21 21l-4.35-4.35" />
+  </svg>
+);
+
+const BookmarkIcon = ({ filled = false, className = "w-5 h-5" }: { filled?: boolean; className?: string }) => (
+  <svg className={className} viewBox="0 0 24 24" fill={filled ? "currentColor" : "none"} stroke="currentColor" strokeWidth="2">
+    <path strokeLinecap="round" strokeLinejoin="round" d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" />
   </svg>
 );
 
@@ -146,10 +144,20 @@ function PriceRatingBadge({ vehicle }: { vehicle: Vehicle }) {
 // RESULT CARD
 // ============================================================================
 
-function ResultCard({ vehicle }: { vehicle: Vehicle }) {
+function ResultCard({
+  vehicle,
+  currentSearchId,
+  isVehicleSaved,
+  onToggleSave,
+}: {
+  vehicle: Vehicle;
+  currentSearchId: string | null;
+  isVehicleSaved: boolean;
+  onToggleSave: () => void;
+}) {
   return (
-    <Link href={`/inserate`} className="block">
-      <div className="card cursor-pointer overflow-hidden group">
+    <div className="card cursor-pointer overflow-hidden group relative">
+      <Link href={`/inserate`} className="block">
         <div className={`h-40 bg-gradient-to-br ${vehicle.gradient} relative overflow-hidden`}>
           <div className="absolute inset-0 flex items-center justify-center">
             <span className="font-display text-white/15 text-5xl tracking-wider select-none group-hover:scale-110 transition-transform duration-500">
@@ -186,8 +194,51 @@ function ResultCard({ vehicle }: { vehicle: Vehicle }) {
             <span className="text-[#f14011] font-semibold group-hover:translate-x-0.5 transition-transform">Details →</span>
           </div>
         </div>
-      </div>
-    </Link>
+      </Link>
+      {currentSearchId && (
+        <button
+          onClick={(e) => { e.preventDefault(); e.stopPropagation(); onToggleSave(); }}
+          className={`absolute top-3 left-3 w-9 h-9 rounded-full backdrop-blur-sm flex items-center justify-center transition-colors z-10 ${
+            isVehicleSaved
+              ? "bg-[#f14011]/90 text-white hover:bg-[#f14011]"
+              : "bg-white/20 text-white hover:bg-white/40"
+          }`}
+          aria-label={isVehicleSaved ? "Aus Suche entfernen" : "In Suche speichern"}
+        >
+          <BookmarkIcon filled={isVehicleSaved} className="w-5 h-5" />
+        </button>
+      )}
+    </div>
+  );
+}
+
+// ============================================================================
+// NUMERIC INPUT HELPER
+// ============================================================================
+
+function NumericInput({
+  label,
+  value,
+  onChange,
+  placeholder,
+}: {
+  label: string;
+  value: string;
+  onChange: (v: string) => void;
+  placeholder: string;
+}) {
+  return (
+    <div>
+      <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1.5">{label}</label>
+      <input
+        type="text"
+        inputMode="numeric"
+        value={value}
+        onChange={(e) => onChange(e.target.value.replace(/[^0-9]/g, ""))}
+        placeholder={placeholder}
+        className="w-full bg-white dark:bg-[#1a1a1a] border border-gray-200 dark:border-[#2a2a2a] rounded-xl px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 placeholder:text-gray-400 hover:border-[#f14011] focus:border-[#f14011] focus:outline-none transition-colors"
+      />
+    </div>
   );
 }
 
@@ -199,13 +250,14 @@ export default function SuchenPage() {
   // Basic filters
   const [brandFilter, setBrandFilter] = useState("Alle Marken");
   const [fuelFilter, setFuelFilter] = useState("Alle Kraftstoffe");
-  const [priceFilter, setPriceFilter] = useState(0);
+  const [priceMin, setPriceMin] = useState("");
+  const [priceMax, setPriceMax] = useState("");
 
   // Extended filters
   const [yearFrom, setYearFrom] = useState("");
   const [yearTo, setYearTo] = useState("");
-  const [mileageFilter, setMileageFilter] = useState(0);
-  const [powerFilter, setPowerFilter] = useState(0);
+  const [mileageMax, setMileageMax] = useState("");
+  const [powerMin, setPowerMin] = useState("");
   const [transmissionFilter, setTransmissionFilter] = useState("Alle");
   const [driveTypeFilter, setDriveTypeFilter] = useState("Alle");
   const [sellerTypeFilter, setSellerTypeFilter] = useState("Alle");
@@ -214,7 +266,7 @@ export default function SuchenPage() {
   const [colorFilter, setColorFilter] = useState("Alle Farben");
   const [conditionFilter, setConditionFilter] = useState("Alle");
   const [doorFilter, setDoorFilter] = useState("Alle");
-  const [seatFilter, setSeatFilter] = useState("Alle");
+  const [seatFilter, setSeatFilter] = useState("");
 
   // New filters
   const [modelFilter, setModelFilter] = useState("");
@@ -230,15 +282,15 @@ export default function SuchenPage() {
   const [huFilter, setHuFilter] = useState("Alle");
   const [previousOwnersFilter, setPreviousOwnersFilter] = useState("Alle");
   const [cylinderFilter, setCylinderFilter] = useState("Alle");
-  const [displacementFilter, setDisplacementFilter] = useState(0);
-  const [tankVolumeFilter, setTankVolumeFilter] = useState(0);
+  const [displacementMax, setDisplacementMax] = useState("");
+  const [tankVolumeMin, setTankVolumeMin] = useState("");
 
   // Additional filters
   const [manufacturerColorFilter, setManufacturerColorFilter] = useState("");
   const [interiorColorFilter, setInteriorColorFilter] = useState("Alle Farben");
   const [seatMaterialFilter, setSeatMaterialFilter] = useState("Alle");
-  const [climateZoneFilter, setClimateZoneFilter] = useState("Alle");
-  const [rimSizeFilter, setRimSizeFilter] = useState("Alle");
+  const [climateZoneFilter, setClimateZoneFilter] = useState("");
+  const [rimSizeFilter, setRimSizeFilter] = useState("");
   const [paintProtectionFilmFilter, setPaintProtectionFilmFilter] = useState("Alle");
   const [noRepaintFilter, setNoRepaintFilter] = useState("Alle");
   const [serviceBookFilter, setServiceBookFilter] = useState("Alle");
@@ -251,7 +303,8 @@ export default function SuchenPage() {
   // Search state
   const [hasSearched, setHasSearched] = useState(false);
   const [searchSaved, setSearchSaved] = useState(false);
-  const { mounted, saveSearch } = useSavedData();
+  const [currentSearchId, setCurrentSearchId] = useState<string | null>(null);
+  const { mounted, saveSearch, toggleVehicleInSearch, isVehicleSavedInSearch } = useSavedData();
 
   // Close motorization dropdown on click outside
   useEffect(() => {
@@ -270,12 +323,12 @@ export default function SuchenPage() {
   const filtered = vehicles.filter((v) => {
     if (brandFilter !== "Alle Marken" && v.brand !== brandFilter) return false;
     if (fuelFilter !== "Alle Kraftstoffe" && v.fuelType !== fuelFilter) return false;
-    const range = priceRanges[priceFilter];
-    if (v.price < range.min || v.price >= range.max) return false;
+    if (priceMin !== "" && v.price < Number(priceMin)) return false;
+    if (priceMax !== "" && v.price > Number(priceMax)) return false;
     if (yearFrom !== "" && v.year < Number(yearFrom)) return false;
     if (yearTo !== "" && v.year > Number(yearTo)) return false;
-    if (mileageFilter !== 0 && v.mileage > mileageOptions[mileageFilter].max) return false;
-    if (powerFilter !== 0 && v.powerPs < powerOptions[powerFilter].min) return false;
+    if (mileageMax !== "" && v.mileage > Number(mileageMax)) return false;
+    if (powerMin !== "" && v.powerPs < Number(powerMin)) return false;
     if (transmissionFilter !== "Alle") {
       const t = v.transmission.toLowerCase();
       if (transmissionFilter === "Automatik" && !t.includes("automatik") && !t.includes("dsg") && !t.includes("pdk") && !t.includes("tronic") && !t.includes("s tronic")) return false;
@@ -300,7 +353,7 @@ export default function SuchenPage() {
       if (doorFilter === "4/5" && !["4", "5"].includes(v.doors)) return false;
       if (doorFilter === "6/7" && !["6", "7"].includes(v.doors)) return false;
     }
-    if (seatFilter !== "Alle" && v.seats !== seatFilter) return false;
+    if (seatFilter !== "" && v.seats !== seatFilter) return false;
     if (modelFilter !== "") {
       if (brandFilter === "Mercedes-Benz" && MERCEDES_MOTORIZATIONS[modelFilter]) {
         if (!MERCEDES_MOTORIZATIONS[modelFilter].some((m) => v.model.toLowerCase().includes(m.toLowerCase()))) return false;
@@ -347,20 +400,13 @@ export default function SuchenPage() {
       }
     }
     if (cylinderFilter !== "Alle" && v.cylinders !== Number(cylinderFilter)) return false;
-    if (displacementFilter !== 0) {
-      const opt = displacementOptions[displacementFilter];
-      if (opt.max === -1) {
-        if (!v.engineDisplacement || v.engineDisplacement <= 3000) return false;
-      } else {
-        if (!v.engineDisplacement || v.engineDisplacement > opt.max) return false;
-      }
-    }
-    if (tankVolumeFilter !== 0 && (!v.tankVolume || v.tankVolume < tankVolumeOptions[tankVolumeFilter].min)) return false;
+    if (displacementMax !== "" && (!v.engineDisplacement || v.engineDisplacement > Number(displacementMax))) return false;
+    if (tankVolumeMin !== "" && (!v.tankVolume || v.tankVolume < Number(tankVolumeMin))) return false;
     if (manufacturerColorFilter !== "" && !v.color.toLowerCase().includes(manufacturerColorFilter.toLowerCase())) return false;
     if (interiorColorFilter !== "Alle Farben" && (!v.interiorColor || !v.interiorColor.toLowerCase().includes(interiorColorFilter.toLowerCase()))) return false;
     if (seatMaterialFilter !== "Alle" && v.seatMaterial !== seatMaterialFilter) return false;
-    if (climateZoneFilter !== "Alle" && v.climateZones !== Number(climateZoneFilter)) return false;
-    if (rimSizeFilter !== "Alle" && v.rimSize !== Number(rimSizeFilter)) return false;
+    if (climateZoneFilter !== "" && v.climateZones !== Number(climateZoneFilter)) return false;
+    if (rimSizeFilter !== "" && v.rimSize !== Number(rimSizeFilter)) return false;
     if (paintProtectionFilmFilter !== "Alle") {
       if (paintProtectionFilmFilter === "Ja" && !v.paintProtectionFilm) return false;
       if (paintProtectionFilmFilter === "Nein" && v.paintProtectionFilm) return false;
@@ -391,11 +437,12 @@ export default function SuchenPage() {
   const activeFilterCount = [
     brandFilter !== "Alle Marken",
     fuelFilter !== "Alle Kraftstoffe",
-    priceFilter !== 0,
+    priceMin !== "",
+    priceMax !== "",
     yearFrom !== "",
     yearTo !== "",
-    mileageFilter !== 0,
-    powerFilter !== 0,
+    mileageMax !== "",
+    powerMin !== "",
     transmissionFilter !== "Alle",
     driveTypeFilter !== "Alle",
     sellerTypeFilter !== "Alle",
@@ -404,7 +451,7 @@ export default function SuchenPage() {
     colorFilter !== "Alle Farben",
     conditionFilter !== "Alle",
     doorFilter !== "Alle",
-    seatFilter !== "Alle",
+    seatFilter !== "",
     modelFilter !== "",
     motorizationFilter.length > 0,
     variantFilter !== "",
@@ -416,13 +463,13 @@ export default function SuchenPage() {
     huFilter !== "Alle",
     previousOwnersFilter !== "Alle",
     cylinderFilter !== "Alle",
-    displacementFilter !== 0,
-    tankVolumeFilter !== 0,
+    displacementMax !== "",
+    tankVolumeMin !== "",
     manufacturerColorFilter !== "",
     interiorColorFilter !== "Alle Farben",
     seatMaterialFilter !== "Alle",
-    climateZoneFilter !== "Alle",
-    rimSizeFilter !== "Alle",
+    climateZoneFilter !== "",
+    rimSizeFilter !== "",
     paintProtectionFilmFilter !== "Alle",
     noRepaintFilter !== "Alle",
     serviceBookFilter !== "Alle",
@@ -434,21 +481,21 @@ export default function SuchenPage() {
   const resetAll = () => {
     setBrandFilter("Alle Marken");
     setFuelFilter("Alle Kraftstoffe");
-    setPriceFilter(0);
+    setPriceMin(""); setPriceMax("");
     setYearFrom(""); setYearTo("");
-    setMileageFilter(0); setPowerFilter(0);
+    setMileageMax(""); setPowerMin("");
     setTransmissionFilter("Alle"); setDriveTypeFilter("Alle");
     setSellerTypeFilter("Alle"); setAccidentFreeFilter("Alle");
     setCityFilter("");
     setColorFilter("Alle Farben"); setConditionFilter("Alle");
-    setDoorFilter("Alle"); setSeatFilter("Alle");
+    setDoorFilter("Alle"); setSeatFilter("");
     setModelFilter(""); setVariantFilter("");
     setVehicleTypeFilter("Alle"); setVehicleCategoryFilter("Alle");
     setMwstFilter("Alle"); setFirstRegFrom(""); setFirstRegTo("");
     setHuFilter("Alle"); setPreviousOwnersFilter("Alle");
-    setCylinderFilter("Alle"); setDisplacementFilter(0); setTankVolumeFilter(0);
+    setCylinderFilter("Alle"); setDisplacementMax(""); setTankVolumeMin("");
     setManufacturerColorFilter(""); setInteriorColorFilter("Alle Farben");
-    setSeatMaterialFilter("Alle"); setClimateZoneFilter("Alle"); setRimSizeFilter("Alle");
+    setSeatMaterialFilter("Alle"); setClimateZoneFilter(""); setRimSizeFilter("");
     setPaintProtectionFilmFilter("Alle"); setNoRepaintFilter("Alle");
     setServiceBookFilter("Alle"); setManufacturerWarrantyFilter("Alle");
     setSafetyFeaturesFilter([]); setEquipmentFeaturesFilter([]);
@@ -458,11 +505,12 @@ export default function SuchenPage() {
     const parts: string[] = [];
     if (brandFilter !== "Alle Marken") parts.push(brandFilter);
     if (fuelFilter !== "Alle Kraftstoffe") parts.push(fuelFilter);
-    if (priceFilter !== 0) parts.push(priceRanges[priceFilter].label);
+    if (priceMin !== "") parts.push(`ab ${Number(priceMin).toLocaleString("de-DE")} €`);
+    if (priceMax !== "") parts.push(`bis ${Number(priceMax).toLocaleString("de-DE")} €`);
     if (yearFrom) parts.push(`ab ${yearFrom}`);
     if (yearTo) parts.push(`bis ${yearTo}`);
-    if (mileageFilter !== 0) parts.push(mileageOptions[mileageFilter].label);
-    if (powerFilter !== 0) parts.push(powerOptions[powerFilter].label);
+    if (mileageMax !== "") parts.push(`bis ${Number(mileageMax).toLocaleString("de-DE")} km`);
+    if (powerMin !== "") parts.push(`ab ${powerMin} PS`);
     if (transmissionFilter !== "Alle") parts.push(transmissionFilter);
     if (driveTypeFilter !== "Alle") parts.push(driveTypeFilter);
     if (sellerTypeFilter !== "Alle") parts.push(sellerTypeFilter);
@@ -471,7 +519,7 @@ export default function SuchenPage() {
     if (colorFilter !== "Alle Farben") parts.push(colorFilter);
     if (conditionFilter !== "Alle") parts.push(conditionFilter);
     if (doorFilter !== "Alle") parts.push(`${doorFilter} Türen`);
-    if (seatFilter !== "Alle") parts.push(`${seatFilter} Sitze`);
+    if (seatFilter !== "") parts.push(`${seatFilter} Sitze`);
     if (modelFilter) parts.push(modelFilter);
     if (motorizationFilter.length > 0) parts.push(motorizationFilter.join(", "));
     if (variantFilter) parts.push(variantFilter);
@@ -483,13 +531,13 @@ export default function SuchenPage() {
     if (huFilter !== "Alle") parts.push(`HU: ${huFilter}`);
     if (previousOwnersFilter !== "Alle") parts.push(`${previousOwnersFilter} Vorbesitzer`);
     if (cylinderFilter !== "Alle") parts.push(`${cylinderFilter} Zylinder`);
-    if (displacementFilter !== 0) parts.push(displacementOptions[displacementFilter].label);
-    if (tankVolumeFilter !== 0) parts.push(tankVolumeOptions[tankVolumeFilter].label);
+    if (displacementMax !== "") parts.push(`bis ${Number(displacementMax).toLocaleString("de-DE")} ccm`);
+    if (tankVolumeMin !== "") parts.push(`ab ${tankVolumeMin} L`);
     if (manufacturerColorFilter) parts.push(`Farbe: ${manufacturerColorFilter}`);
     if (interiorColorFilter !== "Alle Farben") parts.push(`Innen: ${interiorColorFilter}`);
     if (seatMaterialFilter !== "Alle") parts.push(seatMaterialFilter);
-    if (climateZoneFilter !== "Alle") parts.push(`${climateZoneFilter}-Zonen Klima`);
-    if (rimSizeFilter !== "Alle") parts.push(`${rimSizeFilter} Zoll`);
+    if (climateZoneFilter !== "") parts.push(`${climateZoneFilter}-Zonen Klima`);
+    if (rimSizeFilter !== "") parts.push(`${rimSizeFilter} Zoll`);
     if (paintProtectionFilmFilter !== "Alle") parts.push(`Steinschlagfolie: ${paintProtectionFilmFilter}`);
     if (noRepaintFilter !== "Alle") parts.push(`Nachlackierungsfrei: ${noRepaintFilter}`);
     if (serviceBookFilter !== "Alle") parts.push(`Scheckheft: ${serviceBookFilter}`);
@@ -497,12 +545,12 @@ export default function SuchenPage() {
     if (safetyFeaturesFilter.length > 0) parts.push(`${safetyFeaturesFilter.length}x Sicherheit`);
     if (equipmentFeaturesFilter.length > 0) parts.push(`${equipmentFeaturesFilter.length}x Ausstattung`);
     const label = parts.length > 0 ? parts.join(", ") : "Alle Fahrzeuge";
-    saveSearch(
+    const newId = saveSearch(
       label,
       {
-        brandFilter, fuelFilter, priceFilter,
+        brandFilter, fuelFilter, priceMin, priceMax,
         yearFrom, yearTo,
-        mileageFilter, powerFilter,
+        mileageMax, powerMin,
         transmissionFilter, driveTypeFilter,
         sellerTypeFilter, accidentFreeFilter,
         cityFilter,
@@ -512,7 +560,7 @@ export default function SuchenPage() {
         vehicleTypeFilter, vehicleCategoryFilter,
         mwstFilter, firstRegFrom, firstRegTo,
         huFilter, previousOwnersFilter,
-        cylinderFilter, displacementFilter, tankVolumeFilter,
+        cylinderFilter, displacementMax, tankVolumeMin,
         manufacturerColorFilter, interiorColorFilter,
         seatMaterialFilter, climateZoneFilter, rimSizeFilter,
         paintProtectionFilmFilter, noRepaintFilter,
@@ -521,6 +569,7 @@ export default function SuchenPage() {
       },
       filtered.map((v) => v.id),
     );
+    setCurrentSearchId(newId);
     setSearchSaved(true);
     setTimeout(() => setSearchSaved(false), 2000);
   };
@@ -658,24 +707,10 @@ export default function SuchenPage() {
           {/* Section: Preis & Leistung */}
           <h3 className="text-sm font-semibold text-gray-900 dark:text-gray-100 uppercase tracking-wider mb-4">Preis & Leistung</h3>
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 mb-6">
-            <FilterSelect
-              label="Preis"
-              value={priceFilter}
-              onChange={(v) => setPriceFilter(Number(v))}
-              options={priceRanges.map((r, i) => ({ value: i, label: r.label }))}
-            />
-            <FilterSelect
-              label="Leistung"
-              value={powerFilter}
-              onChange={(v) => setPowerFilter(Number(v))}
-              options={powerOptions.map((p, i) => ({ value: i, label: p.label }))}
-            />
-            <FilterSelect
-              label="Kilometerstand"
-              value={mileageFilter}
-              onChange={(v) => setMileageFilter(Number(v))}
-              options={mileageOptions.map((m, i) => ({ value: i, label: m.label }))}
-            />
+            <NumericInput label="Preis von (€)" value={priceMin} onChange={setPriceMin} placeholder="z.B. 10000" />
+            <NumericInput label="Preis bis (€)" value={priceMax} onChange={setPriceMax} placeholder="z.B. 50000" />
+            <NumericInput label="Leistung ab (PS)" value={powerMin} onChange={setPowerMin} placeholder="z.B. 200" />
+            <NumericInput label="Kilometerstand bis" value={mileageMax} onChange={setMileageMax} placeholder="z.B. 50000" />
             <FilterSelect
               label="Getriebe"
               value={transmissionFilter}
@@ -688,18 +723,8 @@ export default function SuchenPage() {
               onChange={setCylinderFilter}
               options={cylinderOptions.map((c) => ({ value: c, label: c }))}
             />
-            <FilterSelect
-              label="Hubraum"
-              value={displacementFilter}
-              onChange={(v) => setDisplacementFilter(Number(v))}
-              options={displacementOptions.map((d, i) => ({ value: i, label: d.label }))}
-            />
-            <FilterSelect
-              label="Tankvolumen"
-              value={tankVolumeFilter}
-              onChange={(v) => setTankVolumeFilter(Number(v))}
-              options={tankVolumeOptions.map((t, i) => ({ value: i, label: t.label }))}
-            />
+            <NumericInput label="Hubraum bis (ccm)" value={displacementMax} onChange={setDisplacementMax} placeholder="z.B. 3000" />
+            <NumericInput label="Tankvolumen ab (L)" value={tankVolumeMin} onChange={setTankVolumeMin} placeholder="z.B. 50" />
           </div>
 
           {/* Section: Details */}
@@ -729,12 +754,7 @@ export default function SuchenPage() {
               onChange={setDoorFilter}
               options={doorOptions.map((d) => ({ value: d, label: d }))}
             />
-            <FilterSelect
-              label="Sitze"
-              value={seatFilter}
-              onChange={setSeatFilter}
-              options={seatOptions.map((s) => ({ value: s, label: s }))}
-            />
+            <NumericInput label="Sitze" value={seatFilter} onChange={setSeatFilter} placeholder="z.B. 5" />
             <FilterSelect
               label="Verkäufertyp"
               value={sellerTypeFilter}
@@ -812,18 +832,8 @@ export default function SuchenPage() {
               onChange={setSeatMaterialFilter}
               options={seatMaterialOptions.map((s) => ({ value: s, label: s }))}
             />
-            <FilterSelect
-              label="Klimazonen"
-              value={climateZoneFilter}
-              onChange={setClimateZoneFilter}
-              options={climateZoneOptions.map((c) => ({ value: c, label: c }))}
-            />
-            <FilterSelect
-              label="Felgengröße (Zoll)"
-              value={rimSizeFilter}
-              onChange={setRimSizeFilter}
-              options={rimSizeOptions.map((r) => ({ value: r, label: r }))}
-            />
+            <NumericInput label="Klimazonen" value={climateZoneFilter} onChange={setClimateZoneFilter} placeholder="z.B. 2" />
+            <NumericInput label="Felgengröße (Zoll)" value={rimSizeFilter} onChange={setRimSizeFilter} placeholder="z.B. 19" />
           </div>
 
           {/* Section: Zustand & Garantie */}
@@ -985,6 +995,11 @@ export default function SuchenPage() {
       {/* Results */}
       {hasSearched && (
         <section className="max-w-7xl mx-auto px-4 sm:px-6 pb-16">
+          {currentSearchId && (
+            <p className="text-sm text-gray-400 mb-4">
+              Klicke auf das Lesezeichen-Symbol, um Fahrzeuge dieser Suche zuzuordnen.
+            </p>
+          )}
           {filtered.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {filtered.map((vehicle, index) => (
@@ -993,7 +1008,12 @@ export default function SuchenPage() {
                   className="animate-fade-in-up"
                   style={{ opacity: 0, animationDelay: `${(index + 4) * 100}ms` }}
                 >
-                  <ResultCard vehicle={vehicle} />
+                  <ResultCard
+                    vehicle={vehicle}
+                    currentSearchId={currentSearchId}
+                    isVehicleSaved={currentSearchId ? isVehicleSavedInSearch(currentSearchId, vehicle.id) : false}
+                    onToggleSave={() => { if (currentSearchId) toggleVehicleInSearch(currentSearchId, vehicle.id); }}
+                  />
                 </div>
               ))}
             </div>

@@ -5,13 +5,6 @@ import Link from "next/link";
 import { SubpageHeader } from "../subpage-header";
 import {
   vehicles,
-  brandOptions,
-  fuelOptions,
-  priceRanges,
-  mileageOptions,
-  powerOptions,
-  displacementOptions,
-  tankVolumeOptions,
 } from "../vehicles-data";
 import type { Vehicle } from "../vehicles-data";
 import { useSavedData } from "../use-saved-data";
@@ -25,19 +18,15 @@ function applyFilters(filters: SavedSearch["filters"]): Vehicle[] {
   return vehicles.filter((v) => {
     if (filters.brandFilter !== "Alle Marken" && v.brand !== filters.brandFilter) return false;
     if (filters.fuelFilter !== "Alle Kraftstoffe" && v.fuelType !== filters.fuelFilter) return false;
-    const range = priceRanges[filters.priceFilter];
-    if (range && (v.price < range.min || v.price >= range.max)) return false;
-    // New filters (backwards-compatible: old saved searches won't have these fields)
+    // Price: direct comparison
+    if (filters.priceMin !== "" && v.price < Number(filters.priceMin)) return false;
+    if (filters.priceMax !== "" && v.price > Number(filters.priceMax)) return false;
     if (filters.yearFrom && v.year < Number(filters.yearFrom)) return false;
     if (filters.yearTo && v.year > Number(filters.yearTo)) return false;
-    if (filters.mileageFilter && filters.mileageFilter !== 0) {
-      const ml = mileageOptions[filters.mileageFilter];
-      if (ml && v.mileage > ml.max) return false;
-    }
-    if (filters.powerFilter && filters.powerFilter !== 0) {
-      const pw = powerOptions[filters.powerFilter];
-      if (pw && v.powerPs < pw.min) return false;
-    }
+    // Mileage: direct comparison
+    if (filters.mileageMax !== "" && v.mileage > Number(filters.mileageMax)) return false;
+    // Power: direct comparison
+    if (filters.powerMin !== "" && v.powerPs < Number(filters.powerMin)) return false;
     if (filters.transmissionFilter && filters.transmissionFilter !== "Alle") {
       const t = v.transmission.toLowerCase();
       if (filters.transmissionFilter === "Automatik" && !t.includes("automatik") && !t.includes("dsg") && !t.includes("pdk") && !t.includes("tronic") && !t.includes("s tronic")) return false;
@@ -62,7 +51,7 @@ function applyFilters(filters: SavedSearch["filters"]): Vehicle[] {
       if (filters.doorFilter === "4/5" && !["4", "5"].includes(v.doors)) return false;
       if (filters.doorFilter === "6/7" && !["6", "7"].includes(v.doors)) return false;
     }
-    if (filters.seatFilter && filters.seatFilter !== "Alle" && v.seats !== filters.seatFilter) return false;
+    if (filters.seatFilter && filters.seatFilter !== "" && filters.seatFilter !== "Alle" && v.seats !== filters.seatFilter) return false;
     if (filters.modelFilter && !v.model.toLowerCase().includes(filters.modelFilter.toLowerCase())) return false;
     if (filters.motorizationFilter && filters.motorizationFilter.length > 0 && !filters.motorizationFilter.some((m) => v.model.toLowerCase().includes(m.toLowerCase()))) return false;
     if (filters.variantFilter && !v.variant.toLowerCase().includes(filters.variantFilter.toLowerCase())) return false;
@@ -103,25 +92,15 @@ function applyFilters(filters: SavedSearch["filters"]): Vehicle[] {
       }
     }
     if (filters.cylinderFilter && filters.cylinderFilter !== "Alle" && v.cylinders !== Number(filters.cylinderFilter)) return false;
-    if (filters.displacementFilter && filters.displacementFilter !== 0) {
-      const opt = displacementOptions[filters.displacementFilter];
-      if (opt) {
-        if (opt.max === -1) {
-          if (!v.engineDisplacement || v.engineDisplacement <= 3000) return false;
-        } else {
-          if (!v.engineDisplacement || v.engineDisplacement > opt.max) return false;
-        }
-      }
-    }
-    if (filters.tankVolumeFilter && filters.tankVolumeFilter !== 0) {
-      const opt = tankVolumeOptions[filters.tankVolumeFilter];
-      if (opt && (!v.tankVolume || v.tankVolume < opt.min)) return false;
-    }
+    // Displacement: direct comparison
+    if (filters.displacementMax !== "" && (!v.engineDisplacement || v.engineDisplacement > Number(filters.displacementMax))) return false;
+    // Tank volume: direct comparison
+    if (filters.tankVolumeMin !== "" && (!v.tankVolume || v.tankVolume < Number(filters.tankVolumeMin))) return false;
     if (filters.manufacturerColorFilter && !v.color.toLowerCase().includes(filters.manufacturerColorFilter.toLowerCase())) return false;
     if (filters.interiorColorFilter && filters.interiorColorFilter !== "Alle Farben" && (!v.interiorColor || !v.interiorColor.toLowerCase().includes(filters.interiorColorFilter.toLowerCase()))) return false;
     if (filters.seatMaterialFilter && filters.seatMaterialFilter !== "Alle" && v.seatMaterial !== filters.seatMaterialFilter) return false;
-    if (filters.climateZoneFilter && filters.climateZoneFilter !== "Alle" && v.climateZones !== Number(filters.climateZoneFilter)) return false;
-    if (filters.rimSizeFilter && filters.rimSizeFilter !== "Alle" && v.rimSize !== Number(filters.rimSizeFilter)) return false;
+    if (filters.climateZoneFilter && filters.climateZoneFilter !== "" && filters.climateZoneFilter !== "Alle" && v.climateZones !== Number(filters.climateZoneFilter)) return false;
+    if (filters.rimSizeFilter && filters.rimSizeFilter !== "" && filters.rimSizeFilter !== "Alle" && v.rimSize !== Number(filters.rimSizeFilter)) return false;
     if (filters.paintProtectionFilmFilter && filters.paintProtectionFilmFilter !== "Alle") {
       if (filters.paintProtectionFilmFilter === "Ja" && !v.paintProtectionFilm) return false;
       if (filters.paintProtectionFilmFilter === "Nein" && v.paintProtectionFilm) return false;
@@ -162,11 +141,12 @@ function buildSearchUrl(filters: SavedSearch["filters"]): string {
   const params = new URLSearchParams();
   if (filters.brandFilter !== "Alle Marken") params.set("brand", filters.brandFilter);
   if (filters.fuelFilter !== "Alle Kraftstoffe") params.set("fuel", filters.fuelFilter);
-  if (filters.priceFilter !== 0) params.set("price", String(filters.priceFilter));
+  if (filters.priceMin !== "") params.set("priceMin", filters.priceMin);
+  if (filters.priceMax !== "") params.set("priceMax", filters.priceMax);
   if (filters.yearFrom) params.set("yearFrom", filters.yearFrom);
   if (filters.yearTo) params.set("yearTo", filters.yearTo);
-  if (filters.mileageFilter && filters.mileageFilter !== 0) params.set("mileage", String(filters.mileageFilter));
-  if (filters.powerFilter && filters.powerFilter !== 0) params.set("power", String(filters.powerFilter));
+  if (filters.mileageMax !== "") params.set("mileageMax", filters.mileageMax);
+  if (filters.powerMin !== "") params.set("powerMin", filters.powerMin);
   if (filters.transmissionFilter && filters.transmissionFilter !== "Alle") params.set("transmission", filters.transmissionFilter);
   if (filters.driveTypeFilter && filters.driveTypeFilter !== "Alle") params.set("driveType", filters.driveTypeFilter);
   if (filters.sellerTypeFilter && filters.sellerTypeFilter !== "Alle") params.set("sellerType", filters.sellerTypeFilter);
@@ -175,7 +155,7 @@ function buildSearchUrl(filters: SavedSearch["filters"]): string {
   if (filters.colorFilter && filters.colorFilter !== "Alle Farben") params.set("color", filters.colorFilter);
   if (filters.conditionFilter && filters.conditionFilter !== "Alle") params.set("condition", filters.conditionFilter);
   if (filters.doorFilter && filters.doorFilter !== "Alle") params.set("doors", filters.doorFilter);
-  if (filters.seatFilter && filters.seatFilter !== "Alle") params.set("seats", filters.seatFilter);
+  if (filters.seatFilter && filters.seatFilter !== "" && filters.seatFilter !== "Alle") params.set("seats", filters.seatFilter);
   if (filters.modelFilter) params.set("model", filters.modelFilter);
   if (filters.motorizationFilter && filters.motorizationFilter.length > 0) params.set("motorization", filters.motorizationFilter.join(","));
   if (filters.variantFilter) params.set("variant", filters.variantFilter);
@@ -187,13 +167,13 @@ function buildSearchUrl(filters: SavedSearch["filters"]): string {
   if (filters.huFilter && filters.huFilter !== "Alle") params.set("hu", filters.huFilter);
   if (filters.previousOwnersFilter && filters.previousOwnersFilter !== "Alle") params.set("previousOwners", filters.previousOwnersFilter);
   if (filters.cylinderFilter && filters.cylinderFilter !== "Alle") params.set("cylinders", filters.cylinderFilter);
-  if (filters.displacementFilter && filters.displacementFilter !== 0) params.set("displacement", String(filters.displacementFilter));
-  if (filters.tankVolumeFilter && filters.tankVolumeFilter !== 0) params.set("tankVolume", String(filters.tankVolumeFilter));
+  if (filters.displacementMax !== "") params.set("displacementMax", filters.displacementMax);
+  if (filters.tankVolumeMin !== "") params.set("tankVolumeMin", filters.tankVolumeMin);
   if (filters.manufacturerColorFilter) params.set("mfColor", filters.manufacturerColorFilter);
   if (filters.interiorColorFilter && filters.interiorColorFilter !== "Alle Farben") params.set("interiorColor", filters.interiorColorFilter);
   if (filters.seatMaterialFilter && filters.seatMaterialFilter !== "Alle") params.set("seatMaterial", filters.seatMaterialFilter);
-  if (filters.climateZoneFilter && filters.climateZoneFilter !== "Alle") params.set("climateZones", filters.climateZoneFilter);
-  if (filters.rimSizeFilter && filters.rimSizeFilter !== "Alle") params.set("rimSize", filters.rimSizeFilter);
+  if (filters.climateZoneFilter && filters.climateZoneFilter !== "" && filters.climateZoneFilter !== "Alle") params.set("climateZones", filters.climateZoneFilter);
+  if (filters.rimSizeFilter && filters.rimSizeFilter !== "" && filters.rimSizeFilter !== "Alle") params.set("rimSize", filters.rimSizeFilter);
   if (filters.paintProtectionFilmFilter && filters.paintProtectionFilmFilter !== "Alle") params.set("ppf", filters.paintProtectionFilmFilter);
   if (filters.noRepaintFilter && filters.noRepaintFilter !== "Alle") params.set("noRepaint", filters.noRepaintFilter);
   if (filters.serviceBookFilter && filters.serviceBookFilter !== "Alle") params.set("serviceBook", filters.serviceBookFilter);
@@ -217,20 +197,25 @@ function SearchCard({
   onRemove: () => void;
   onMarkSeen: (ids: number[]) => void;
 }) {
+  const [showSavedVehicles, setShowSavedVehicles] = useState(false);
   const currentMatches = applyFilters(search.filters);
   const currentIds = currentMatches.map((v) => v.id);
   const newIds = currentIds.filter((id) => !search.seenVehicleIds.includes(id));
   const newCount = newIds.length;
 
+  const savedVehiclesList = vehicles.filter((v) => (search.savedVehicleIds ?? []).includes(v.id));
+  const savedCount = savedVehiclesList.length;
+
   const filterTags: string[] = [];
   const f = search.filters;
   if (f.brandFilter !== "Alle Marken") filterTags.push(f.brandFilter);
   if (f.fuelFilter !== "Alle Kraftstoffe") filterTags.push(f.fuelFilter);
-  if (f.priceFilter !== 0) filterTags.push(priceRanges[f.priceFilter]?.label ?? "");
+  if (f.priceMin !== "") filterTags.push(`ab ${Number(f.priceMin).toLocaleString("de-DE")} €`);
+  if (f.priceMax !== "") filterTags.push(`bis ${Number(f.priceMax).toLocaleString("de-DE")} €`);
   if (f.yearFrom) filterTags.push(`ab ${f.yearFrom}`);
   if (f.yearTo) filterTags.push(`bis ${f.yearTo}`);
-  if (f.mileageFilter && f.mileageFilter !== 0) filterTags.push(mileageOptions[f.mileageFilter]?.label ?? "");
-  if (f.powerFilter && f.powerFilter !== 0) filterTags.push(powerOptions[f.powerFilter]?.label ?? "");
+  if (f.mileageMax !== "") filterTags.push(`bis ${Number(f.mileageMax).toLocaleString("de-DE")} km`);
+  if (f.powerMin !== "") filterTags.push(`ab ${f.powerMin} PS`);
   if (f.transmissionFilter && f.transmissionFilter !== "Alle") filterTags.push(f.transmissionFilter);
   if (f.driveTypeFilter && f.driveTypeFilter !== "Alle") filterTags.push(f.driveTypeFilter);
   if (f.sellerTypeFilter && f.sellerTypeFilter !== "Alle") filterTags.push(f.sellerTypeFilter);
@@ -239,7 +224,7 @@ function SearchCard({
   if (f.colorFilter && f.colorFilter !== "Alle Farben") filterTags.push(f.colorFilter);
   if (f.conditionFilter && f.conditionFilter !== "Alle") filterTags.push(f.conditionFilter);
   if (f.doorFilter && f.doorFilter !== "Alle") filterTags.push(`${f.doorFilter} Türen`);
-  if (f.seatFilter && f.seatFilter !== "Alle") filterTags.push(`${f.seatFilter} Sitze`);
+  if (f.seatFilter && f.seatFilter !== "" && f.seatFilter !== "Alle") filterTags.push(`${f.seatFilter} Sitze`);
   if (f.modelFilter) filterTags.push(f.modelFilter);
   if (f.motorizationFilter && f.motorizationFilter.length > 0) filterTags.push(f.motorizationFilter.join(", "));
   if (f.variantFilter) filterTags.push(f.variantFilter);
@@ -251,13 +236,13 @@ function SearchCard({
   if (f.huFilter && f.huFilter !== "Alle") filterTags.push(`HU: ${f.huFilter}`);
   if (f.previousOwnersFilter && f.previousOwnersFilter !== "Alle") filterTags.push(`${f.previousOwnersFilter} Vorbesitzer`);
   if (f.cylinderFilter && f.cylinderFilter !== "Alle") filterTags.push(`${f.cylinderFilter} Zylinder`);
-  if (f.displacementFilter && f.displacementFilter !== 0) filterTags.push(displacementOptions[f.displacementFilter]?.label ?? "");
-  if (f.tankVolumeFilter && f.tankVolumeFilter !== 0) filterTags.push(tankVolumeOptions[f.tankVolumeFilter]?.label ?? "");
+  if (f.displacementMax !== "") filterTags.push(`bis ${Number(f.displacementMax).toLocaleString("de-DE")} ccm`);
+  if (f.tankVolumeMin !== "") filterTags.push(`ab ${f.tankVolumeMin} L`);
   if (f.manufacturerColorFilter) filterTags.push(`Farbe: ${f.manufacturerColorFilter}`);
   if (f.interiorColorFilter && f.interiorColorFilter !== "Alle Farben") filterTags.push(`Innen: ${f.interiorColorFilter}`);
   if (f.seatMaterialFilter && f.seatMaterialFilter !== "Alle") filterTags.push(f.seatMaterialFilter);
-  if (f.climateZoneFilter && f.climateZoneFilter !== "Alle") filterTags.push(`${f.climateZoneFilter}-Zonen Klima`);
-  if (f.rimSizeFilter && f.rimSizeFilter !== "Alle") filterTags.push(`${f.rimSizeFilter} Zoll`);
+  if (f.climateZoneFilter && f.climateZoneFilter !== "" && f.climateZoneFilter !== "Alle") filterTags.push(`${f.climateZoneFilter}-Zonen Klima`);
+  if (f.rimSizeFilter && f.rimSizeFilter !== "" && f.rimSizeFilter !== "Alle") filterTags.push(`${f.rimSizeFilter} Zoll`);
   if (f.paintProtectionFilmFilter && f.paintProtectionFilmFilter !== "Alle") filterTags.push(`Steinschlagfolie: ${f.paintProtectionFilmFilter}`);
   if (f.noRepaintFilter && f.noRepaintFilter !== "Alle") filterTags.push(`Nachlackierungsfrei: ${f.noRepaintFilter}`);
   if (f.serviceBookFilter && f.serviceBookFilter !== "Alle") filterTags.push(`Scheckheft: ${f.serviceBookFilter}`);
@@ -318,6 +303,45 @@ function SearchCard({
           </button>
         )}
       </div>
+
+      {/* Saved Vehicles Section */}
+      {savedCount > 0 && (
+        <div className="mt-4 pt-4 border-t border-gray-100">
+          <button
+            onClick={() => setShowSavedVehicles(!showSavedVehicles)}
+            className="flex items-center gap-2 text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors w-full"
+          >
+            <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" />
+            </svg>
+            {savedCount} gespeicherte{savedCount === 1 ? "s" : ""} Fahrzeug{savedCount === 1 ? "" : "e"}
+            <svg
+              className={`w-4 h-4 ml-auto transition-transform ${showSavedVehicles ? "rotate-180" : ""}`}
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+          {showSavedVehicles && (
+            <div className="mt-3 space-y-2">
+              {savedVehiclesList.map((v) => (
+                <div key={v.id} className="flex items-center justify-between py-2 px-3 bg-gray-50 rounded-lg text-sm">
+                  <div className="flex items-center gap-2 min-w-0">
+                    <span className="font-medium text-gray-900 truncate">{v.brand} {v.model}</span>
+                    {v.variant && <span className="text-gray-400 truncate">{v.variant}</span>}
+                  </div>
+                  <span className="text-[#f14011] font-semibold whitespace-nowrap ml-3">
+                    {v.price.toLocaleString("de-DE")} €
+                  </span>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 }

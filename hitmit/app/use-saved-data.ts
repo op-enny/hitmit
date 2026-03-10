@@ -1,6 +1,13 @@
 "use client";
 
 import { useEffect, useState, useCallback } from "react";
+import {
+  priceRanges,
+  mileageOptions,
+  powerOptions,
+  displacementOptions,
+  tankVolumeOptions,
+} from "./vehicles-data";
 
 export interface SavedSearch {
   id: string;
@@ -9,11 +16,12 @@ export interface SavedSearch {
   filters: {
     brandFilter: string;
     fuelFilter: string;
-    priceFilter: number;
+    priceMin: string;
+    priceMax: string;
     yearFrom: string;
     yearTo: string;
-    mileageFilter: number;
-    powerFilter: number;
+    mileageMax: string;
+    powerMin: string;
     transmissionFilter: string;
     driveTypeFilter: string;
     sellerTypeFilter: string;
@@ -34,8 +42,8 @@ export interface SavedSearch {
     huFilter: string;
     previousOwnersFilter: string;
     cylinderFilter: string;
-    displacementFilter: number;
-    tankVolumeFilter: number;
+    displacementMax: string;
+    tankVolumeMin: string;
     manufacturerColorFilter: string;
     interiorColorFilter: string;
     seatMaterialFilter: string;
@@ -49,15 +57,130 @@ export interface SavedSearch {
     equipmentFeaturesFilter: string[];
   };
   seenVehicleIds: number[];
+  savedVehicleIds: number[];
 }
 
 const SEARCHES_KEY = "hitmit_saved_searches";
 const FAVORITES_KEY = "hitmit_favorites";
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function migrateSearch(raw: any): SavedSearch {
+  const f = raw.filters ?? {};
+
+  // Migrate priceFilter (old: number index) → priceMin + priceMax
+  let priceMin = f.priceMin ?? "";
+  let priceMax = f.priceMax ?? "";
+  if (f.priceFilter !== undefined && typeof f.priceFilter === "number" && f.priceFilter !== 0) {
+    const range = priceRanges[f.priceFilter];
+    if (range) {
+      priceMin = range.min > 0 ? String(range.min) : "";
+      priceMax = range.max < Infinity ? String(range.max) : "";
+    }
+  }
+
+  // Migrate mileageFilter (old: number index) → mileageMax
+  let mileageMax = f.mileageMax ?? "";
+  if (f.mileageFilter !== undefined && typeof f.mileageFilter === "number" && f.mileageFilter !== 0) {
+    const opt = mileageOptions[f.mileageFilter];
+    if (opt && opt.max < Infinity) {
+      mileageMax = String(opt.max);
+    }
+  }
+
+  // Migrate powerFilter (old: number index) → powerMin
+  let powerMin = f.powerMin ?? "";
+  if (f.powerFilter !== undefined && typeof f.powerFilter === "number" && f.powerFilter !== 0) {
+    const opt = powerOptions[f.powerFilter];
+    if (opt && opt.min > 0) {
+      powerMin = String(opt.min);
+    }
+  }
+
+  // Migrate displacementFilter (old: number index) → displacementMax
+  let displacementMax = f.displacementMax ?? "";
+  if (f.displacementFilter !== undefined && typeof f.displacementFilter === "number" && f.displacementFilter !== 0) {
+    const opt = displacementOptions[f.displacementFilter];
+    if (opt) {
+      if (opt.max === -1) {
+        displacementMax = "3001"; // "Über 3000" → use 3001 as proxy
+      } else if (opt.max < Infinity) {
+        displacementMax = String(opt.max);
+      }
+    }
+  }
+
+  // Migrate tankVolumeFilter (old: number index) → tankVolumeMin
+  let tankVolumeMin = f.tankVolumeMin ?? "";
+  if (f.tankVolumeFilter !== undefined && typeof f.tankVolumeFilter === "number" && f.tankVolumeFilter !== 0) {
+    const opt = tankVolumeOptions[f.tankVolumeFilter];
+    if (opt && opt.min > 0) {
+      tankVolumeMin = String(opt.min);
+    }
+  }
+
+  // Migrate seatFilter, climateZoneFilter, rimSizeFilter: "Alle" → ""
+  const seatFilter = f.seatFilter === "Alle" ? "" : (f.seatFilter ?? "");
+  const climateZoneFilter = f.climateZoneFilter === "Alle" ? "" : (f.climateZoneFilter ?? "");
+  const rimSizeFilter = f.rimSizeFilter === "Alle" ? "" : (f.rimSizeFilter ?? "");
+
+  return {
+    id: raw.id ?? crypto.randomUUID(),
+    createdAt: raw.createdAt ?? new Date().toISOString(),
+    label: raw.label ?? "",
+    filters: {
+      brandFilter: f.brandFilter ?? "Alle Marken",
+      fuelFilter: f.fuelFilter ?? "Alle Kraftstoffe",
+      priceMin,
+      priceMax,
+      yearFrom: f.yearFrom ?? "",
+      yearTo: f.yearTo ?? "",
+      mileageMax,
+      powerMin,
+      transmissionFilter: f.transmissionFilter ?? "Alle",
+      driveTypeFilter: f.driveTypeFilter ?? "Alle",
+      sellerTypeFilter: f.sellerTypeFilter ?? "Alle",
+      accidentFreeFilter: f.accidentFreeFilter ?? "Alle",
+      cityFilter: f.cityFilter ?? "",
+      colorFilter: f.colorFilter ?? "Alle Farben",
+      conditionFilter: f.conditionFilter ?? "Alle",
+      doorFilter: f.doorFilter ?? "Alle",
+      seatFilter,
+      modelFilter: f.modelFilter ?? "",
+      motorizationFilter: f.motorizationFilter ?? [],
+      variantFilter: f.variantFilter ?? "",
+      vehicleTypeFilter: f.vehicleTypeFilter ?? "Alle",
+      vehicleCategoryFilter: f.vehicleCategoryFilter ?? "Alle",
+      mwstFilter: f.mwstFilter ?? "Alle",
+      firstRegFrom: f.firstRegFrom ?? "",
+      firstRegTo: f.firstRegTo ?? "",
+      huFilter: f.huFilter ?? "Alle",
+      previousOwnersFilter: f.previousOwnersFilter ?? "Alle",
+      cylinderFilter: f.cylinderFilter ?? "Alle",
+      displacementMax,
+      tankVolumeMin,
+      manufacturerColorFilter: f.manufacturerColorFilter ?? "",
+      interiorColorFilter: f.interiorColorFilter ?? "Alle Farben",
+      seatMaterialFilter: f.seatMaterialFilter ?? "Alle",
+      climateZoneFilter,
+      rimSizeFilter,
+      paintProtectionFilmFilter: f.paintProtectionFilmFilter ?? "Alle",
+      noRepaintFilter: f.noRepaintFilter ?? "Alle",
+      serviceBookFilter: f.serviceBookFilter ?? "Alle",
+      manufacturerWarrantyFilter: f.manufacturerWarrantyFilter ?? "Alle",
+      safetyFeaturesFilter: f.safetyFeaturesFilter ?? [],
+      equipmentFeaturesFilter: f.equipmentFeaturesFilter ?? [],
+    },
+    seenVehicleIds: raw.seenVehicleIds ?? [],
+    savedVehicleIds: raw.savedVehicleIds ?? [],
+  };
+}
+
 function loadSearches(): SavedSearch[] {
   try {
     const raw = localStorage.getItem(SEARCHES_KEY);
-    return raw ? JSON.parse(raw) : [];
+    if (!raw) return [];
+    const parsed = JSON.parse(raw);
+    return Array.isArray(parsed) ? parsed.map(migrateSearch) : [];
   } catch {
     return [];
   }
@@ -94,15 +217,18 @@ export function useSavedData() {
   }, []);
 
   const saveSearch = useCallback(
-    (label: string, filters: SavedSearch["filters"], currentVehicleIds: number[]) => {
+    (label: string, filters: SavedSearch["filters"], currentVehicleIds: number[]): string => {
+      const id = crypto.randomUUID();
       const entry: SavedSearch = {
-        id: crypto.randomUUID(),
+        id,
         createdAt: new Date().toISOString(),
         label,
         filters,
         seenVehicleIds: currentVehicleIds,
+        savedVehicleIds: [],
       };
       persistSearches([entry, ...loadSearches()]);
+      return id;
     },
     [persistSearches],
   );
@@ -123,6 +249,30 @@ export function useSavedData() {
       );
     },
     [persistSearches],
+  );
+
+  const toggleVehicleInSearch = useCallback(
+    (searchId: string, vehicleId: number) => {
+      persistSearches(
+        loadSearches().map((s) => {
+          if (s.id !== searchId) return s;
+          const ids = s.savedVehicleIds ?? [];
+          const next = ids.includes(vehicleId)
+            ? ids.filter((id) => id !== vehicleId)
+            : [...ids, vehicleId];
+          return { ...s, savedVehicleIds: next };
+        }),
+      );
+    },
+    [persistSearches],
+  );
+
+  const isVehicleSavedInSearch = useCallback(
+    (searchId: string, vehicleId: number): boolean => {
+      const search = savedSearches.find((s) => s.id === searchId);
+      return search ? (search.savedVehicleIds ?? []).includes(vehicleId) : false;
+    },
+    [savedSearches],
   );
 
   const toggleFavorite = useCallback(
@@ -148,6 +298,8 @@ export function useSavedData() {
     saveSearch,
     removeSearch,
     markSearchSeen,
+    toggleVehicleInSearch,
+    isVehicleSavedInSearch,
     toggleFavorite,
     isFavorite,
   };

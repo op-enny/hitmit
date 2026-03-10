@@ -978,11 +978,20 @@ function InseratePageInner() {
                 if (modelFilter) parts.push(modelFilter);
                 if (motorizationFilter.length > 0) parts.push(motorizationFilter.join(", "));
                 if (fuelFilter !== "Alle Kraftstoffe") parts.push(fuelFilter);
-                if (priceFilter !== 0) parts.push(priceRanges[priceFilter].label);
+                // Convert old number-based filters to new string format
+                const pRange = priceRanges[priceFilter];
+                const pMin = pRange && pRange.min > 0 ? String(pRange.min) : "";
+                const pMax = pRange && pRange.max < Infinity ? String(pRange.max) : "";
+                const mlMax = mileageFilter !== 0 ? (mileageOptions[mileageFilter].max < Infinity ? String(mileageOptions[mileageFilter].max) : "") : "";
+                const pwMin = powerFilter !== 0 ? (powerOptions[powerFilter].min > 0 ? String(powerOptions[powerFilter].min) : "") : "";
+                if (pMin || pMax) {
+                  if (pMin) parts.push(`ab ${Number(pMin).toLocaleString("de-DE")} €`);
+                  if (pMax) parts.push(`bis ${Number(pMax).toLocaleString("de-DE")} €`);
+                }
                 if (yearFrom) parts.push(`ab ${yearFrom}`);
                 if (yearTo) parts.push(`bis ${yearTo}`);
-                if (mileageFilter !== 0) parts.push(mileageOptions[mileageFilter].label);
-                if (powerFilter !== 0) parts.push(powerOptions[powerFilter].label);
+                if (mlMax) parts.push(`bis ${Number(mlMax).toLocaleString("de-DE")} km`);
+                if (pwMin) parts.push(`ab ${pwMin} PS`);
                 if (transmissionFilter !== "Alle") parts.push(transmissionFilter);
                 if (driveTypeFilter !== "Alle") parts.push(driveTypeFilter);
                 if (sellerTypeFilter !== "Alle") parts.push(sellerTypeFilter);
@@ -996,21 +1005,22 @@ function InseratePageInner() {
                 saveSearch(
                   label,
                   {
-                    brandFilter, fuelFilter, priceFilter,
+                    brandFilter, fuelFilter,
+                    priceMin: pMin, priceMax: pMax,
                     yearFrom, yearTo,
-                    mileageFilter, powerFilter,
+                    mileageMax: mlMax, powerMin: pwMin,
                     transmissionFilter, driveTypeFilter,
                     sellerTypeFilter, accidentFreeFilter,
                     cityFilter,
                     colorFilter, conditionFilter,
-                    doorFilter, seatFilter,
+                    doorFilter, seatFilter: seatFilter === "Alle" ? "" : seatFilter,
                     modelFilter, motorizationFilter, variantFilter: "",
                     vehicleTypeFilter: "Alle", vehicleCategoryFilter: "Alle",
                     mwstFilter: "Alle", firstRegFrom: "", firstRegTo: "",
                     huFilter: "Alle", previousOwnersFilter: "Alle",
-                    cylinderFilter: "Alle", displacementFilter: 0, tankVolumeFilter: 0,
+                    cylinderFilter: "Alle", displacementMax: "", tankVolumeMin: "",
                     manufacturerColorFilter: "", interiorColorFilter: "Alle Farben",
-                    seatMaterialFilter: "Alle", climateZoneFilter: "Alle", rimSizeFilter: "Alle",
+                    seatMaterialFilter: "Alle", climateZoneFilter: "", rimSizeFilter: "",
                     paintProtectionFilmFilter: "Alle", noRepaintFilter: "Alle",
                     serviceBookFilter: "Alle", manufacturerWarrantyFilter: "Alle",
                     safetyFeaturesFilter: [], equipmentFeaturesFilter: [],
