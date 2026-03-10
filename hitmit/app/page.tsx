@@ -557,9 +557,6 @@ function Header({
 
           {/* Desktop CTA */}
           <div className="hidden lg:flex items-center gap-4">
-            <a href="#contact" className="text-[#0a0a0a] dark:text-[#ededed] font-semibold text-sm hover:text-[#f14011] transition-colors">
-              Kontakt
-            </a>
             {authUser ? (
               <>
                 <div className="w-9 h-9 rounded-full bg-[#f14011] flex items-center justify-center">
