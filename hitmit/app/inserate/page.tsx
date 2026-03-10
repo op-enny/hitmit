@@ -7,7 +7,7 @@ import { useSearchParams } from "next/navigation";
 import { calculateValuation, PRICE_RATING_INFO } from "../valuation";
 import type { ValuationBreakdown, PriceRating } from "../valuation";
 import { calculateTireScore, TIRE_RATING_INFO } from "../tire-score";
-import { ThemeToggle } from "../theme-toggle";
+import { SubpageHeader } from "../subpage-header";
 import {
   vehicles,
   brandOptions,
@@ -814,40 +814,7 @@ function InseratePageInner() {
 
   return (
     <div className="min-h-screen bg-mesh">
-      {/* Header */}
-      <header className="sticky top-0 z-40 bg-white/80 backdrop-blur-md border-b border-gray-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-3">
-            <Image src="/hitmit-logo.png" alt="HITMIT" width={40} height={40} className="rounded-lg" />
-            <span className="font-display text-2xl tracking-wider text-gray-900">HITMIT</span>
-          </Link>
-          <div className="flex items-center gap-4">
-            <button
-              onClick={toggleDealer}
-              className={`text-xs font-medium px-3 py-1.5 rounded-full border transition-colors ${
-                isDealer
-                  ? "bg-blue-600 text-white border-blue-600"
-                  : "bg-white dark:bg-[#141414] text-gray-500 border-gray-200 hover:border-gray-400"
-              }`}
-            >
-              {isDealer ? "Händler ✓" : "Händler-Login"}
-            </button>
-            <Link
-              href="/gespeichert"
-              className="text-sm font-medium text-gray-500 hover:text-[#f14011] transition-colors"
-            >
-              Gespeichert
-            </Link>
-            <Link
-              href="/"
-              className="text-sm font-medium text-gray-500 hover:text-[#f14011] transition-colors"
-            >
-              ← Zurück
-            </Link>
-            <ThemeToggle />
-          </div>
-        </div>
-      </header>
+      <SubpageHeader />
 
       {/* Page Header */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 pt-12 pb-8">
@@ -989,6 +956,18 @@ function InseratePageInner() {
           <div className="flex items-center px-4 text-sm text-gray-400">
             {filtered.length} {filtered.length === 1 ? "Fahrzeug" : "Fahrzeuge"}
           </div>
+
+          {/* Dealer login */}
+          <button
+            onClick={toggleDealer}
+            className={`text-xs font-medium px-3 py-1.5 rounded-full border transition-colors ${
+              isDealer
+                ? "bg-blue-600 text-white border-blue-600"
+                : "bg-white dark:bg-[#141414] text-gray-500 border-gray-200 hover:border-gray-400"
+            }`}
+          >
+            {isDealer ? "Händler ✓" : "Händler-Login"}
+          </button>
 
           {/* Save search button */}
           {mounted && (
