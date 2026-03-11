@@ -1147,7 +1147,13 @@ function InseratePageInner() {
     }
 
     if (motorizationFilter.length > 0 && !motorizationFilter.some((m) => v.model.toLowerCase().includes(m.toLowerCase()))) return false;
-    if (fuelFilter !== "Alle Kraftstoffe" && v.fuelType !== fuelFilter) return false;
+    if (fuelFilter !== "Alle Kraftstoffe") {
+      if (fuelFilter.startsWith("Plug-in-Hybrid")) {
+        if (!v.fuelType.startsWith("Plug-in-Hybrid")) return false;
+      } else {
+        if (v.fuelType !== fuelFilter) return false;
+      }
+    }
     const range = priceRanges[priceFilter];
     if (v.price < range.min || v.price >= range.max) return false;
     if (yearFrom !== "" && v.year < Number(yearFrom)) return false;

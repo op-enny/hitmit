@@ -394,7 +394,13 @@ export default function SuchenPage() {
       if (variantFilter !== "" && !v.variant.toLowerCase().includes(variantFilter.toLowerCase())) return false;
     }
 
-    if (fuelFilter !== "Alle Kraftstoffe" && v.fuelType !== fuelFilter) return false;
+    if (fuelFilter !== "Alle Kraftstoffe") {
+      if (fuelFilter.startsWith("Plug-in-Hybrid")) {
+        if (!v.fuelType.startsWith("Plug-in-Hybrid")) return false;
+      } else {
+        if (v.fuelType !== fuelFilter) return false;
+      }
+    }
     if (priceMin !== "" && v.price < Number(priceMin)) return false;
     if (priceMax !== "" && v.price > Number(priceMax)) return false;
     if (yearFrom !== "" && v.year < Number(yearFrom)) return false;
@@ -1081,7 +1087,7 @@ export default function SuchenPage() {
                 Umkreis {cityRadius ? `${cityRadius} km` : "(beliebig)"}
               </label>
               {(() => {
-                const radiusSteps = [0,10,20,30,40,50,60,70,80,90,100,150,200,250,300,400,500,600,700,800,900,1000];
+                const radiusSteps = [0, 50, 100, 250, 500, 1000];
                 const idx = radiusSteps.indexOf(Number(cityRadius) || 0);
                 const sliderIdx = idx >= 0 ? idx : 0;
                 return (

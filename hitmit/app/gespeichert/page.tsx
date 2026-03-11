@@ -34,7 +34,13 @@ function applyFilters(filters: SavedSearch["filters"]): Vehicle[] {
       if (!matchesAny) return false;
     }
 
-    if (filters.fuelFilter !== "Alle Kraftstoffe" && v.fuelType !== filters.fuelFilter) return false;
+    if (filters.fuelFilter !== "Alle Kraftstoffe") {
+      if (filters.fuelFilter.startsWith("Plug-in-Hybrid")) {
+        if (!v.fuelType.startsWith("Plug-in-Hybrid")) return false;
+      } else {
+        if (v.fuelType !== filters.fuelFilter) return false;
+      }
+    }
     // Price: direct comparison
     if (filters.priceMin !== "" && v.price < Number(filters.priceMin)) return false;
     if (filters.priceMax !== "" && v.price > Number(filters.priceMax)) return false;

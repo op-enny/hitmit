@@ -528,7 +528,8 @@ export const fuelOptions = [
   "Diesel",
   "Elektro",
   "Hybrid",
-  "Plug-in-Hybrid",
+  "Plug-in-Hybrid (Benzin/Elektro)",
+  "Plug-in-Hybrid (Diesel/Elektro)",
   "Erdgas (CNG)",
   "Wasserstoff",
 ];
