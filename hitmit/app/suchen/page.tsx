@@ -18,6 +18,7 @@ import {
   huOptions,
   interiorColorOptions,
   seatMaterialOptions,
+  seatOptions,
   SAFETY_FEATURE_LIST,
   EQUIPMENT_FEATURE_LIST,
   CAR_BRANDS_MODELS,
@@ -28,6 +29,13 @@ import {
   getBrandOptionsForType,
   getModelsForBrand,
   getCategoriesForType,
+  getDriveTypeOptionsForType,
+  getCylinderOptionsForType,
+  getDoorOptionsForType,
+  getSeatOptionsForType,
+  isFieldVisibleForType,
+  getSafetyFeaturesForType,
+  getEquipmentFeaturesForType,
 } from "../vehicles-data";
 import type { Vehicle } from "../vehicles-data";
 import { useSavedData } from "../use-saved-data";
@@ -776,6 +784,20 @@ export default function SuchenPage() {
                 setShowBrandRow2(false); setShowBrandRow3(false);
                 setCustomBrandText(""); setCustomBrandText2(""); setCustomBrandText3("");
                 setVehicleCategoryFilter("Alle");
+                // Reset type-specific filters
+                setDriveTypeFilter("Alle");
+                setCylinderFilter("Alle");
+                setDoorFilter("Alle");
+                setSeatFilter("");
+                setInteriorColorFilter("Alle Farben");
+                setSeatMaterialFilter("Alle");
+                setClimateZoneFilter("");
+                setPaintProtectionFilmFilter("Alle");
+                setNoRepaintFilter("Alle");
+                setNonSmokerFilter("Alle");
+                setPetFreeFilter("Alle");
+                setSafetyFeaturesFilter([]);
+                setEquipmentFeaturesFilter([]);
               }}
               className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-all ${
                 vehicleTypeFilter === tab.value
@@ -1078,7 +1100,7 @@ export default function SuchenPage() {
               label="Zylinder"
               value={cylinderFilter}
               onChange={setCylinderFilter}
-              options={cylinderOptions.map((c) => ({ value: c, label: c }))}
+              options={getCylinderOptionsForType(vehicleTypeFilter).map((c) => ({ value: c, label: c }))}
             />
             <NumericInput label="Hubraum von (ccm)" value={displacementMin} onChange={setDisplacementMin} placeholder="z.B. 1500" />
             <NumericInput label="Hubraum bis (ccm)" value={displacementMax} onChange={setDisplacementMax} placeholder="z.B. 3000" />
@@ -1112,15 +1134,22 @@ export default function SuchenPage() {
               label="Antrieb"
               value={driveTypeFilter}
               onChange={setDriveTypeFilter}
-              options={driveTypeOptions.map((d) => ({ value: d, label: d }))}
+              options={getDriveTypeOptionsForType(vehicleTypeFilter).map((d) => ({ value: d, label: d }))}
             />
+            {isFieldVisibleForType("doors", vehicleTypeFilter) && (
+              <FilterSelect
+                label="Türen"
+                value={doorFilter}
+                onChange={setDoorFilter}
+                options={getDoorOptionsForType(vehicleTypeFilter).map((d) => ({ value: d, label: d }))}
+              />
+            )}
             <FilterSelect
-              label="Türen"
-              value={doorFilter}
-              onChange={setDoorFilter}
-              options={doorOptions.map((d) => ({ value: d, label: d }))}
+              label="Sitze"
+              value={seatFilter}
+              onChange={setSeatFilter}
+              options={getSeatOptionsForType(vehicleTypeFilter).map((s) => ({ value: s, label: s }))}
             />
-            <NumericInput label="Sitze" value={seatFilter} onChange={setSeatFilter} placeholder="z.B. 5" />
             <FilterSelect
               label="Verkäufertyp"
               value={sellerTypeFilter}
@@ -1229,47 +1258,57 @@ export default function SuchenPage() {
           {/* Section: Interieur */}
           <h3 className="text-sm font-semibold text-gray-900 dark:text-gray-100 uppercase tracking-wider mb-4">Interieur</h3>
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 mb-6">
-            <FilterSelect
-              label="Innenfarbe"
-              value={interiorColorFilter}
-              onChange={setInteriorColorFilter}
-              options={interiorColorOptions.map((c) => ({ value: c, label: c }))}
-            />
-            <FilterSelect
-              label="Sitzmaterial"
-              value={seatMaterialFilter}
-              onChange={setSeatMaterialFilter}
-              options={seatMaterialOptions.map((s) => ({ value: s, label: s }))}
-            />
-            <NumericInput label="Klimazonen" value={climateZoneFilter} onChange={setClimateZoneFilter} placeholder="z.B. 2" />
+            {isFieldVisibleForType("interiorColor", vehicleTypeFilter) && (
+              <FilterSelect
+                label="Innenfarbe"
+                value={interiorColorFilter}
+                onChange={setInteriorColorFilter}
+                options={interiorColorOptions.map((c) => ({ value: c, label: c }))}
+              />
+            )}
+            {isFieldVisibleForType("seatMaterial", vehicleTypeFilter) && (
+              <FilterSelect
+                label="Sitzmaterial"
+                value={seatMaterialFilter}
+                onChange={setSeatMaterialFilter}
+                options={seatMaterialOptions.map((s) => ({ value: s, label: s }))}
+              />
+            )}
+            {isFieldVisibleForType("climateZones", vehicleTypeFilter) && (
+              <NumericInput label="Klimazonen" value={climateZoneFilter} onChange={setClimateZoneFilter} placeholder="z.B. 2" />
+            )}
             <NumericInput label="Felgengröße (Zoll)" value={rimSizeFilter} onChange={setRimSizeFilter} placeholder="z.B. 19" />
           </div>
 
           {/* Section: Zustand & Garantie */}
           <h3 className="text-sm font-semibold text-gray-900 dark:text-gray-100 uppercase tracking-wider mb-4">Zustand & Garantie</h3>
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 mb-6">
-            <div className="flex items-end">
-              <label className="flex items-center gap-2 px-4 py-2.5 cursor-pointer">
-                <input
-                  type="checkbox"
-                  checked={paintProtectionFilmFilter === "Ja"}
-                  onChange={(e) => setPaintProtectionFilmFilter(e.target.checked ? "Ja" : "Alle")}
-                  className="w-4 h-4 rounded border-gray-300 dark:border-gray-600 text-[#f14011] focus:ring-[#f14011] cursor-pointer"
-                />
-                <span className="text-sm text-gray-700 dark:text-gray-300">Steinschlagschutzfolie</span>
-              </label>
-            </div>
-            <div className="flex items-end">
-              <label className="flex items-center gap-2 px-4 py-2.5 cursor-pointer">
-                <input
-                  type="checkbox"
-                  checked={noRepaintFilter === "Ja"}
-                  onChange={(e) => setNoRepaintFilter(e.target.checked ? "Ja" : "Alle")}
-                  className="w-4 h-4 rounded border-gray-300 dark:border-gray-600 text-[#f14011] focus:ring-[#f14011] cursor-pointer"
-                />
-                <span className="text-sm text-gray-700 dark:text-gray-300">Nachlackierungsfrei</span>
-              </label>
-            </div>
+            {isFieldVisibleForType("paintProtectionFilm", vehicleTypeFilter) && (
+              <div className="flex items-end">
+                <label className="flex items-center gap-2 px-4 py-2.5 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={paintProtectionFilmFilter === "Ja"}
+                    onChange={(e) => setPaintProtectionFilmFilter(e.target.checked ? "Ja" : "Alle")}
+                    className="w-4 h-4 rounded border-gray-300 dark:border-gray-600 text-[#f14011] focus:ring-[#f14011] cursor-pointer"
+                  />
+                  <span className="text-sm text-gray-700 dark:text-gray-300">Steinschlagschutzfolie</span>
+                </label>
+              </div>
+            )}
+            {isFieldVisibleForType("noRepaint", vehicleTypeFilter) && (
+              <div className="flex items-end">
+                <label className="flex items-center gap-2 px-4 py-2.5 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={noRepaintFilter === "Ja"}
+                    onChange={(e) => setNoRepaintFilter(e.target.checked ? "Ja" : "Alle")}
+                    className="w-4 h-4 rounded border-gray-300 dark:border-gray-600 text-[#f14011] focus:ring-[#f14011] cursor-pointer"
+                  />
+                  <span className="text-sm text-gray-700 dark:text-gray-300">Nachlackierungsfrei</span>
+                </label>
+              </div>
+            )}
             <div className="flex items-end">
               <label className="flex items-center gap-2 px-4 py-2.5 cursor-pointer">
                 <input
@@ -1292,28 +1331,32 @@ export default function SuchenPage() {
                 <span className="text-sm text-gray-700 dark:text-gray-300">Herstellergarantie</span>
               </label>
             </div>
-            <div className="flex items-end">
-              <label className="flex items-center gap-2 px-4 py-2.5 cursor-pointer">
-                <input
-                  type="checkbox"
-                  checked={nonSmokerFilter === "Ja"}
-                  onChange={(e) => setNonSmokerFilter(e.target.checked ? "Ja" : "Alle")}
-                  className="w-4 h-4 rounded border-gray-300 dark:border-gray-600 text-[#f14011] focus:ring-[#f14011] cursor-pointer"
-                />
-                <span className="text-sm text-gray-700 dark:text-gray-300">Nichtraucherfahrzeug</span>
-              </label>
-            </div>
-            <div className="flex items-end">
-              <label className="flex items-center gap-2 px-4 py-2.5 cursor-pointer">
-                <input
-                  type="checkbox"
-                  checked={petFreeFilter === "Ja"}
-                  onChange={(e) => setPetFreeFilter(e.target.checked ? "Ja" : "Alle")}
-                  className="w-4 h-4 rounded border-gray-300 dark:border-gray-600 text-[#f14011] focus:ring-[#f14011] cursor-pointer"
-                />
-                <span className="text-sm text-gray-700 dark:text-gray-300">Tierfreies Fahrzeug</span>
-              </label>
-            </div>
+            {isFieldVisibleForType("nonSmokerVehicle", vehicleTypeFilter) && (
+              <div className="flex items-end">
+                <label className="flex items-center gap-2 px-4 py-2.5 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={nonSmokerFilter === "Ja"}
+                    onChange={(e) => setNonSmokerFilter(e.target.checked ? "Ja" : "Alle")}
+                    className="w-4 h-4 rounded border-gray-300 dark:border-gray-600 text-[#f14011] focus:ring-[#f14011] cursor-pointer"
+                  />
+                  <span className="text-sm text-gray-700 dark:text-gray-300">Nichtraucherfahrzeug</span>
+                </label>
+              </div>
+            )}
+            {isFieldVisibleForType("petFreeVehicle", vehicleTypeFilter) && (
+              <div className="flex items-end">
+                <label className="flex items-center gap-2 px-4 py-2.5 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={petFreeFilter === "Ja"}
+                    onChange={(e) => setPetFreeFilter(e.target.checked ? "Ja" : "Alle")}
+                    className="w-4 h-4 rounded border-gray-300 dark:border-gray-600 text-[#f14011] focus:ring-[#f14011] cursor-pointer"
+                  />
+                  <span className="text-sm text-gray-700 dark:text-gray-300">Tierfreies Fahrzeug</span>
+                </label>
+              </div>
+            )}
           </div>
 
           {/* Section: Umwelt & Emissionen */}
@@ -1368,7 +1411,7 @@ export default function SuchenPage() {
             </button>
             {showSafetyFeatures && (
               <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2">
-                {SAFETY_FEATURE_LIST.map((feature) => (
+                {getSafetyFeaturesForType(vehicleTypeFilter).map((feature) => (
                   <label key={feature} className="flex items-center gap-2 cursor-pointer group">
                     <input
                       type="checkbox"
@@ -1407,7 +1450,7 @@ export default function SuchenPage() {
             </button>
             {showEquipmentFeatures && (
               <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2">
-                {EQUIPMENT_FEATURE_LIST.map((feature) => (
+                {getEquipmentFeaturesForType(vehicleTypeFilter).map((feature) => (
                   <label key={feature} className="flex items-center gap-2 cursor-pointer group">
                     <input
                       type="checkbox"

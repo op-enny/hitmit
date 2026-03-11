@@ -4,7 +4,7 @@ import React, { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import { generateDescription, checkCompleteness } from "./description-generator";
 import { ThemeToggle } from "./theme-toggle";
-import { CAR_BRANDS_MODELS, getBrandsForType, getModelsForBrand, getCategoriesForType, VEHICLE_TYPE_VALUE_TO_LABEL } from "./vehicles-data";
+import { CAR_BRANDS_MODELS, getBrandsForType, getModelsForBrand, getCategoriesForType, VEHICLE_TYPE_VALUE_TO_LABEL, DRIVE_TYPE_FORM_OPTIONS_BY_TYPE, CYLINDER_FORM_OPTIONS_BY_TYPE, DOOR_FORM_OPTIONS_BY_TYPE, SEAT_FORM_OPTIONS_BY_TYPE, isFieldVisibleForType, getComfortFeaturesForType, getSafetyFeaturesForType, getExteriorFeaturesForType, getMultimediaFeaturesForType } from "./vehicles-data";
 
 // ============================================================================
 // SVG ICONS
@@ -1348,6 +1348,30 @@ function getFormModels(vehicleType: string, brand: string): string[] {
   return getModelsForBrand("Alle", brand);
 }
 
+function getFormTypeLabel(vehicleType: string): string {
+  return VEHICLE_TYPE_VALUE_TO_LABEL[vehicleType] || "PKW";
+}
+
+function getFormDriveTypeOptions(vehicleType: string) {
+  const label = getFormTypeLabel(vehicleType);
+  return DRIVE_TYPE_FORM_OPTIONS_BY_TYPE[label] || DRIVE_TYPE_FORM_OPTIONS_BY_TYPE.PKW;
+}
+
+function getFormCylinderOptions(vehicleType: string) {
+  const label = getFormTypeLabel(vehicleType);
+  return CYLINDER_FORM_OPTIONS_BY_TYPE[label] || CYLINDER_FORM_OPTIONS_BY_TYPE.PKW;
+}
+
+function getFormDoorOptions(vehicleType: string) {
+  const label = getFormTypeLabel(vehicleType);
+  return DOOR_FORM_OPTIONS_BY_TYPE[label] || DOOR_FORM_OPTIONS_BY_TYPE.PKW;
+}
+
+function getFormSeatOptions(vehicleType: string) {
+  const label = getFormTypeLabel(vehicleType);
+  return SEAT_FORM_OPTIONS_BY_TYPE[label] || SEAT_FORM_OPTIONS_BY_TYPE.PKW;
+}
+
 const COLOR_OPTIONS = [
   { value: "", label: "Bitte wählen" },
   { value: "black", label: "Schwarz" },
@@ -2451,6 +2475,23 @@ function SubmitFormSection() {
                   updateField("brand", "");
                   updateField("model", "");
                   updateField("vehicleCategory", "");
+                  // Reset type-specific fields
+                  updateField("driveType", "");
+                  updateField("cylinders", "");
+                  updateField("doors", "");
+                  updateField("seats", "");
+                  updateField("comfortFeatures", []);
+                  updateField("safetyFeatures", []);
+                  updateField("exteriorFeatures", []);
+                  updateField("multimediaFeatures", []);
+                  updateField("airbags", "");
+                  updateField("parkingAid", []);
+                  updateField("cameraFront", null);
+                  updateField("cameraRear", null);
+                  updateField("damageMap", {});
+                  updateField("paintThickness", {});
+                  updateField("paintThicknessAvailable", null);
+                  updateField("paintThicknessImage", "");
                 }}
               />
               <FormCombobox
@@ -2635,13 +2676,13 @@ function SubmitFormSection() {
               <div className="grid md:grid-cols-3 gap-6">
                 <FormSelect
                   label="Antrieb"
-                  options={DRIVE_TYPE_OPTIONS}
+                  options={getFormDriveTypeOptions(formData.vehicleType)}
                   value={formData.driveType}
                   onChange={(e) => updateField("driveType", e.target.value)}
                 />
                 <FormSelect
                   label="Zylinder"
-                  options={CYLINDER_OPTIONS}
+                  options={getFormCylinderOptions(formData.vehicleType)}
                   value={formData.cylinders}
                   onChange={(e) => updateField("cylinders", e.target.value)}
                 />
@@ -2723,42 +2764,48 @@ function SubmitFormSection() {
                 />
               </div>
               <div className="grid md:grid-cols-4 gap-6">
+                {isFieldVisibleForType("doors", getFormTypeLabel(formData.vehicleType)) && (
+                  <FormSelect
+                    label="Türen"
+                    options={getFormDoorOptions(formData.vehicleType)}
+                    value={formData.doors}
+                    onChange={(e) => updateField("doors", e.target.value)}
+                  />
+                )}
                 <FormSelect
-                  label="Türen"
-                  options={DOOR_OPTIONS}
-                  value={formData.doors}
-                  onChange={(e) => updateField("doors", e.target.value)}
-                />
-                <FormInput
                   label="Sitze"
-                  type="text"
-                  inputMode="numeric"
-                  placeholder="5"
+                  options={getFormSeatOptions(formData.vehicleType)}
                   value={formData.seats}
                   onChange={(e) => updateField("seats", e.target.value)}
                 />
-                <FormSelect
-                  label="Innenfarbe"
-                  options={COLOR_OPTIONS}
-                  value={formData.interiorColor}
-                  onChange={(e) => updateField("interiorColor", e.target.value)}
-                />
-                <FormSelect
-                  label="Sitzmaterial"
-                  options={SEAT_MATERIAL_OPTIONS}
-                  value={formData.seatMaterial}
-                  onChange={(e) => updateField("seatMaterial", e.target.value)}
-                />
+                {isFieldVisibleForType("interiorColor", getFormTypeLabel(formData.vehicleType)) && (
+                  <FormSelect
+                    label="Innenfarbe"
+                    options={COLOR_OPTIONS}
+                    value={formData.interiorColor}
+                    onChange={(e) => updateField("interiorColor", e.target.value)}
+                  />
+                )}
+                {isFieldVisibleForType("seatMaterial", getFormTypeLabel(formData.vehicleType)) && (
+                  <FormSelect
+                    label="Sitzmaterial"
+                    options={SEAT_MATERIAL_OPTIONS}
+                    value={formData.seatMaterial}
+                    onChange={(e) => updateField("seatMaterial", e.target.value)}
+                  />
+                )}
               </div>
               <div className="grid md:grid-cols-3 gap-6">
-                <FormInput
-                  label="Klimazonen"
-                  type="text"
-                  inputMode="numeric"
-                  placeholder="2"
-                  value={formData.climateZones}
-                  onChange={(e) => updateField("climateZones", e.target.value)}
-                />
+                {isFieldVisibleForType("climateZones", getFormTypeLabel(formData.vehicleType)) && (
+                  <FormInput
+                    label="Klimazonen"
+                    type="text"
+                    inputMode="numeric"
+                    placeholder="2"
+                    value={formData.climateZones}
+                    onChange={(e) => updateField("climateZones", e.target.value)}
+                  />
+                )}
                 <FormInput
                   label="Felgengröße (Zoll)"
                   type="text"
@@ -2772,24 +2819,28 @@ function SubmitFormSection() {
 
             {/* Condition & History */}
             <FormSection title="Zustand & Historie" icon="📜">
-              <div className="grid md:grid-cols-2 gap-6">
-                <FormBinaryState
-                  label="Steinschlagschutzfolie"
-                  value={formData.stoneguardFilm}
-                  onChange={(val) => updateField("stoneguardFilm", val)}
-                />
-              </div>
+              {isFieldVisibleForType("paintProtectionFilm", getFormTypeLabel(formData.vehicleType)) && (
+                <div className="grid md:grid-cols-2 gap-6">
+                  <FormBinaryState
+                    label="Steinschlagschutzfolie"
+                    value={formData.stoneguardFilm}
+                    onChange={(val) => updateField("stoneguardFilm", val)}
+                  />
+                </div>
+              )}
               <div className="grid md:grid-cols-3 gap-6">
                 <FormBinaryState
                   label="Unfallfrei"
                   value={formData.accidentFree}
                   onChange={(val) => updateField("accidentFree", val)}
                 />
-                <FormBinaryState
-                  label="Nachlackierungsfrei"
-                  value={formData.repaintFree}
-                  onChange={(val) => updateField("repaintFree", val)}
-                />
+                {isFieldVisibleForType("noRepaint", getFormTypeLabel(formData.vehicleType)) && (
+                  <FormBinaryState
+                    label="Nachlackierungsfrei"
+                    value={formData.repaintFree}
+                    onChange={(val) => updateField("repaintFree", val)}
+                  />
+                )}
                 <FormBinaryState
                   label="Scheckheftgepflegt"
                   value={formData.serviceHistory}
@@ -2897,29 +2948,37 @@ function SubmitFormSection() {
               </div>
 
               {/* Schadenskarte */}
-              <div className="pt-4 border-t border-[#e5e5e5] dark:border-[#2a2a2a]">
-                <FormBinaryState
-                  label="Fahrzeug aktuell beschädigt"
-                  value={formData.currentlyDamaged}
-                  onChange={(val) => updateField("currentlyDamaged", val)}
-                />
-              </div>
-              <DamageMap
-                damageMap={formData.damageMap}
-                onChange={(map) => updateField("damageMap", map)}
-                paintThicknessAvailable={formData.paintThicknessAvailable}
-                paintThickness={formData.paintThickness}
-                onPaintThicknessChange={(map) => updateField("paintThickness", map)}
-              />
-              <FormBinaryState
-                label="Lackdickenmessung vorhanden"
-                value={formData.paintThicknessAvailable}
-                onChange={(val) => updateField("paintThicknessAvailable", val)}
-              />
+              {isFieldVisibleForType("damageMap", getFormTypeLabel(formData.vehicleType)) && (
+                <>
+                  <div className="pt-4 border-t border-[#e5e5e5] dark:border-[#2a2a2a]">
+                    <FormBinaryState
+                      label="Fahrzeug aktuell beschädigt"
+                      value={formData.currentlyDamaged}
+                      onChange={(val) => updateField("currentlyDamaged", val)}
+                    />
+                  </div>
+                  <DamageMap
+                    damageMap={formData.damageMap}
+                    onChange={(map) => updateField("damageMap", map)}
+                    paintThicknessAvailable={formData.paintThicknessAvailable}
+                    paintThickness={formData.paintThickness}
+                    onPaintThicknessChange={(map) => updateField("paintThickness", map)}
+                  />
+                </>
+              )}
+              {isFieldVisibleForType("paintThickness", getFormTypeLabel(formData.vehicleType)) && (
+                <>
+                  <FormBinaryState
+                    label="Lackdickenmessung vorhanden"
+                    value={formData.paintThicknessAvailable}
+                    onChange={(val) => updateField("paintThicknessAvailable", val)}
+                  />
                   {formData.paintThicknessAvailable === true && (
                     <PaintThicknessInfoButton />
                   )}
-                  {formData.paintThicknessAvailable === true && (
+                </>
+              )}
+              {isFieldVisibleForType("paintThickness", getFormTypeLabel(formData.vehicleType)) && formData.paintThicknessAvailable === true && (
                     <div>
                       <label className="block text-sm font-semibold text-[#0a0a0a] dark:text-[#ededed] mb-2">Messprotokoll-Foto</label>
                       <p className="text-sm text-[#737373] dark:text-[#8a8a8a] mb-2">Foto des Lackdickenmessprotokolls hochladen</p>
@@ -2972,33 +3031,43 @@ function SubmitFormSection() {
 
             {/* Safety */}
             <FormSection title="Sicherheit" icon="🛡️">
-              <FormSelect
-                label="Airbags"
-                options={AIRBAGS_OPTIONS}
-                value={formData.airbags}
-                onChange={(e) => updateField("airbags", e.target.value)}
-              />
-              <FormFeatureSelect
-                label="Einparkhilfe"
-                features={PARKING_AID_FEATURES}
-                selected={formData.parkingAid}
-                onChange={(selected) => updateField("parkingAid", selected)}
-              />
-              <div className="grid md:grid-cols-2 gap-6">
-                <FormBinaryState
-                  label="Kamera vorne"
-                  value={formData.cameraFront}
-                  onChange={(val) => updateField("cameraFront", val)}
+              {isFieldVisibleForType("airbags", getFormTypeLabel(formData.vehicleType)) && (
+                <FormSelect
+                  label="Airbags"
+                  options={AIRBAGS_OPTIONS}
+                  value={formData.airbags}
+                  onChange={(e) => updateField("airbags", e.target.value)}
                 />
-                <FormBinaryState
-                  label="Kamera hinten"
-                  value={formData.cameraRear}
-                  onChange={(val) => updateField("cameraRear", val)}
+              )}
+              {isFieldVisibleForType("parkingAid", getFormTypeLabel(formData.vehicleType)) && (
+                <FormFeatureSelect
+                  label="Einparkhilfe"
+                  features={PARKING_AID_FEATURES}
+                  selected={formData.parkingAid}
+                  onChange={(selected) => updateField("parkingAid", selected)}
                 />
-              </div>
+              )}
+              {(isFieldVisibleForType("cameraFront", getFormTypeLabel(formData.vehicleType)) || isFieldVisibleForType("cameraRear", getFormTypeLabel(formData.vehicleType))) && (
+                <div className="grid md:grid-cols-2 gap-6">
+                  {isFieldVisibleForType("cameraFront", getFormTypeLabel(formData.vehicleType)) && (
+                    <FormBinaryState
+                      label="Kamera vorne"
+                      value={formData.cameraFront}
+                      onChange={(val) => updateField("cameraFront", val)}
+                    />
+                  )}
+                  {isFieldVisibleForType("cameraRear", getFormTypeLabel(formData.vehicleType)) && (
+                    <FormBinaryState
+                      label="Kamera hinten"
+                      value={formData.cameraRear}
+                      onChange={(val) => updateField("cameraRear", val)}
+                    />
+                  )}
+                </div>
+              )}
               <FormFeatureSelectWithOther
                 label="Sicherheitsausstattung"
-                features={SAFETY_FEATURES}
+                features={getSafetyFeaturesForType(getFormTypeLabel(formData.vehicleType))}
                 selected={formData.safetyFeatures}
                 onChange={(selected) => updateField("safetyFeatures", selected)}
                 otherValue={formData.safetyOther}
@@ -3010,7 +3079,7 @@ function SubmitFormSection() {
             <FormSection title="Ausstattung" icon="✨">
               <FormFeatureSelectWithOther
                 label="Komfort"
-                features={COMFORT_FEATURES}
+                features={getComfortFeaturesForType(getFormTypeLabel(formData.vehicleType))}
                 selected={formData.comfortFeatures}
                 onChange={(selected) => updateField("comfortFeatures", selected)}
                 otherValue={formData.comfortOther}
@@ -3018,7 +3087,7 @@ function SubmitFormSection() {
               />
               <FormFeatureSelectWithOther
                 label="Exterieur"
-                features={EXTERIOR_FEATURES}
+                features={getExteriorFeaturesForType(getFormTypeLabel(formData.vehicleType))}
                 selected={formData.exteriorFeatures}
                 onChange={(selected) => updateField("exteriorFeatures", selected)}
                 otherValue={formData.exteriorOther}
@@ -3026,7 +3095,7 @@ function SubmitFormSection() {
               />
               <FormFeatureSelectWithOther
                 label="Multimedia"
-                features={MULTIMEDIA_FEATURES}
+                features={getMultimediaFeaturesForType(getFormTypeLabel(formData.vehicleType))}
                 selected={formData.multimediaFeatures}
                 onChange={(selected) => updateField("multimediaFeatures", selected)}
                 otherValue={formData.multimediaOther}

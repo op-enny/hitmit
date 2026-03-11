@@ -38,6 +38,11 @@ import {
   getBrandOptionsForType,
   getModelsForBrand,
   getCategoriesForType,
+  getDriveTypeOptionsForType,
+  getCylinderOptionsForType,
+  getDoorOptionsForType,
+  getSeatOptionsForType,
+  isFieldVisibleForType,
 } from "../vehicles-data";
 import type { Vehicle } from "../vehicles-data";
 import { useSavedData } from "../use-saved-data";
@@ -1765,7 +1770,7 @@ function InseratePageInner() {
                     onChange={(e) => setDriveTypeFilter(e.target.value)}
                     className="w-full appearance-none bg-gray-50 dark:bg-[#1a1a1a] border border-gray-200 rounded-xl px-4 py-2.5 pr-9 text-sm text-gray-700 hover:border-[#f14011] focus:border-[#f14011] focus:outline-none transition-colors cursor-pointer"
                   >
-                    {driveTypeOptions.map((d) => (
+                    {getDriveTypeOptionsForType(vehicleTypeFilter).map((d) => (
                       <option key={d} value={d}>{d}</option>
                     ))}
                   </select>
@@ -1841,21 +1846,23 @@ function InseratePageInner() {
               </div>
 
               {/* Doors */}
-              <div>
-                <label className="block text-xs font-medium text-gray-500 mb-1.5">Türen</label>
-                <div className="relative">
-                  <select
-                    value={doorFilter}
-                    onChange={(e) => setDoorFilter(e.target.value)}
-                    className="w-full appearance-none bg-gray-50 dark:bg-[#1a1a1a] border border-gray-200 rounded-xl px-4 py-2.5 pr-9 text-sm text-gray-700 hover:border-[#f14011] focus:border-[#f14011] focus:outline-none transition-colors cursor-pointer"
-                  >
-                    {doorOptions.map((d) => (
-                      <option key={d} value={d}>{d}</option>
-                    ))}
-                  </select>
-                  <ChevronDownIcon className="w-4 h-4 text-gray-400 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+              {isFieldVisibleForType("doors", vehicleTypeFilter) && (
+                <div>
+                  <label className="block text-xs font-medium text-gray-500 mb-1.5">Türen</label>
+                  <div className="relative">
+                    <select
+                      value={doorFilter}
+                      onChange={(e) => setDoorFilter(e.target.value)}
+                      className="w-full appearance-none bg-gray-50 dark:bg-[#1a1a1a] border border-gray-200 rounded-xl px-4 py-2.5 pr-9 text-sm text-gray-700 hover:border-[#f14011] focus:border-[#f14011] focus:outline-none transition-colors cursor-pointer"
+                    >
+                      {getDoorOptionsForType(vehicleTypeFilter).map((d) => (
+                        <option key={d} value={d}>{d}</option>
+                      ))}
+                    </select>
+                    <ChevronDownIcon className="w-4 h-4 text-gray-400 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+                  </div>
                 </div>
-              </div>
+              )}
 
               {/* Seats */}
               <div>
@@ -1866,7 +1873,7 @@ function InseratePageInner() {
                     onChange={(e) => setSeatFilter(e.target.value)}
                     className="w-full appearance-none bg-gray-50 dark:bg-[#1a1a1a] border border-gray-200 rounded-xl px-4 py-2.5 pr-9 text-sm text-gray-700 hover:border-[#f14011] focus:border-[#f14011] focus:outline-none transition-colors cursor-pointer"
                   >
-                    {seatOptions.map((s) => (
+                    {getSeatOptionsForType(vehicleTypeFilter).map((s) => (
                       <option key={s} value={s}>{s}</option>
                     ))}
                   </select>
@@ -1900,6 +1907,16 @@ function InseratePageInner() {
                       setShowBrandRow2(false); setShowBrandRow3(false);
                       setCustomBrandText(""); setCustomBrandText2(""); setCustomBrandText3("");
                       setVehicleCategoryFilter("Alle");
+                      // Reset type-specific filters
+                      setDriveTypeFilter("Alle");
+                      setCylinderFilter("Alle");
+                      setDoorFilter("Alle");
+                      setSeatFilter("Alle");
+                      setInteriorColorFilter("Alle Farben");
+                      setSeatMaterialFilter("Alle");
+                      setClimateZoneFilter("");
+                      setPaintProtectionFilmFilter("Alle");
+                      setNoRepaintFilter("Alle");
                     }}
                     className="w-full appearance-none bg-gray-50 dark:bg-[#1a1a1a] border border-gray-200 rounded-xl px-4 py-2.5 pr-9 text-sm text-gray-700 hover:border-[#f14011] focus:border-[#f14011] focus:outline-none transition-colors cursor-pointer"
                   >
@@ -1954,7 +1971,7 @@ function InseratePageInner() {
                     onChange={(e) => setCylinderFilter(e.target.value)}
                     className="w-full appearance-none bg-gray-50 dark:bg-[#1a1a1a] border border-gray-200 rounded-xl px-4 py-2.5 pr-9 text-sm text-gray-700 hover:border-[#f14011] focus:border-[#f14011] focus:outline-none transition-colors cursor-pointer"
                   >
-                    {cylinderOptions.map((c) => (
+                    {getCylinderOptionsForType(vehicleTypeFilter).map((c) => (
                       <option key={c} value={c}>{c}</option>
                     ))}
                   </select>
@@ -1999,50 +2016,56 @@ function InseratePageInner() {
               </div>
 
               {/* Interior Color */}
-              <div>
-                <label className="block text-xs font-medium text-gray-500 mb-1.5">Innenfarbe</label>
-                <div className="relative">
-                  <select
-                    value={interiorColorFilter}
-                    onChange={(e) => setInteriorColorFilter(e.target.value)}
-                    className="w-full appearance-none bg-gray-50 dark:bg-[#1a1a1a] border border-gray-200 rounded-xl px-4 py-2.5 pr-9 text-sm text-gray-700 hover:border-[#f14011] focus:border-[#f14011] focus:outline-none transition-colors cursor-pointer"
-                  >
-                    {interiorColorOptions.map((c) => (
-                      <option key={c} value={c}>{c}</option>
-                    ))}
-                  </select>
-                  <ChevronDownIcon className="w-4 h-4 text-gray-400 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+              {isFieldVisibleForType("interiorColor", vehicleTypeFilter) && (
+                <div>
+                  <label className="block text-xs font-medium text-gray-500 mb-1.5">Innenfarbe</label>
+                  <div className="relative">
+                    <select
+                      value={interiorColorFilter}
+                      onChange={(e) => setInteriorColorFilter(e.target.value)}
+                      className="w-full appearance-none bg-gray-50 dark:bg-[#1a1a1a] border border-gray-200 rounded-xl px-4 py-2.5 pr-9 text-sm text-gray-700 hover:border-[#f14011] focus:border-[#f14011] focus:outline-none transition-colors cursor-pointer"
+                    >
+                      {interiorColorOptions.map((c) => (
+                        <option key={c} value={c}>{c}</option>
+                      ))}
+                    </select>
+                    <ChevronDownIcon className="w-4 h-4 text-gray-400 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+                  </div>
                 </div>
-              </div>
+              )}
 
               {/* Seat Material */}
-              <div>
-                <label className="block text-xs font-medium text-gray-500 mb-1.5">Sitzmaterial</label>
-                <div className="relative">
-                  <select
-                    value={seatMaterialFilter}
-                    onChange={(e) => setSeatMaterialFilter(e.target.value)}
-                    className="w-full appearance-none bg-gray-50 dark:bg-[#1a1a1a] border border-gray-200 rounded-xl px-4 py-2.5 pr-9 text-sm text-gray-700 hover:border-[#f14011] focus:border-[#f14011] focus:outline-none transition-colors cursor-pointer"
-                  >
-                    {seatMaterialOptions.map((s) => (
-                      <option key={s} value={s}>{s}</option>
-                    ))}
-                  </select>
-                  <ChevronDownIcon className="w-4 h-4 text-gray-400 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+              {isFieldVisibleForType("seatMaterial", vehicleTypeFilter) && (
+                <div>
+                  <label className="block text-xs font-medium text-gray-500 mb-1.5">Sitzmaterial</label>
+                  <div className="relative">
+                    <select
+                      value={seatMaterialFilter}
+                      onChange={(e) => setSeatMaterialFilter(e.target.value)}
+                      className="w-full appearance-none bg-gray-50 dark:bg-[#1a1a1a] border border-gray-200 rounded-xl px-4 py-2.5 pr-9 text-sm text-gray-700 hover:border-[#f14011] focus:border-[#f14011] focus:outline-none transition-colors cursor-pointer"
+                    >
+                      {seatMaterialOptions.map((s) => (
+                        <option key={s} value={s}>{s}</option>
+                      ))}
+                    </select>
+                    <ChevronDownIcon className="w-4 h-4 text-gray-400 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+                  </div>
                 </div>
-              </div>
+              )}
 
               {/* Climate Zones */}
-              <div>
-                <label className="block text-xs font-medium text-gray-500 mb-1.5">Klimazonen</label>
-                <input
-                  type="text"
-                  value={climateZoneFilter}
-                  onChange={(e) => setClimateZoneFilter(e.target.value)}
-                  placeholder="z.B. 2"
-                  className="w-full bg-gray-50 dark:bg-[#1a1a1a] border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-gray-700 placeholder:text-gray-400 hover:border-[#f14011] focus:border-[#f14011] focus:outline-none transition-colors"
-                />
-              </div>
+              {isFieldVisibleForType("climateZones", vehicleTypeFilter) && (
+                <div>
+                  <label className="block text-xs font-medium text-gray-500 mb-1.5">Klimazonen</label>
+                  <input
+                    type="text"
+                    value={climateZoneFilter}
+                    onChange={(e) => setClimateZoneFilter(e.target.value)}
+                    placeholder="z.B. 2"
+                    className="w-full bg-gray-50 dark:bg-[#1a1a1a] border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-gray-700 placeholder:text-gray-400 hover:border-[#f14011] focus:border-[#f14011] focus:outline-none transition-colors"
+                  />
+                </div>
+              )}
 
               {/* Rim Size */}
               <div>
@@ -2069,30 +2092,34 @@ function InseratePageInner() {
               </div>
 
               {/* Paint Protection Film */}
-              <div className="flex items-end">
-                <label className="flex items-center gap-2 px-4 py-2.5 cursor-pointer">
-                  <input
-                    type="checkbox"
-                    checked={paintProtectionFilmFilter === "Ja"}
-                    onChange={(e) => setPaintProtectionFilmFilter(e.target.checked ? "Ja" : "Alle")}
-                    className="w-4 h-4 rounded border-gray-300 dark:border-gray-600 text-[#f14011] focus:ring-[#f14011] cursor-pointer"
-                  />
-                  <span className="text-sm text-gray-700 dark:text-gray-300">Steinschlagschutzfolie</span>
-                </label>
-              </div>
+              {isFieldVisibleForType("paintProtectionFilm", vehicleTypeFilter) && (
+                <div className="flex items-end">
+                  <label className="flex items-center gap-2 px-4 py-2.5 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={paintProtectionFilmFilter === "Ja"}
+                      onChange={(e) => setPaintProtectionFilmFilter(e.target.checked ? "Ja" : "Alle")}
+                      className="w-4 h-4 rounded border-gray-300 dark:border-gray-600 text-[#f14011] focus:ring-[#f14011] cursor-pointer"
+                    />
+                    <span className="text-sm text-gray-700 dark:text-gray-300">Steinschlagschutzfolie</span>
+                  </label>
+                </div>
+              )}
 
               {/* No Repaint */}
-              <div className="flex items-end">
-                <label className="flex items-center gap-2 px-4 py-2.5 cursor-pointer">
-                  <input
-                    type="checkbox"
-                    checked={noRepaintFilter === "Ja"}
-                    onChange={(e) => setNoRepaintFilter(e.target.checked ? "Ja" : "Alle")}
-                    className="w-4 h-4 rounded border-gray-300 dark:border-gray-600 text-[#f14011] focus:ring-[#f14011] cursor-pointer"
-                  />
-                  <span className="text-sm text-gray-700 dark:text-gray-300">Nachlackierungsfrei</span>
-                </label>
-              </div>
+              {isFieldVisibleForType("noRepaint", vehicleTypeFilter) && (
+                <div className="flex items-end">
+                  <label className="flex items-center gap-2 px-4 py-2.5 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={noRepaintFilter === "Ja"}
+                      onChange={(e) => setNoRepaintFilter(e.target.checked ? "Ja" : "Alle")}
+                      className="w-4 h-4 rounded border-gray-300 dark:border-gray-600 text-[#f14011] focus:ring-[#f14011] cursor-pointer"
+                    />
+                    <span className="text-sm text-gray-700 dark:text-gray-300">Nachlackierungsfrei</span>
+                  </label>
+                </div>
+              )}
 
               {/* Service Book */}
               <div className="flex items-end">
@@ -2121,30 +2148,34 @@ function InseratePageInner() {
               </div>
 
               {/* Non-Smoker */}
-              <div className="flex items-end">
-                <label className="flex items-center gap-2 px-4 py-2.5 cursor-pointer">
-                  <input
-                    type="checkbox"
-                    checked={nonSmokerFilter === "Ja"}
-                    onChange={(e) => setNonSmokerFilter(e.target.checked ? "Ja" : "Alle")}
-                    className="w-4 h-4 rounded border-gray-300 dark:border-gray-600 text-[#f14011] focus:ring-[#f14011] cursor-pointer"
-                  />
-                  <span className="text-sm text-gray-700 dark:text-gray-300">Nichtraucherfahrzeug</span>
-                </label>
-              </div>
+              {isFieldVisibleForType("nonSmokerVehicle", vehicleTypeFilter) && (
+                <div className="flex items-end">
+                  <label className="flex items-center gap-2 px-4 py-2.5 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={nonSmokerFilter === "Ja"}
+                      onChange={(e) => setNonSmokerFilter(e.target.checked ? "Ja" : "Alle")}
+                      className="w-4 h-4 rounded border-gray-300 dark:border-gray-600 text-[#f14011] focus:ring-[#f14011] cursor-pointer"
+                    />
+                    <span className="text-sm text-gray-700 dark:text-gray-300">Nichtraucherfahrzeug</span>
+                  </label>
+                </div>
+              )}
 
               {/* Pet Free */}
-              <div className="flex items-end">
-                <label className="flex items-center gap-2 px-4 py-2.5 cursor-pointer">
-                  <input
-                    type="checkbox"
-                    checked={petFreeFilter === "Ja"}
-                    onChange={(e) => setPetFreeFilter(e.target.checked ? "Ja" : "Alle")}
-                    className="w-4 h-4 rounded border-gray-300 dark:border-gray-600 text-[#f14011] focus:ring-[#f14011] cursor-pointer"
-                  />
-                  <span className="text-sm text-gray-700 dark:text-gray-300">Tierfreies Fahrzeug</span>
-                </label>
-              </div>
+              {isFieldVisibleForType("petFreeVehicle", vehicleTypeFilter) && (
+                <div className="flex items-end">
+                  <label className="flex items-center gap-2 px-4 py-2.5 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={petFreeFilter === "Ja"}
+                      onChange={(e) => setPetFreeFilter(e.target.checked ? "Ja" : "Alle")}
+                      className="w-4 h-4 rounded border-gray-300 dark:border-gray-600 text-[#f14011] focus:ring-[#f14011] cursor-pointer"
+                    />
+                    <span className="text-sm text-gray-700 dark:text-gray-300">Tierfreies Fahrzeug</span>
+                  </label>
+                </div>
+              )}
 
               {/* Emission Class */}
               <div>

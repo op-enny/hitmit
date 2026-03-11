@@ -830,3 +830,283 @@ export const EQUIPMENT_FEATURE_LIST = [
   "WLAN-Hotspot",
   "Induktives Laden",
 ];
+
+// ============================================================================
+// TYPE-SPECIFIC FEATURE LISTS
+// ============================================================================
+
+export const COMFORT_FEATURES_BY_TYPE: Record<string, string[]> = {
+  PKW: [
+    "Klimaanlage", "Klimaautomatik", "Sitzheizung", "Lenkradheizung",
+    "Elektrische Sitze", "Massagesitze", "Panoramadach", "Schiebedach",
+    "Elektrische Heckklappe", "Keyless Entry", "Standheizung", "Tempomat",
+    "Abstandsregeltempomat", "Sitzbelüftung vorne", "Sitzbelüftung hinten", "Keyless-Go",
+  ],
+  Motorrad: [
+    "Griffheizung", "Sitzheizung", "Windschild", "Topcase", "Seitenkoffer",
+    "Sozius-Fußrasten", "Tempomat", "USB-Anschluss", "12V-Steckdose", "Handprotektoren",
+  ],
+  LKW: [
+    "Klimaanlage", "Standheizung", "Kühlbox", "Liegebett", "Tempomat",
+    "Abstandsregeltempomat", "Luftfederung", "Elektrische Fensterheber",
+  ],
+  Transporter: [
+    "Klimaanlage", "Klimaautomatik", "Sitzheizung", "Tempomat",
+    "Abstandsregeltempomat", "Keyless Entry", "Standheizung",
+    "Elektrische Fensterheber", "Trennwand",
+  ],
+};
+
+export const SAFETY_FEATURES_BY_TYPE: Record<string, string[]> = {
+  PKW: [
+    "ABS", "ESP", "Traktionskontrolle", "Spurhalteassistent", "Totwinkelassistent",
+    "Notbremsassistent", "Müdigkeitserkennung", "Verkehrszeichenerkennung",
+    "Nachtsichtassistent", "Head-up-Display", "Reifendruckkontrolle",
+    "Querverkehrsassistent", "Isofix",
+  ],
+  Motorrad: [
+    "ABS", "Kurven-ABS", "Traktionskontrolle", "Wheelie-Kontrolle",
+    "Quickshifter", "Fahrmodi", "Notbremsassistent", "Reifendruckkontrolle",
+  ],
+  LKW: [
+    "ABS", "ESP", "Abbiegeassistent", "Notbremsassistent", "Spurhalteassistent",
+    "Totwinkelassistent", "Reifendruckkontrolle", "ACC",
+  ],
+  Transporter: [
+    "ABS", "ESP", "Traktionskontrolle", "Spurhalteassistent", "Notbremsassistent",
+    "Totwinkelassistent", "Abbiegeassistent", "Reifendruckkontrolle",
+    "Rückfahrkamera", "Parktronic", "ACC",
+  ],
+};
+
+export const EXTERIOR_FEATURES_BY_TYPE: Record<string, string[]> = {
+  PKW: [
+    "LED-Scheinwerfer", "Xenon-Scheinwerfer", "Matrix-LED", "Tagfahrlicht",
+    "Nebelscheinwerfer", "Alufelgen", "Dachreling", "Anhängerkupplung",
+    "Sportpaket", "Lackversiegelung",
+  ],
+  Motorrad: [
+    "LED-Scheinwerfer", "Tagfahrlicht", "Sturzbügel", "Soziusgriffe",
+    "Gepäckträger", "Sportauspuff", "Kettenschutz",
+  ],
+  LKW: [
+    "LED-Scheinwerfer", "Nebelscheinwerfer", "Spoiler", "Seitenverkleidung",
+    "Rampe", "Anhängerkupplung", "Dachspoiler",
+  ],
+  Transporter: [
+    "LED-Scheinwerfer", "Tagfahrlicht", "Nebelscheinwerfer", "Anhängerkupplung",
+    "Dachreling", "Dachgalerie", "Trittbretter", "Laderaumverkleidung",
+  ],
+};
+
+export const MULTIMEDIA_FEATURES_BY_TYPE: Record<string, string[]> = {
+  PKW: [
+    "Navigationssystem", "Apple CarPlay", "Android Auto", "Bluetooth",
+    "USB", "DAB-Radio", "Soundsystem", "Rückfahrkamera", "360°-Kamera",
+    "WLAN-Hotspot", "Induktives Laden",
+  ],
+  Motorrad: [
+    "Navigationssystem", "Bluetooth-Kommunikation", "GPS-Halterung",
+    "TFT-Display", "Connectivity",
+  ],
+  LKW: [
+    "Navigationssystem", "DAB-Radio", "Bluetooth", "Freisprecheinrichtung",
+    "Rückfahrkamera",
+  ],
+  Transporter: [
+    "Navigationssystem", "Apple CarPlay", "Android Auto", "Bluetooth",
+    "DAB-Radio", "Rückfahrkamera", "USB",
+  ],
+};
+
+export function getComfortFeaturesForType(type: string): string[] {
+  if (type && type !== "Alle" && type !== "" && COMFORT_FEATURES_BY_TYPE[type]) {
+    return COMFORT_FEATURES_BY_TYPE[type];
+  }
+  return COMFORT_FEATURES_BY_TYPE.PKW;
+}
+
+export function getSafetyFeaturesForType(type: string): string[] {
+  if (type && type !== "Alle" && type !== "" && SAFETY_FEATURES_BY_TYPE[type]) {
+    return SAFETY_FEATURES_BY_TYPE[type];
+  }
+  return SAFETY_FEATURES_BY_TYPE.PKW;
+}
+
+export function getExteriorFeaturesForType(type: string): string[] {
+  if (type && type !== "Alle" && type !== "" && EXTERIOR_FEATURES_BY_TYPE[type]) {
+    return EXTERIOR_FEATURES_BY_TYPE[type];
+  }
+  return EXTERIOR_FEATURES_BY_TYPE.PKW;
+}
+
+export function getMultimediaFeaturesForType(type: string): string[] {
+  if (type && type !== "Alle" && type !== "" && MULTIMEDIA_FEATURES_BY_TYPE[type]) {
+    return MULTIMEDIA_FEATURES_BY_TYPE[type];
+  }
+  return MULTIMEDIA_FEATURES_BY_TYPE.PKW;
+}
+
+export function getEquipmentFeaturesForType(type: string): string[] {
+  return [
+    ...getComfortFeaturesForType(type),
+    ...getExteriorFeaturesForType(type),
+    ...getMultimediaFeaturesForType(type),
+  ];
+}
+
+// ============================================================================
+// TYPE-SPECIFIC SELECT OPTIONS (Form: value/label pairs)
+// ============================================================================
+
+export const DRIVE_TYPE_FORM_OPTIONS_BY_TYPE: Record<string, { value: string; label: string }[]> = {
+  PKW: [
+    { value: "", label: "Bitte wählen" },
+    { value: "fwd", label: "Frontantrieb" },
+    { value: "rwd", label: "Hinterradantrieb" },
+    { value: "awd", label: "Allrad" },
+  ],
+  Motorrad: [
+    { value: "", label: "Bitte wählen" },
+    { value: "chain", label: "Kette" },
+    { value: "shaft", label: "Kardan" },
+    { value: "belt", label: "Riemen" },
+  ],
+  LKW: [
+    { value: "", label: "Bitte wählen" },
+    { value: "rwd", label: "Hinterradantrieb" },
+    { value: "awd", label: "Allrad" },
+  ],
+  Transporter: [
+    { value: "", label: "Bitte wählen" },
+    { value: "fwd", label: "Frontantrieb" },
+    { value: "rwd", label: "Hinterradantrieb" },
+    { value: "awd", label: "Allrad" },
+  ],
+};
+
+export const CYLINDER_FORM_OPTIONS_BY_TYPE: Record<string, { value: string; label: string }[]> = {
+  PKW: [
+    { value: "", label: "Bitte wählen" },
+    { value: "3", label: "3" }, { value: "4", label: "4" }, { value: "5", label: "5" },
+    { value: "6", label: "6" }, { value: "8", label: "8" }, { value: "10", label: "10" },
+    { value: "12", label: "12" }, { value: "16", label: "16" },
+  ],
+  Motorrad: [
+    { value: "", label: "Bitte wählen" },
+    { value: "1", label: "1" }, { value: "2", label: "2" }, { value: "3", label: "3" },
+    { value: "4", label: "4" }, { value: "6", label: "6" },
+  ],
+  LKW: [
+    { value: "", label: "Bitte wählen" },
+    { value: "4", label: "4" }, { value: "6", label: "6" },
+    { value: "8", label: "8" }, { value: "12", label: "12" },
+  ],
+  Transporter: [
+    { value: "", label: "Bitte wählen" },
+    { value: "3", label: "3" }, { value: "4", label: "4" }, { value: "6", label: "6" },
+  ],
+};
+
+export const DOOR_FORM_OPTIONS_BY_TYPE: Record<string, { value: string; label: string }[]> = {
+  PKW: [
+    { value: "", label: "Bitte wählen" },
+    { value: "2/3", label: "2/3" }, { value: "4/5", label: "4/5" }, { value: "6/7", label: "6/7" },
+  ],
+  LKW: [
+    { value: "", label: "Bitte wählen" },
+    { value: "1", label: "1" }, { value: "2", label: "2" }, { value: "3", label: "3" },
+  ],
+  Transporter: [
+    { value: "", label: "Bitte wählen" },
+    { value: "3", label: "3" }, { value: "4", label: "4" }, { value: "5", label: "5" },
+  ],
+};
+
+export const SEAT_FORM_OPTIONS_BY_TYPE: Record<string, { value: string; label: string }[]> = {
+  PKW: [
+    { value: "", label: "Bitte wählen" },
+    { value: "2", label: "2" }, { value: "4", label: "4" }, { value: "5", label: "5" },
+    { value: "7", label: "7" }, { value: "9", label: "9" },
+  ],
+  Motorrad: [
+    { value: "", label: "Bitte wählen" },
+    { value: "1", label: "1" }, { value: "2", label: "2" },
+  ],
+  LKW: [
+    { value: "", label: "Bitte wählen" },
+    { value: "1", label: "1" }, { value: "2", label: "2" }, { value: "3", label: "3" },
+  ],
+  Transporter: [
+    { value: "", label: "Bitte wählen" },
+    { value: "2", label: "2" }, { value: "3", label: "3" }, { value: "5", label: "5" },
+    { value: "6", label: "6" }, { value: "7", label: "7" }, { value: "8", label: "8" }, { value: "9", label: "9" },
+  ],
+};
+
+// ============================================================================
+// TYPE-SPECIFIC FILTER OPTIONS (string arrays for suchen/inserate)
+// ============================================================================
+
+export function getDriveTypeOptionsForType(type: string): string[] {
+  switch (type) {
+    case "Motorrad": return ["Alle", "Kette", "Kardan", "Riemen"];
+    case "LKW": return ["Alle", "Hinterradantrieb", "Allrad"];
+    case "Transporter": return ["Alle", "Frontantrieb", "Hinterradantrieb", "Allrad"];
+    default: return driveTypeOptions;
+  }
+}
+
+export function getCylinderOptionsForType(type: string): string[] {
+  switch (type) {
+    case "Motorrad": return ["Alle", "1", "2", "3", "4", "6"];
+    case "LKW": return ["Alle", "4", "6", "8", "12"];
+    case "Transporter": return ["Alle", "3", "4", "6"];
+    default: return cylinderOptions;
+  }
+}
+
+export function getDoorOptionsForType(type: string): string[] {
+  switch (type) {
+    case "LKW": return ["Alle", "1", "2", "3"];
+    case "Transporter": return ["Alle", "3", "4", "5"];
+    default: return doorOptions;
+  }
+}
+
+export function getSeatOptionsForType(type: string): string[] {
+  switch (type) {
+    case "Motorrad": return ["Alle", "1", "2"];
+    case "LKW": return ["Alle", "1", "2", "3"];
+    case "Transporter": return ["Alle", "2", "3", "5", "6", "7", "8", "9"];
+    default: return seatOptions;
+  }
+}
+
+// ============================================================================
+// FIELD VISIBILITY PER TYPE
+// ============================================================================
+
+const HIDDEN_FIELDS_BY_TYPE: Record<string, Set<string>> = {
+  Motorrad: new Set([
+    "doors", "climateZones", "airbags", "parkingAid", "cameraFront", "cameraRear",
+    "interiorColor", "seatMaterial", "damageMap", "paintThickness",
+    "nonSmokerVehicle", "petFreeVehicle", "noRepaint", "paintProtectionFilm",
+  ]),
+  LKW: new Set([
+    "climateZones", "airbags", "interiorColor", "seatMaterial",
+    "damageMap", "paintThickness", "nonSmokerVehicle", "petFreeVehicle",
+    "paintProtectionFilm",
+  ]),
+  Transporter: new Set([
+    "damageMap", "paintThickness", "nonSmokerVehicle", "petFreeVehicle",
+    "paintProtectionFilm",
+  ]),
+};
+
+export function isFieldVisibleForType(field: string, type: string): boolean {
+  if (!type || type === "Alle" || type === "PKW" || type === "") return true;
+  const hidden = HIDDEN_FIELDS_BY_TYPE[type];
+  if (!hidden) return true;
+  return !hidden.has(field);
+}
