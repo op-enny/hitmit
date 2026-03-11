@@ -764,14 +764,14 @@ export default function SuchenPage() {
             )}
             {/* "+" Button to add Row 2 */}
             {brandFilter !== "Alle Marken" && !showBrandRow2 && (
-              <div className="flex items-end">
+              <div className="col-span-full">
                 <button
                   type="button"
                   onClick={() => setShowBrandRow2(true)}
                   className="flex items-center gap-1.5 px-3 py-2.5 text-sm font-medium text-[#f14011] border border-dashed border-[#f14011]/40 rounded-xl hover:bg-[#f14011]/5 transition-colors"
                 >
                   <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path strokeLinecap="round" d="M12 5v14M5 12h14" /></svg>
-                  Marke
+                  Weitere Marke hinzufügen
                 </button>
               </div>
             )}
