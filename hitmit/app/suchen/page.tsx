@@ -825,7 +825,17 @@ export default function SuchenPage() {
                 <div className="flex items-end">
                   <button
                     type="button"
-                    onClick={() => { setBrandFilter2("Alle Marken"); setModelFilter2(""); setVariantFilter2(""); setShowBrandRow2(false); setBrandFilter3("Alle Marken"); setModelFilter3(""); setVariantFilter3(""); setShowBrandRow3(false); }}
+                    onClick={() => {
+                      if (showBrandRow3) {
+                        // Zeile 3 hochrutschen nach Zeile 2
+                        setBrandFilter2(brandFilter3); setModelFilter2(modelFilter3); setVariantFilter2(variantFilter3);
+                        setBrandFilter3("Alle Marken"); setModelFilter3(""); setVariantFilter3("");
+                        setShowBrandRow3(false);
+                      } else {
+                        setBrandFilter2("Alle Marken"); setModelFilter2(""); setVariantFilter2("");
+                        setShowBrandRow2(false);
+                      }
+                    }}
                     className="flex items-center gap-1 px-3 py-2.5 text-sm font-medium text-gray-400 border border-gray-200 dark:border-[#2a2a2a] rounded-xl hover:text-red-500 hover:border-red-300 transition-colors"
                   >
                     <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path strokeLinecap="round" d="M6 18L18 6M6 6l12 12" /></svg>
