@@ -46,6 +46,32 @@ interface GeneratorInput {
 }
 
 // ============================================================================
+// Vehicle type noun & article helpers (German grammar)
+// ============================================================================
+
+// Fahrzeug/Motorrad = neuter (das), LKW/Transporter = masculine (der)
+interface VehicleGrammar {
+  noun: string;       // Fahrzeug, Motorrad, LKW, Transporter
+  artDef: string;     // Das, Das, Der, Der  (nominative, capitalized)
+  artDefLc: string;   // das, das, der, der  (nominative, lowercase)
+  dem: string;        // dieses, dieses, dieser, dieser (demonstrative)
+  rel: string;        // das, das, der, der  (relative pronoun)
+}
+
+const VEHICLE_GRAMMAR: Record<string, VehicleGrammar> = {
+  car:        { noun: "Fahrzeug",    artDef: "Das",  artDefLc: "das",  dem: "dieses",  rel: "das" },
+  motorcycle: { noun: "Motorrad",    artDef: "Das",  artDefLc: "das",  dem: "dieses",  rel: "das" },
+  truck:      { noun: "LKW",         artDef: "Der",  artDefLc: "der",  dem: "dieser",  rel: "der" },
+  van:        { noun: "Transporter", artDef: "Der",  artDefLc: "der",  dem: "dieser",  rel: "der" },
+};
+
+const DEFAULT_GRAMMAR: VehicleGrammar = VEHICLE_GRAMMAR.car;
+
+function getGrammar(vehicleType: string): VehicleGrammar {
+  return VEHICLE_GRAMMAR[vehicleType] ?? DEFAULT_GRAMMAR;
+}
+
+// ============================================================================
 // Value → Label mappings
 // ============================================================================
 
@@ -185,6 +211,7 @@ function buildIntro(d: GeneratorInput, rand: () => number): string {
   const condLabel = label(CONDITION_LABELS, d.condition);
   const isPremium = PREMIUM_BRANDS.has(d.brand);
   const isDealer = d.sellerType === "dealer";
+  const g = getGrammar(d.vehicleType);
 
   // Detect highlights for intro
   const lowKm = d.mileage && parseInt(d.mileage) < 50000;
@@ -195,7 +222,7 @@ function buildIntro(d: GeneratorInput, rand: () => number): string {
       const parts = [`Zum Verkauf steht ${isNew ? "ein neuer" : year ? `ein ${year}er` : "ein"} ${name}`];
       if (condLabel && !isNew) parts[0] += ` als ${condLabel}`;
       parts[0] += ".";
-      if (lowKm) parts.push(`Mit nur ${formatNumber(d.mileage)} km ist dieses Fahrzeug besonders laufstark.`);
+      if (lowKm) parts.push(`Mit nur ${formatNumber(d.mileage)} km ist ${g.dem} ${g.noun} besonders laufstark.`);
       return parts.join(" ");
     },
     () => {
@@ -204,7 +231,7 @@ function buildIntro(d: GeneratorInput, rand: () => number): string {
         : `Ich verkaufe ${year ? `meinen ${year}er` : "meinen"} ${name}`;
       if (condLabel && !isNew) s += ` (${condLabel})`;
       s += ".";
-      if (isPremium) s += ` Ein Fahrzeug, das in puncto Qualität und Komfort keine Wünsche offen lässt.`;
+      if (isPremium) s += ` Ein ${g.noun}, ${g.rel} in puncto Qualität und Komfort keine Wünsche offen lässt.`;
       return s;
     },
     () => {
@@ -231,13 +258,14 @@ function buildIntro(d: GeneratorInput, rand: () => number): string {
 
 function buildHistory(d: GeneratorInput, rand: () => number): string {
   const parts: string[] = [];
+  const g = getGrammar(d.vehicleType);
 
   // Mileage (if not already mentioned in intro with low-km highlight)
   const lowKm = d.mileage && parseInt(d.mileage) < 50000;
   if (d.mileage && !lowKm) {
     parts.push(pick([
       `Der Kilometerstand beträgt ${formatNumber(d.mileage)} km.`,
-      `Das Fahrzeug hat ${formatNumber(d.mileage)} km gelaufen.`,
+      `${g.artDef} ${g.noun} hat ${formatNumber(d.mileage)} km gelaufen.`,
       `Aktueller Tachostand: ${formatNumber(d.mileage)} km.`,
     ], rand));
   }
@@ -248,11 +276,11 @@ function buildHistory(d: GeneratorInput, rand: () => number): string {
     if (n === 1) {
       parts.push(pick([
         "Es handelt sich um einen Erstbesitz.",
-        "Das Fahrzeug hatte bisher nur einen Vorbesitzer.",
+        `${g.artDef} ${g.noun} hatte bisher nur einen Vorbesitzer.`,
         "Aus erster Hand.",
       ], rand));
     } else if (n === 2) {
-      parts.push(`Das Fahrzeug hatte bisher ${n} Vorbesitzer.`);
+      parts.push(`${g.artDef} ${g.noun} hatte bisher ${n} Vorbesitzer.`);
     } else if (!isNaN(n) && n > 0) {
       parts.push(`Anzahl Vorbesitzer: ${n}.`);
     }
@@ -261,9 +289,9 @@ function buildHistory(d: GeneratorInput, rand: () => number): string {
   // Accident-free
   if (d.accidentFree === true) {
     parts.push(pick([
-      "Das Fahrzeug ist unfallfrei.",
+      `${g.artDef} ${g.noun} ist unfallfrei.`,
       "Laut Vorbesitzer unfallfrei.",
-      "Unfallfrei laut Fahrzeughistorie.",
+      `Unfallfrei laut ${g.noun}historie.`,
     ], rand));
   }
 
@@ -286,7 +314,7 @@ function buildHistory(d: GeneratorInput, rand: () => number): string {
   if (hasValue(d.vehicleOrigin) && d.vehicleOrigin !== "deutschland") {
     const originLabel = label(ORIGIN_LABELS, d.vehicleOrigin);
     if (originLabel) {
-      parts.push(`Das Fahrzeug wurde aus ${originLabel} importiert.`);
+      parts.push(`${g.artDef} ${g.noun} wurde aus ${originLabel} importiert.`);
     }
   }
 
@@ -310,6 +338,7 @@ function buildHistory(d: GeneratorInput, rand: () => number): string {
 
 function buildPowertrain(d: GeneratorInput, rand: () => number): string {
   const parts: string[] = [];
+  const g = getGrammar(d.vehicleType);
   const fuel = label(FUEL_LABELS, d.fuelType);
   const trans = label(TRANSMISSION_LABELS, d.transmission);
   const drive = label(DRIVE_LABELS, d.driveType);
@@ -321,7 +350,7 @@ function buildPowertrain(d: GeneratorInput, rand: () => number): string {
     if (techParts.length > 0) {
       parts.push(pick([
         `Unter der Haube arbeitet ein ${techParts.join(" ")}-Aggregat.`,
-        `Angetrieben wird das Fahrzeug von einem ${techParts.join(" ")}-Motor.`,
+        `Angetrieben wird ${g.artDefLc} ${g.noun} von einem ${techParts.join(" ")}-Motor.`,
         `Die Motorisierung: ${techParts.join(", ")}.`,
       ], rand));
     }
@@ -376,11 +405,12 @@ function buildHighlights(d: GeneratorInput, rand: () => number): string {
 
   const isDealer = d.sellerType === "dealer";
 
+  const g = getGrammar(d.vehicleType);
   const intros = [
     isDealer
       ? "Zu den Ausstattungs-Highlights zählen unter anderem:"
       : "An Ausstattung ist unter anderem dabei:",
-    "Das Fahrzeug überzeugt mit folgender Ausstattung:",
+    `${g.artDef} ${g.noun} überzeugt mit folgender Ausstattung:`,
     `Die ${premium.length >= 3 ? "hochwertige" : "umfangreiche"} Ausstattung umfasst:`,
   ];
 
@@ -432,6 +462,7 @@ function buildComfortMultimedia(d: GeneratorInput, rand: () => number): string {
 
 function buildExterior(d: GeneratorInput, rand: () => number): string {
   const parts: string[] = [];
+  const g = getGrammar(d.vehicleType);
   const color = label(COLOR_LABELS, d.colorGeneral);
   const mfColor = d.colorManufacturer;
 
@@ -440,7 +471,7 @@ function buildExterior(d: GeneratorInput, rand: () => number): string {
     if (colorDesc) {
       parts.push(pick([
         `Die Außenfarbe: ${colorDesc}.`,
-        `Das Fahrzeug kommt in ${colorDesc}.`,
+        `${g.artDef} ${g.noun} kommt in ${colorDesc}.`,
         `Außenfarbe: ${colorDesc}.`,
       ], rand));
     }
@@ -465,11 +496,12 @@ function buildExterior(d: GeneratorInput, rand: () => number): string {
 
 function buildSafety(d: GeneratorInput): string {
   if (d.safetyFeatures.length === 0) return "";
+  const g = getGrammar(d.vehicleType);
 
   // Safety features were already listed in highlights, so only mention
   // a brief summary if there are many
   if (d.safetyFeatures.length >= 5) {
-    return "Das Fahrzeug verfügt über ein umfassendes Sicherheitspaket mit modernen Assistenzsystemen.";
+    return `${g.artDef} ${g.noun} verfügt über ein umfassendes Sicherheitspaket mit modernen Assistenzsystemen.`;
   }
   return "";
 }
