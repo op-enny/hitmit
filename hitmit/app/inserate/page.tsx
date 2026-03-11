@@ -937,6 +937,9 @@ function InseratePageInner() {
   const [brandFilter3, setBrandFilter3] = useState("Alle Marken");
   const [modelFilter3, setModelFilter3] = useState("");
   const [variantFilter3, setVariantFilter3] = useState("");
+  const [customBrandText, setCustomBrandText] = useState("");
+  const [customBrandText2, setCustomBrandText2] = useState("");
+  const [customBrandText3, setCustomBrandText3] = useState("");
   const [showBrandRow2, setShowBrandRow2] = useState(false);
   const [showBrandRow3, setShowBrandRow3] = useState(false);
   const [showAdvanced, setShowAdvanced] = useState(false);
@@ -1112,13 +1115,20 @@ function InseratePageInner() {
 
   const filtered = vehicles.filter((v) => {
     // Brand+Model+Variant: ODER-Logik über bis zu 3 Paare
-    const brandModelPairs: { brand: string; model: string; variant: string }[] = [];
-    if (brandFilter !== "Alle Marken") brandModelPairs.push({ brand: brandFilter, model: modelFilter, variant: variantFilter });
-    if (brandFilter2 !== "Alle Marken") brandModelPairs.push({ brand: brandFilter2, model: modelFilter2, variant: variantFilter2 });
-    if (brandFilter3 !== "Alle Marken") brandModelPairs.push({ brand: brandFilter3, model: modelFilter3, variant: variantFilter3 });
+    const brandModelPairs: { brand: string; model: string; variant: string; customText?: string }[] = [];
+    if (brandFilter !== "Alle Marken") brandModelPairs.push({ brand: brandFilter, model: modelFilter, variant: variantFilter, customText: brandFilter === "Andere" ? customBrandText : undefined });
+    if (brandFilter2 !== "Alle Marken") brandModelPairs.push({ brand: brandFilter2, model: modelFilter2, variant: variantFilter2, customText: brandFilter2 === "Andere" ? customBrandText2 : undefined });
+    if (brandFilter3 !== "Alle Marken") brandModelPairs.push({ brand: brandFilter3, model: modelFilter3, variant: variantFilter3, customText: brandFilter3 === "Andere" ? customBrandText3 : undefined });
 
     if (brandModelPairs.length > 0) {
       const matchesAny = brandModelPairs.some((pair) => {
+        if (pair.brand === "Andere" && pair.customText) {
+          const search = pair.customText.toLowerCase();
+          const matchesBrandOrModel = v.brand.toLowerCase().includes(search) || v.model.toLowerCase().includes(search);
+          if (!matchesBrandOrModel) return false;
+          if (pair.variant !== "" && !v.variant.toLowerCase().includes(pair.variant.toLowerCase())) return false;
+          return true;
+        }
         if (v.brand !== pair.brand) return false;
         if (pair.model !== "") {
           if (pair.brand === "Mercedes-Benz" && MERCEDES_MOTORIZATIONS[pair.model]) {
@@ -1236,7 +1246,7 @@ function InseratePageInner() {
             <div className="relative">
               <select
                 value={brandFilter}
-                onChange={(e) => { setBrandFilter(e.target.value); setModelFilter(""); setMotorizationFilter([]); setVariantFilter(""); }}
+                onChange={(e) => { setBrandFilter(e.target.value); setModelFilter(""); setMotorizationFilter([]); setVariantFilter(""); setCustomBrandText(""); }}
                 className="appearance-none bg-white dark:bg-[#141414] border border-gray-200 rounded-full px-5 py-2.5 pr-10 text-sm font-medium text-gray-700 hover:border-[#f14011] focus:border-[#f14011] focus:outline-none transition-colors cursor-pointer"
               >
                 {brandOptions.map((b) => (
@@ -1248,21 +1258,31 @@ function InseratePageInner() {
               <ChevronDownIcon className="w-4 h-4 text-gray-400 absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
             </div>
 
-            <div className="relative">
-              <select
-                value={modelFilter}
-                onChange={(e) => { setModelFilter(e.target.value); setMotorizationFilter([]); }}
-                className="appearance-none bg-white dark:bg-[#141414] border border-gray-200 rounded-full px-5 py-2.5 pr-10 text-sm font-medium text-gray-700 hover:border-[#f14011] focus:border-[#f14011] focus:outline-none transition-colors cursor-pointer"
-              >
-                <option value="">Alle Modelle</option>
-                {brandFilter !== "Alle Marken" && CAR_BRANDS_MODELS[brandFilter] &&
-                  CAR_BRANDS_MODELS[brandFilter].map((m) => (
-                    <option key={m} value={m}>{m}</option>
-                  ))
-                }
-              </select>
-              <ChevronDownIcon className="w-4 h-4 text-gray-400 absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
-            </div>
+            {brandFilter === "Andere" ? (
+              <input
+                type="text"
+                value={customBrandText}
+                onChange={(e) => setCustomBrandText(e.target.value)}
+                placeholder="Marke / Modell eingeben"
+                className="bg-white dark:bg-[#141414] border border-gray-200 rounded-full px-5 py-2.5 text-sm font-medium text-gray-700 placeholder:text-gray-400 hover:border-[#f14011] focus:border-[#f14011] focus:outline-none transition-colors w-56"
+              />
+            ) : (
+              <div className="relative">
+                <select
+                  value={modelFilter}
+                  onChange={(e) => { setModelFilter(e.target.value); setMotorizationFilter([]); }}
+                  className="appearance-none bg-white dark:bg-[#141414] border border-gray-200 rounded-full px-5 py-2.5 pr-10 text-sm font-medium text-gray-700 hover:border-[#f14011] focus:border-[#f14011] focus:outline-none transition-colors cursor-pointer"
+                >
+                  <option value="">Alle Modelle</option>
+                  {brandFilter !== "Alle Marken" && CAR_BRANDS_MODELS[brandFilter] &&
+                    CAR_BRANDS_MODELS[brandFilter].map((m) => (
+                      <option key={m} value={m}>{m}</option>
+                    ))
+                  }
+                </select>
+                <ChevronDownIcon className="w-4 h-4 text-gray-400 absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+              </div>
+            )}
 
             {/* Motorisierung (Mercedes only) */}
             {brandFilter === "Mercedes-Benz" && modelFilter !== "" && MERCEDES_MOTORIZATIONS[modelFilter] && (
@@ -1329,7 +1349,7 @@ function InseratePageInner() {
               <div className="relative">
                 <select
                   value={brandFilter2}
-                  onChange={(e) => { setBrandFilter2(e.target.value); setModelFilter2(""); setVariantFilter2(""); }}
+                  onChange={(e) => { setBrandFilter2(e.target.value); setModelFilter2(""); setVariantFilter2(""); setCustomBrandText2(""); }}
                   className="appearance-none bg-white dark:bg-[#141414] border border-gray-200 rounded-full px-5 py-2.5 pr-10 text-sm font-medium text-gray-700 hover:border-[#f14011] focus:border-[#f14011] focus:outline-none transition-colors cursor-pointer"
                 >
                   {brandOptions.map((b) => (
@@ -1338,21 +1358,31 @@ function InseratePageInner() {
                 </select>
                 <ChevronDownIcon className="w-4 h-4 text-gray-400 absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
               </div>
-              <div className="relative">
-                <select
-                  value={modelFilter2}
-                  onChange={(e) => setModelFilter2(e.target.value)}
-                  className="appearance-none bg-white dark:bg-[#141414] border border-gray-200 rounded-full px-5 py-2.5 pr-10 text-sm font-medium text-gray-700 hover:border-[#f14011] focus:border-[#f14011] focus:outline-none transition-colors cursor-pointer"
-                >
-                  <option value="">Alle Modelle</option>
-                  {brandFilter2 !== "Alle Marken" && CAR_BRANDS_MODELS[brandFilter2] &&
-                    CAR_BRANDS_MODELS[brandFilter2].map((m) => (
-                      <option key={m} value={m}>{m}</option>
-                    ))
-                  }
-                </select>
-                <ChevronDownIcon className="w-4 h-4 text-gray-400 absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
-              </div>
+              {brandFilter2 === "Andere" ? (
+                <input
+                  type="text"
+                  value={customBrandText2}
+                  onChange={(e) => setCustomBrandText2(e.target.value)}
+                  placeholder="Marke / Modell eingeben"
+                  className="bg-white dark:bg-[#141414] border border-gray-200 rounded-full px-5 py-2.5 text-sm font-medium text-gray-700 placeholder:text-gray-400 hover:border-[#f14011] focus:border-[#f14011] focus:outline-none transition-colors w-56"
+                />
+              ) : (
+                <div className="relative">
+                  <select
+                    value={modelFilter2}
+                    onChange={(e) => setModelFilter2(e.target.value)}
+                    className="appearance-none bg-white dark:bg-[#141414] border border-gray-200 rounded-full px-5 py-2.5 pr-10 text-sm font-medium text-gray-700 hover:border-[#f14011] focus:border-[#f14011] focus:outline-none transition-colors cursor-pointer"
+                  >
+                    <option value="">Alle Modelle</option>
+                    {brandFilter2 !== "Alle Marken" && CAR_BRANDS_MODELS[brandFilter2] &&
+                      CAR_BRANDS_MODELS[brandFilter2].map((m) => (
+                        <option key={m} value={m}>{m}</option>
+                      ))
+                    }
+                  </select>
+                  <ChevronDownIcon className="w-4 h-4 text-gray-400 absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+                </div>
+              )}
               <input
                 type="text"
                 value={variantFilter2}
@@ -1365,11 +1395,11 @@ function InseratePageInner() {
                 onClick={() => {
                   if (showBrandRow3) {
                     // Zeile 3 hochrutschen nach Zeile 2
-                    setBrandFilter2(brandFilter3); setModelFilter2(modelFilter3); setVariantFilter2(variantFilter3);
-                    setBrandFilter3("Alle Marken"); setModelFilter3(""); setVariantFilter3("");
+                    setBrandFilter2(brandFilter3); setModelFilter2(modelFilter3); setVariantFilter2(variantFilter3); setCustomBrandText2(customBrandText3);
+                    setBrandFilter3("Alle Marken"); setModelFilter3(""); setVariantFilter3(""); setCustomBrandText3("");
                     setShowBrandRow3(false);
                   } else {
-                    setBrandFilter2("Alle Marken"); setModelFilter2(""); setVariantFilter2("");
+                    setBrandFilter2("Alle Marken"); setModelFilter2(""); setVariantFilter2(""); setCustomBrandText2("");
                     setShowBrandRow2(false);
                   }
                 }}
@@ -1398,7 +1428,7 @@ function InseratePageInner() {
               <div className="relative">
                 <select
                   value={brandFilter3}
-                  onChange={(e) => { setBrandFilter3(e.target.value); setModelFilter3(""); setVariantFilter3(""); }}
+                  onChange={(e) => { setBrandFilter3(e.target.value); setModelFilter3(""); setVariantFilter3(""); setCustomBrandText3(""); }}
                   className="appearance-none bg-white dark:bg-[#141414] border border-gray-200 rounded-full px-5 py-2.5 pr-10 text-sm font-medium text-gray-700 hover:border-[#f14011] focus:border-[#f14011] focus:outline-none transition-colors cursor-pointer"
                 >
                   {brandOptions.map((b) => (
@@ -1407,21 +1437,31 @@ function InseratePageInner() {
                 </select>
                 <ChevronDownIcon className="w-4 h-4 text-gray-400 absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
               </div>
-              <div className="relative">
-                <select
-                  value={modelFilter3}
-                  onChange={(e) => setModelFilter3(e.target.value)}
-                  className="appearance-none bg-white dark:bg-[#141414] border border-gray-200 rounded-full px-5 py-2.5 pr-10 text-sm font-medium text-gray-700 hover:border-[#f14011] focus:border-[#f14011] focus:outline-none transition-colors cursor-pointer"
-                >
-                  <option value="">Alle Modelle</option>
-                  {brandFilter3 !== "Alle Marken" && CAR_BRANDS_MODELS[brandFilter3] &&
-                    CAR_BRANDS_MODELS[brandFilter3].map((m) => (
-                      <option key={m} value={m}>{m}</option>
-                    ))
-                  }
-                </select>
-                <ChevronDownIcon className="w-4 h-4 text-gray-400 absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
-              </div>
+              {brandFilter3 === "Andere" ? (
+                <input
+                  type="text"
+                  value={customBrandText3}
+                  onChange={(e) => setCustomBrandText3(e.target.value)}
+                  placeholder="Marke / Modell eingeben"
+                  className="bg-white dark:bg-[#141414] border border-gray-200 rounded-full px-5 py-2.5 text-sm font-medium text-gray-700 placeholder:text-gray-400 hover:border-[#f14011] focus:border-[#f14011] focus:outline-none transition-colors w-56"
+                />
+              ) : (
+                <div className="relative">
+                  <select
+                    value={modelFilter3}
+                    onChange={(e) => setModelFilter3(e.target.value)}
+                    className="appearance-none bg-white dark:bg-[#141414] border border-gray-200 rounded-full px-5 py-2.5 pr-10 text-sm font-medium text-gray-700 hover:border-[#f14011] focus:border-[#f14011] focus:outline-none transition-colors cursor-pointer"
+                  >
+                    <option value="">Alle Modelle</option>
+                    {brandFilter3 !== "Alle Marken" && CAR_BRANDS_MODELS[brandFilter3] &&
+                      CAR_BRANDS_MODELS[brandFilter3].map((m) => (
+                        <option key={m} value={m}>{m}</option>
+                      ))
+                    }
+                  </select>
+                  <ChevronDownIcon className="w-4 h-4 text-gray-400 absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+                </div>
+              )}
               <input
                 type="text"
                 value={variantFilter3}
@@ -2040,20 +2080,16 @@ function InseratePageInner() {
               </div>
 
               {/* Service Book */}
-              <div>
-                <label className="block text-xs font-medium text-gray-500 mb-1.5">Scheckheftgepflegt</label>
-                <div className="relative">
-                  <select
-                    value={serviceBookFilter}
-                    onChange={(e) => setServiceBookFilter(e.target.value)}
-                    className="w-full appearance-none bg-gray-50 dark:bg-[#1a1a1a] border border-gray-200 rounded-xl px-4 py-2.5 pr-9 text-sm text-gray-700 hover:border-[#f14011] focus:border-[#f14011] focus:outline-none transition-colors cursor-pointer"
-                  >
-                    <option value="Alle">Alle</option>
-                    <option value="Ja">Ja</option>
-                    <option value="Nein">Nein</option>
-                  </select>
-                  <ChevronDownIcon className="w-4 h-4 text-gray-400 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
-                </div>
+              <div className="flex items-end">
+                <label className="flex items-center gap-2 px-4 py-2.5 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={serviceBookFilter === "Ja"}
+                    onChange={(e) => setServiceBookFilter(e.target.checked ? "Ja" : "Alle")}
+                    className="w-4 h-4 rounded border-gray-300 dark:border-gray-600 text-[#f14011] focus:ring-[#f14011] cursor-pointer"
+                  />
+                  <span className="text-sm text-gray-700 dark:text-gray-300">Scheckheftgepflegt</span>
+                </label>
               </div>
 
               {/* Manufacturer Warranty */}
@@ -2169,8 +2205,9 @@ function InseratePageInner() {
                   setEmissionClassFilter("Alle"); setEnvironmentalBadgeFilter("Alle");
                   setParticleFilterFilter("Alle");
                   setManufacturerColorFilter(""); setVariantFilter("");
-                  setBrandFilter2("Alle Marken"); setModelFilter2(""); setVariantFilter2("");
-                  setBrandFilter3("Alle Marken"); setModelFilter3(""); setVariantFilter3("");
+                  setBrandFilter2("Alle Marken"); setModelFilter2(""); setVariantFilter2(""); setCustomBrandText2("");
+                  setBrandFilter3("Alle Marken"); setModelFilter3(""); setVariantFilter3(""); setCustomBrandText3("");
+                  setCustomBrandText("");
                   setShowBrandRow2(false); setShowBrandRow3(false);
                 }}
                 className="mt-4 text-sm text-[#f14011] font-semibold hover:underline"

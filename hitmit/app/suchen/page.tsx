@@ -300,6 +300,9 @@ export default function SuchenPage() {
   const [modelFilter3, setModelFilter3] = useState("");
   const [variantFilter2, setVariantFilter2] = useState("");
   const [variantFilter3, setVariantFilter3] = useState("");
+  const [customBrandText, setCustomBrandText] = useState("");
+  const [customBrandText2, setCustomBrandText2] = useState("");
+  const [customBrandText3, setCustomBrandText3] = useState("");
   const [showBrandRow2, setShowBrandRow2] = useState(false);
   const [showBrandRow3, setShowBrandRow3] = useState(false);
   const [motorizationFilter, setMotorizationFilter] = useState<string[]>([]);
@@ -361,13 +364,20 @@ export default function SuchenPage() {
   // Filter logic
   const filtered = vehicles.filter((v) => {
     // Brand+Model+Variant: ODER-Logik über bis zu 3 Paare
-    const brandModelPairs: { brand: string; model: string; variant: string }[] = [];
-    if (brandFilter !== "Alle Marken") brandModelPairs.push({ brand: brandFilter, model: modelFilter, variant: variantFilter });
-    if (brandFilter2 !== "Alle Marken") brandModelPairs.push({ brand: brandFilter2, model: modelFilter2, variant: variantFilter2 });
-    if (brandFilter3 !== "Alle Marken") brandModelPairs.push({ brand: brandFilter3, model: modelFilter3, variant: variantFilter3 });
+    const brandModelPairs: { brand: string; model: string; variant: string; customText?: string }[] = [];
+    if (brandFilter !== "Alle Marken") brandModelPairs.push({ brand: brandFilter, model: modelFilter, variant: variantFilter, customText: brandFilter === "Andere" ? customBrandText : undefined });
+    if (brandFilter2 !== "Alle Marken") brandModelPairs.push({ brand: brandFilter2, model: modelFilter2, variant: variantFilter2, customText: brandFilter2 === "Andere" ? customBrandText2 : undefined });
+    if (brandFilter3 !== "Alle Marken") brandModelPairs.push({ brand: brandFilter3, model: modelFilter3, variant: variantFilter3, customText: brandFilter3 === "Andere" ? customBrandText3 : undefined });
 
     if (brandModelPairs.length > 0) {
       const matchesAny = brandModelPairs.some((pair) => {
+        if (pair.brand === "Andere" && pair.customText) {
+          const search = pair.customText.toLowerCase();
+          const matchesBrandOrModel = v.brand.toLowerCase().includes(search) || v.model.toLowerCase().includes(search);
+          if (!matchesBrandOrModel) return false;
+          if (pair.variant !== "" && !v.variant.toLowerCase().includes(pair.variant.toLowerCase())) return false;
+          return true;
+        }
         if (v.brand !== pair.brand) return false;
         if (pair.model !== "") {
           if (pair.brand === "Mercedes-Benz" && MERCEDES_MOTORIZATIONS[pair.model]) {
@@ -583,8 +593,9 @@ export default function SuchenPage() {
     setColorFilter("Alle Farben"); setConditionFilter("Alle");
     setDoorFilter("Alle"); setSeatFilter("");
     setModelFilter("");
-    setBrandFilter2("Alle Marken"); setModelFilter2(""); setVariantFilter2("");
-    setBrandFilter3("Alle Marken"); setModelFilter3(""); setVariantFilter3("");
+    setBrandFilter2("Alle Marken"); setModelFilter2(""); setVariantFilter2(""); setCustomBrandText2("");
+    setBrandFilter3("Alle Marken"); setModelFilter3(""); setVariantFilter3(""); setCustomBrandText3("");
+    setCustomBrandText("");
     setShowBrandRow2(false); setShowBrandRow3(false);
     setVariantFilter("");
     setVehicleTypeFilter("Alle"); setVehicleCategoryFilter("Alle");
@@ -716,20 +727,33 @@ export default function SuchenPage() {
             <FilterSelect
               label="Marke"
               value={brandFilter}
-              onChange={(v) => { setBrandFilter(v); setModelFilter(""); setMotorizationFilter([]); }}
+              onChange={(v) => { setBrandFilter(v); setModelFilter(""); setMotorizationFilter([]); setCustomBrandText(""); }}
               options={brandOptions.map((b) => ({ value: b, label: b }))}
             />
-            <FilterSelect
-              label="Modell"
-              value={modelFilter}
-              onChange={(v) => { setModelFilter(v); setMotorizationFilter([]); }}
-              options={[
-                { value: "", label: "Alle Modelle" },
-                ...(brandFilter !== "Alle Marken" && CAR_BRANDS_MODELS[brandFilter]
-                  ? CAR_BRANDS_MODELS[brandFilter].map((m) => ({ value: m, label: m }))
-                  : []),
-              ]}
-            />
+            {brandFilter === "Andere" ? (
+              <div>
+                <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1.5">Freitext-Suche</label>
+                <input
+                  type="text"
+                  value={customBrandText}
+                  onChange={(e) => setCustomBrandText(e.target.value)}
+                  placeholder="Marke / Modell eingeben"
+                  className="w-full bg-white dark:bg-[#1a1a1a] border border-gray-200 dark:border-[#2a2a2a] rounded-xl px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 placeholder:text-gray-400 hover:border-[#f14011] focus:border-[#f14011] focus:outline-none transition-colors"
+                />
+              </div>
+            ) : (
+              <FilterSelect
+                label="Modell"
+                value={modelFilter}
+                onChange={(v) => { setModelFilter(v); setMotorizationFilter([]); }}
+                options={[
+                  { value: "", label: "Alle Modelle" },
+                  ...(brandFilter !== "Alle Marken" && CAR_BRANDS_MODELS[brandFilter]
+                    ? CAR_BRANDS_MODELS[brandFilter].map((m) => ({ value: m, label: m }))
+                    : []),
+                ]}
+              />
+            )}
             {brandFilter === "Mercedes-Benz" && modelFilter !== "" && MERCEDES_MOTORIZATIONS[modelFilter] && (
               <div className="relative" ref={motorizationRef}>
                 <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1.5">Motorisierung</label>
@@ -799,20 +823,33 @@ export default function SuchenPage() {
                 <FilterSelect
                   label="Marke 2"
                   value={brandFilter2}
-                  onChange={(v) => { setBrandFilter2(v); setModelFilter2(""); setVariantFilter2(""); }}
+                  onChange={(v) => { setBrandFilter2(v); setModelFilter2(""); setVariantFilter2(""); setCustomBrandText2(""); }}
                   options={brandOptions.map((b) => ({ value: b, label: b }))}
                 />
-                <FilterSelect
-                  label="Modell 2"
-                  value={modelFilter2}
-                  onChange={setModelFilter2}
-                  options={[
-                    { value: "", label: "Alle Modelle" },
-                    ...(brandFilter2 !== "Alle Marken" && CAR_BRANDS_MODELS[brandFilter2]
-                      ? CAR_BRANDS_MODELS[brandFilter2].map((m) => ({ value: m, label: m }))
-                      : []),
-                  ]}
-                />
+                {brandFilter2 === "Andere" ? (
+                  <div>
+                    <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1.5">Freitext-Suche 2</label>
+                    <input
+                      type="text"
+                      value={customBrandText2}
+                      onChange={(e) => setCustomBrandText2(e.target.value)}
+                      placeholder="Marke / Modell eingeben"
+                      className="w-full bg-white dark:bg-[#1a1a1a] border border-gray-200 dark:border-[#2a2a2a] rounded-xl px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 placeholder:text-gray-400 hover:border-[#f14011] focus:border-[#f14011] focus:outline-none transition-colors"
+                    />
+                  </div>
+                ) : (
+                  <FilterSelect
+                    label="Modell 2"
+                    value={modelFilter2}
+                    onChange={setModelFilter2}
+                    options={[
+                      { value: "", label: "Alle Modelle" },
+                      ...(brandFilter2 !== "Alle Marken" && CAR_BRANDS_MODELS[brandFilter2]
+                        ? CAR_BRANDS_MODELS[brandFilter2].map((m) => ({ value: m, label: m }))
+                        : []),
+                    ]}
+                  />
+                )}
                 <div>
                   <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1.5">Variante 2</label>
                   <input
@@ -829,11 +866,11 @@ export default function SuchenPage() {
                     onClick={() => {
                       if (showBrandRow3) {
                         // Zeile 3 hochrutschen nach Zeile 2
-                        setBrandFilter2(brandFilter3); setModelFilter2(modelFilter3); setVariantFilter2(variantFilter3);
-                        setBrandFilter3("Alle Marken"); setModelFilter3(""); setVariantFilter3("");
+                        setBrandFilter2(brandFilter3); setModelFilter2(modelFilter3); setVariantFilter2(variantFilter3); setCustomBrandText2(customBrandText3);
+                        setBrandFilter3("Alle Marken"); setModelFilter3(""); setVariantFilter3(""); setCustomBrandText3("");
                         setShowBrandRow3(false);
                       } else {
-                        setBrandFilter2("Alle Marken"); setModelFilter2(""); setVariantFilter2("");
+                        setBrandFilter2("Alle Marken"); setModelFilter2(""); setVariantFilter2(""); setCustomBrandText2("");
                         setShowBrandRow2(false);
                       }
                     }}
@@ -865,20 +902,33 @@ export default function SuchenPage() {
                 <FilterSelect
                   label="Marke 3"
                   value={brandFilter3}
-                  onChange={(v) => { setBrandFilter3(v); setModelFilter3(""); setVariantFilter3(""); }}
+                  onChange={(v) => { setBrandFilter3(v); setModelFilter3(""); setVariantFilter3(""); setCustomBrandText3(""); }}
                   options={brandOptions.map((b) => ({ value: b, label: b }))}
                 />
-                <FilterSelect
-                  label="Modell 3"
-                  value={modelFilter3}
-                  onChange={setModelFilter3}
-                  options={[
-                    { value: "", label: "Alle Modelle" },
-                    ...(brandFilter3 !== "Alle Marken" && CAR_BRANDS_MODELS[brandFilter3]
-                      ? CAR_BRANDS_MODELS[brandFilter3].map((m) => ({ value: m, label: m }))
-                      : []),
-                  ]}
-                />
+                {brandFilter3 === "Andere" ? (
+                  <div>
+                    <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1.5">Freitext-Suche 3</label>
+                    <input
+                      type="text"
+                      value={customBrandText3}
+                      onChange={(e) => setCustomBrandText3(e.target.value)}
+                      placeholder="Marke / Modell eingeben"
+                      className="w-full bg-white dark:bg-[#1a1a1a] border border-gray-200 dark:border-[#2a2a2a] rounded-xl px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 placeholder:text-gray-400 hover:border-[#f14011] focus:border-[#f14011] focus:outline-none transition-colors"
+                    />
+                  </div>
+                ) : (
+                  <FilterSelect
+                    label="Modell 3"
+                    value={modelFilter3}
+                    onChange={setModelFilter3}
+                    options={[
+                      { value: "", label: "Alle Modelle" },
+                      ...(brandFilter3 !== "Alle Marken" && CAR_BRANDS_MODELS[brandFilter3]
+                        ? CAR_BRANDS_MODELS[brandFilter3].map((m) => ({ value: m, label: m }))
+                        : []),
+                    ]}
+                  />
+                )}
                 <div>
                   <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1.5">Variante 3</label>
                   <input
@@ -892,7 +942,7 @@ export default function SuchenPage() {
                 <div className="flex items-end">
                   <button
                     type="button"
-                    onClick={() => { setBrandFilter3("Alle Marken"); setModelFilter3(""); setVariantFilter3(""); setShowBrandRow3(false); }}
+                    onClick={() => { setBrandFilter3("Alle Marken"); setModelFilter3(""); setVariantFilter3(""); setCustomBrandText3(""); setShowBrandRow3(false); }}
                     className="flex items-center gap-1 px-3 py-2.5 text-sm font-medium text-gray-400 border border-gray-200 dark:border-[#2a2a2a] rounded-xl hover:text-red-500 hover:border-red-300 transition-colors"
                   >
                     <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path strokeLinecap="round" d="M6 18L18 6M6 6l12 12" /></svg>
@@ -1149,12 +1199,17 @@ export default function SuchenPage() {
                 <span className="text-sm text-gray-700 dark:text-gray-300">Nachlackierungsfrei</span>
               </label>
             </div>
-            <FilterSelect
-              label="Scheckheftgepflegt"
-              value={serviceBookFilter}
-              onChange={setServiceBookFilter}
-              options={[{ value: "Alle", label: "Alle" }, { value: "Ja", label: "Ja" }, { value: "Nein", label: "Nein" }]}
-            />
+            <div className="flex items-end">
+              <label className="flex items-center gap-2 px-4 py-2.5 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={serviceBookFilter === "Ja"}
+                  onChange={(e) => setServiceBookFilter(e.target.checked ? "Ja" : "Alle")}
+                  className="w-4 h-4 rounded border-gray-300 dark:border-gray-600 text-[#f14011] focus:ring-[#f14011] cursor-pointer"
+                />
+                <span className="text-sm text-gray-700 dark:text-gray-300">Scheckheftgepflegt</span>
+              </label>
+            </div>
             <div className="flex items-end">
               <label className="flex items-center gap-2 px-4 py-2.5 cursor-pointer">
                 <input
