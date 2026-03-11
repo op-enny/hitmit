@@ -396,7 +396,8 @@ export default function SuchenPage() {
     if (transmissionFilter !== "Alle") {
       const t = v.transmission.toLowerCase();
       if (transmissionFilter === "Automatik" && !t.includes("automatik") && !t.includes("dsg") && !t.includes("pdk") && !t.includes("tronic") && !t.includes("s tronic")) return false;
-      if (transmissionFilter === "Schaltung" && (t.includes("automatik") || t.includes("dsg") || t.includes("pdk") || t.includes("tronic") || t.includes("s tronic"))) return false;
+      if (transmissionFilter === "Halbautomatik" && !t.includes("halbautomatik")) return false;
+      if (transmissionFilter === "Schaltung" && (t.includes("automatik") || t.includes("dsg") || t.includes("pdk") || t.includes("tronic") || t.includes("s tronic") || t.includes("halbautomatik"))) return false;
     }
     if (driveTypeFilter !== "Alle") {
       const d = v.driveType.toLowerCase();
@@ -970,18 +971,26 @@ export default function SuchenPage() {
           {/* Section: Details */}
           <h3 className="text-sm font-semibold text-gray-900 dark:text-gray-100 uppercase tracking-wider mb-4">Details</h3>
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 mb-6">
-            <FilterSelect
-              label="Erstzulassung von"
-              value={yearFrom}
-              onChange={setYearFrom}
-              options={[{ value: "", label: "Alle" }, ...yearOptions.map((y) => ({ value: String(y), label: String(y) }))]}
-            />
-            <FilterSelect
-              label="Erstzulassung bis"
-              value={yearTo}
-              onChange={setYearTo}
-              options={[{ value: "", label: "Alle" }, ...yearOptions.map((y) => ({ value: String(y), label: String(y) }))]}
-            />
+            <div>
+              <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1.5">Erstzulassung von</label>
+              <input
+                type="text"
+                value={yearFrom}
+                onChange={(e) => setYearFrom(e.target.value)}
+                placeholder="z.B. 2018"
+                className="w-full bg-white dark:bg-[#1a1a1a] border border-gray-200 dark:border-[#2a2a2a] rounded-xl px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 placeholder:text-gray-400 hover:border-[#f14011] focus:border-[#f14011] focus:outline-none transition-colors"
+              />
+            </div>
+            <div>
+              <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1.5">Erstzulassung bis</label>
+              <input
+                type="text"
+                value={yearTo}
+                onChange={(e) => setYearTo(e.target.value)}
+                placeholder="z.B. 2024"
+                className="w-full bg-white dark:bg-[#1a1a1a] border border-gray-200 dark:border-[#2a2a2a] rounded-xl px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 placeholder:text-gray-400 hover:border-[#f14011] focus:border-[#f14011] focus:outline-none transition-colors"
+              />
+            </div>
             <FilterSelect
               label="Antrieb"
               value={driveTypeFilter}
@@ -1041,8 +1050,9 @@ export default function SuchenPage() {
                     />
                     <div className="flex justify-between text-[10px] text-gray-400 mt-1">
                       <span>Alle</span>
+                      <span>50</span>
                       <span>100</span>
-                      <span>300</span>
+                      <span>250</span>
                       <span>500</span>
                       <span>1000 km</span>
                     </div>

@@ -555,7 +555,7 @@ export const powerOptions = [
   { label: "Ab 500 PS", min: 500 },
 ];
 
-export const transmissionOptions = ["Alle", "Automatik", "Schaltung"];
+export const transmissionOptions = ["Alle", "Automatik", "Halbautomatik", "Schaltung"];
 export const driveTypeOptions = ["Alle", "Frontantrieb", "Hinterradantrieb", "Allrad"];
 export const sellerTypeOptions = ["Alle", "Privat", "Händler"];
 export const colorOptions = [
@@ -573,7 +573,7 @@ export const colorOptions = [
   "Gelb",
   "Sonstige",
 ];
-export const conditionOptions = ["Alle", "Neuwagen", "Gebraucht", "Unfallwagen", "Tageszulassung"];
+export const conditionOptions = ["Alle", "Neuwagen", "Gebraucht", "Unfallwagen (nicht fahrtüchtig)", "Tageszulassung"];
 export const doorOptions = ["Alle", "2/3", "4/5", "6/7"];
 export const seatOptions = ["Alle", "2", "4", "5", "7"];
 export const vehicleTypeOptions = ["Alle", "PKW", "Motorrad", "LKW", "Transporter", "Sonstige"];

@@ -1147,7 +1147,8 @@ function InseratePageInner() {
     if (transmissionFilter !== "Alle") {
       const t = v.transmission.toLowerCase();
       if (transmissionFilter === "Automatik" && !t.includes("automatik") && !t.includes("dsg") && !t.includes("pdk") && !t.includes("tronic") && !t.includes("s tronic")) return false;
-      if (transmissionFilter === "Schaltung" && (t.includes("automatik") || t.includes("dsg") || t.includes("pdk") || t.includes("tronic") || t.includes("s tronic"))) return false;
+      if (transmissionFilter === "Halbautomatik" && !t.includes("halbautomatik")) return false;
+      if (transmissionFilter === "Schaltung" && (t.includes("automatik") || t.includes("dsg") || t.includes("pdk") || t.includes("tronic") || t.includes("s tronic") || t.includes("halbautomatik"))) return false;
     }
     if (driveTypeFilter !== "Alle") {
       const d = v.driveType.toLowerCase();
@@ -1636,37 +1637,25 @@ function InseratePageInner() {
               {/* Year From */}
               <div>
                 <label className="block text-xs font-medium text-gray-500 mb-1.5">Erstzulassung von</label>
-                <div className="relative">
-                  <select
-                    value={yearFrom}
-                    onChange={(e) => setYearFrom(e.target.value)}
-                    className="w-full appearance-none bg-gray-50 dark:bg-[#1a1a1a] border border-gray-200 rounded-xl px-4 py-2.5 pr-9 text-sm text-gray-700 hover:border-[#f14011] focus:border-[#f14011] focus:outline-none transition-colors cursor-pointer"
-                  >
-                    <option value="">Alle</option>
-                    {yearOptions.map((y) => (
-                      <option key={y} value={y}>{y}</option>
-                    ))}
-                  </select>
-                  <ChevronDownIcon className="w-4 h-4 text-gray-400 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
-                </div>
+                <input
+                  type="text"
+                  value={yearFrom}
+                  onChange={(e) => setYearFrom(e.target.value)}
+                  placeholder="z.B. 2018"
+                  className="w-full bg-gray-50 dark:bg-[#1a1a1a] border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-gray-700 placeholder:text-gray-400 hover:border-[#f14011] focus:border-[#f14011] focus:outline-none transition-colors"
+                />
               </div>
 
               {/* Year To */}
               <div>
                 <label className="block text-xs font-medium text-gray-500 mb-1.5">Erstzulassung bis</label>
-                <div className="relative">
-                  <select
-                    value={yearTo}
-                    onChange={(e) => setYearTo(e.target.value)}
-                    className="w-full appearance-none bg-gray-50 dark:bg-[#1a1a1a] border border-gray-200 rounded-xl px-4 py-2.5 pr-9 text-sm text-gray-700 hover:border-[#f14011] focus:border-[#f14011] focus:outline-none transition-colors cursor-pointer"
-                  >
-                    <option value="">Alle</option>
-                    {yearOptions.map((y) => (
-                      <option key={y} value={y}>{y}</option>
-                    ))}
-                  </select>
-                  <ChevronDownIcon className="w-4 h-4 text-gray-400 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
-                </div>
+                <input
+                  type="text"
+                  value={yearTo}
+                  onChange={(e) => setYearTo(e.target.value)}
+                  placeholder="z.B. 2024"
+                  className="w-full bg-gray-50 dark:bg-[#1a1a1a] border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-gray-700 placeholder:text-gray-400 hover:border-[#f14011] focus:border-[#f14011] focus:outline-none transition-colors"
+                />
               </div>
 
               {/* Mileage */}

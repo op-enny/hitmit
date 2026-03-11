@@ -49,7 +49,8 @@ function applyFilters(filters: SavedSearch["filters"]): Vehicle[] {
     if (filters.transmissionFilter && filters.transmissionFilter !== "Alle") {
       const t = v.transmission.toLowerCase();
       if (filters.transmissionFilter === "Automatik" && !t.includes("automatik") && !t.includes("dsg") && !t.includes("pdk") && !t.includes("tronic") && !t.includes("s tronic")) return false;
-      if (filters.transmissionFilter === "Schaltung" && (t.includes("automatik") || t.includes("dsg") || t.includes("pdk") || t.includes("tronic") || t.includes("s tronic"))) return false;
+      if (filters.transmissionFilter === "Halbautomatik" && !t.includes("halbautomatik")) return false;
+      if (filters.transmissionFilter === "Schaltung" && (t.includes("automatik") || t.includes("dsg") || t.includes("pdk") || t.includes("tronic") || t.includes("s tronic") || t.includes("halbautomatik"))) return false;
     }
     if (filters.driveTypeFilter && filters.driveTypeFilter !== "Alle") {
       const d = v.driveType.toLowerCase();
