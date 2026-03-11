@@ -55,6 +55,7 @@ export interface SavedSearch {
     noRepaintFilter: string;
     serviceBookFilter: string;
     manufacturerWarrantyFilter: string;
+    ausstattungSearch: string;
     safetyFeaturesFilter: string[];
     equipmentFeaturesFilter: string[];
   };
@@ -172,6 +173,7 @@ function migrateSearch(raw: any): SavedSearch {
       noRepaintFilter: f.noRepaintFilter ?? "Alle",
       serviceBookFilter: f.serviceBookFilter ?? "Alle",
       manufacturerWarrantyFilter: f.manufacturerWarrantyFilter ?? "Alle",
+      ausstattungSearch: f.ausstattungSearch ?? "",
       safetyFeaturesFilter: f.safetyFeaturesFilter ?? [],
       equipmentFeaturesFilter: f.equipmentFeaturesFilter ?? [],
     },

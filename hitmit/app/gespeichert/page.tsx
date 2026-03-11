@@ -120,6 +120,11 @@ function applyFilters(filters: SavedSearch["filters"]): Vehicle[] {
       if (filters.manufacturerWarrantyFilter === "Vorhanden" && !v.manufacturerWarranty) return false;
       if (filters.manufacturerWarrantyFilter === "Nicht vorhanden" && v.manufacturerWarranty) return false;
     }
+    if (filters.ausstattungSearch && filters.ausstattungSearch.trim() !== "") {
+      const allFeatures = [...v.comfortFeatures, ...v.safetyFeatures, ...v.exteriorFeatures, ...v.multimediaFeatures];
+      const terms = filters.ausstattungSearch.toLowerCase().split(",").map((t: string) => t.trim()).filter(Boolean);
+      if (!terms.every((term: string) => allFeatures.some((f) => f.toLowerCase().includes(term)))) return false;
+    }
     if (filters.safetyFeaturesFilter && filters.safetyFeaturesFilter.length > 0) {
       const allFeatures = [...v.safetyFeatures];
       if (!filters.safetyFeaturesFilter.every((f: string) => allFeatures.some((vf) => vf.toLowerCase().includes(f.toLowerCase())))) return false;
@@ -182,6 +187,7 @@ function buildSearchUrl(filters: SavedSearch["filters"]): string {
   if (filters.noRepaintFilter && filters.noRepaintFilter !== "Alle") params.set("noRepaint", filters.noRepaintFilter);
   if (filters.serviceBookFilter && filters.serviceBookFilter !== "Alle") params.set("serviceBook", filters.serviceBookFilter);
   if (filters.manufacturerWarrantyFilter && filters.manufacturerWarrantyFilter !== "Alle") params.set("warranty", filters.manufacturerWarrantyFilter);
+  if (filters.ausstattungSearch && filters.ausstattungSearch.trim()) params.set("ausstattung", filters.ausstattungSearch.trim());
   if (filters.safetyFeaturesFilter && filters.safetyFeaturesFilter.length > 0) params.set("safety", filters.safetyFeaturesFilter.join(","));
   if (filters.equipmentFeaturesFilter && filters.equipmentFeaturesFilter.length > 0) params.set("equipment", filters.equipmentFeaturesFilter.join(","));
   const qs = params.toString();
@@ -252,6 +258,7 @@ function SearchCard({
   if (f.noRepaintFilter && f.noRepaintFilter !== "Alle") filterTags.push(`Nachlackierungsfrei: ${f.noRepaintFilter}`);
   if (f.serviceBookFilter && f.serviceBookFilter !== "Alle") filterTags.push(`Scheckheft: ${f.serviceBookFilter}`);
   if (f.manufacturerWarrantyFilter && f.manufacturerWarrantyFilter !== "Alle") filterTags.push(`Garantie: ${f.manufacturerWarrantyFilter}`);
+  if (f.ausstattungSearch && f.ausstattungSearch.trim()) filterTags.push(`"${f.ausstattungSearch.trim()}"`);
   if (f.safetyFeaturesFilter && f.safetyFeaturesFilter.length > 0) filterTags.push(`${f.safetyFeaturesFilter.length}x Sicherheit`);
   if (f.equipmentFeaturesFilter && f.equipmentFeaturesFilter.length > 0) filterTags.push(`${f.equipmentFeaturesFilter.length}x Ausstattung`);
 

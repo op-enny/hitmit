@@ -1230,6 +1230,7 @@ function InseratePageInner() {
                     mwstFilter: "Alle", firstRegFrom: "", firstRegTo: "",
                     huFilter: "Alle", previousOwnersFilter: "Alle",
                     cylinderFilter: "Alle", displacementMin: "", displacementMax: "", tankVolumeMin: "",
+                    ausstattungSearch: "",
                     manufacturerColorFilter: "", interiorColorFilter: "Alle Farben",
                     seatMaterialFilter: "Alle", climateZoneFilter: "", rimSizeFilter: "",
                     paintProtectionFilmFilter: "Alle", noRepaintFilter: "Alle",

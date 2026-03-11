@@ -296,6 +296,7 @@ export default function SuchenPage() {
   const [noRepaintFilter, setNoRepaintFilter] = useState("Alle");
   const [serviceBookFilter, setServiceBookFilter] = useState("Alle");
   const [manufacturerWarrantyFilter, setManufacturerWarrantyFilter] = useState("Alle");
+  const [ausstattungSearch, setAusstattungSearch] = useState("");
   const [safetyFeaturesFilter, setSafetyFeaturesFilter] = useState<string[]>([]);
   const [equipmentFeaturesFilter, setEquipmentFeaturesFilter] = useState<string[]>([]);
   const [showSafetyFeatures, setShowSafetyFeatures] = useState(false);
@@ -425,6 +426,11 @@ export default function SuchenPage() {
       if (manufacturerWarrantyFilter === "Vorhanden" && !v.manufacturerWarranty) return false;
       if (manufacturerWarrantyFilter === "Nicht vorhanden" && v.manufacturerWarranty) return false;
     }
+    if (ausstattungSearch.trim() !== "") {
+      const allFeatures = [...v.comfortFeatures, ...v.safetyFeatures, ...v.exteriorFeatures, ...v.multimediaFeatures];
+      const terms = ausstattungSearch.toLowerCase().split(",").map((t) => t.trim()).filter(Boolean);
+      if (!terms.every((term) => allFeatures.some((f) => f.toLowerCase().includes(term)))) return false;
+    }
     if (safetyFeaturesFilter.length > 0) {
       const allFeatures = [...v.safetyFeatures];
       if (!safetyFeaturesFilter.every((f) => allFeatures.some((vf) => vf.toLowerCase().includes(f.toLowerCase())))) return false;
@@ -477,6 +483,7 @@ export default function SuchenPage() {
     noRepaintFilter !== "Alle",
     serviceBookFilter !== "Alle",
     manufacturerWarrantyFilter !== "Alle",
+    ausstattungSearch.trim() !== "",
     safetyFeaturesFilter.length > 0,
     equipmentFeaturesFilter.length > 0,
   ].filter(Boolean).length;
@@ -501,6 +508,7 @@ export default function SuchenPage() {
     setSeatMaterialFilter("Alle"); setClimateZoneFilter(""); setRimSizeFilter("");
     setPaintProtectionFilmFilter("Alle"); setNoRepaintFilter("Alle");
     setServiceBookFilter("Alle"); setManufacturerWarrantyFilter("Alle");
+    setAusstattungSearch("");
     setSafetyFeaturesFilter([]); setEquipmentFeaturesFilter([]);
   };
 
@@ -546,6 +554,7 @@ export default function SuchenPage() {
     if (noRepaintFilter !== "Alle") parts.push(`Nachlackierungsfrei: ${noRepaintFilter}`);
     if (serviceBookFilter !== "Alle") parts.push(`Scheckheft: ${serviceBookFilter}`);
     if (manufacturerWarrantyFilter !== "Alle") parts.push(`Garantie: ${manufacturerWarrantyFilter}`);
+    if (ausstattungSearch.trim()) parts.push(`"${ausstattungSearch.trim()}"`);
     if (safetyFeaturesFilter.length > 0) parts.push(`${safetyFeaturesFilter.length}x Sicherheit`);
     if (equipmentFeaturesFilter.length > 0) parts.push(`${equipmentFeaturesFilter.length}x Ausstattung`);
     const label = parts.length > 0 ? parts.join(", ") : "Alle Fahrzeuge";
@@ -569,7 +578,7 @@ export default function SuchenPage() {
         seatMaterialFilter, climateZoneFilter, rimSizeFilter,
         paintProtectionFilmFilter, noRepaintFilter,
         serviceBookFilter, manufacturerWarrantyFilter,
-        safetyFeaturesFilter, equipmentFeaturesFilter,
+        ausstattungSearch, safetyFeaturesFilter, equipmentFeaturesFilter,
       },
       filtered.map((v) => v.id),
     );
@@ -868,6 +877,19 @@ export default function SuchenPage() {
               onChange={setManufacturerWarrantyFilter}
               options={[{ value: "Alle", label: "Alle" }, { value: "Vorhanden", label: "Vorhanden" }, { value: "Nicht vorhanden", label: "Nicht vorhanden" }]}
             />
+          </div>
+
+          {/* Section: Freie Ausstattungssuche */}
+          <h3 className="text-sm font-semibold text-gray-900 dark:text-gray-100 uppercase tracking-wider mb-4">Ausstattungssuche</h3>
+          <div className="mb-6">
+            <input
+              type="text"
+              value={ausstattungSearch}
+              onChange={(e) => setAusstattungSearch(e.target.value)}
+              placeholder="z.B. Panoramadach, Sitzheizung, Apple CarPlay"
+              className="w-full bg-white dark:bg-[#1a1a1a] border border-gray-200 dark:border-[#2a2a2a] rounded-xl px-4 py-2.5 text-sm hover:border-[#f14011] focus:border-[#f14011] focus:outline-none transition-colors"
+            />
+            <p className="text-xs text-gray-400 mt-1.5">Mehrere Begriffe mit Komma trennen – durchsucht alle Ausstattungskategorien</p>
           </div>
 
           {/* Section: Sicherheit */}
