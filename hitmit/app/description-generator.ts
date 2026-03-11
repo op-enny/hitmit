@@ -63,6 +63,7 @@ const VEHICLE_GRAMMAR: Record<string, VehicleGrammar> = {
   motorcycle: { noun: "Motorrad",    artDef: "Das",  artDefLc: "das",  dem: "dieses",  rel: "das" },
   truck:      { noun: "LKW",         artDef: "Der",  artDefLc: "der",  dem: "dieser",  rel: "der" },
   van:        { noun: "Transporter", artDef: "Der",  artDefLc: "der",  dem: "dieser",  rel: "der" },
+  motorhome:  { noun: "Wohnmobil",  artDef: "Das",  artDefLc: "das",  dem: "dieses",  rel: "das" },
 };
 
 const DEFAULT_GRAMMAR: VehicleGrammar = VEHICLE_GRAMMAR.car;

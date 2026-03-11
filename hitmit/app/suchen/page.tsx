@@ -763,6 +763,16 @@ export default function SuchenPage() {
                 <circle cx="18" cy="19" r="2" />
               </svg>
             )},
+            { value: "Wohnmobil", label: "Wohnmobil", icon: (
+              <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+                <rect x="1" y="6" width="22" height="11" rx="2" />
+                <path d="M1 11h10V6" />
+                <path d="M17 6v5h6" />
+                <rect x="13" y="8" width="3" height="3" rx="0.5" />
+                <circle cx="6" cy="19" r="2" />
+                <circle cx="18" cy="19" r="2" />
+              </svg>
+            )},
           ] as const).map((tab) => (
             <button
               key={tab.value}

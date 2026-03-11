@@ -1281,6 +1281,7 @@ const VEHICLE_TYPE_OPTIONS = [
   { value: "motorcycle", label: "Motorrad" },
   { value: "truck", label: "LKW" },
   { value: "van", label: "Transporter" },
+  { value: "motorhome", label: "Wohnmobil" },
   { value: "other", label: "Sonstige" },
 ];
 
@@ -1329,6 +1330,15 @@ const VEHICLE_CATEGORY_OPTIONS_BY_TYPE: Record<string, { value: string; label: s
     { value: "highroof", label: "Hochdachkombi" },
     { value: "doublecab", label: "Doppelkabine" },
     { value: "curtainside", label: "Planenwagen" },
+  ],
+  motorhome: [
+    { value: "", label: "Bitte wählen" },
+    { value: "integrated", label: "Integriert" },
+    { value: "semiIntegrated", label: "Teilintegriert" },
+    { value: "alcove", label: "Alkoven" },
+    { value: "panel", label: "Kastenwagen" },
+    { value: "campervan", label: "Van" },
+    { value: "expedition", label: "Expeditionsmobil" },
   ],
 };
 

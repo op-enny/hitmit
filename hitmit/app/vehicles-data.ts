@@ -554,6 +554,32 @@ export const TRANSPORTER_BRANDS_MODELS: Record<string, string[]> = {
   "Andere": ["Anderes Modell"],
 };
 
+export const MOTORHOME_BRANDS_MODELS: Record<string, string[]> = {
+  "Adria": ["Matrix", "Coral", "Sonic", "Compact", "Twin"],
+  "Bürstner": ["Lyseo", "Ixeo", "Elegance", "Campeo", "Copa"],
+  "Carado": ["T", "A", "V", "CV"],
+  "Carthago": ["Liner", "Chic", "C-Tourer", "Malibu Van"],
+  "Chausson": ["Titanium", "Flash", "Twist", "X"],
+  "Dethleffs": ["Pulse", "Trend", "Esprit", "Globebus", "Evan"],
+  "Eura Mobil": ["Integra Line", "Profila", "Contura", "Van"],
+  "Fendt": ["Bianco", "Tendenza", "Diamant"],
+  "Frankia": ["Platin", "Titan", "Neo", "Yucon"],
+  "Globecar": ["Campscout", "Roadscout", "Summit"],
+  "Hobby": ["Optima", "Siesta", "Vantana"],
+  "Hymer": ["B-Klasse", "Exsis", "ML-T", "Free", "Grand Canyon"],
+  "Knaus": ["Van TI", "Sky TI", "Sun TI", "BoxStar", "BoxLife"],
+  "LMC": ["Explorer", "Cruiser", "Innovan"],
+  "Malibu": ["Van", "Genius", "Charming"],
+  "Morelo": ["Palace", "Grand Empire", "Loft", "Home"],
+  "Niesmann+Bischoff": ["Arto", "Flair", "iSmove", "Smove"],
+  "Pilote": ["Galaxy", "Pacific", "Van"],
+  "Pössl": ["Summit", "Roadcruiser", "Campster", "Vanster"],
+  "Rapido": ["Serie M", "Serie C", "Serie A", "Van"],
+  "Sunlight": ["T", "A", "Cliff", "Van"],
+  "Weinsberg": ["CaraCore", "CaraCompact", "CaraTour", "X-Cursion"],
+  "Andere": ["Anderes Modell"],
+};
+
 // ============================================================================
 // CATEGORY OPTIONS BY TYPE
 // ============================================================================
@@ -562,18 +588,20 @@ export const carCategoryOptions = ["Alle", "Limousine", "Kombi", "Schrägheck", 
 export const motorcycleCategoryOptions = ["Alle", "Naked Bike", "Sportler", "Tourer", "Enduro", "Chopper/Cruiser", "Roller", "Supermoto", "Cross", "Adventure"];
 export const truckCategoryOptions = ["Alle", "Sattelzugmaschine", "Pritsche", "Kipper", "Koffer", "Betonmischer", "Kühlkoffer", "Tankwagen"];
 export const transporterCategoryOptions = ["Alle", "Kastenwagen", "Pritsche", "Kühlwagen", "Hochdachkombi", "Doppelkabine", "Planenwagen"];
+export const motorhomeCategoryOptions = ["Alle", "Integriert", "Teilintegriert", "Alkoven", "Kastenwagen", "Van", "Expeditionsmobil"];
 
 // ============================================================================
 // HELPER FUNCTIONS
 // ============================================================================
 
-export type VehicleTypeKey = "Alle" | "PKW" | "Motorrad" | "LKW" | "Transporter" | "Andere";
+export type VehicleTypeKey = "Alle" | "PKW" | "Motorrad" | "LKW" | "Transporter" | "Wohnmobil" | "Andere";
 
 const BRANDS_BY_TYPE: Record<string, Record<string, string[]>> = {
   PKW: CAR_BRANDS_MODELS,
   Motorrad: MOTORCYCLE_BRANDS_MODELS,
   LKW: TRUCK_BRANDS_MODELS,
   Transporter: TRANSPORTER_BRANDS_MODELS,
+  Wohnmobil: MOTORHOME_BRANDS_MODELS,
 };
 
 export function getBrandsForType(type: string): string[] {
@@ -613,10 +641,11 @@ export function getCategoriesForType(type: string): string[] {
     case "Motorrad": return motorcycleCategoryOptions;
     case "LKW": return truckCategoryOptions;
     case "Transporter": return transporterCategoryOptions;
+    case "Wohnmobil": return motorhomeCategoryOptions;
     default: {
       // "Alle" → merge all categories, deduplicate, keep "Alle" first
       const all = new Set<string>();
-      for (const opts of [carCategoryOptions, motorcycleCategoryOptions, truckCategoryOptions, transporterCategoryOptions]) {
+      for (const opts of [carCategoryOptions, motorcycleCategoryOptions, truckCategoryOptions, transporterCategoryOptions, motorhomeCategoryOptions]) {
         for (const o of opts) {
           if (o !== "Alle") all.add(o);
         }
@@ -635,6 +664,7 @@ export const VEHICLE_TYPE_VALUE_TO_LABEL: Record<string, string> = {
   motorcycle: "Motorrad",
   truck: "LKW",
   van: "Transporter",
+  motorhome: "Wohnmobil",
   other: "Andere",
 };
 
@@ -643,6 +673,7 @@ export const VEHICLE_TYPE_LABEL_TO_VALUE: Record<string, string> = {
   Motorrad: "motorcycle",
   LKW: "truck",
   Transporter: "van",
+  Wohnmobil: "motorhome",
   Andere: "other",
 };
 
@@ -652,6 +683,7 @@ const VEHICLE_LABELS: Record<string, { noun: string; icon: string }> = {
   Motorrad:    { noun: "Motorrad",    icon: "🏍️" },
   LKW:         { noun: "LKW",         icon: "🚛" },
   Transporter: { noun: "Transporter", icon: "🚐" },
+  Wohnmobil:   { noun: "Wohnmobil",  icon: "🏕️" },
 };
 
 export function getVehicleNoun(type: string): string {
@@ -751,7 +783,7 @@ export const colorOptions = [
 export const conditionOptions = ["Alle", "Neuwagen", "Gebraucht", "Unfallwagen (nicht fahrtüchtig)", "Tageszulassung"];
 export const doorOptions = ["Alle", "2/3", "4/5", "6/7"];
 export const seatOptions = ["Alle", "2", "4", "5", "7"];
-export const vehicleTypeOptions = ["Alle", "PKW", "Motorrad", "LKW", "Transporter", "Andere"];
+export const vehicleTypeOptions = ["Alle", "PKW", "Motorrad", "LKW", "Transporter", "Wohnmobil", "Andere"];
 export const vehicleCategoryOptions = ["Alle", "Limousine", "Kombi", "Schrägheck", "SUV", "Geländewagen", "Sportwagen", "Coupé", "Cabrio", "Van / Minibus", "Pick-up"];
 export const cylinderOptions = ["Alle", "3", "4", "5", "6", "8", "10", "12", "16"];
 export const displacementOptions = [
@@ -871,6 +903,11 @@ export const COMFORT_FEATURES_BY_TYPE: Record<string, string[]> = {
     "Abstandsregeltempomat", "Keyless Entry", "Standheizung",
     "Elektrische Fensterheber", "Trennwand",
   ],
+  Wohnmobil: [
+    "Klimaanlage", "Standheizung", "Markise", "Warmwasserboiler",
+    "Sitzheizung", "Tempomat", "Elektrische Trittstufe", "Rahmenfenster",
+    "Verdunkelungssystem", "Fußbodenheizung",
+  ],
 };
 
 export const SAFETY_FEATURES_BY_TYPE: Record<string, string[]> = {
@@ -893,6 +930,10 @@ export const SAFETY_FEATURES_BY_TYPE: Record<string, string[]> = {
     "Totwinkelassistent", "Abbiegeassistent", "Reifendruckkontrolle",
     "Rückfahrkamera", "Parktronic", "ACC",
   ],
+  Wohnmobil: [
+    "ABS", "ESP", "Spurhalteassistent", "Notbremsassistent", "Rückfahrkamera",
+    "Reifendruckkontrolle", "Totwinkelassistent", "Gaswarner",
+  ],
 };
 
 export const EXTERIOR_FEATURES_BY_TYPE: Record<string, string[]> = {
@@ -913,6 +954,10 @@ export const EXTERIOR_FEATURES_BY_TYPE: Record<string, string[]> = {
     "LED-Scheinwerfer", "Tagfahrlicht", "Nebelscheinwerfer", "Anhängerkupplung",
     "Dachreling", "Dachgalerie", "Trittbretter", "Laderaumverkleidung",
   ],
+  Wohnmobil: [
+    "LED-Scheinwerfer", "Markise", "Fahrradträger", "Anhängerkupplung",
+    "Dachreling", "SAT-Anlage", "Solaranlage", "Dachklimaanlage",
+  ],
 };
 
 export const MULTIMEDIA_FEATURES_BY_TYPE: Record<string, string[]> = {
@@ -932,6 +977,10 @@ export const MULTIMEDIA_FEATURES_BY_TYPE: Record<string, string[]> = {
   Transporter: [
     "Navigationssystem", "Apple CarPlay", "Android Auto", "Bluetooth",
     "DAB-Radio", "Rückfahrkamera", "USB",
+  ],
+  Wohnmobil: [
+    "Navigationssystem", "Apple CarPlay", "Android Auto", "Bluetooth",
+    "DAB-Radio", "Rückfahrkamera", "TV", "WLAN-Hotspot",
   ],
 };
 
@@ -999,6 +1048,12 @@ export const DRIVE_TYPE_FORM_OPTIONS_BY_TYPE: Record<string, { value: string; la
     { value: "rwd", label: "Hinterradantrieb" },
     { value: "awd", label: "Allrad" },
   ],
+  Wohnmobil: [
+    { value: "", label: "Bitte wählen" },
+    { value: "fwd", label: "Frontantrieb" },
+    { value: "rwd", label: "Hinterradantrieb" },
+    { value: "awd", label: "Allrad" },
+  ],
 };
 
 export const CYLINDER_FORM_OPTIONS_BY_TYPE: Record<string, { value: string; label: string }[]> = {
@@ -1022,6 +1077,10 @@ export const CYLINDER_FORM_OPTIONS_BY_TYPE: Record<string, { value: string; labe
     { value: "", label: "Bitte wählen" },
     { value: "3", label: "3" }, { value: "4", label: "4" }, { value: "6", label: "6" },
   ],
+  Wohnmobil: [
+    { value: "", label: "Bitte wählen" },
+    { value: "4", label: "4" }, { value: "6", label: "6" },
+  ],
 };
 
 export const DOOR_FORM_OPTIONS_BY_TYPE: Record<string, { value: string; label: string }[]> = {
@@ -1036,6 +1095,10 @@ export const DOOR_FORM_OPTIONS_BY_TYPE: Record<string, { value: string; label: s
   Transporter: [
     { value: "", label: "Bitte wählen" },
     { value: "3", label: "3" }, { value: "4", label: "4" }, { value: "5", label: "5" },
+  ],
+  Wohnmobil: [
+    { value: "", label: "Bitte wählen" },
+    { value: "2", label: "2" }, { value: "3", label: "3" }, { value: "4", label: "4" },
   ],
 };
 
@@ -1058,6 +1121,11 @@ export const SEAT_FORM_OPTIONS_BY_TYPE: Record<string, { value: string; label: s
     { value: "2", label: "2" }, { value: "3", label: "3" }, { value: "5", label: "5" },
     { value: "6", label: "6" }, { value: "7", label: "7" }, { value: "8", label: "8" }, { value: "9", label: "9" },
   ],
+  Wohnmobil: [
+    { value: "", label: "Bitte wählen" },
+    { value: "2", label: "2" }, { value: "4", label: "4" }, { value: "5", label: "5" },
+    { value: "6", label: "6" }, { value: "7", label: "7" },
+  ],
 };
 
 // ============================================================================
@@ -1069,6 +1137,7 @@ export function getDriveTypeOptionsForType(type: string): string[] {
     case "Motorrad": return ["Alle", "Kette", "Kardan", "Riemen"];
     case "LKW": return ["Alle", "Hinterradantrieb", "Allrad"];
     case "Transporter": return ["Alle", "Frontantrieb", "Hinterradantrieb", "Allrad"];
+    case "Wohnmobil": return ["Alle", "Frontantrieb", "Hinterradantrieb", "Allrad"];
     default: return driveTypeOptions;
   }
 }
@@ -1078,6 +1147,7 @@ export function getCylinderOptionsForType(type: string): string[] {
     case "Motorrad": return ["Alle", "1", "2", "3", "4", "6"];
     case "LKW": return ["Alle", "4", "6", "8", "12"];
     case "Transporter": return ["Alle", "3", "4", "6"];
+    case "Wohnmobil": return ["Alle", "4", "6"];
     default: return cylinderOptions;
   }
 }
@@ -1086,6 +1156,7 @@ export function getDoorOptionsForType(type: string): string[] {
   switch (type) {
     case "LKW": return ["Alle", "1", "2", "3"];
     case "Transporter": return ["Alle", "3", "4", "5"];
+    case "Wohnmobil": return ["Alle", "2", "3", "4"];
     default: return doorOptions;
   }
 }
@@ -1095,6 +1166,7 @@ export function getSeatOptionsForType(type: string): string[] {
     case "Motorrad": return ["Alle", "1", "2"];
     case "LKW": return ["Alle", "1", "2", "3"];
     case "Transporter": return ["Alle", "2", "3", "5", "6", "7", "8", "9"];
+    case "Wohnmobil": return ["Alle", "2", "4", "5", "6", "7"];
     default: return seatOptions;
   }
 }
@@ -1117,6 +1189,9 @@ const HIDDEN_FIELDS_BY_TYPE: Record<string, Set<string>> = {
   Transporter: new Set([
     "damageMap", "paintThickness", "nonSmokerVehicle", "petFreeVehicle",
     "paintProtectionFilm",
+  ]),
+  Wohnmobil: new Set([
+    "damageMap", "paintThickness",
   ]),
 };
 
