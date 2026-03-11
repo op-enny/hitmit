@@ -931,6 +931,14 @@ function InseratePageInner() {
   const [particleFilterFilter, setParticleFilterFilter] = useState("Alle");
   const [manufacturerColorFilter, setManufacturerColorFilter] = useState("");
   const [variantFilter, setVariantFilter] = useState("");
+  const [brandFilter2, setBrandFilter2] = useState("Alle Marken");
+  const [modelFilter2, setModelFilter2] = useState("");
+  const [variantFilter2, setVariantFilter2] = useState("");
+  const [brandFilter3, setBrandFilter3] = useState("Alle Marken");
+  const [modelFilter3, setModelFilter3] = useState("");
+  const [variantFilter3, setVariantFilter3] = useState("");
+  const [showBrandRow2, setShowBrandRow2] = useState(false);
+  const [showBrandRow3, setShowBrandRow3] = useState(false);
   const [showAdvanced, setShowAdvanced] = useState(false);
   const [selectedVehicle, setSelectedVehicle] = useState<Vehicle | null>(null);
   const [isDealer, setIsDealer] = useState(false);
@@ -974,7 +982,6 @@ function InseratePageInner() {
     environmentalBadgeFilter !== "Alle",
     particleFilterFilter !== "Alle",
     manufacturerColorFilter !== "",
-    variantFilter !== "",
   ].filter(Boolean).length;
 
   // Read query params for filter pre-fill (from gespeichert page)
@@ -1040,6 +1047,12 @@ function InseratePageInner() {
     const pff = searchParams.get("particleFilter");
     const mc = searchParams.get("manufacturerColor");
     const va = searchParams.get("variant");
+    const b2 = searchParams.get("brand2");
+    const m2 = searchParams.get("model2");
+    const v2 = searchParams.get("variant2");
+    const b3 = searchParams.get("brand3");
+    const m3 = searchParams.get("model3");
+    const v3 = searchParams.get("variant3");
     if (vt && vehicleTypeOptions.includes(vt)) setVehicleTypeFilter(vt);
     if (vc && vehicleCategoryOptions.includes(vc)) setVehicleCategoryFilter(vc);
     if (mw && ["Alle", "Ja", "Nein"].includes(mw)) setMwstFilter(mw);
@@ -1062,8 +1075,14 @@ function InseratePageInner() {
     if (pff && particleFilterOptions.includes(pff)) setParticleFilterFilter(pff);
     if (mc) setManufacturerColorFilter(mc);
     if (va) setVariantFilter(va);
+    if (b2 && brandOptions.includes(b2)) { setBrandFilter2(b2); setShowBrandRow2(true); }
+    if (m2) setModelFilter2(m2);
+    if (v2) setVariantFilter2(v2);
+    if (b3 && brandOptions.includes(b3)) { setBrandFilter3(b3); setShowBrandRow2(true); setShowBrandRow3(true); }
+    if (m3) setModelFilter3(m3);
+    if (v3) setVariantFilter3(v3);
     // Auto-open advanced section if any advanced param is set
-    if (yf || yt || ml || pw || tr || dt || st || af || ct || co || cn || dr || se || vt || vc || mw || cy || dmi || dma || tv || ic || sm || cz || rs || ppf || nr || sb || mwf || ns || pf || ec || eb || pff || mc || va) setShowAdvanced(true);
+    if (yf || yt || ml || pw || tr || dt || st || af || ct || co || cn || dr || se || vt || vc || mw || cy || dmi || dma || tv || ic || sm || cz || rs || ppf || nr || sb || mwf || ns || pf || ec || eb || pff || mc) setShowAdvanced(true);
   }, [searchParams]);
 
   // Close motorization dropdown on click outside
@@ -1092,14 +1111,31 @@ function InseratePageInner() {
   };
 
   const filtered = vehicles.filter((v) => {
-    if (brandFilter !== "Alle Marken" && v.brand !== brandFilter) return false;
-    if (modelFilter !== "") {
-      if (brandFilter === "Mercedes-Benz" && MERCEDES_MOTORIZATIONS[modelFilter]) {
-        if (!MERCEDES_MOTORIZATIONS[modelFilter].some((m) => v.model.toLowerCase().includes(m.toLowerCase()))) return false;
-      } else {
-        if (!v.model.toLowerCase().includes(modelFilter.toLowerCase())) return false;
-      }
+    // Brand+Model+Variant: ODER-Logik über bis zu 3 Paare
+    const brandModelPairs: { brand: string; model: string; variant: string }[] = [];
+    if (brandFilter !== "Alle Marken") brandModelPairs.push({ brand: brandFilter, model: modelFilter, variant: variantFilter });
+    if (brandFilter2 !== "Alle Marken") brandModelPairs.push({ brand: brandFilter2, model: modelFilter2, variant: variantFilter2 });
+    if (brandFilter3 !== "Alle Marken") brandModelPairs.push({ brand: brandFilter3, model: modelFilter3, variant: variantFilter3 });
+
+    if (brandModelPairs.length > 0) {
+      const matchesAny = brandModelPairs.some((pair) => {
+        if (v.brand !== pair.brand) return false;
+        if (pair.model !== "") {
+          if (pair.brand === "Mercedes-Benz" && MERCEDES_MOTORIZATIONS[pair.model]) {
+            if (!MERCEDES_MOTORIZATIONS[pair.model].some((m) => v.model.toLowerCase().includes(m.toLowerCase()))) return false;
+          } else {
+            if (!v.model.toLowerCase().includes(pair.model.toLowerCase())) return false;
+          }
+        }
+        if (pair.variant !== "" && !v.variant.toLowerCase().includes(pair.variant.toLowerCase())) return false;
+        return true;
+      });
+      if (!matchesAny) return false;
+    } else {
+      // No brand selected — still check variant from row 1 if set
+      if (variantFilter !== "" && !v.variant.toLowerCase().includes(variantFilter.toLowerCase())) return false;
     }
+
     if (motorizationFilter.length > 0 && !motorizationFilter.some((m) => v.model.toLowerCase().includes(m.toLowerCase()))) return false;
     if (fuelFilter !== "Alle Kraftstoffe" && v.fuelType !== fuelFilter) return false;
     const range = priceRanges[priceFilter];
@@ -1174,7 +1210,6 @@ function InseratePageInner() {
       if (particleFilterFilter === "Nein" && v.particleFilter) return false;
     }
     if (manufacturerColorFilter !== "" && !v.color.toLowerCase().includes(manufacturerColorFilter.toLowerCase())) return false;
-    if (variantFilter !== "" && !v.variant.toLowerCase().includes(variantFilter.toLowerCase())) return false;
     return true;
   });
 
@@ -1195,11 +1230,11 @@ function InseratePageInner() {
       {/* Filters */}
       <section className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 pb-8">
         <div className="flex flex-wrap gap-3 animate-fade-in-up delay-200" style={{ opacity: 0 }}>
-          {/* Brand */}
+          {/* Row 1: Brand + Model + Motorisierung + Variante */}
           <div className="relative">
             <select
               value={brandFilter}
-              onChange={(e) => { setBrandFilter(e.target.value); setModelFilter(""); setMotorizationFilter([]); }}
+              onChange={(e) => { setBrandFilter(e.target.value); setModelFilter(""); setMotorizationFilter([]); setVariantFilter(""); }}
               className="appearance-none bg-white dark:bg-[#141414] border border-gray-200 rounded-full px-5 py-2.5 pr-10 text-sm font-medium text-gray-700 hover:border-[#f14011] focus:border-[#f14011] focus:outline-none transition-colors cursor-pointer"
             >
               {brandOptions.map((b) => (
@@ -1211,7 +1246,6 @@ function InseratePageInner() {
             <ChevronDownIcon className="w-4 h-4 text-gray-400 absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
           </div>
 
-          {/* Model */}
           <div className="relative">
             <select
               value={modelFilter}
@@ -1262,6 +1296,140 @@ function InseratePageInner() {
                   ))}
                 </div>
               )}
+            </div>
+          )}
+
+          {/* Variante (Row 1) — appears when model is selected */}
+          {modelFilter !== "" && (
+            <input
+              type="text"
+              value={variantFilter}
+              onChange={(e) => setVariantFilter(e.target.value)}
+              placeholder="Variante (z.B. Clubsport)"
+              className="bg-white dark:bg-[#141414] border border-gray-200 rounded-full px-5 py-2.5 text-sm font-medium text-gray-700 placeholder:text-gray-400 hover:border-[#f14011] focus:border-[#f14011] focus:outline-none transition-colors w-48"
+            />
+          )}
+
+          {/* "Weitere Marke" Button — new line below row 1 */}
+          {modelFilter !== "" && !showBrandRow2 && (
+            <div className="basis-full">
+              <button
+                type="button"
+                onClick={() => setShowBrandRow2(true)}
+                className="flex items-center gap-1.5 px-3 py-2.5 text-sm font-medium text-[#f14011] border border-dashed border-[#f14011]/40 rounded-full hover:bg-[#f14011]/5 transition-colors"
+              >
+                <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path strokeLinecap="round" d="M12 5v14M5 12h14" /></svg>
+                Weitere Marke hinzufügen
+              </button>
+            </div>
+          )}
+
+          {/* Row 2: Brand2 + Model2 + Variante2 */}
+          {showBrandRow2 && (
+            <div className="basis-full flex flex-wrap gap-3 items-center">
+              <div className="relative">
+                <select
+                  value={brandFilter2}
+                  onChange={(e) => { setBrandFilter2(e.target.value); setModelFilter2(""); setVariantFilter2(""); }}
+                  className="appearance-none bg-white dark:bg-[#141414] border border-gray-200 rounded-full px-5 py-2.5 pr-10 text-sm font-medium text-gray-700 hover:border-[#f14011] focus:border-[#f14011] focus:outline-none transition-colors cursor-pointer"
+                >
+                  {brandOptions.map((b) => (
+                    <option key={b} value={b}>{b}</option>
+                  ))}
+                </select>
+                <ChevronDownIcon className="w-4 h-4 text-gray-400 absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+              </div>
+              <div className="relative">
+                <select
+                  value={modelFilter2}
+                  onChange={(e) => setModelFilter2(e.target.value)}
+                  className="appearance-none bg-white dark:bg-[#141414] border border-gray-200 rounded-full px-5 py-2.5 pr-10 text-sm font-medium text-gray-700 hover:border-[#f14011] focus:border-[#f14011] focus:outline-none transition-colors cursor-pointer"
+                >
+                  <option value="">Alle Modelle</option>
+                  {brandFilter2 !== "Alle Marken" && CAR_BRANDS_MODELS[brandFilter2] &&
+                    CAR_BRANDS_MODELS[brandFilter2].map((m) => (
+                      <option key={m} value={m}>{m}</option>
+                    ))
+                  }
+                </select>
+                <ChevronDownIcon className="w-4 h-4 text-gray-400 absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+              </div>
+              {modelFilter2 !== "" && (
+                <input
+                  type="text"
+                  value={variantFilter2}
+                  onChange={(e) => setVariantFilter2(e.target.value)}
+                  placeholder="Variante"
+                  className="bg-white dark:bg-[#141414] border border-gray-200 rounded-full px-5 py-2.5 text-sm font-medium text-gray-700 placeholder:text-gray-400 hover:border-[#f14011] focus:border-[#f14011] focus:outline-none transition-colors w-48"
+                />
+              )}
+              <button
+                type="button"
+                onClick={() => { setBrandFilter2("Alle Marken"); setModelFilter2(""); setVariantFilter2(""); setShowBrandRow2(false); setBrandFilter3("Alle Marken"); setModelFilter3(""); setVariantFilter3(""); setShowBrandRow3(false); }}
+                className="flex items-center justify-center w-10 h-10 text-gray-400 border border-gray-200 rounded-full hover:text-red-500 hover:border-red-300 transition-colors"
+              >
+                <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path strokeLinecap="round" d="M6 18L18 6M6 6l12 12" /></svg>
+              </button>
+              {/* "+" for Row 3 */}
+              {brandFilter2 !== "Alle Marken" && modelFilter2 !== "" && !showBrandRow3 && (
+                <button
+                  type="button"
+                  onClick={() => setShowBrandRow3(true)}
+                  className="flex items-center gap-1.5 px-3 py-2.5 text-sm font-medium text-[#f14011] border border-dashed border-[#f14011]/40 rounded-full hover:bg-[#f14011]/5 transition-colors"
+                >
+                  <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path strokeLinecap="round" d="M12 5v14M5 12h14" /></svg>
+                  Marke
+                </button>
+              )}
+            </div>
+          )}
+
+          {/* Row 3: Brand3 + Model3 + Variante3 */}
+          {showBrandRow3 && (
+            <div className="basis-full flex flex-wrap gap-3 items-center">
+              <div className="relative">
+                <select
+                  value={brandFilter3}
+                  onChange={(e) => { setBrandFilter3(e.target.value); setModelFilter3(""); setVariantFilter3(""); }}
+                  className="appearance-none bg-white dark:bg-[#141414] border border-gray-200 rounded-full px-5 py-2.5 pr-10 text-sm font-medium text-gray-700 hover:border-[#f14011] focus:border-[#f14011] focus:outline-none transition-colors cursor-pointer"
+                >
+                  {brandOptions.map((b) => (
+                    <option key={b} value={b}>{b}</option>
+                  ))}
+                </select>
+                <ChevronDownIcon className="w-4 h-4 text-gray-400 absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+              </div>
+              <div className="relative">
+                <select
+                  value={modelFilter3}
+                  onChange={(e) => setModelFilter3(e.target.value)}
+                  className="appearance-none bg-white dark:bg-[#141414] border border-gray-200 rounded-full px-5 py-2.5 pr-10 text-sm font-medium text-gray-700 hover:border-[#f14011] focus:border-[#f14011] focus:outline-none transition-colors cursor-pointer"
+                >
+                  <option value="">Alle Modelle</option>
+                  {brandFilter3 !== "Alle Marken" && CAR_BRANDS_MODELS[brandFilter3] &&
+                    CAR_BRANDS_MODELS[brandFilter3].map((m) => (
+                      <option key={m} value={m}>{m}</option>
+                    ))
+                  }
+                </select>
+                <ChevronDownIcon className="w-4 h-4 text-gray-400 absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+              </div>
+              {modelFilter3 !== "" && (
+                <input
+                  type="text"
+                  value={variantFilter3}
+                  onChange={(e) => setVariantFilter3(e.target.value)}
+                  placeholder="Variante"
+                  className="bg-white dark:bg-[#141414] border border-gray-200 rounded-full px-5 py-2.5 text-sm font-medium text-gray-700 placeholder:text-gray-400 hover:border-[#f14011] focus:border-[#f14011] focus:outline-none transition-colors w-48"
+                />
+              )}
+              <button
+                type="button"
+                onClick={() => { setBrandFilter3("Alle Marken"); setModelFilter3(""); setVariantFilter3(""); setShowBrandRow3(false); }}
+                className="flex items-center justify-center w-10 h-10 text-gray-400 border border-gray-200 rounded-full hover:text-red-500 hover:border-red-300 transition-colors"
+              >
+                <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path strokeLinecap="round" d="M6 18L18 6M6 6l12 12" /></svg>
+              </button>
             </div>
           )}
 
@@ -1342,6 +1510,11 @@ function InseratePageInner() {
                 const parts: string[] = [];
                 if (brandFilter !== "Alle Marken") parts.push(brandFilter);
                 if (modelFilter) parts.push(modelFilter);
+                if (variantFilter) parts.push(variantFilter);
+                if (brandFilter2 !== "Alle Marken") parts.push(modelFilter2 ? `${brandFilter2} ${modelFilter2}` : brandFilter2);
+                if (variantFilter2) parts.push(variantFilter2);
+                if (brandFilter3 !== "Alle Marken") parts.push(modelFilter3 ? `${brandFilter3} ${modelFilter3}` : brandFilter3);
+                if (variantFilter3) parts.push(variantFilter3);
                 if (motorizationFilter.length > 0) parts.push(motorizationFilter.join(", "));
                 if (fuelFilter !== "Alle Kraftstoffe") parts.push(fuelFilter);
                 // Convert old number-based filters to new string format
@@ -1370,7 +1543,6 @@ function InseratePageInner() {
                 if (vehicleTypeFilter !== "Alle") parts.push(vehicleTypeFilter);
                 if (vehicleCategoryFilter !== "Alle") parts.push(vehicleCategoryFilter);
                 if (mwstFilter !== "Alle") parts.push(`MwSt. ${mwstFilter}`);
-                if (variantFilter) parts.push(variantFilter);
                 if (cylinderFilter !== "Alle") parts.push(`${cylinderFilter} Zyl.`);
                 if (displacementMin) parts.push(`ab ${displacementMin} ccm`);
                 if (displacementMax) parts.push(`bis ${displacementMax} ccm`);
@@ -1403,8 +1575,8 @@ function InseratePageInner() {
                     colorFilter, conditionFilter,
                     doorFilter, seatFilter: seatFilter === "Alle" ? "" : seatFilter,
                     modelFilter,
-                    brandFilter2: "Alle Marken", modelFilter2: "",
-                    brandFilter3: "Alle Marken", modelFilter3: "",
+                    brandFilter2, modelFilter2,
+                    brandFilter3, modelFilter3,
                     motorizationFilter, variantFilter,
                     vehicleTypeFilter, vehicleCategoryFilter,
                     mwstFilter, firstRegFrom: "", firstRegTo: "",
@@ -1721,18 +1893,6 @@ function InseratePageInner() {
                 </div>
               </div>
 
-              {/* Variant */}
-              <div>
-                <label className="block text-xs font-medium text-gray-500 mb-1.5">Variante</label>
-                <input
-                  type="text"
-                  value={variantFilter}
-                  onChange={(e) => setVariantFilter(e.target.value)}
-                  placeholder="z.B. Clubsport, AMG"
-                  className="w-full bg-gray-50 dark:bg-[#1a1a1a] border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-gray-700 placeholder:text-gray-400 hover:border-[#f14011] focus:border-[#f14011] focus:outline-none transition-colors"
-                />
-              </div>
-
               {/* Cylinders */}
               <div>
                 <label className="block text-xs font-medium text-gray-500 mb-1.5">Zylinder</label>
@@ -2032,6 +2192,9 @@ function InseratePageInner() {
                   setEmissionClassFilter("Alle"); setEnvironmentalBadgeFilter("Alle");
                   setParticleFilterFilter("Alle");
                   setManufacturerColorFilter(""); setVariantFilter("");
+                  setBrandFilter2("Alle Marken"); setModelFilter2(""); setVariantFilter2("");
+                  setBrandFilter3("Alle Marken"); setModelFilter3(""); setVariantFilter3("");
+                  setShowBrandRow2(false); setShowBrandRow3(false);
                 }}
                 className="mt-4 text-sm text-[#f14011] font-semibold hover:underline"
               >
