@@ -1229,102 +1229,102 @@ function InseratePageInner() {
 
       {/* Filters */}
       <section className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 pb-8">
-        <div className="flex flex-wrap gap-3 animate-fade-in-up delay-200" style={{ opacity: 0 }}>
+        <div className="flex flex-col gap-3 animate-fade-in-up delay-200" style={{ opacity: 0 }}>
           {/* Row 1: Brand + Model + Motorisierung + Variante */}
-          <div className="relative">
-            <select
-              value={brandFilter}
-              onChange={(e) => { setBrandFilter(e.target.value); setModelFilter(""); setMotorizationFilter([]); setVariantFilter(""); }}
-              className="appearance-none bg-white dark:bg-[#141414] border border-gray-200 rounded-full px-5 py-2.5 pr-10 text-sm font-medium text-gray-700 hover:border-[#f14011] focus:border-[#f14011] focus:outline-none transition-colors cursor-pointer"
-            >
-              {brandOptions.map((b) => (
-                <option key={b} value={b}>
-                  {b}
-                </option>
-              ))}
-            </select>
-            <ChevronDownIcon className="w-4 h-4 text-gray-400 absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
-          </div>
-
-          <div className="relative">
-            <select
-              value={modelFilter}
-              onChange={(e) => { setModelFilter(e.target.value); setMotorizationFilter([]); }}
-              className="appearance-none bg-white dark:bg-[#141414] border border-gray-200 rounded-full px-5 py-2.5 pr-10 text-sm font-medium text-gray-700 hover:border-[#f14011] focus:border-[#f14011] focus:outline-none transition-colors cursor-pointer"
-            >
-              <option value="">Alle Modelle</option>
-              {brandFilter !== "Alle Marken" && CAR_BRANDS_MODELS[brandFilter] &&
-                CAR_BRANDS_MODELS[brandFilter].map((m) => (
-                  <option key={m} value={m}>{m}</option>
-                ))
-              }
-            </select>
-            <ChevronDownIcon className="w-4 h-4 text-gray-400 absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
-          </div>
-
-          {/* Motorisierung (Mercedes only) */}
-          {brandFilter === "Mercedes-Benz" && modelFilter !== "" && MERCEDES_MOTORIZATIONS[modelFilter] && (
-            <div className="relative" ref={motorizationRef}>
-              <button
-                type="button"
-                onClick={() => setShowMotorizationDropdown(!showMotorizationDropdown)}
-                className="appearance-none bg-white dark:bg-[#141414] border border-gray-200 rounded-full px-5 py-2.5 pr-10 text-sm font-medium text-gray-700 hover:border-[#f14011] focus:border-[#f14011] focus:outline-none transition-colors cursor-pointer flex items-center gap-1"
+          <div className="flex flex-wrap gap-3 items-center">
+            <div className="relative">
+              <select
+                value={brandFilter}
+                onChange={(e) => { setBrandFilter(e.target.value); setModelFilter(""); setMotorizationFilter([]); setVariantFilter(""); }}
+                className="appearance-none bg-white dark:bg-[#141414] border border-gray-200 rounded-full px-5 py-2.5 pr-10 text-sm font-medium text-gray-700 hover:border-[#f14011] focus:border-[#f14011] focus:outline-none transition-colors cursor-pointer"
               >
-                {motorizationFilter.length === 0
-                  ? "Alle Motorisierungen"
-                  : `${motorizationFilter.length} Motorisierung${motorizationFilter.length > 1 ? "en" : ""}`}
-              </button>
-              <ChevronDownIcon className={`w-4 h-4 text-gray-400 absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none transition-transform ${showMotorizationDropdown ? "rotate-180" : ""}`} />
-              {showMotorizationDropdown && (
-                <div className="absolute z-50 mt-1 min-w-[200px] bg-white dark:bg-[#141414] border border-gray-200 dark:border-[#2a2a2a] rounded-xl shadow-lg max-h-60 overflow-y-auto py-1">
-                  {MERCEDES_MOTORIZATIONS[modelFilter].map((m) => (
-                    <label key={m} className="flex items-center gap-2 px-3 py-1.5 cursor-pointer hover:bg-gray-50 dark:hover:bg-[#222]">
-                      <input
-                        type="checkbox"
-                        checked={motorizationFilter.includes(m)}
-                        onChange={(e) => {
-                          if (e.target.checked) {
-                            setMotorizationFilter([...motorizationFilter, m]);
-                          } else {
-                            setMotorizationFilter(motorizationFilter.filter((x) => x !== m));
-                          }
-                        }}
-                        className="w-4 h-4 rounded border-gray-300 dark:border-gray-600 text-[#f14011] focus:ring-[#f14011] cursor-pointer"
-                      />
-                      <span className="text-sm text-gray-700 dark:text-gray-300">{m}</span>
-                    </label>
-                  ))}
-                </div>
-              )}
+                {brandOptions.map((b) => (
+                  <option key={b} value={b}>
+                    {b}
+                  </option>
+                ))}
+              </select>
+              <ChevronDownIcon className="w-4 h-4 text-gray-400 absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
             </div>
-          )}
 
-          {/* Variante (Row 1) */}
-          <input
-            type="text"
-            value={variantFilter}
-            onChange={(e) => setVariantFilter(e.target.value)}
-            placeholder="Variante (z.B. Clubsport)"
-            className="bg-white dark:bg-[#141414] border border-gray-200 rounded-full px-5 py-2.5 text-sm font-medium text-gray-700 placeholder:text-gray-400 hover:border-[#f14011] focus:border-[#f14011] focus:outline-none transition-colors w-48"
-          />
+            <div className="relative">
+              <select
+                value={modelFilter}
+                onChange={(e) => { setModelFilter(e.target.value); setMotorizationFilter([]); }}
+                className="appearance-none bg-white dark:bg-[#141414] border border-gray-200 rounded-full px-5 py-2.5 pr-10 text-sm font-medium text-gray-700 hover:border-[#f14011] focus:border-[#f14011] focus:outline-none transition-colors cursor-pointer"
+              >
+                <option value="">Alle Modelle</option>
+                {brandFilter !== "Alle Marken" && CAR_BRANDS_MODELS[brandFilter] &&
+                  CAR_BRANDS_MODELS[brandFilter].map((m) => (
+                    <option key={m} value={m}>{m}</option>
+                  ))
+                }
+              </select>
+              <ChevronDownIcon className="w-4 h-4 text-gray-400 absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+            </div>
 
-          {/* "Weitere Marke" Button — new line below row 1 */}
+            {/* Motorisierung (Mercedes only) */}
+            {brandFilter === "Mercedes-Benz" && modelFilter !== "" && MERCEDES_MOTORIZATIONS[modelFilter] && (
+              <div className="relative" ref={motorizationRef}>
+                <button
+                  type="button"
+                  onClick={() => setShowMotorizationDropdown(!showMotorizationDropdown)}
+                  className="appearance-none bg-white dark:bg-[#141414] border border-gray-200 rounded-full px-5 py-2.5 pr-10 text-sm font-medium text-gray-700 hover:border-[#f14011] focus:border-[#f14011] focus:outline-none transition-colors cursor-pointer flex items-center gap-1"
+                >
+                  {motorizationFilter.length === 0
+                    ? "Alle Motorisierungen"
+                    : `${motorizationFilter.length} Motorisierung${motorizationFilter.length > 1 ? "en" : ""}`}
+                </button>
+                <ChevronDownIcon className={`w-4 h-4 text-gray-400 absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none transition-transform ${showMotorizationDropdown ? "rotate-180" : ""}`} />
+                {showMotorizationDropdown && (
+                  <div className="absolute z-50 mt-1 min-w-[200px] bg-white dark:bg-[#141414] border border-gray-200 dark:border-[#2a2a2a] rounded-xl shadow-lg max-h-60 overflow-y-auto py-1">
+                    {MERCEDES_MOTORIZATIONS[modelFilter].map((m) => (
+                      <label key={m} className="flex items-center gap-2 px-3 py-1.5 cursor-pointer hover:bg-gray-50 dark:hover:bg-[#222]">
+                        <input
+                          type="checkbox"
+                          checked={motorizationFilter.includes(m)}
+                          onChange={(e) => {
+                            if (e.target.checked) {
+                              setMotorizationFilter([...motorizationFilter, m]);
+                            } else {
+                              setMotorizationFilter(motorizationFilter.filter((x) => x !== m));
+                            }
+                          }}
+                          className="w-4 h-4 rounded border-gray-300 dark:border-gray-600 text-[#f14011] focus:ring-[#f14011] cursor-pointer"
+                        />
+                        <span className="text-sm text-gray-700 dark:text-gray-300">{m}</span>
+                      </label>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* Variante (Row 1) */}
+            <input
+              type="text"
+              value={variantFilter}
+              onChange={(e) => setVariantFilter(e.target.value)}
+              placeholder="Variante (z.B. Clubsport)"
+              className="bg-white dark:bg-[#141414] border border-gray-200 rounded-full px-5 py-2.5 text-sm font-medium text-gray-700 placeholder:text-gray-400 hover:border-[#f14011] focus:border-[#f14011] focus:outline-none transition-colors w-48"
+            />
+          </div>
+
+          {/* "Weitere Marke" Button — own line below row 1 */}
           {modelFilter !== "" && !showBrandRow2 && (
-            <div className="basis-full">
-              <button
-                type="button"
-                onClick={() => setShowBrandRow2(true)}
-                className="flex items-center gap-1.5 px-3 py-2.5 text-sm font-medium text-[#f14011] border border-dashed border-[#f14011]/40 rounded-full hover:bg-[#f14011]/5 transition-colors"
-              >
-                <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path strokeLinecap="round" d="M12 5v14M5 12h14" /></svg>
-                Weitere Marke hinzufügen
-              </button>
-            </div>
+            <button
+              type="button"
+              onClick={() => setShowBrandRow2(true)}
+              className="flex items-center gap-1.5 px-3 py-2.5 text-sm font-medium text-[#f14011] border border-dashed border-[#f14011]/40 rounded-full hover:bg-[#f14011]/5 transition-colors self-start"
+            >
+              <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path strokeLinecap="round" d="M12 5v14M5 12h14" /></svg>
+              Weitere Marke hinzufügen
+            </button>
           )}
 
           {/* Row 2: Brand2 + Model2 + Variante2 */}
           {showBrandRow2 && (
-            <div className="basis-full flex flex-wrap gap-3 items-center">
+            <div className="flex flex-wrap gap-3 items-center">
               <div className="relative">
                 <select
                   value={brandFilter2}
@@ -1370,22 +1370,20 @@ function InseratePageInner() {
           )}
 
           {/* "+" for Row 3 — own line below row 2 */}
-          {showBrandRow2 && brandFilter2 !== "Alle Marken" && modelFilter2 !== "" && !showBrandRow3 && (
-            <div className="basis-full">
-              <button
-                type="button"
-                onClick={() => setShowBrandRow3(true)}
-                className="flex items-center gap-1.5 px-3 py-2.5 text-sm font-medium text-[#f14011] border border-dashed border-[#f14011]/40 rounded-full hover:bg-[#f14011]/5 transition-colors"
-              >
-                <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path strokeLinecap="round" d="M12 5v14M5 12h14" /></svg>
-                Weitere Marke hinzufügen
-              </button>
-            </div>
+          {showBrandRow2 && brandFilter2 !== "Alle Marken" && !showBrandRow3 && (
+            <button
+              type="button"
+              onClick={() => setShowBrandRow3(true)}
+              className="flex items-center gap-1.5 px-3 py-2.5 text-sm font-medium text-[#f14011] border border-dashed border-[#f14011]/40 rounded-full hover:bg-[#f14011]/5 transition-colors self-start"
+            >
+              <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path strokeLinecap="round" d="M12 5v14M5 12h14" /></svg>
+              Weitere Marke hinzufügen
+            </button>
           )}
 
           {/* Row 3: Brand3 + Model3 + Variante3 */}
           {showBrandRow3 && (
-            <div className="basis-full flex flex-wrap gap-3 items-center">
+            <div className="flex flex-wrap gap-3 items-center">
               <div className="relative">
                 <select
                   value={brandFilter3}
@@ -1430,6 +1428,8 @@ function InseratePageInner() {
             </div>
           )}
 
+          {/* Price, Fuel, More filters etc. */}
+          <div className="flex flex-wrap gap-3 items-center">
           {/* Price */}
           <div className="relative">
             <select
@@ -1616,6 +1616,7 @@ function InseratePageInner() {
               )}
             </button>
           )}
+          </div>
         </div>
 
         {/* Advanced Filters */}
