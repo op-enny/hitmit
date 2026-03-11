@@ -820,22 +820,34 @@ export default function SuchenPage() {
               <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1.5">
                 Umkreis {cityRadius ? `${cityRadius} km` : "(beliebig)"}
               </label>
-              <input
-                type="range"
-                min="0"
-                max="200"
-                step="10"
-                value={cityRadius || "0"}
-                onChange={(e) => setCityRadius(e.target.value === "0" ? "" : e.target.value)}
-                className="w-full h-2 bg-gray-200 dark:bg-[#2a2a2a] rounded-lg appearance-none cursor-pointer accent-[#f14011]"
-              />
-              <div className="flex justify-between text-[10px] text-gray-400 mt-1">
-                <span>Alle</span>
-                <span>50</span>
-                <span>100</span>
-                <span>150</span>
-                <span>200 km</span>
-              </div>
+              {(() => {
+                const radiusSteps = [0,10,20,30,40,50,60,70,80,90,100,150,200,250,300,400,500,600,700,800,900,1000];
+                const idx = radiusSteps.indexOf(Number(cityRadius) || 0);
+                const sliderIdx = idx >= 0 ? idx : 0;
+                return (
+                  <>
+                    <input
+                      type="range"
+                      min="0"
+                      max={radiusSteps.length - 1}
+                      step="1"
+                      value={sliderIdx}
+                      onChange={(e) => {
+                        const v = radiusSteps[Number(e.target.value)];
+                        setCityRadius(v === 0 ? "" : String(v));
+                      }}
+                      className="w-full h-2 bg-gray-200 dark:bg-[#2a2a2a] rounded-lg appearance-none cursor-pointer accent-[#f14011]"
+                    />
+                    <div className="flex justify-between text-[10px] text-gray-400 mt-1">
+                      <span>Alle</span>
+                      <span>100</span>
+                      <span>300</span>
+                      <span>500</span>
+                      <span>1000 km</span>
+                    </div>
+                  </>
+                );
+              })()}
             </div>
             <div>
               <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1.5">Erstzulassung von</label>
