@@ -2014,37 +2014,29 @@ function InseratePageInner() {
               </div>
 
               {/* Paint Protection Film */}
-              <div>
-                <label className="block text-xs font-medium text-gray-500 mb-1.5">Steinschlagschutzfolie</label>
-                <div className="relative">
-                  <select
-                    value={paintProtectionFilmFilter}
-                    onChange={(e) => setPaintProtectionFilmFilter(e.target.value)}
-                    className="w-full appearance-none bg-gray-50 dark:bg-[#1a1a1a] border border-gray-200 rounded-xl px-4 py-2.5 pr-9 text-sm text-gray-700 hover:border-[#f14011] focus:border-[#f14011] focus:outline-none transition-colors cursor-pointer"
-                  >
-                    <option value="Alle">Alle</option>
-                    <option value="Ja">Ja</option>
-                    <option value="Nein">Nein</option>
-                  </select>
-                  <ChevronDownIcon className="w-4 h-4 text-gray-400 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
-                </div>
+              <div className="flex items-end">
+                <label className="flex items-center gap-2 px-4 py-2.5 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={paintProtectionFilmFilter === "Ja"}
+                    onChange={(e) => setPaintProtectionFilmFilter(e.target.checked ? "Ja" : "Alle")}
+                    className="w-4 h-4 rounded border-gray-300 dark:border-gray-600 text-[#f14011] focus:ring-[#f14011] cursor-pointer"
+                  />
+                  <span className="text-sm text-gray-700 dark:text-gray-300">Steinschlagschutzfolie</span>
+                </label>
               </div>
 
               {/* No Repaint */}
-              <div>
-                <label className="block text-xs font-medium text-gray-500 mb-1.5">Nachlackierungsfrei</label>
-                <div className="relative">
-                  <select
-                    value={noRepaintFilter}
-                    onChange={(e) => setNoRepaintFilter(e.target.value)}
-                    className="w-full appearance-none bg-gray-50 dark:bg-[#1a1a1a] border border-gray-200 rounded-xl px-4 py-2.5 pr-9 text-sm text-gray-700 hover:border-[#f14011] focus:border-[#f14011] focus:outline-none transition-colors cursor-pointer"
-                  >
-                    <option value="Alle">Alle</option>
-                    <option value="Ja">Ja</option>
-                    <option value="Nein">Nein</option>
-                  </select>
-                  <ChevronDownIcon className="w-4 h-4 text-gray-400 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
-                </div>
+              <div className="flex items-end">
+                <label className="flex items-center gap-2 px-4 py-2.5 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={noRepaintFilter === "Ja"}
+                    onChange={(e) => setNoRepaintFilter(e.target.checked ? "Ja" : "Alle")}
+                    className="w-4 h-4 rounded border-gray-300 dark:border-gray-600 text-[#f14011] focus:ring-[#f14011] cursor-pointer"
+                  />
+                  <span className="text-sm text-gray-700 dark:text-gray-300">Nachlackierungsfrei</span>
+                </label>
               </div>
 
               {/* Service Book */}
@@ -2078,37 +2070,29 @@ function InseratePageInner() {
               </div>
 
               {/* Non-Smoker */}
-              <div>
-                <label className="block text-xs font-medium text-gray-500 mb-1.5">Nichtraucherfahrzeug</label>
-                <div className="relative">
-                  <select
-                    value={nonSmokerFilter}
-                    onChange={(e) => setNonSmokerFilter(e.target.value)}
-                    className="w-full appearance-none bg-gray-50 dark:bg-[#1a1a1a] border border-gray-200 rounded-xl px-4 py-2.5 pr-9 text-sm text-gray-700 hover:border-[#f14011] focus:border-[#f14011] focus:outline-none transition-colors cursor-pointer"
-                  >
-                    <option value="Alle">Alle</option>
-                    <option value="Ja">Ja</option>
-                    <option value="Nein">Nein</option>
-                  </select>
-                  <ChevronDownIcon className="w-4 h-4 text-gray-400 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
-                </div>
+              <div className="flex items-end">
+                <label className="flex items-center gap-2 px-4 py-2.5 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={nonSmokerFilter === "Ja"}
+                    onChange={(e) => setNonSmokerFilter(e.target.checked ? "Ja" : "Alle")}
+                    className="w-4 h-4 rounded border-gray-300 dark:border-gray-600 text-[#f14011] focus:ring-[#f14011] cursor-pointer"
+                  />
+                  <span className="text-sm text-gray-700 dark:text-gray-300">Nichtraucherfahrzeug</span>
+                </label>
               </div>
 
               {/* Pet Free */}
-              <div>
-                <label className="block text-xs font-medium text-gray-500 mb-1.5">Tierfreies Fahrzeug</label>
-                <div className="relative">
-                  <select
-                    value={petFreeFilter}
-                    onChange={(e) => setPetFreeFilter(e.target.value)}
-                    className="w-full appearance-none bg-gray-50 dark:bg-[#1a1a1a] border border-gray-200 rounded-xl px-4 py-2.5 pr-9 text-sm text-gray-700 hover:border-[#f14011] focus:border-[#f14011] focus:outline-none transition-colors cursor-pointer"
-                  >
-                    <option value="Alle">Alle</option>
-                    <option value="Ja">Ja</option>
-                    <option value="Nein">Nein</option>
-                  </select>
-                  <ChevronDownIcon className="w-4 h-4 text-gray-400 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
-                </div>
+              <div className="flex items-end">
+                <label className="flex items-center gap-2 px-4 py-2.5 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={petFreeFilter === "Ja"}
+                    onChange={(e) => setPetFreeFilter(e.target.checked ? "Ja" : "Alle")}
+                    className="w-4 h-4 rounded border-gray-300 dark:border-gray-600 text-[#f14011] focus:ring-[#f14011] cursor-pointer"
+                  />
+                  <span className="text-sm text-gray-700 dark:text-gray-300">Tierfreies Fahrzeug</span>
+                </label>
               </div>
 
               {/* Emission Class */}

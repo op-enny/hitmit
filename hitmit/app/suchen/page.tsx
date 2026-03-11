@@ -1127,18 +1127,28 @@ export default function SuchenPage() {
           {/* Section: Zustand & Garantie */}
           <h3 className="text-sm font-semibold text-gray-900 dark:text-gray-100 uppercase tracking-wider mb-4">Zustand & Garantie</h3>
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 mb-6">
-            <FilterSelect
-              label="Steinschlagschutzfolie"
-              value={paintProtectionFilmFilter}
-              onChange={setPaintProtectionFilmFilter}
-              options={[{ value: "Alle", label: "Alle" }, { value: "Ja", label: "Ja" }, { value: "Nein", label: "Nein" }]}
-            />
-            <FilterSelect
-              label="Nachlackierungsfrei"
-              value={noRepaintFilter}
-              onChange={setNoRepaintFilter}
-              options={[{ value: "Alle", label: "Alle" }, { value: "Ja", label: "Ja" }, { value: "Nein", label: "Nein" }]}
-            />
+            <div className="flex items-end">
+              <label className="flex items-center gap-2 px-4 py-2.5 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={paintProtectionFilmFilter === "Ja"}
+                  onChange={(e) => setPaintProtectionFilmFilter(e.target.checked ? "Ja" : "Alle")}
+                  className="w-4 h-4 rounded border-gray-300 dark:border-gray-600 text-[#f14011] focus:ring-[#f14011] cursor-pointer"
+                />
+                <span className="text-sm text-gray-700 dark:text-gray-300">Steinschlagschutzfolie</span>
+              </label>
+            </div>
+            <div className="flex items-end">
+              <label className="flex items-center gap-2 px-4 py-2.5 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={noRepaintFilter === "Ja"}
+                  onChange={(e) => setNoRepaintFilter(e.target.checked ? "Ja" : "Alle")}
+                  className="w-4 h-4 rounded border-gray-300 dark:border-gray-600 text-[#f14011] focus:ring-[#f14011] cursor-pointer"
+                />
+                <span className="text-sm text-gray-700 dark:text-gray-300">Nachlackierungsfrei</span>
+              </label>
+            </div>
             <FilterSelect
               label="Scheckheftgepflegt"
               value={serviceBookFilter}
@@ -1156,18 +1166,28 @@ export default function SuchenPage() {
                 <span className="text-sm text-gray-700 dark:text-gray-300">Herstellergarantie</span>
               </label>
             </div>
-            <FilterSelect
-              label="Nichtraucherfahrzeug"
-              value={nonSmokerFilter}
-              onChange={setNonSmokerFilter}
-              options={[{ value: "Alle", label: "Alle" }, { value: "Ja", label: "Ja" }, { value: "Nein", label: "Nein" }]}
-            />
-            <FilterSelect
-              label="Tierfreies Fahrzeug"
-              value={petFreeFilter}
-              onChange={setPetFreeFilter}
-              options={[{ value: "Alle", label: "Alle" }, { value: "Ja", label: "Ja" }, { value: "Nein", label: "Nein" }]}
-            />
+            <div className="flex items-end">
+              <label className="flex items-center gap-2 px-4 py-2.5 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={nonSmokerFilter === "Ja"}
+                  onChange={(e) => setNonSmokerFilter(e.target.checked ? "Ja" : "Alle")}
+                  className="w-4 h-4 rounded border-gray-300 dark:border-gray-600 text-[#f14011] focus:ring-[#f14011] cursor-pointer"
+                />
+                <span className="text-sm text-gray-700 dark:text-gray-300">Nichtraucherfahrzeug</span>
+              </label>
+            </div>
+            <div className="flex items-end">
+              <label className="flex items-center gap-2 px-4 py-2.5 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={petFreeFilter === "Ja"}
+                  onChange={(e) => setPetFreeFilter(e.target.checked ? "Ja" : "Alle")}
+                  className="w-4 h-4 rounded border-gray-300 dark:border-gray-600 text-[#f14011] focus:ring-[#f14011] cursor-pointer"
+                />
+                <span className="text-sm text-gray-700 dark:text-gray-300">Tierfreies Fahrzeug</span>
+              </label>
+            </div>
           </div>
 
           {/* Section: Umwelt & Emissionen */}

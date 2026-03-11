@@ -225,7 +225,7 @@ export function parseUserQuery(input: string): ParsedQuery {
 
   // --- Color ---
   for (const c of colorOptions) {
-    if (c !== "Alle Farben" && c !== "Sonstige" && q.includes(c.toLowerCase())) {
+    if (c !== "Alle Farben" && c !== "Andere" && q.includes(c.toLowerCase())) {
       query.color = c;
       break;
     }

@@ -485,7 +485,7 @@ export const CAR_BRANDS_MODELS: Record<string, string[]> = {
   "Volvo": ["XC40", "XC60", "XC90", "C40", "S60", "S90", "V60", "V90", "EX30", "EX90"],
   "XPeng": ["G6", "G9", "P7"],
   "Zeekr": ["001", "X", "007"],
-  "Sonstige": ["Anderes Modell"],
+  "Andere": ["Anderes Modell"],
 };
 
 export const MERCEDES_MOTORIZATIONS: Record<string, string[]> = {
@@ -571,12 +571,12 @@ export const colorOptions = [
   "Grün",
   "Beige",
   "Gelb",
-  "Sonstige",
+  "Andere",
 ];
 export const conditionOptions = ["Alle", "Neuwagen", "Gebraucht", "Unfallwagen (nicht fahrtüchtig)", "Tageszulassung"];
 export const doorOptions = ["Alle", "2/3", "4/5", "6/7"];
 export const seatOptions = ["Alle", "2", "4", "5", "7"];
-export const vehicleTypeOptions = ["Alle", "PKW", "Motorrad", "LKW", "Transporter", "Sonstige"];
+export const vehicleTypeOptions = ["Alle", "PKW", "Motorrad", "LKW", "Transporter", "Andere"];
 export const vehicleCategoryOptions = ["Alle", "Limousine", "Kombi", "Schrägheck", "SUV", "Geländewagen", "Sportwagen", "Coupé", "Cabrio", "Van / Minibus", "Pick-up"];
 export const cylinderOptions = ["Alle", "3", "4", "5", "6", "8", "10", "12", "16"];
 export const displacementOptions = [
@@ -607,9 +607,9 @@ export const interiorColorOptions = [
   "Beige",
   "Rot",
   "Blau",
-  "Sonstige",
+  "Andere",
 ];
-export const seatMaterialOptions = ["Alle", "Leder", "Teilleder", "Stoff", "Alcantara", "Velours", "Sonstige"];
+export const seatMaterialOptions = ["Alle", "Leder", "Teilleder", "Stoff", "Alcantara", "Velours", "Andere"];
 export const climateZoneOptions = ["Alle", "1", "2", "3", "4"];
 export const rimSizeOptions = ["Alle", "15", "16", "17", "18", "19", "20", "21", "22"];
 
