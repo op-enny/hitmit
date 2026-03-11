@@ -35,6 +35,194 @@ import { useSavedData } from "../use-saved-data";
 
 
 // ============================================================================
+// DAMAGE MAP (read-only)
+// ============================================================================
+
+const DAMAGE_ZONES = [
+  { id: "frontLeft", label: "Vorne links", x: 62, y: 18 },
+  { id: "frontCenter", label: "Vorne Mitte", x: 50, y: 10 },
+  { id: "frontRight", label: "Vorne rechts", x: 38, y: 18 },
+  { id: "leftFront", label: "Seite links vorne", x: 72, y: 38 },
+  { id: "leftRear", label: "Seite links hinten", x: 72, y: 62 },
+  { id: "rightFront", label: "Seite rechts vorne", x: 28, y: 38 },
+  { id: "rightRear", label: "Seite rechts hinten", x: 28, y: 62 },
+  { id: "roof", label: "Dach", x: 50, y: 50 },
+  { id: "rearLeft", label: "Hinten links", x: 62, y: 82 },
+  { id: "rearCenter", label: "Hinten Mitte", x: 50, y: 90 },
+  { id: "rearRight", label: "Hinten rechts", x: 38, y: 82 },
+];
+
+function ReadOnlyDamageMap({
+  damageMap,
+  paintThickness,
+}: {
+  damageMap?: Record<string, string>;
+  paintThickness?: Record<string, string>;
+}) {
+  const [selectedZone, setSelectedZone] = useState<string | null>(null);
+  const hasDamages = damageMap && Object.keys(damageMap).length > 0;
+
+  // Map paintThickness keys to zone IDs for overlay
+  const PAINT_ZONE_MAP: Record<string, string> = {
+    "Motorhaube": "frontCenter",
+    "Kotflügel vorne links": "leftFront",
+    "Kotflügel vorne rechts": "rightFront",
+    "Fahrertür": "leftRear",
+    "Beifahrertür": "rightFront",
+    "Kotflügel hinten links": "leftRear",
+    "Kotflügel hinten rechts": "rearRight",
+    "Heckklappe": "rearCenter",
+    "Dach": "roof",
+  };
+
+  function getPaintColor(value: string): string {
+    const num = parseInt(value);
+    if (num < 80) return "#9ca3af";
+    if (num <= 130) return "#22c55e";
+    if (num <= 250) return "#eab308";
+    if (num <= 400) return "#f97316";
+    return "#ef4444";
+  }
+
+  // Build paint thickness by zone ID
+  const paintByZone: Record<string, { label: string; value: string }> = {};
+  if (paintThickness) {
+    for (const [label, value] of Object.entries(paintThickness)) {
+      const zoneId = PAINT_ZONE_MAP[label];
+      if (zoneId) {
+        paintByZone[zoneId] = { label, value };
+      }
+    }
+  }
+
+  const selectedInfo = selectedZone ? DAMAGE_ZONES.find((z) => z.id === selectedZone) : null;
+  const selectedDamage = selectedZone && damageMap ? damageMap[selectedZone] : null;
+  const selectedPaint = selectedZone ? paintByZone[selectedZone] : null;
+
+  return (
+    <div>
+      <div className="relative bg-gray-50 dark:bg-[#1f1f1f] rounded-2xl p-4" style={{ minHeight: 320 }}>
+        <svg viewBox="0 0 100 100" className="w-full max-w-[320px] mx-auto" style={{ height: 280 }}>
+          <defs>
+            <linearGradient id="carBodyRO" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor="#e8e8e8" />
+              <stop offset="100%" stopColor="#d4d4d4" />
+            </linearGradient>
+            <linearGradient id="glassRO" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor="#bfdbfe" />
+              <stop offset="100%" stopColor="#93c5fd" />
+            </linearGradient>
+          </defs>
+
+          {/* Car body */}
+          <path
+            d="M 35 8 Q 35 5 38 5 L 62 5 Q 65 5 65 8
+               L 67 20 Q 68 22 70 23 L 72 24 Q 74 25 74 28
+               L 74 72 Q 74 75 72 76 L 70 77 Q 68 78 67 80
+               L 65 92 Q 65 95 62 95 L 38 95 Q 35 95 35 92
+               L 33 80 Q 32 78 30 77 L 28 76 Q 26 75 26 72
+               L 26 28 Q 26 25 28 24 L 30 23 Q 32 22 33 20 Z"
+            fill="url(#carBodyRO)" stroke="#a3a3a3" strokeWidth="0.8"
+          />
+          {/* Hood */}
+          <path d="M 37 8 Q 37 6 39 6 L 61 6 Q 63 6 63 8 L 64 18 Q 64 19 63 19 L 37 19 Q 36 19 36 18 Z" fill="#d4d4d4" stroke="#b0b0b0" strokeWidth="0.4" />
+          {/* Windshield */}
+          <path d="M 36 20 L 64 20 Q 65 20 65 21 L 66 29 Q 66 30 65 30 L 35 30 Q 34 30 34 29 L 35 21 Q 35 20 36 20 Z" fill="url(#glassRO)" stroke="#7daadb" strokeWidth="0.5" opacity="0.85" />
+          {/* Roof */}
+          <path d="M 35 31 L 65 31 Q 66 31 66 32 L 66 68 Q 66 69 65 69 L 35 69 Q 34 69 34 68 L 34 32 Q 34 31 35 31 Z" fill="#d9d9d9" stroke="#b0b0b0" strokeWidth="0.4" />
+          {/* Rear window */}
+          <path d="M 35 70 L 65 70 Q 66 70 66 71 L 65 79 Q 65 80 64 80 L 36 80 Q 35 80 34 79 L 34 71 Q 34 70 35 70 Z" fill="url(#glassRO)" stroke="#7daadb" strokeWidth="0.5" opacity="0.85" />
+          {/* Trunk */}
+          <path d="M 36 81 L 64 81 Q 64 81 64 82 L 63 92 Q 63 93 62 93 L 38 93 Q 37 93 37 92 L 36 82 Q 36 81 36 81 Z" fill="#d4d4d4" stroke="#b0b0b0" strokeWidth="0.4" />
+          {/* Mirrors */}
+          <ellipse cx="74" cy="26" rx="3" ry="2" fill="#c0c0c0" stroke="#a0a0a0" strokeWidth="0.4" />
+          <ellipse cx="26" cy="26" rx="3" ry="2" fill="#c0c0c0" stroke="#a0a0a0" strokeWidth="0.4" />
+          {/* Wheels */}
+          <rect x="70" y="14" width="7" height="14" rx="2.5" fill="#404040" stroke="#333" strokeWidth="0.5" />
+          <rect x="70" y="72" width="7" height="14" rx="2.5" fill="#404040" stroke="#333" strokeWidth="0.5" />
+          <rect x="23" y="14" width="7" height="14" rx="2.5" fill="#404040" stroke="#333" strokeWidth="0.5" />
+          <rect x="23" y="72" width="7" height="14" rx="2.5" fill="#404040" stroke="#333" strokeWidth="0.5" />
+          {/* Rims */}
+          <rect x="71.5" y="18" width="4" height="6" rx="1.5" fill="#666" stroke="#555" strokeWidth="0.3" />
+          <rect x="71.5" y="76" width="4" height="6" rx="1.5" fill="#666" stroke="#555" strokeWidth="0.3" />
+          <rect x="24.5" y="18" width="4" height="6" rx="1.5" fill="#666" stroke="#555" strokeWidth="0.3" />
+          <rect x="24.5" y="76" width="4" height="6" rx="1.5" fill="#666" stroke="#555" strokeWidth="0.3" />
+          {/* Headlights */}
+          <ellipse cx="40" cy="7" rx="3" ry="1.2" fill="#fef08a" stroke="#eab308" strokeWidth="0.3" opacity="0.7" />
+          <ellipse cx="60" cy="7" rx="3" ry="1.2" fill="#fef08a" stroke="#eab308" strokeWidth="0.3" opacity="0.7" />
+          {/* Taillights */}
+          <ellipse cx="40" cy="93" rx="3" ry="1.2" fill="#fca5a5" stroke="#ef4444" strokeWidth="0.3" opacity="0.7" />
+          <ellipse cx="60" cy="93" rx="3" ry="1.2" fill="#fca5a5" stroke="#ef4444" strokeWidth="0.3" opacity="0.7" />
+          {/* Pillar lines */}
+          <line x1="36" y1="20" x2="34" y2="31" stroke="#b0b0b0" strokeWidth="0.3" />
+          <line x1="64" y1="20" x2="66" y2="31" stroke="#b0b0b0" strokeWidth="0.3" />
+          <line x1="36" y1="80" x2="34" y2="69" stroke="#b0b0b0" strokeWidth="0.3" />
+          <line x1="64" y1="80" x2="66" y2="69" stroke="#b0b0b0" strokeWidth="0.3" />
+
+          {/* Zone markers */}
+          {DAMAGE_ZONES.map((zone) => {
+            const isDamaged = damageMap?.[zone.id];
+            const hasPaint = paintByZone[zone.id];
+            const isSelected = selectedZone === zone.id;
+            let fill = "rgba(120,120,120,0.35)";
+            if (isDamaged) fill = "#f14011";
+            else if (hasPaint) fill = getPaintColor(hasPaint.value);
+            return (
+              <g key={zone.id}>
+                <circle
+                  cx={zone.x}
+                  cy={zone.y}
+                  r={isDamaged || isSelected ? 4.5 : 3}
+                  fill={fill}
+                  stroke="white"
+                  strokeWidth="1"
+                  className="cursor-pointer hover:opacity-80 transition-opacity"
+                  onClick={() => setSelectedZone(isSelected ? null : zone.id)}
+                />
+                {isDamaged && (
+                  <text x={zone.x} y={zone.y - 6} textAnchor="middle" fontSize="3.5" fill="#f14011" fontWeight="bold">!</text>
+                )}
+              </g>
+            );
+          })}
+        </svg>
+      </div>
+
+      {/* Legend */}
+      <div className="flex flex-wrap gap-3 mt-3 text-xs text-gray-500">
+        {hasDamages && (
+          <span className="flex items-center gap-1">
+            <span className="w-3 h-3 rounded-full bg-[#f14011] inline-block" /> Schaden
+          </span>
+        )}
+        {paintThickness && (
+          <>
+            <span className="flex items-center gap-1"><span className="w-3 h-3 rounded-full bg-green-500 inline-block" /> Lack OK</span>
+            <span className="flex items-center gap-1"><span className="w-3 h-3 rounded-full bg-yellow-500 inline-block" /> Nachlackierung</span>
+            <span className="flex items-center gap-1"><span className="w-3 h-3 rounded-full bg-orange-500 inline-block" /> Spachtel</span>
+          </>
+        )}
+      </div>
+
+      {/* Selected zone detail */}
+      {selectedInfo && (selectedDamage || selectedPaint) && (
+        <div className="mt-3 p-3 bg-gray-50 dark:bg-[#1a1a1a] rounded-xl border border-gray-200 dark:border-[#2a2a2a]">
+          <p className="text-sm font-semibold text-gray-900">{selectedInfo.label}</p>
+          {selectedDamage && (
+            <p className="text-sm text-red-600 mt-1">{selectedDamage}</p>
+          )}
+          {selectedPaint && (
+            <p className="text-sm text-gray-600 mt-1">
+              Lackdicke: <span className="font-mono font-semibold">{selectedPaint.value} µm</span>
+            </p>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ============================================================================
 // PAINT THICKNESS INFO BUTTON
 // ============================================================================
 
@@ -516,6 +704,15 @@ function DetailModal({ vehicle, onClose, isDealer }: { vehicle: Vehicle; onClose
               <div className="mt-2">
                 <PaintThicknessInfoButton />
               </div>
+            </div>
+          )}
+
+          {/* Schadenskarte */}
+          {(vehicle.damageMap && Object.keys(vehicle.damageMap).length > 0 || vehicle.paintThickness && Object.keys(vehicle.paintThickness).length > 0) && (
+            <div>
+              <h3 className="font-semibold text-gray-900 mb-2">Schadenskarte</h3>
+              <p className="text-sm text-gray-400 mb-3">Klicke auf eine Zone für Details</p>
+              <ReadOnlyDamageMap damageMap={vehicle.damageMap} paintThickness={vehicle.paintThickness} />
             </div>
           )}
 

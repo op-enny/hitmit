@@ -35,6 +35,7 @@ export interface Vehicle {
   exteriorFeatures: string[];
   multimediaFeatures: string[];
   paintThickness?: Record<string, string>;
+  damageMap?: Record<string, string>;
   vehicleOrigin?: string;
   tireDepthFront?: string;
   tireDepthRear?: string;
@@ -96,6 +97,7 @@ export const vehicles: Vehicle[] = [
     exteriorFeatures: ["M Carbon Dach", "M Carbon Paket", "LED Scheinwerfer", "19/20 Zoll M Felgen"],
     multimediaFeatures: ["Harman Kardon", "Apple CarPlay", "Android Auto", "Navigation"],
     paintThickness: { "Motorhaube": "105", "Kotflügel vorne links": "112", "Fahrertür": "98", "Kotflügel hinten rechts": "185", "Heckklappe": "102" },
+    damageMap: { "rearRight": "Kleine Delle, Parkrempler", "leftRear": "Leichter Kratzer am Schweller" },
     vehicleType: "PKW",
     vehicleCategory: "Coupé",
     mwstAusweisbar: true,
