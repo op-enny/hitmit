@@ -257,8 +257,10 @@ export default function SuchenPage() {
   // Extended filters
   const [yearFrom, setYearFrom] = useState("");
   const [yearTo, setYearTo] = useState("");
+  const [mileageMin, setMileageMin] = useState("");
   const [mileageMax, setMileageMax] = useState("");
   const [powerMin, setPowerMin] = useState("");
+  const [powerMax, setPowerMax] = useState("");
   const [transmissionFilter, setTransmissionFilter] = useState("Alle");
   const [driveTypeFilter, setDriveTypeFilter] = useState("Alle");
   const [sellerTypeFilter, setSellerTypeFilter] = useState("Alle");
@@ -331,8 +333,10 @@ export default function SuchenPage() {
     if (priceMax !== "" && v.price > Number(priceMax)) return false;
     if (yearFrom !== "" && v.year < Number(yearFrom)) return false;
     if (yearTo !== "" && v.year > Number(yearTo)) return false;
+    if (mileageMin !== "" && v.mileage < Number(mileageMin)) return false;
     if (mileageMax !== "" && v.mileage > Number(mileageMax)) return false;
     if (powerMin !== "" && v.powerPs < Number(powerMin)) return false;
+    if (powerMax !== "" && v.powerPs > Number(powerMax)) return false;
     if (transmissionFilter !== "Alle") {
       const t = v.transmission.toLowerCase();
       if (transmissionFilter === "Automatik" && !t.includes("automatik") && !t.includes("dsg") && !t.includes("pdk") && !t.includes("tronic") && !t.includes("s tronic")) return false;
@@ -463,8 +467,10 @@ export default function SuchenPage() {
     priceMax !== "",
     yearFrom !== "",
     yearTo !== "",
+    mileageMin !== "",
     mileageMax !== "",
     powerMin !== "",
+    powerMax !== "",
     transmissionFilter !== "Alle",
     driveTypeFilter !== "Alle",
     sellerTypeFilter !== "Alle",
@@ -508,7 +514,7 @@ export default function SuchenPage() {
     setFuelFilter("Alle Kraftstoffe");
     setPriceMin(""); setPriceMax("");
     setYearFrom(""); setYearTo("");
-    setMileageMax(""); setPowerMin("");
+    setMileageMin(""); setMileageMax(""); setPowerMin(""); setPowerMax("");
     setTransmissionFilter("Alle"); setDriveTypeFilter("Alle");
     setSellerTypeFilter("Alle"); setAccidentFreeFilter("Alle");
     setCityFilter(""); setCityRadius("");
@@ -535,8 +541,10 @@ export default function SuchenPage() {
     if (priceMax !== "") parts.push(`bis ${Number(priceMax).toLocaleString("de-DE")} €`);
     if (yearFrom) parts.push(`ab ${yearFrom}`);
     if (yearTo) parts.push(`bis ${yearTo}`);
+    if (mileageMin !== "") parts.push(`ab ${Number(mileageMin).toLocaleString("de-DE")} km`);
     if (mileageMax !== "") parts.push(`bis ${Number(mileageMax).toLocaleString("de-DE")} km`);
     if (powerMin !== "") parts.push(`ab ${powerMin} PS`);
+    if (powerMax !== "") parts.push(`bis ${powerMax} PS`);
     if (transmissionFilter !== "Alle") parts.push(transmissionFilter);
     if (driveTypeFilter !== "Alle") parts.push(driveTypeFilter);
     if (sellerTypeFilter !== "Alle") parts.push(sellerTypeFilter);
@@ -578,7 +586,7 @@ export default function SuchenPage() {
       {
         brandFilter, fuelFilter, priceMin, priceMax,
         yearFrom, yearTo,
-        mileageMax, powerMin,
+        mileageMin, mileageMax, powerMin, powerMax,
         transmissionFilter, driveTypeFilter,
         sellerTypeFilter, accidentFreeFilter,
         cityFilter, cityRadius,
@@ -738,6 +746,8 @@ export default function SuchenPage() {
             <NumericInput label="Preis von (€)" value={priceMin} onChange={setPriceMin} placeholder="z.B. 10000" />
             <NumericInput label="Preis bis (€)" value={priceMax} onChange={setPriceMax} placeholder="z.B. 50000" />
             <NumericInput label="Leistung ab (PS)" value={powerMin} onChange={setPowerMin} placeholder="z.B. 200" />
+            <NumericInput label="Leistung bis (PS)" value={powerMax} onChange={setPowerMax} placeholder="z.B. 500" />
+            <NumericInput label="Kilometerstand ab" value={mileageMin} onChange={setMileageMin} placeholder="z.B. 10000" />
             <NumericInput label="Kilometerstand bis" value={mileageMax} onChange={setMileageMax} placeholder="z.B. 50000" />
             <FilterSelect
               label="Getriebe"

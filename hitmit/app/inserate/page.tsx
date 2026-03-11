@@ -1219,7 +1219,7 @@ function InseratePageInner() {
                     brandFilter, fuelFilter,
                     priceMin: pMin, priceMax: pMax,
                     yearFrom, yearTo,
-                    mileageMax: mlMax, powerMin: pwMin,
+                    mileageMin: "", mileageMax: mlMax, powerMin: pwMin, powerMax: "",
                     transmissionFilter, driveTypeFilter,
                     sellerTypeFilter, accidentFreeFilter,
                     cityFilter, cityRadius: "",

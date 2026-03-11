@@ -21,8 +21,10 @@ export interface SavedSearch {
     priceMax: string;
     yearFrom: string;
     yearTo: string;
+    mileageMin: string;
     mileageMax: string;
     powerMin: string;
+    powerMax: string;
     transmissionFilter: string;
     driveTypeFilter: string;
     sellerTypeFilter: string;
@@ -140,8 +142,10 @@ function migrateSearch(raw: any): SavedSearch {
       priceMax,
       yearFrom: f.yearFrom ?? "",
       yearTo: f.yearTo ?? "",
+      mileageMin: f.mileageMin ?? "",
       mileageMax,
       powerMin,
+      powerMax: f.powerMax ?? "",
       transmissionFilter: f.transmissionFilter ?? "Alle",
       driveTypeFilter: f.driveTypeFilter ?? "Alle",
       sellerTypeFilter: f.sellerTypeFilter ?? "Alle",

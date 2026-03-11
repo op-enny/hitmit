@@ -27,9 +27,11 @@ function applyFilters(filters: SavedSearch["filters"]): Vehicle[] {
     if (filters.yearFrom && v.year < Number(filters.yearFrom)) return false;
     if (filters.yearTo && v.year > Number(filters.yearTo)) return false;
     // Mileage: direct comparison
+    if (filters.mileageMin !== "" && v.mileage < Number(filters.mileageMin)) return false;
     if (filters.mileageMax !== "" && v.mileage > Number(filters.mileageMax)) return false;
     // Power: direct comparison
     if (filters.powerMin !== "" && v.powerPs < Number(filters.powerMin)) return false;
+    if (filters.powerMax !== "" && v.powerPs > Number(filters.powerMax)) return false;
     if (filters.transmissionFilter && filters.transmissionFilter !== "Alle") {
       const t = v.transmission.toLowerCase();
       if (filters.transmissionFilter === "Automatik" && !t.includes("automatik") && !t.includes("dsg") && !t.includes("pdk") && !t.includes("tronic") && !t.includes("s tronic")) return false;
@@ -166,8 +168,10 @@ function buildSearchUrl(filters: SavedSearch["filters"]): string {
   if (filters.priceMax !== "") params.set("priceMax", filters.priceMax);
   if (filters.yearFrom) params.set("yearFrom", filters.yearFrom);
   if (filters.yearTo) params.set("yearTo", filters.yearTo);
+  if (filters.mileageMin !== "") params.set("mileageMin", filters.mileageMin);
   if (filters.mileageMax !== "") params.set("mileageMax", filters.mileageMax);
   if (filters.powerMin !== "") params.set("powerMin", filters.powerMin);
+  if (filters.powerMax !== "") params.set("powerMax", filters.powerMax);
   if (filters.transmissionFilter && filters.transmissionFilter !== "Alle") params.set("transmission", filters.transmissionFilter);
   if (filters.driveTypeFilter && filters.driveTypeFilter !== "Alle") params.set("driveType", filters.driveTypeFilter);
   if (filters.sellerTypeFilter && filters.sellerTypeFilter !== "Alle") params.set("sellerType", filters.sellerTypeFilter);
@@ -238,8 +242,10 @@ function SearchCard({
   if (f.priceMax !== "") filterTags.push(`bis ${Number(f.priceMax).toLocaleString("de-DE")} €`);
   if (f.yearFrom) filterTags.push(`ab ${f.yearFrom}`);
   if (f.yearTo) filterTags.push(`bis ${f.yearTo}`);
+  if (f.mileageMin !== "") filterTags.push(`ab ${Number(f.mileageMin).toLocaleString("de-DE")} km`);
   if (f.mileageMax !== "") filterTags.push(`bis ${Number(f.mileageMax).toLocaleString("de-DE")} km`);
   if (f.powerMin !== "") filterTags.push(`ab ${f.powerMin} PS`);
+  if (f.powerMax !== "") filterTags.push(`bis ${f.powerMax} PS`);
   if (f.transmissionFilter && f.transmissionFilter !== "Alle") filterTags.push(f.transmissionFilter);
   if (f.driveTypeFilter && f.driveTypeFilter !== "Alle") filterTags.push(f.driveTypeFilter);
   if (f.sellerTypeFilter && f.sellerTypeFilter !== "Alle") filterTags.push(f.sellerTypeFilter);
