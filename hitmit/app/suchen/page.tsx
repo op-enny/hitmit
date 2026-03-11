@@ -1082,40 +1082,19 @@ export default function SuchenPage() {
                 className="w-full bg-white dark:bg-[#1a1a1a] border border-gray-200 dark:border-[#2a2a2a] rounded-xl px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 placeholder:text-gray-400 hover:border-[#f14011] focus:border-[#f14011] focus:outline-none transition-colors"
               />
             </div>
-            <div>
-              <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1.5">
-                Umkreis {cityRadius ? `${cityRadius} km` : "(beliebig)"}
-              </label>
-              {(() => {
-                const radiusSteps = [0, 50, 100, 250, 500, 1000];
-                const idx = radiusSteps.indexOf(Number(cityRadius) || 0);
-                const sliderIdx = idx >= 0 ? idx : 0;
-                return (
-                  <>
-                    <input
-                      type="range"
-                      min="0"
-                      max={radiusSteps.length - 1}
-                      step="1"
-                      value={sliderIdx}
-                      onChange={(e) => {
-                        const v = radiusSteps[Number(e.target.value)];
-                        setCityRadius(v === 0 ? "" : String(v));
-                      }}
-                      className="w-full h-2 bg-gray-200 dark:bg-[#2a2a2a] rounded-lg appearance-none cursor-pointer accent-[#f14011]"
-                    />
-                    <div className="flex justify-between text-[10px] text-gray-400 mt-1">
-                      <span>Alle</span>
-                      <span>50</span>
-                      <span>100</span>
-                      <span>250</span>
-                      <span>500</span>
-                      <span>1000 km</span>
-                    </div>
-                  </>
-                );
-              })()}
-            </div>
+            <FilterSelect
+              label="Umkreis"
+              value={cityRadius || "Alle"}
+              onChange={(v) => setCityRadius(v === "Alle" ? "" : v)}
+              options={[
+                { value: "Alle", label: "Beliebig" },
+                { value: "50", label: "50 km" },
+                { value: "100", label: "100 km" },
+                { value: "250", label: "250 km" },
+                { value: "500", label: "500 km" },
+                { value: "1000", label: "1000 km" },
+              ]}
+            />
             <div>
               <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1.5">Erstzulassung von</label>
               <input
