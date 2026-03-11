@@ -776,9 +776,9 @@ export default function SuchenPage() {
               </div>
             )}
 
-            {/* Row 2: Marke + Modell (conditional) */}
+            {/* Row 2: Marke + Modell (conditional) — full-width sub-row */}
             {showBrandRow2 && (
-              <>
+              <div className="col-span-full grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
                 <FilterSelect
                   label="Marke 2"
                   value={brandFilter2}
@@ -816,12 +816,12 @@ export default function SuchenPage() {
                     </button>
                   )}
                 </div>
-              </>
+              </div>
             )}
 
-            {/* Row 3: Marke + Modell (conditional) */}
+            {/* Row 3: Marke + Modell (conditional) — full-width sub-row */}
             {showBrandRow3 && (
-              <>
+              <div className="col-span-full grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
                 <FilterSelect
                   label="Marke 3"
                   value={brandFilter3}
@@ -848,7 +848,7 @@ export default function SuchenPage() {
                     <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path strokeLinecap="round" d="M6 18L18 6M6 6l12 12" /></svg>
                   </button>
                 </div>
-              </>
+              </div>
             )}
             <div>
               <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1.5">Variante</label>
