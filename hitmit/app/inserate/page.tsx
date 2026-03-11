@@ -1299,16 +1299,14 @@ function InseratePageInner() {
             </div>
           )}
 
-          {/* Variante (Row 1) — appears when model is selected */}
-          {modelFilter !== "" && (
-            <input
-              type="text"
-              value={variantFilter}
-              onChange={(e) => setVariantFilter(e.target.value)}
-              placeholder="Variante (z.B. Clubsport)"
-              className="bg-white dark:bg-[#141414] border border-gray-200 rounded-full px-5 py-2.5 text-sm font-medium text-gray-700 placeholder:text-gray-400 hover:border-[#f14011] focus:border-[#f14011] focus:outline-none transition-colors w-48"
-            />
-          )}
+          {/* Variante (Row 1) */}
+          <input
+            type="text"
+            value={variantFilter}
+            onChange={(e) => setVariantFilter(e.target.value)}
+            placeholder="Variante (z.B. Clubsport)"
+            className="bg-white dark:bg-[#141414] border border-gray-200 rounded-full px-5 py-2.5 text-sm font-medium text-gray-700 placeholder:text-gray-400 hover:border-[#f14011] focus:border-[#f14011] focus:outline-none transition-colors w-48"
+          />
 
           {/* "Weitere Marke" Button — new line below row 1 */}
           {modelFilter !== "" && !showBrandRow2 && (
@@ -1354,15 +1352,13 @@ function InseratePageInner() {
                 </select>
                 <ChevronDownIcon className="w-4 h-4 text-gray-400 absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
               </div>
-              {modelFilter2 !== "" && (
-                <input
-                  type="text"
-                  value={variantFilter2}
-                  onChange={(e) => setVariantFilter2(e.target.value)}
-                  placeholder="Variante"
-                  className="bg-white dark:bg-[#141414] border border-gray-200 rounded-full px-5 py-2.5 text-sm font-medium text-gray-700 placeholder:text-gray-400 hover:border-[#f14011] focus:border-[#f14011] focus:outline-none transition-colors w-48"
-                />
-              )}
+              <input
+                type="text"
+                value={variantFilter2}
+                onChange={(e) => setVariantFilter2(e.target.value)}
+                placeholder="Variante"
+                className="bg-white dark:bg-[#141414] border border-gray-200 rounded-full px-5 py-2.5 text-sm font-medium text-gray-700 placeholder:text-gray-400 hover:border-[#f14011] focus:border-[#f14011] focus:outline-none transition-colors w-48"
+              />
               <button
                 type="button"
                 onClick={() => { setBrandFilter2("Alle Marken"); setModelFilter2(""); setVariantFilter2(""); setShowBrandRow2(false); setBrandFilter3("Alle Marken"); setModelFilter3(""); setVariantFilter3(""); setShowBrandRow3(false); }}
@@ -1370,17 +1366,20 @@ function InseratePageInner() {
               >
                 <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path strokeLinecap="round" d="M6 18L18 6M6 6l12 12" /></svg>
               </button>
-              {/* "+" for Row 3 */}
-              {brandFilter2 !== "Alle Marken" && modelFilter2 !== "" && !showBrandRow3 && (
-                <button
-                  type="button"
-                  onClick={() => setShowBrandRow3(true)}
-                  className="flex items-center gap-1.5 px-3 py-2.5 text-sm font-medium text-[#f14011] border border-dashed border-[#f14011]/40 rounded-full hover:bg-[#f14011]/5 transition-colors"
-                >
-                  <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path strokeLinecap="round" d="M12 5v14M5 12h14" /></svg>
-                  Marke
-                </button>
-              )}
+            </div>
+          )}
+
+          {/* "+" for Row 3 — own line below row 2 */}
+          {showBrandRow2 && brandFilter2 !== "Alle Marken" && modelFilter2 !== "" && !showBrandRow3 && (
+            <div className="basis-full">
+              <button
+                type="button"
+                onClick={() => setShowBrandRow3(true)}
+                className="flex items-center gap-1.5 px-3 py-2.5 text-sm font-medium text-[#f14011] border border-dashed border-[#f14011]/40 rounded-full hover:bg-[#f14011]/5 transition-colors"
+              >
+                <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path strokeLinecap="round" d="M12 5v14M5 12h14" /></svg>
+                Weitere Marke hinzufügen
+              </button>
             </div>
           )}
 
@@ -1414,15 +1413,13 @@ function InseratePageInner() {
                 </select>
                 <ChevronDownIcon className="w-4 h-4 text-gray-400 absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
               </div>
-              {modelFilter3 !== "" && (
-                <input
-                  type="text"
-                  value={variantFilter3}
-                  onChange={(e) => setVariantFilter3(e.target.value)}
-                  placeholder="Variante"
-                  className="bg-white dark:bg-[#141414] border border-gray-200 rounded-full px-5 py-2.5 text-sm font-medium text-gray-700 placeholder:text-gray-400 hover:border-[#f14011] focus:border-[#f14011] focus:outline-none transition-colors w-48"
-                />
-              )}
+              <input
+                type="text"
+                value={variantFilter3}
+                onChange={(e) => setVariantFilter3(e.target.value)}
+                placeholder="Variante"
+                className="bg-white dark:bg-[#141414] border border-gray-200 rounded-full px-5 py-2.5 text-sm font-medium text-gray-700 placeholder:text-gray-400 hover:border-[#f14011] focus:border-[#f14011] focus:outline-none transition-colors w-48"
+              />
               <button
                 type="button"
                 onClick={() => { setBrandFilter3("Alle Marken"); setModelFilter3(""); setVariantFilter3(""); setShowBrandRow3(false); }}
