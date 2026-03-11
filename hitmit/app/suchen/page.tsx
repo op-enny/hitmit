@@ -1080,12 +1080,17 @@ export default function SuchenPage() {
                 className="w-full bg-white dark:bg-[#1a1a1a] border border-gray-200 dark:border-[#2a2a2a] rounded-xl px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 placeholder:text-gray-400 hover:border-[#f14011] focus:border-[#f14011] focus:outline-none transition-colors"
               />
             </div>
-            <FilterSelect
-              label="HU"
-              value={huFilter}
-              onChange={setHuFilter}
-              options={huOptions.map((h) => ({ value: h, label: h }))}
-            />
+            <div className="flex items-end">
+              <label className="flex items-center gap-2 px-4 py-2.5 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={huFilter === "Neu (mind. 12 Monate)"}
+                  onChange={(e) => setHuFilter(e.target.checked ? "Neu (mind. 12 Monate)" : "Alle")}
+                  className="w-4 h-4 rounded border-gray-300 dark:border-gray-600 text-[#f14011] focus:ring-[#f14011] cursor-pointer"
+                />
+                <span className="text-sm text-gray-700 dark:text-gray-300">HU neu</span>
+              </label>
+            </div>
             <FilterSelect
               label="Vorbesitzer"
               value={previousOwnersFilter}
@@ -1140,12 +1145,17 @@ export default function SuchenPage() {
               onChange={setServiceBookFilter}
               options={[{ value: "Alle", label: "Alle" }, { value: "Ja", label: "Ja" }, { value: "Nein", label: "Nein" }]}
             />
-            <FilterSelect
-              label="Herstellergarantie"
-              value={manufacturerWarrantyFilter}
-              onChange={setManufacturerWarrantyFilter}
-              options={[{ value: "Alle", label: "Alle" }, { value: "Vorhanden", label: "Vorhanden" }, { value: "Nicht vorhanden", label: "Nicht vorhanden" }]}
-            />
+            <div className="flex items-end">
+              <label className="flex items-center gap-2 px-4 py-2.5 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={manufacturerWarrantyFilter === "Vorhanden"}
+                  onChange={(e) => setManufacturerWarrantyFilter(e.target.checked ? "Vorhanden" : "Alle")}
+                  className="w-4 h-4 rounded border-gray-300 dark:border-gray-600 text-[#f14011] focus:ring-[#f14011] cursor-pointer"
+                />
+                <span className="text-sm text-gray-700 dark:text-gray-300">Herstellergarantie</span>
+              </label>
+            </div>
             <FilterSelect
               label="Nichtraucherfahrzeug"
               value={nonSmokerFilter}

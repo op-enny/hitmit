@@ -2065,20 +2065,16 @@ function InseratePageInner() {
               </div>
 
               {/* Manufacturer Warranty */}
-              <div>
-                <label className="block text-xs font-medium text-gray-500 mb-1.5">Herstellergarantie</label>
-                <div className="relative">
-                  <select
-                    value={manufacturerWarrantyFilter}
-                    onChange={(e) => setManufacturerWarrantyFilter(e.target.value)}
-                    className="w-full appearance-none bg-gray-50 dark:bg-[#1a1a1a] border border-gray-200 rounded-xl px-4 py-2.5 pr-9 text-sm text-gray-700 hover:border-[#f14011] focus:border-[#f14011] focus:outline-none transition-colors cursor-pointer"
-                  >
-                    <option value="Alle">Alle</option>
-                    <option value="Vorhanden">Vorhanden</option>
-                    <option value="Nicht vorhanden">Nicht vorhanden</option>
-                  </select>
-                  <ChevronDownIcon className="w-4 h-4 text-gray-400 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
-                </div>
+              <div className="flex items-end">
+                <label className="flex items-center gap-2 px-4 py-2.5 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={manufacturerWarrantyFilter === "Vorhanden"}
+                    onChange={(e) => setManufacturerWarrantyFilter(e.target.checked ? "Vorhanden" : "Alle")}
+                    className="w-4 h-4 rounded border-gray-300 dark:border-gray-600 text-[#f14011] focus:ring-[#f14011] cursor-pointer"
+                  />
+                  <span className="text-sm text-gray-700 dark:text-gray-300">Herstellergarantie</span>
+                </label>
               </div>
 
               {/* Non-Smoker */}
