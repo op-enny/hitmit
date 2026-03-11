@@ -59,6 +59,8 @@ export interface Vehicle {
   noRepaint?: boolean;
   serviceBookMaintained?: boolean;
   manufacturerWarranty?: boolean;
+  nonSmokerVehicle?: boolean;
+  petFreeVehicle?: boolean;
   gradient: string;
 }
 
@@ -114,6 +116,8 @@ export const vehicles: Vehicle[] = [
     noRepaint: true,
     serviceBookMaintained: true,
     manufacturerWarranty: false,
+    nonSmokerVehicle: true,
+    petFreeVehicle: true,
     gradient: "from-blue-600 via-blue-800 to-gray-900",
   },
   {
@@ -164,6 +168,8 @@ export const vehicles: Vehicle[] = [
     noRepaint: true,
     serviceBookMaintained: true,
     manufacturerWarranty: false,
+    nonSmokerVehicle: true,
+    petFreeVehicle: false,
     gradient: "from-red-500 via-red-700 to-gray-900",
   },
   {
@@ -215,6 +221,8 @@ export const vehicles: Vehicle[] = [
     noRepaint: true,
     serviceBookMaintained: true,
     manufacturerWarranty: true,
+    nonSmokerVehicle: true,
+    petFreeVehicle: true,
     gradient: "from-gray-700 via-gray-900 to-black",
   },
   {
@@ -265,6 +273,8 @@ export const vehicles: Vehicle[] = [
     noRepaint: true,
     serviceBookMaintained: true,
     manufacturerWarranty: true,
+    nonSmokerVehicle: false,
+    petFreeVehicle: true,
     gradient: "from-indigo-600 via-indigo-900 to-gray-900",
   },
   {
@@ -315,6 +325,8 @@ export const vehicles: Vehicle[] = [
     noRepaint: true,
     serviceBookMaintained: false,
     manufacturerWarranty: false,
+    nonSmokerVehicle: true,
+    petFreeVehicle: false,
     gradient: "from-sky-400 via-sky-600 to-gray-900",
   },
   {
@@ -366,6 +378,8 @@ export const vehicles: Vehicle[] = [
     noRepaint: true,
     serviceBookMaintained: true,
     manufacturerWarranty: true,
+    nonSmokerVehicle: true,
+    petFreeVehicle: true,
     gradient: "from-gray-500 via-gray-700 to-gray-900",
   },
 ];

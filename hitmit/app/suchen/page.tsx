@@ -150,11 +150,15 @@ function ResultCard({
   currentSearchId,
   isVehicleSaved,
   onToggleSave,
+  isFavorited,
+  onToggleFavorite,
 }: {
   vehicle: Vehicle;
   currentSearchId: string | null;
   isVehicleSaved: boolean;
   onToggleSave: () => void;
+  isFavorited: boolean;
+  onToggleFavorite: () => void;
 }) {
   return (
     <div className="card cursor-pointer overflow-hidden group relative">
@@ -196,10 +200,23 @@ function ResultCard({
           </div>
         </div>
       </Link>
+      <button
+        onClick={(e) => { e.preventDefault(); e.stopPropagation(); onToggleFavorite(); }}
+        className={`absolute top-3 left-3 w-9 h-9 rounded-full backdrop-blur-sm flex items-center justify-center transition-colors z-10 ${
+          isFavorited
+            ? "bg-[#f14011]/90 text-white hover:bg-[#f14011]"
+            : "bg-white/20 text-white hover:bg-white/40"
+        }`}
+        aria-label={isFavorited ? "Favorit entfernen" : "Als Favorit speichern"}
+      >
+        <svg className="w-5 h-5" viewBox="0 0 24 24" fill={isFavorited ? "#fff" : "none"} stroke="currentColor" strokeWidth="2">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+        </svg>
+      </button>
       {currentSearchId && (
         <button
           onClick={(e) => { e.preventDefault(); e.stopPropagation(); onToggleSave(); }}
-          className={`absolute top-3 left-3 w-9 h-9 rounded-full backdrop-blur-sm flex items-center justify-center transition-colors z-10 ${
+          className={`absolute top-3 left-12 w-9 h-9 rounded-full backdrop-blur-sm flex items-center justify-center transition-colors z-10 ${
             isVehicleSaved
               ? "bg-[#f14011]/90 text-white hover:bg-[#f14011]"
               : "bg-white/20 text-white hover:bg-white/40"
@@ -301,6 +318,8 @@ export default function SuchenPage() {
   const [serviceBookFilter, setServiceBookFilter] = useState("Alle");
   const [manufacturerWarrantyFilter, setManufacturerWarrantyFilter] = useState("Alle");
   const [ausstattungSearch, setAusstattungSearch] = useState("");
+  const [nonSmokerFilter, setNonSmokerFilter] = useState("Alle");
+  const [petFreeFilter, setPetFreeFilter] = useState("Alle");
   const [safetyFeaturesFilter, setSafetyFeaturesFilter] = useState<string[]>([]);
   const [equipmentFeaturesFilter, setEquipmentFeaturesFilter] = useState<string[]>([]);
   const [showSafetyFeatures, setShowSafetyFeatures] = useState(false);
@@ -310,7 +329,7 @@ export default function SuchenPage() {
   const [hasSearched, setHasSearched] = useState(false);
   const [searchSaved, setSearchSaved] = useState(false);
   const [currentSearchId, setCurrentSearchId] = useState<string | null>(null);
-  const { mounted, saveSearch, toggleVehicleInSearch, isVehicleSavedInSearch } = useSavedData();
+  const { mounted, saveSearch, toggleVehicleInSearch, isVehicleSavedInSearch, toggleFavorite, isFavorite } = useSavedData();
 
   // Close motorization dropdown on click outside
   useEffect(() => {
@@ -444,6 +463,10 @@ export default function SuchenPage() {
       if (manufacturerWarrantyFilter === "Vorhanden" && !v.manufacturerWarranty) return false;
       if (manufacturerWarrantyFilter === "Nicht vorhanden" && v.manufacturerWarranty) return false;
     }
+    if (nonSmokerFilter === "Ja" && !v.nonSmokerVehicle) return false;
+    if (nonSmokerFilter === "Nein" && v.nonSmokerVehicle) return false;
+    if (petFreeFilter === "Ja" && !v.petFreeVehicle) return false;
+    if (petFreeFilter === "Nein" && v.petFreeVehicle) return false;
     if (ausstattungSearch.trim() !== "") {
       const allFeatures = [...v.comfortFeatures, ...v.safetyFeatures, ...v.exteriorFeatures, ...v.multimediaFeatures];
       const terms = ausstattungSearch.toLowerCase().split(",").map((t) => t.trim()).filter(Boolean);
@@ -504,6 +527,8 @@ export default function SuchenPage() {
     noRepaintFilter !== "Alle",
     serviceBookFilter !== "Alle",
     manufacturerWarrantyFilter !== "Alle",
+    nonSmokerFilter !== "Alle",
+    petFreeFilter !== "Alle",
     ausstattungSearch.trim() !== "",
     safetyFeaturesFilter.length > 0,
     equipmentFeaturesFilter.length > 0,
@@ -529,6 +554,7 @@ export default function SuchenPage() {
     setSeatMaterialFilter("Alle"); setClimateZoneFilter(""); setRimSizeFilter("");
     setPaintProtectionFilmFilter("Alle"); setNoRepaintFilter("Alle");
     setServiceBookFilter("Alle"); setManufacturerWarrantyFilter("Alle");
+    setNonSmokerFilter("Alle"); setPetFreeFilter("Alle");
     setAusstattungSearch("");
     setSafetyFeaturesFilter([]); setEquipmentFeaturesFilter([]);
   };
@@ -577,6 +603,8 @@ export default function SuchenPage() {
     if (noRepaintFilter !== "Alle") parts.push(`Nachlackierungsfrei: ${noRepaintFilter}`);
     if (serviceBookFilter !== "Alle") parts.push(`Scheckheft: ${serviceBookFilter}`);
     if (manufacturerWarrantyFilter !== "Alle") parts.push(`Garantie: ${manufacturerWarrantyFilter}`);
+    if (nonSmokerFilter !== "Alle") parts.push(`Nichtraucher: ${nonSmokerFilter}`);
+    if (petFreeFilter !== "Alle") parts.push(`Tierfrei: ${petFreeFilter}`);
     if (ausstattungSearch.trim()) parts.push(`"${ausstattungSearch.trim()}"`);
     if (safetyFeaturesFilter.length > 0) parts.push(`${safetyFeaturesFilter.length}x Sicherheit`);
     if (equipmentFeaturesFilter.length > 0) parts.push(`${equipmentFeaturesFilter.length}x Ausstattung`);
@@ -601,6 +629,7 @@ export default function SuchenPage() {
         seatMaterialFilter, climateZoneFilter, rimSizeFilter,
         paintProtectionFilmFilter, noRepaintFilter,
         serviceBookFilter, manufacturerWarrantyFilter,
+        nonSmokerFilter, petFreeFilter,
         ausstattungSearch, safetyFeaturesFilter, equipmentFeaturesFilter,
       },
       filtered.map((v) => v.id),
@@ -935,6 +964,18 @@ export default function SuchenPage() {
               onChange={setManufacturerWarrantyFilter}
               options={[{ value: "Alle", label: "Alle" }, { value: "Vorhanden", label: "Vorhanden" }, { value: "Nicht vorhanden", label: "Nicht vorhanden" }]}
             />
+            <FilterSelect
+              label="Nichtraucherfahrzeug"
+              value={nonSmokerFilter}
+              onChange={setNonSmokerFilter}
+              options={[{ value: "Alle", label: "Alle" }, { value: "Ja", label: "Ja" }, { value: "Nein", label: "Nein" }]}
+            />
+            <FilterSelect
+              label="Tierfreies Fahrzeug"
+              value={petFreeFilter}
+              onChange={setPetFreeFilter}
+              options={[{ value: "Alle", label: "Alle" }, { value: "Ja", label: "Ja" }, { value: "Nein", label: "Nein" }]}
+            />
           </div>
 
           {/* Section: Freie Ausstattungssuche */}
@@ -1098,6 +1139,8 @@ export default function SuchenPage() {
                     currentSearchId={currentSearchId}
                     isVehicleSaved={currentSearchId ? isVehicleSavedInSearch(currentSearchId, vehicle.id) : false}
                     onToggleSave={() => { if (currentSearchId) toggleVehicleInSearch(currentSearchId, vehicle.id); }}
+                    isFavorited={mounted ? isFavorite(vehicle.id) : false}
+                    onToggleFavorite={() => toggleFavorite(vehicle.id)}
                   />
                 </div>
               ))}

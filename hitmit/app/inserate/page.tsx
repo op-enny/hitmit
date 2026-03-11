@@ -639,6 +639,16 @@ function DetailModal({ vehicle, onClose, isDealer }: { vehicle: Vehicle; onClose
                 Herstellergarantie
               </span>
             )}
+            {vehicle.nonSmokerVehicle && (
+              <span className="px-3 py-1 bg-green-50 text-green-700 rounded-full text-sm font-medium">
+                Nichtraucherfahrzeug
+              </span>
+            )}
+            {vehicle.petFreeVehicle && (
+              <span className="px-3 py-1 bg-green-50 text-green-700 rounded-full text-sm font-medium">
+                Tierfreies Fahrzeug
+              </span>
+            )}
             {vehicle.mwstAusweisbar && (
               <span className="px-3 py-1 bg-blue-50 text-blue-700 rounded-full text-sm font-medium">
                 MwSt. ausweisbar
@@ -1235,6 +1245,7 @@ function InseratePageInner() {
                     seatMaterialFilter: "Alle", climateZoneFilter: "", rimSizeFilter: "",
                     paintProtectionFilmFilter: "Alle", noRepaintFilter: "Alle",
                     serviceBookFilter: "Alle", manufacturerWarrantyFilter: "Alle",
+                    nonSmokerFilter: "Alle", petFreeFilter: "Alle",
                     safetyFeaturesFilter: [], equipmentFeaturesFilter: [],
                   },
                   filtered.map((v) => v.id),
