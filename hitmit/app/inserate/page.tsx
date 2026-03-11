@@ -1311,7 +1311,7 @@ function InseratePageInner() {
           </div>
 
           {/* "Weitere Marke" Button — own line below row 1 */}
-          {modelFilter !== "" && !showBrandRow2 && (
+          {brandFilter !== "Alle Marken" && !showBrandRow2 && (
             <button
               type="button"
               onClick={() => setShowBrandRow2(true)}
