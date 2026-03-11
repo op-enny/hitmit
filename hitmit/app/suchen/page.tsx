@@ -298,6 +298,8 @@ export default function SuchenPage() {
   const [modelFilter2, setModelFilter2] = useState("");
   const [brandFilter3, setBrandFilter3] = useState("Alle Marken");
   const [modelFilter3, setModelFilter3] = useState("");
+  const [variantFilter2, setVariantFilter2] = useState("");
+  const [variantFilter3, setVariantFilter3] = useState("");
   const [showBrandRow2, setShowBrandRow2] = useState(false);
   const [showBrandRow3, setShowBrandRow3] = useState(false);
   const [motorizationFilter, setMotorizationFilter] = useState<string[]>([]);
@@ -358,11 +360,11 @@ export default function SuchenPage() {
 
   // Filter logic
   const filtered = vehicles.filter((v) => {
-    // Brand+Model: ODER-Logik über bis zu 3 Paare
-    const brandModelPairs: { brand: string; model: string }[] = [];
-    if (brandFilter !== "Alle Marken") brandModelPairs.push({ brand: brandFilter, model: modelFilter });
-    if (brandFilter2 !== "Alle Marken") brandModelPairs.push({ brand: brandFilter2, model: modelFilter2 });
-    if (brandFilter3 !== "Alle Marken") brandModelPairs.push({ brand: brandFilter3, model: modelFilter3 });
+    // Brand+Model+Variant: ODER-Logik über bis zu 3 Paare
+    const brandModelPairs: { brand: string; model: string; variant: string }[] = [];
+    if (brandFilter !== "Alle Marken") brandModelPairs.push({ brand: brandFilter, model: modelFilter, variant: variantFilter });
+    if (brandFilter2 !== "Alle Marken") brandModelPairs.push({ brand: brandFilter2, model: modelFilter2, variant: variantFilter2 });
+    if (brandFilter3 !== "Alle Marken") brandModelPairs.push({ brand: brandFilter3, model: modelFilter3, variant: variantFilter3 });
 
     if (brandModelPairs.length > 0) {
       const matchesAny = brandModelPairs.some((pair) => {
@@ -374,9 +376,12 @@ export default function SuchenPage() {
             if (!v.model.toLowerCase().includes(pair.model.toLowerCase())) return false;
           }
         }
+        if (pair.variant !== "" && !v.variant.toLowerCase().includes(pair.variant.toLowerCase())) return false;
         return true;
       });
       if (!matchesAny) return false;
+    } else {
+      if (variantFilter !== "" && !v.variant.toLowerCase().includes(variantFilter.toLowerCase())) return false;
     }
 
     if (fuelFilter !== "Alle Kraftstoffe" && v.fuelType !== fuelFilter) return false;
@@ -426,7 +431,6 @@ export default function SuchenPage() {
     }
     if (seatFilter !== "" && v.seats !== seatFilter) return false;
     if (motorizationFilter.length > 0 && !motorizationFilter.some((m) => v.model.toLowerCase().includes(m.toLowerCase()))) return false;
-    if (variantFilter !== "" && !v.variant.toLowerCase().includes(variantFilter.toLowerCase())) return false;
     if (vehicleTypeFilter !== "Alle" && v.vehicleType !== vehicleTypeFilter) return false;
     if (vehicleCategoryFilter !== "Alle" && v.vehicleCategory !== vehicleCategoryFilter) return false;
     if (mwstFilter !== "Alle") {
@@ -536,7 +540,6 @@ export default function SuchenPage() {
     doorFilter !== "Alle",
     seatFilter !== "",
     motorizationFilter.length > 0,
-    variantFilter !== "",
     vehicleTypeFilter !== "Alle",
     vehicleCategoryFilter !== "Alle",
     mwstFilter !== "Alle",
@@ -579,8 +582,8 @@ export default function SuchenPage() {
     setColorFilter("Alle Farben"); setConditionFilter("Alle");
     setDoorFilter("Alle"); setSeatFilter("");
     setModelFilter("");
-    setBrandFilter2("Alle Marken"); setModelFilter2("");
-    setBrandFilter3("Alle Marken"); setModelFilter3("");
+    setBrandFilter2("Alle Marken"); setModelFilter2(""); setVariantFilter2("");
+    setBrandFilter3("Alle Marken"); setModelFilter3(""); setVariantFilter3("");
     setShowBrandRow2(false); setShowBrandRow3(false);
     setVariantFilter("");
     setVehicleTypeFilter("Alle"); setVehicleCategoryFilter("Alle");
@@ -600,8 +603,11 @@ export default function SuchenPage() {
   const handleSaveSearch = () => {
     const parts: string[] = [];
     if (brandFilter !== "Alle Marken") parts.push(modelFilter ? `${brandFilter} ${modelFilter}` : brandFilter);
+    if (variantFilter) parts.push(variantFilter);
     if (brandFilter2 !== "Alle Marken") parts.push(modelFilter2 ? `${brandFilter2} ${modelFilter2}` : brandFilter2);
+    if (variantFilter2) parts.push(variantFilter2);
     if (brandFilter3 !== "Alle Marken") parts.push(modelFilter3 ? `${brandFilter3} ${modelFilter3}` : brandFilter3);
+    if (variantFilter3) parts.push(variantFilter3);
     if (fuelFilter !== "Alle Kraftstoffe") parts.push(fuelFilter);
     if (priceMin !== "") parts.push(`ab ${Number(priceMin).toLocaleString("de-DE")} €`);
     if (priceMax !== "") parts.push(`bis ${Number(priceMax).toLocaleString("de-DE")} €`);
@@ -621,7 +627,6 @@ export default function SuchenPage() {
     if (doorFilter !== "Alle") parts.push(`${doorFilter} Türen`);
     if (seatFilter !== "") parts.push(`${seatFilter} Sitze`);
     if (motorizationFilter.length > 0) parts.push(motorizationFilter.join(", "));
-    if (variantFilter) parts.push(variantFilter);
     if (vehicleTypeFilter !== "Alle") parts.push(vehicleTypeFilter);
     if (vehicleCategoryFilter !== "Alle") parts.push(vehicleCategoryFilter);
     if (mwstFilter !== "Alle") parts.push(`MwSt: ${mwstFilter}`);
@@ -762,6 +767,17 @@ export default function SuchenPage() {
                 )}
               </div>
             )}
+            {/* Variante (Row 1) */}
+            <div>
+              <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1.5">Variante</label>
+              <input
+                type="text"
+                value={variantFilter}
+                onChange={(e) => setVariantFilter(e.target.value)}
+                placeholder="z.B. Clubsport, AMG"
+                className="w-full bg-white dark:bg-[#1a1a1a] border border-gray-200 dark:border-[#2a2a2a] rounded-xl px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 placeholder:text-gray-400 hover:border-[#f14011] focus:border-[#f14011] focus:outline-none transition-colors"
+              />
+            </div>
             {/* "+" Button to add Row 2 */}
             {brandFilter !== "Alle Marken" && !showBrandRow2 && (
               <div className="col-span-full">
@@ -776,13 +792,13 @@ export default function SuchenPage() {
               </div>
             )}
 
-            {/* Row 2: Marke + Modell (conditional) — full-width sub-row */}
+            {/* Row 2: Marke + Modell + Variante (conditional) — full-width sub-row */}
             {showBrandRow2 && (
               <div className="col-span-full grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
                 <FilterSelect
                   label="Marke 2"
                   value={brandFilter2}
-                  onChange={(v) => { setBrandFilter2(v); setModelFilter2(""); }}
+                  onChange={(v) => { setBrandFilter2(v); setModelFilter2(""); setVariantFilter2(""); }}
                   options={brandOptions.map((b) => ({ value: b, label: b }))}
                 />
                 <FilterSelect
@@ -796,36 +812,49 @@ export default function SuchenPage() {
                       : []),
                   ]}
                 />
-                <div className="flex items-end gap-2">
+                <div>
+                  <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1.5">Variante 2</label>
+                  <input
+                    type="text"
+                    value={variantFilter2}
+                    onChange={(e) => setVariantFilter2(e.target.value)}
+                    placeholder="z.B. Clubsport, AMG"
+                    className="w-full bg-white dark:bg-[#1a1a1a] border border-gray-200 dark:border-[#2a2a2a] rounded-xl px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 placeholder:text-gray-400 hover:border-[#f14011] focus:border-[#f14011] focus:outline-none transition-colors"
+                  />
+                </div>
+                <div className="flex items-end">
                   <button
                     type="button"
-                    onClick={() => { setBrandFilter2("Alle Marken"); setModelFilter2(""); setShowBrandRow2(false); setBrandFilter3("Alle Marken"); setModelFilter3(""); setShowBrandRow3(false); }}
+                    onClick={() => { setBrandFilter2("Alle Marken"); setModelFilter2(""); setVariantFilter2(""); setShowBrandRow2(false); setBrandFilter3("Alle Marken"); setModelFilter3(""); setVariantFilter3(""); setShowBrandRow3(false); }}
                     className="flex items-center gap-1 px-3 py-2.5 text-sm font-medium text-gray-400 border border-gray-200 dark:border-[#2a2a2a] rounded-xl hover:text-red-500 hover:border-red-300 transition-colors"
                   >
                     <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path strokeLinecap="round" d="M6 18L18 6M6 6l12 12" /></svg>
                   </button>
-                  {/* "+" Button to add Row 3 */}
-                  {brandFilter2 !== "Alle Marken" && !showBrandRow3 && (
-                    <button
-                      type="button"
-                      onClick={() => setShowBrandRow3(true)}
-                      className="flex items-center gap-1.5 px-3 py-2.5 text-sm font-medium text-[#f14011] border border-dashed border-[#f14011]/40 rounded-xl hover:bg-[#f14011]/5 transition-colors"
-                    >
-                      <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path strokeLinecap="round" d="M12 5v14M5 12h14" /></svg>
-                      Marke
-                    </button>
-                  )}
                 </div>
               </div>
             )}
 
-            {/* Row 3: Marke + Modell (conditional) — full-width sub-row */}
+            {/* "+" Button to add Row 3 — own line below row 2 */}
+            {showBrandRow2 && brandFilter2 !== "Alle Marken" && !showBrandRow3 && (
+              <div className="col-span-full">
+                <button
+                  type="button"
+                  onClick={() => setShowBrandRow3(true)}
+                  className="flex items-center gap-1.5 px-3 py-2.5 text-sm font-medium text-[#f14011] border border-dashed border-[#f14011]/40 rounded-xl hover:bg-[#f14011]/5 transition-colors"
+                >
+                  <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path strokeLinecap="round" d="M12 5v14M5 12h14" /></svg>
+                  Weitere Marke hinzufügen
+                </button>
+              </div>
+            )}
+
+            {/* Row 3: Marke + Modell + Variante (conditional) — full-width sub-row */}
             {showBrandRow3 && (
               <div className="col-span-full grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
                 <FilterSelect
                   label="Marke 3"
                   value={brandFilter3}
-                  onChange={(v) => { setBrandFilter3(v); setModelFilter3(""); }}
+                  onChange={(v) => { setBrandFilter3(v); setModelFilter3(""); setVariantFilter3(""); }}
                   options={brandOptions.map((b) => ({ value: b, label: b }))}
                 />
                 <FilterSelect
@@ -839,10 +868,20 @@ export default function SuchenPage() {
                       : []),
                   ]}
                 />
+                <div>
+                  <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1.5">Variante 3</label>
+                  <input
+                    type="text"
+                    value={variantFilter3}
+                    onChange={(e) => setVariantFilter3(e.target.value)}
+                    placeholder="z.B. Clubsport, AMG"
+                    className="w-full bg-white dark:bg-[#1a1a1a] border border-gray-200 dark:border-[#2a2a2a] rounded-xl px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 placeholder:text-gray-400 hover:border-[#f14011] focus:border-[#f14011] focus:outline-none transition-colors"
+                  />
+                </div>
                 <div className="flex items-end">
                   <button
                     type="button"
-                    onClick={() => { setBrandFilter3("Alle Marken"); setModelFilter3(""); setShowBrandRow3(false); }}
+                    onClick={() => { setBrandFilter3("Alle Marken"); setModelFilter3(""); setVariantFilter3(""); setShowBrandRow3(false); }}
                     className="flex items-center gap-1 px-3 py-2.5 text-sm font-medium text-gray-400 border border-gray-200 dark:border-[#2a2a2a] rounded-xl hover:text-red-500 hover:border-red-300 transition-colors"
                   >
                     <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path strokeLinecap="round" d="M6 18L18 6M6 6l12 12" /></svg>
@@ -850,16 +889,6 @@ export default function SuchenPage() {
                 </div>
               </div>
             )}
-            <div>
-              <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1.5">Variante</label>
-              <input
-                type="text"
-                value={variantFilter}
-                onChange={(e) => setVariantFilter(e.target.value)}
-                placeholder="z.B. Clubsport, AMG"
-                className="w-full bg-white dark:bg-[#1a1a1a] border border-gray-200 dark:border-[#2a2a2a] rounded-xl px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 placeholder:text-gray-400 hover:border-[#f14011] focus:border-[#f14011] focus:outline-none transition-colors"
-              />
-            </div>
             <FilterSelect
               label="Fahrzeugtyp"
               value={vehicleTypeFilter}
