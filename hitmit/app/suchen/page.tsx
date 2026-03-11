@@ -291,6 +291,12 @@ export default function SuchenPage() {
 
   // New filters
   const [modelFilter, setModelFilter] = useState("");
+  const [brandFilter2, setBrandFilter2] = useState("Alle Marken");
+  const [modelFilter2, setModelFilter2] = useState("");
+  const [brandFilter3, setBrandFilter3] = useState("Alle Marken");
+  const [modelFilter3, setModelFilter3] = useState("");
+  const [showBrandRow2, setShowBrandRow2] = useState(false);
+  const [showBrandRow3, setShowBrandRow3] = useState(false);
   const [motorizationFilter, setMotorizationFilter] = useState<string[]>([]);
   const [showMotorizationDropdown, setShowMotorizationDropdown] = useState(false);
   const motorizationRef = useRef<HTMLDivElement>(null);
@@ -346,7 +352,27 @@ export default function SuchenPage() {
 
   // Filter logic
   const filtered = vehicles.filter((v) => {
-    if (brandFilter !== "Alle Marken" && v.brand !== brandFilter) return false;
+    // Brand+Model: ODER-Logik über bis zu 3 Paare
+    const brandModelPairs: { brand: string; model: string }[] = [];
+    if (brandFilter !== "Alle Marken") brandModelPairs.push({ brand: brandFilter, model: modelFilter });
+    if (brandFilter2 !== "Alle Marken") brandModelPairs.push({ brand: brandFilter2, model: modelFilter2 });
+    if (brandFilter3 !== "Alle Marken") brandModelPairs.push({ brand: brandFilter3, model: modelFilter3 });
+
+    if (brandModelPairs.length > 0) {
+      const matchesAny = brandModelPairs.some((pair) => {
+        if (v.brand !== pair.brand) return false;
+        if (pair.model !== "") {
+          if (pair.brand === "Mercedes-Benz" && MERCEDES_MOTORIZATIONS[pair.model]) {
+            if (!MERCEDES_MOTORIZATIONS[pair.model].some((m) => v.model.toLowerCase().includes(m.toLowerCase()))) return false;
+          } else {
+            if (!v.model.toLowerCase().includes(pair.model.toLowerCase())) return false;
+          }
+        }
+        return true;
+      });
+      if (!matchesAny) return false;
+    }
+
     if (fuelFilter !== "Alle Kraftstoffe" && v.fuelType !== fuelFilter) return false;
     if (priceMin !== "" && v.price < Number(priceMin)) return false;
     if (priceMax !== "" && v.price > Number(priceMax)) return false;
@@ -393,13 +419,6 @@ export default function SuchenPage() {
       if (doorFilter === "6/7" && !["6", "7"].includes(v.doors)) return false;
     }
     if (seatFilter !== "" && v.seats !== seatFilter) return false;
-    if (modelFilter !== "") {
-      if (brandFilter === "Mercedes-Benz" && MERCEDES_MOTORIZATIONS[modelFilter]) {
-        if (!MERCEDES_MOTORIZATIONS[modelFilter].some((m) => v.model.toLowerCase().includes(m.toLowerCase()))) return false;
-      } else {
-        if (!v.model.toLowerCase().includes(modelFilter.toLowerCase())) return false;
-      }
-    }
     if (motorizationFilter.length > 0 && !motorizationFilter.some((m) => v.model.toLowerCase().includes(m.toLowerCase()))) return false;
     if (variantFilter !== "" && !v.variant.toLowerCase().includes(variantFilter.toLowerCase())) return false;
     if (vehicleTypeFilter !== "Alle" && v.vehicleType !== vehicleTypeFilter) return false;
@@ -484,7 +503,7 @@ export default function SuchenPage() {
   });
 
   const activeFilterCount = [
-    brandFilter !== "Alle Marken",
+    brandFilter !== "Alle Marken" || brandFilter2 !== "Alle Marken" || brandFilter3 !== "Alle Marken",
     fuelFilter !== "Alle Kraftstoffe",
     priceMin !== "",
     priceMax !== "",
@@ -504,7 +523,6 @@ export default function SuchenPage() {
     conditionFilter !== "Alle",
     doorFilter !== "Alle",
     seatFilter !== "",
-    modelFilter !== "",
     motorizationFilter.length > 0,
     variantFilter !== "",
     vehicleTypeFilter !== "Alle",
@@ -545,7 +563,11 @@ export default function SuchenPage() {
     setCityFilter(""); setCityRadius("");
     setColorFilter("Alle Farben"); setConditionFilter("Alle");
     setDoorFilter("Alle"); setSeatFilter("");
-    setModelFilter(""); setVariantFilter("");
+    setModelFilter("");
+    setBrandFilter2("Alle Marken"); setModelFilter2("");
+    setBrandFilter3("Alle Marken"); setModelFilter3("");
+    setShowBrandRow2(false); setShowBrandRow3(false);
+    setVariantFilter("");
     setVehicleTypeFilter("Alle"); setVehicleCategoryFilter("Alle");
     setMwstFilter("Alle"); setFirstRegFrom(""); setFirstRegTo("");
     setHuFilter("Alle"); setPreviousOwnersFilter("Alle");
@@ -561,7 +583,9 @@ export default function SuchenPage() {
 
   const handleSaveSearch = () => {
     const parts: string[] = [];
-    if (brandFilter !== "Alle Marken") parts.push(brandFilter);
+    if (brandFilter !== "Alle Marken") parts.push(modelFilter ? `${brandFilter} ${modelFilter}` : brandFilter);
+    if (brandFilter2 !== "Alle Marken") parts.push(modelFilter2 ? `${brandFilter2} ${modelFilter2}` : brandFilter2);
+    if (brandFilter3 !== "Alle Marken") parts.push(modelFilter3 ? `${brandFilter3} ${modelFilter3}` : brandFilter3);
     if (fuelFilter !== "Alle Kraftstoffe") parts.push(fuelFilter);
     if (priceMin !== "") parts.push(`ab ${Number(priceMin).toLocaleString("de-DE")} €`);
     if (priceMax !== "") parts.push(`bis ${Number(priceMax).toLocaleString("de-DE")} €`);
@@ -580,7 +604,6 @@ export default function SuchenPage() {
     if (conditionFilter !== "Alle") parts.push(conditionFilter);
     if (doorFilter !== "Alle") parts.push(`${doorFilter} Türen`);
     if (seatFilter !== "") parts.push(`${seatFilter} Sitze`);
-    if (modelFilter) parts.push(modelFilter);
     if (motorizationFilter.length > 0) parts.push(motorizationFilter.join(", "));
     if (variantFilter) parts.push(variantFilter);
     if (vehicleTypeFilter !== "Alle") parts.push(vehicleTypeFilter);
@@ -620,7 +643,8 @@ export default function SuchenPage() {
         cityFilter, cityRadius,
         colorFilter, conditionFilter,
         doorFilter, seatFilter,
-        modelFilter, motorizationFilter, variantFilter,
+        modelFilter, brandFilter2, modelFilter2, brandFilter3, modelFilter3,
+        motorizationFilter, variantFilter,
         vehicleTypeFilter, vehicleCategoryFilter,
         mwstFilter, firstRegFrom, firstRegTo,
         huFilter, previousOwnersFilter,
@@ -662,6 +686,7 @@ export default function SuchenPage() {
           {/* Section: Fahrzeug */}
           <h3 className="text-sm font-semibold text-gray-900 dark:text-gray-100 uppercase tracking-wider mb-4">Fahrzeug</h3>
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 mb-6">
+            {/* Row 1: Marke + Modell (always visible) */}
             <FilterSelect
               label="Marke"
               value={brandFilter}
@@ -716,6 +741,94 @@ export default function SuchenPage() {
                   </div>
                 )}
               </div>
+            )}
+            {/* "+" Button to add Row 2 */}
+            {brandFilter !== "Alle Marken" && !showBrandRow2 && (
+              <div className="flex items-end">
+                <button
+                  type="button"
+                  onClick={() => setShowBrandRow2(true)}
+                  className="flex items-center gap-1.5 px-3 py-2.5 text-sm font-medium text-[#f14011] border border-dashed border-[#f14011]/40 rounded-xl hover:bg-[#f14011]/5 transition-colors"
+                >
+                  <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path strokeLinecap="round" d="M12 5v14M5 12h14" /></svg>
+                  Marke
+                </button>
+              </div>
+            )}
+
+            {/* Row 2: Marke + Modell (conditional) */}
+            {showBrandRow2 && (
+              <>
+                <FilterSelect
+                  label="Marke 2"
+                  value={brandFilter2}
+                  onChange={(v) => { setBrandFilter2(v); setModelFilter2(""); }}
+                  options={brandOptions.map((b) => ({ value: b, label: b }))}
+                />
+                <FilterSelect
+                  label="Modell 2"
+                  value={modelFilter2}
+                  onChange={setModelFilter2}
+                  options={[
+                    { value: "", label: "Alle Modelle" },
+                    ...(brandFilter2 !== "Alle Marken" && CAR_BRANDS_MODELS[brandFilter2]
+                      ? CAR_BRANDS_MODELS[brandFilter2].map((m) => ({ value: m, label: m }))
+                      : []),
+                  ]}
+                />
+                <div className="flex items-end gap-2">
+                  <button
+                    type="button"
+                    onClick={() => { setBrandFilter2("Alle Marken"); setModelFilter2(""); setShowBrandRow2(false); setBrandFilter3("Alle Marken"); setModelFilter3(""); setShowBrandRow3(false); }}
+                    className="flex items-center gap-1 px-3 py-2.5 text-sm font-medium text-gray-400 border border-gray-200 dark:border-[#2a2a2a] rounded-xl hover:text-red-500 hover:border-red-300 transition-colors"
+                  >
+                    <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path strokeLinecap="round" d="M6 18L18 6M6 6l12 12" /></svg>
+                  </button>
+                  {/* "+" Button to add Row 3 */}
+                  {brandFilter2 !== "Alle Marken" && !showBrandRow3 && (
+                    <button
+                      type="button"
+                      onClick={() => setShowBrandRow3(true)}
+                      className="flex items-center gap-1.5 px-3 py-2.5 text-sm font-medium text-[#f14011] border border-dashed border-[#f14011]/40 rounded-xl hover:bg-[#f14011]/5 transition-colors"
+                    >
+                      <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path strokeLinecap="round" d="M12 5v14M5 12h14" /></svg>
+                      Marke
+                    </button>
+                  )}
+                </div>
+              </>
+            )}
+
+            {/* Row 3: Marke + Modell (conditional) */}
+            {showBrandRow3 && (
+              <>
+                <FilterSelect
+                  label="Marke 3"
+                  value={brandFilter3}
+                  onChange={(v) => { setBrandFilter3(v); setModelFilter3(""); }}
+                  options={brandOptions.map((b) => ({ value: b, label: b }))}
+                />
+                <FilterSelect
+                  label="Modell 3"
+                  value={modelFilter3}
+                  onChange={setModelFilter3}
+                  options={[
+                    { value: "", label: "Alle Modelle" },
+                    ...(brandFilter3 !== "Alle Marken" && CAR_BRANDS_MODELS[brandFilter3]
+                      ? CAR_BRANDS_MODELS[brandFilter3].map((m) => ({ value: m, label: m }))
+                      : []),
+                  ]}
+                />
+                <div className="flex items-end">
+                  <button
+                    type="button"
+                    onClick={() => { setBrandFilter3("Alle Marken"); setModelFilter3(""); setShowBrandRow3(false); }}
+                    className="flex items-center gap-1 px-3 py-2.5 text-sm font-medium text-gray-400 border border-gray-200 dark:border-[#2a2a2a] rounded-xl hover:text-red-500 hover:border-red-300 transition-colors"
+                  >
+                    <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path strokeLinecap="round" d="M6 18L18 6M6 6l12 12" /></svg>
+                  </button>
+                </div>
+              </>
             )}
             <div>
               <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1.5">Variante</label>
