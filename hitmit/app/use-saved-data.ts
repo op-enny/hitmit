@@ -28,6 +28,7 @@ export interface SavedSearch {
     sellerTypeFilter: string;
     accidentFreeFilter: string;
     cityFilter: string;
+    cityRadius: string;
     colorFilter: string;
     conditionFilter: string;
     doorFilter: string;
@@ -146,6 +147,7 @@ function migrateSearch(raw: any): SavedSearch {
       sellerTypeFilter: f.sellerTypeFilter ?? "Alle",
       accidentFreeFilter: f.accidentFreeFilter ?? "Alle",
       cityFilter: f.cityFilter ?? "",
+      cityRadius: f.cityRadius ?? "",
       colorFilter: f.colorFilter ?? "Alle Farben",
       conditionFilter: f.conditionFilter ?? "Alle",
       doorFilter: f.doorFilter ?? "Alle",

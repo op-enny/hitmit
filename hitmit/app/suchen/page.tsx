@@ -29,6 +29,7 @@ import {
 import type { Vehicle } from "../vehicles-data";
 import { useSavedData } from "../use-saved-data";
 import { calculateValuation, PRICE_RATING_INFO } from "../valuation";
+import { getCoordsByCity, distanceKm } from "../geocoding";
 
 // ============================================================================
 // ICONS
@@ -263,6 +264,7 @@ export default function SuchenPage() {
   const [sellerTypeFilter, setSellerTypeFilter] = useState("Alle");
   const [accidentFreeFilter, setAccidentFreeFilter] = useState("Alle");
   const [cityFilter, setCityFilter] = useState("");
+  const [cityRadius, setCityRadius] = useState("");
   const [colorFilter, setColorFilter] = useState("Alle Farben");
   const [conditionFilter, setConditionFilter] = useState("Alle");
   const [doorFilter, setDoorFilter] = useState("Alle");
@@ -347,7 +349,19 @@ export default function SuchenPage() {
       if (sellerTypeFilter === "Händler" && v.sellerType !== "dealer") return false;
     }
     if (accidentFreeFilter === "Nur unfallfrei" && !v.accidentFree) return false;
-    if (cityFilter !== "" && !v.city.toLowerCase().includes(cityFilter.toLowerCase())) return false;
+    if (cityFilter !== "") {
+      if (cityRadius !== "" && Number(cityRadius) > 0) {
+        const from = getCoordsByCity(cityFilter);
+        const to = getCoordsByCity(v.city);
+        if (from && to) {
+          if (distanceKm(from, to) > Number(cityRadius)) return false;
+        } else {
+          if (!v.city.toLowerCase().includes(cityFilter.toLowerCase())) return false;
+        }
+      } else {
+        if (!v.city.toLowerCase().includes(cityFilter.toLowerCase())) return false;
+      }
+    }
     if (colorFilter !== "Alle Farben" && !v.color.toLowerCase().includes(colorFilter.toLowerCase())) return false;
     if (conditionFilter !== "Alle" && v.condition !== conditionFilter) return false;
     if (doorFilter !== "Alle") {
@@ -456,6 +470,7 @@ export default function SuchenPage() {
     sellerTypeFilter !== "Alle",
     accidentFreeFilter !== "Alle",
     cityFilter !== "",
+    cityRadius !== "",
     colorFilter !== "Alle Farben",
     conditionFilter !== "Alle",
     doorFilter !== "Alle",
@@ -496,7 +511,7 @@ export default function SuchenPage() {
     setMileageMax(""); setPowerMin("");
     setTransmissionFilter("Alle"); setDriveTypeFilter("Alle");
     setSellerTypeFilter("Alle"); setAccidentFreeFilter("Alle");
-    setCityFilter("");
+    setCityFilter(""); setCityRadius("");
     setColorFilter("Alle Farben"); setConditionFilter("Alle");
     setDoorFilter("Alle"); setSeatFilter("");
     setModelFilter(""); setVariantFilter("");
@@ -526,7 +541,7 @@ export default function SuchenPage() {
     if (driveTypeFilter !== "Alle") parts.push(driveTypeFilter);
     if (sellerTypeFilter !== "Alle") parts.push(sellerTypeFilter);
     if (accidentFreeFilter !== "Alle") parts.push("Unfallfrei");
-    if (cityFilter) parts.push(cityFilter);
+    if (cityFilter) parts.push(cityRadius ? `${cityFilter} +${cityRadius} km` : cityFilter);
     if (colorFilter !== "Alle Farben") parts.push(colorFilter);
     if (conditionFilter !== "Alle") parts.push(conditionFilter);
     if (doorFilter !== "Alle") parts.push(`${doorFilter} Türen`);
@@ -566,7 +581,7 @@ export default function SuchenPage() {
         mileageMax, powerMin,
         transmissionFilter, driveTypeFilter,
         sellerTypeFilter, accidentFreeFilter,
-        cityFilter,
+        cityFilter, cityRadius,
         colorFilter, conditionFilter,
         doorFilter, seatFilter,
         modelFilter, motorizationFilter, variantFilter,
@@ -790,6 +805,27 @@ export default function SuchenPage() {
                 placeholder="z.B. München"
                 className="w-full bg-white dark:bg-[#1a1a1a] border border-gray-200 dark:border-[#2a2a2a] rounded-xl px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 placeholder:text-gray-400 hover:border-[#f14011] focus:border-[#f14011] focus:outline-none transition-colors"
               />
+            </div>
+            <div>
+              <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1.5">
+                Umkreis {cityRadius ? `${cityRadius} km` : "(beliebig)"}
+              </label>
+              <input
+                type="range"
+                min="0"
+                max="200"
+                step="10"
+                value={cityRadius || "0"}
+                onChange={(e) => setCityRadius(e.target.value === "0" ? "" : e.target.value)}
+                className="w-full h-2 bg-gray-200 dark:bg-[#2a2a2a] rounded-lg appearance-none cursor-pointer accent-[#f14011]"
+              />
+              <div className="flex justify-between text-[10px] text-gray-400 mt-1">
+                <span>Alle</span>
+                <span>50</span>
+                <span>100</span>
+                <span>150</span>
+                <span>200 km</span>
+              </div>
             </div>
             <div>
               <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1.5">Erstzulassung von</label>

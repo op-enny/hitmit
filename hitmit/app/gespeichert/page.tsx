@@ -10,6 +10,7 @@ import type { Vehicle } from "../vehicles-data";
 import { useSavedData } from "../use-saved-data";
 import type { SavedSearch } from "../use-saved-data";
 import { getDealers } from "../dealer-utils";
+import { getCoordsByCity, distanceKm } from "../geocoding";
 import { StarRating } from "../star-rating";
 
 // ============================================================================
@@ -45,7 +46,19 @@ function applyFilters(filters: SavedSearch["filters"]): Vehicle[] {
       if (filters.sellerTypeFilter === "Händler" && v.sellerType !== "dealer") return false;
     }
     if (filters.accidentFreeFilter === "Nur unfallfrei" && !v.accidentFree) return false;
-    if (filters.cityFilter && !v.city.toLowerCase().includes(filters.cityFilter.toLowerCase())) return false;
+    if (filters.cityFilter) {
+      if (filters.cityRadius && Number(filters.cityRadius) > 0) {
+        const from = getCoordsByCity(filters.cityFilter);
+        const to = getCoordsByCity(v.city);
+        if (from && to) {
+          if (distanceKm(from, to) > Number(filters.cityRadius)) return false;
+        } else {
+          if (!v.city.toLowerCase().includes(filters.cityFilter.toLowerCase())) return false;
+        }
+      } else {
+        if (!v.city.toLowerCase().includes(filters.cityFilter.toLowerCase())) return false;
+      }
+    }
     if (filters.colorFilter && filters.colorFilter !== "Alle Farben" && !v.color.toLowerCase().includes(filters.colorFilter.toLowerCase())) return false;
     if (filters.conditionFilter && filters.conditionFilter !== "Alle" && v.condition !== filters.conditionFilter) return false;
     if (filters.doorFilter && filters.doorFilter !== "Alle") {
@@ -160,6 +173,7 @@ function buildSearchUrl(filters: SavedSearch["filters"]): string {
   if (filters.sellerTypeFilter && filters.sellerTypeFilter !== "Alle") params.set("sellerType", filters.sellerTypeFilter);
   if (filters.accidentFreeFilter === "Nur unfallfrei") params.set("accidentFree", "ja");
   if (filters.cityFilter) params.set("city", filters.cityFilter);
+  if (filters.cityRadius) params.set("radius", filters.cityRadius);
   if (filters.colorFilter && filters.colorFilter !== "Alle Farben") params.set("color", filters.colorFilter);
   if (filters.conditionFilter && filters.conditionFilter !== "Alle") params.set("condition", filters.conditionFilter);
   if (filters.doorFilter && filters.doorFilter !== "Alle") params.set("doors", filters.doorFilter);
@@ -230,7 +244,7 @@ function SearchCard({
   if (f.driveTypeFilter && f.driveTypeFilter !== "Alle") filterTags.push(f.driveTypeFilter);
   if (f.sellerTypeFilter && f.sellerTypeFilter !== "Alle") filterTags.push(f.sellerTypeFilter);
   if (f.accidentFreeFilter === "Nur unfallfrei") filterTags.push("Unfallfrei");
-  if (f.cityFilter) filterTags.push(f.cityFilter);
+  if (f.cityFilter) filterTags.push(f.cityRadius ? `${f.cityFilter} +${f.cityRadius} km` : f.cityFilter);
   if (f.colorFilter && f.colorFilter !== "Alle Farben") filterTags.push(f.colorFilter);
   if (f.conditionFilter && f.conditionFilter !== "Alle") filterTags.push(f.conditionFilter);
   if (f.doorFilter && f.doorFilter !== "Alle") filterTags.push(`${f.doorFilter} Türen`);

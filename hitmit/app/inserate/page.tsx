@@ -1222,7 +1222,7 @@ function InseratePageInner() {
                     mileageMax: mlMax, powerMin: pwMin,
                     transmissionFilter, driveTypeFilter,
                     sellerTypeFilter, accidentFreeFilter,
-                    cityFilter,
+                    cityFilter, cityRadius: "",
                     colorFilter, conditionFilter,
                     doorFilter, seatFilter: seatFilter === "Alle" ? "" : seatFilter,
                     modelFilter, motorizationFilter, variantFilter: "",
