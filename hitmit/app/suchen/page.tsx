@@ -317,7 +317,7 @@ export default function SuchenPage() {
   const [showMotorizationDropdown, setShowMotorizationDropdown] = useState(false);
   const motorizationRef = useRef<HTMLDivElement>(null);
   const [variantFilter, setVariantFilter] = useState("");
-  const [vehicleTypeFilter, setVehicleTypeFilter] = useState("Alle");
+  const [vehicleTypeFilter, setVehicleTypeFilter] = useState("PKW");
   const [vehicleCategoryFilter, setVehicleCategoryFilter] = useState("Alle");
   const [mwstFilter, setMwstFilter] = useState("Alle");
   const [firstRegFrom, setFirstRegFrom] = useState("");
@@ -735,14 +735,6 @@ export default function SuchenPage() {
       <section className="max-w-7xl mx-auto px-4 sm:px-6 pb-4">
         <div className="flex flex-wrap gap-2 animate-fade-in-up delay-150" style={{ opacity: 0 }}>
           {([
-            { value: "Alle", label: "Alle", icon: (
-              <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
-                <rect x="3" y="3" width="7" height="7" rx="1.5" />
-                <rect x="14" y="3" width="7" height="7" rx="1.5" />
-                <rect x="3" y="14" width="7" height="7" rx="1.5" />
-                <rect x="14" y="14" width="7" height="7" rx="1.5" />
-              </svg>
-            )},
             { value: "PKW", label: "PKW", icon: (
               <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
                 <path d="M5 17h14M5 17a2 2 0 01-2-2v-3a1 1 0 011-1l2-4h12l2 4a1 1 0 011 1v3a2 2 0 01-2 2M5 17a1.5 1.5 0 103 0M19 17a1.5 1.5 0 10-3 0" />
@@ -849,7 +841,7 @@ export default function SuchenPage() {
                 ]}
               />
             )}
-            {(vehicleTypeFilter === "Alle" || vehicleTypeFilter === "PKW") && brandFilter === "Mercedes-Benz" && modelFilter !== "" && MERCEDES_MOTORIZATIONS[modelFilter] && (
+            {vehicleTypeFilter === "PKW" && brandFilter === "Mercedes-Benz" && modelFilter !== "" && MERCEDES_MOTORIZATIONS[modelFilter] && (
               <div className="relative" ref={motorizationRef}>
                 <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1.5">Motorisierung</label>
                 <button

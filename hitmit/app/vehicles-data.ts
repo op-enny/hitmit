@@ -646,6 +646,22 @@ export const VEHICLE_TYPE_LABEL_TO_VALUE: Record<string, string> = {
   Andere: "other",
 };
 
+// Vehicle type labels for dynamic UI text
+const VEHICLE_LABELS: Record<string, { noun: string; icon: string }> = {
+  PKW:         { noun: "Fahrzeug",    icon: "🚗" },
+  Motorrad:    { noun: "Motorrad",    icon: "🏍️" },
+  LKW:         { noun: "LKW",         icon: "🚛" },
+  Transporter: { noun: "Transporter", icon: "🚐" },
+};
+
+export function getVehicleNoun(type: string): string {
+  return VEHICLE_LABELS[type]?.noun ?? "Fahrzeug";
+}
+
+export function getVehicleIcon(type: string): string {
+  return VEHICLE_LABELS[type]?.icon ?? "🚗";
+}
+
 export const MERCEDES_MOTORIZATIONS: Record<string, string[]> = {
   "A-Klasse": ["A 160", "A 180", "A 180 d", "A 200", "A 200 d", "A 220", "A 220 d", "A 250", "A 250 e", "A 35 AMG", "A 45 AMG", "A 45 S AMG"],
   "B-Klasse": ["B 160", "B 180", "B 180 d", "B 200", "B 200 d", "B 220 d", "B 250 e"],

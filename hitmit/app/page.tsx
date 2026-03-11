@@ -4,7 +4,7 @@ import React, { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import { generateDescription, checkCompleteness } from "./description-generator";
 import { ThemeToggle } from "./theme-toggle";
-import { CAR_BRANDS_MODELS, getBrandsForType, getModelsForBrand, getCategoriesForType, VEHICLE_TYPE_VALUE_TO_LABEL, DRIVE_TYPE_FORM_OPTIONS_BY_TYPE, CYLINDER_FORM_OPTIONS_BY_TYPE, DOOR_FORM_OPTIONS_BY_TYPE, SEAT_FORM_OPTIONS_BY_TYPE, isFieldVisibleForType, getComfortFeaturesForType, getSafetyFeaturesForType, getExteriorFeaturesForType, getMultimediaFeaturesForType } from "./vehicles-data";
+import { CAR_BRANDS_MODELS, getBrandsForType, getModelsForBrand, getCategoriesForType, VEHICLE_TYPE_VALUE_TO_LABEL, DRIVE_TYPE_FORM_OPTIONS_BY_TYPE, CYLINDER_FORM_OPTIONS_BY_TYPE, DOOR_FORM_OPTIONS_BY_TYPE, SEAT_FORM_OPTIONS_BY_TYPE, isFieldVisibleForType, getComfortFeaturesForType, getSafetyFeaturesForType, getExteriorFeaturesForType, getMultimediaFeaturesForType, getVehicleNoun, getVehicleIcon } from "./vehicles-data";
 
 // ============================================================================
 // SVG ICONS
@@ -2462,7 +2462,7 @@ function SubmitFormSection() {
 
           {/* Basic Vehicle Info - Always visible */}
           <div className="pt-6 border-t border-[#e5e5e5] dark:border-[#2a2a2a]">
-            <h3 className="font-display text-2xl text-[#0a0a0a] dark:text-[#ededed] mb-6">Fahrzeugdaten</h3>
+            <h3 className="font-display text-2xl text-[#0a0a0a] dark:text-[#ededed] mb-6">{getVehicleNoun(getFormTypeLabel(formData.vehicleType))}daten</h3>
             <div className="grid md:grid-cols-3 gap-6 mb-6">
               <FormSelect
                 label="Fahrzeugtyp"
@@ -2590,7 +2590,7 @@ function SubmitFormSection() {
             <p className="text-sm text-[#737373] dark:text-[#8a8a8a] mb-2">Weitere Details (optional)</p>
 
             {/* Vehicle Details */}
-            <FormSection title="Fahrzeugdetails" icon="🚗">
+            <FormSection title={`${getVehicleNoun(getFormTypeLabel(formData.vehicleType))}details`} icon={getVehicleIcon(getFormTypeLabel(formData.vehicleType))}>
               <div className="grid md:grid-cols-3 gap-6">
                 <FormInput
                   label="Baujahr"
@@ -2849,7 +2849,7 @@ function SubmitFormSection() {
               </div>
               <div className="grid md:grid-cols-2 gap-6">
                 <FormSelect
-                  label="Fahrzeugherkunft"
+                  label={`${getVehicleNoun(getFormTypeLabel(formData.vehicleType))}herkunft`}
                   options={VEHICLE_ORIGIN_OPTIONS}
                   value={formData.vehicleOrigin}
                   onChange={(e) => updateField("vehicleOrigin", e.target.value)}
@@ -2952,7 +2952,7 @@ function SubmitFormSection() {
                 <>
                   <div className="pt-4 border-t border-[#e5e5e5] dark:border-[#2a2a2a]">
                     <FormBinaryState
-                      label="Fahrzeug aktuell beschädigt"
+                      label={`${getVehicleNoun(getFormTypeLabel(formData.vehicleType))} aktuell beschädigt`}
                       value={formData.currentlyDamaged}
                       onChange={(val) => updateField("currentlyDamaged", val)}
                     />
@@ -3110,7 +3110,7 @@ function SubmitFormSection() {
             {/* Description */}
             <FormSection title="Beschreibung" icon="📝" defaultOpen>
               <div>
-                <label className="block text-sm font-semibold text-[#0a0a0a] dark:text-[#ededed] mb-2">Fahrzeugbeschreibung</label>
+                <label className="block text-sm font-semibold text-[#0a0a0a] dark:text-[#ededed] mb-2">{getVehicleNoun(getFormTypeLabel(formData.vehicleType))}beschreibung</label>
                 <div className="flex flex-wrap gap-2 mb-3">
                   <button
                     type="button"
@@ -3162,7 +3162,7 @@ function SubmitFormSection() {
                 <textarea
                   rows={8}
                   className="input !rounded-2xl resize-none"
-                  placeholder="Erzähl uns mehr über dein Fahrzeug: besondere Ausstattung, Wartungshistorie, Gründe für den Verkauf, etc."
+                  placeholder={`Erzähl uns mehr über dein ${getVehicleNoun(getFormTypeLabel(formData.vehicleType))}: besondere Ausstattung, Wartungshistorie, Gründe für den Verkauf, etc.`}
                   value={formData.description}
                   onChange={(e) => updateField("description", e.target.value)}
                   maxLength={5000}
