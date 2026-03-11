@@ -601,6 +601,8 @@ function DetailModal({ vehicle, onClose, isDealer }: { vehicle: Vehicle; onClose
               { label: "Erstzulassung", value: vehicle.firstRegistration },
               ...(vehicle.hu ? [{ label: "HU", value: vehicle.hu }] : []),
               ...(vehicle.previousOwners !== undefined ? [{ label: "Vorbesitzer", value: String(vehicle.previousOwners) }] : []),
+              ...(vehicle.emissionClass ? [{ label: "Schadstoffklasse", value: vehicle.emissionClass }] : []),
+              ...(vehicle.environmentalBadge ? [{ label: "Umweltplakette", value: vehicle.environmentalBadge }] : []),
             ].map((spec) => (
               <div key={spec.label} className="bg-gray-50 rounded-xl p-3">
                 <p className="text-xs text-gray-400 uppercase tracking-wider">{spec.label}</p>
@@ -647,6 +649,11 @@ function DetailModal({ vehicle, onClose, isDealer }: { vehicle: Vehicle; onClose
             {vehicle.petFreeVehicle && (
               <span className="px-3 py-1 bg-green-50 text-green-700 rounded-full text-sm font-medium">
                 Tierfreies Fahrzeug
+              </span>
+            )}
+            {vehicle.particleFilter && (
+              <span className="px-3 py-1 bg-green-50 text-green-700 rounded-full text-sm font-medium">
+                Rußpartikelfilter
               </span>
             )}
             {vehicle.mwstAusweisbar && (
