@@ -67,6 +67,9 @@ export interface SavedSearch {
     equipmentFeaturesFilter: string[];
     nonSmokerFilter: string;
     petFreeFilter: string;
+    emissionClassFilter: string;
+    environmentalBadgeFilter: string;
+    particleFilterFilter: string;
   };
   seenVehicleIds: number[];
   savedVehicleIds: number[];
@@ -194,6 +197,9 @@ function migrateSearch(raw: any): SavedSearch {
       equipmentFeaturesFilter: f.equipmentFeaturesFilter ?? [],
       nonSmokerFilter: f.nonSmokerFilter ?? "Alle",
       petFreeFilter: f.petFreeFilter ?? "Alle",
+      emissionClassFilter: f.emissionClassFilter ?? "Alle",
+      environmentalBadgeFilter: f.environmentalBadgeFilter ?? "Alle",
+      particleFilterFilter: f.particleFilterFilter ?? "Alle",
     },
     seenVehicleIds: raw.seenVehicleIds ?? [],
     savedVehicleIds: raw.savedVehicleIds ?? [],

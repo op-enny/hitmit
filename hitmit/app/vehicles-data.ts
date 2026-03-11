@@ -61,6 +61,9 @@ export interface Vehicle {
   manufacturerWarranty?: boolean;
   nonSmokerVehicle?: boolean;
   petFreeVehicle?: boolean;
+  emissionClass?: string;
+  environmentalBadge?: string;
+  particleFilter?: boolean;
   gradient: string;
 }
 
@@ -118,6 +121,9 @@ export const vehicles: Vehicle[] = [
     manufacturerWarranty: false,
     nonSmokerVehicle: true,
     petFreeVehicle: true,
+    emissionClass: "Euro 6d",
+    environmentalBadge: "Grün (4)",
+    particleFilter: true,
     gradient: "from-blue-600 via-blue-800 to-gray-900",
   },
   {
@@ -170,6 +176,9 @@ export const vehicles: Vehicle[] = [
     manufacturerWarranty: false,
     nonSmokerVehicle: true,
     petFreeVehicle: false,
+    emissionClass: "Euro 6d",
+    environmentalBadge: "Grün (4)",
+    particleFilter: true,
     gradient: "from-red-500 via-red-700 to-gray-900",
   },
   {
@@ -223,6 +232,9 @@ export const vehicles: Vehicle[] = [
     manufacturerWarranty: true,
     nonSmokerVehicle: true,
     petFreeVehicle: true,
+    emissionClass: "Euro 6d",
+    environmentalBadge: "Grün (4)",
+    particleFilter: true,
     gradient: "from-gray-700 via-gray-900 to-black",
   },
   {
@@ -275,6 +287,9 @@ export const vehicles: Vehicle[] = [
     manufacturerWarranty: true,
     nonSmokerVehicle: false,
     petFreeVehicle: true,
+    emissionClass: "Euro 6d",
+    environmentalBadge: "Grün (4)",
+    particleFilter: true,
     gradient: "from-indigo-600 via-indigo-900 to-gray-900",
   },
   {
@@ -327,6 +342,8 @@ export const vehicles: Vehicle[] = [
     manufacturerWarranty: false,
     nonSmokerVehicle: true,
     petFreeVehicle: false,
+    emissionClass: "Emissionsfrei",
+    environmentalBadge: "Grün (4)",
     gradient: "from-sky-400 via-sky-600 to-gray-900",
   },
   {
@@ -380,6 +397,9 @@ export const vehicles: Vehicle[] = [
     manufacturerWarranty: true,
     nonSmokerVehicle: true,
     petFreeVehicle: true,
+    emissionClass: "Euro 6d",
+    environmentalBadge: "Grün (4)",
+    particleFilter: true,
     gradient: "from-gray-500 via-gray-700 to-gray-900",
   },
 ];
@@ -592,6 +612,10 @@ export const interiorColorOptions = [
 export const seatMaterialOptions = ["Alle", "Leder", "Teilleder", "Stoff", "Alcantara", "Velours", "Sonstige"];
 export const climateZoneOptions = ["Alle", "1", "2", "3", "4"];
 export const rimSizeOptions = ["Alle", "15", "16", "17", "18", "19", "20", "21", "22"];
+
+export const emissionClassOptions = ["Alle", "Euro 6d", "Euro 6c", "Euro 6b", "Euro 6", "Euro 5", "Euro 4", "Euro 3", "Euro 2", "Euro 1", "Emissionsfrei"];
+export const environmentalBadgeOptions = ["Alle", "Grün (4)", "Gelb (3)", "Rot (2)", "Keine"];
+export const particleFilterOptions = ["Alle", "Ja", "Nein"];
 
 export const SAFETY_FEATURE_LIST = [
   "ABS",

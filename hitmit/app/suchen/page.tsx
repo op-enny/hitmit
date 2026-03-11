@@ -25,6 +25,9 @@ import {
   EQUIPMENT_FEATURE_LIST,
   CAR_BRANDS_MODELS,
   MERCEDES_MOTORIZATIONS,
+  emissionClassOptions,
+  environmentalBadgeOptions,
+  particleFilterOptions,
 } from "../vehicles-data";
 import type { Vehicle } from "../vehicles-data";
 import { useSavedData } from "../use-saved-data";
@@ -326,6 +329,9 @@ export default function SuchenPage() {
   const [ausstattungSearch, setAusstattungSearch] = useState("");
   const [nonSmokerFilter, setNonSmokerFilter] = useState("Alle");
   const [petFreeFilter, setPetFreeFilter] = useState("Alle");
+  const [emissionClassFilter, setEmissionClassFilter] = useState("Alle");
+  const [environmentalBadgeFilter, setEnvironmentalBadgeFilter] = useState("Alle");
+  const [particleFilterFilter, setParticleFilterFilter] = useState("Alle");
   const [safetyFeaturesFilter, setSafetyFeaturesFilter] = useState<string[]>([]);
   const [equipmentFeaturesFilter, setEquipmentFeaturesFilter] = useState<string[]>([]);
   const [showSafetyFeatures, setShowSafetyFeatures] = useState(false);
@@ -486,6 +492,12 @@ export default function SuchenPage() {
     if (nonSmokerFilter === "Nein" && v.nonSmokerVehicle) return false;
     if (petFreeFilter === "Ja" && !v.petFreeVehicle) return false;
     if (petFreeFilter === "Nein" && v.petFreeVehicle) return false;
+    if (emissionClassFilter !== "Alle" && v.emissionClass !== emissionClassFilter) return false;
+    if (environmentalBadgeFilter !== "Alle" && v.environmentalBadge !== environmentalBadgeFilter) return false;
+    if (particleFilterFilter !== "Alle") {
+      if (particleFilterFilter === "Ja" && !v.particleFilter) return false;
+      if (particleFilterFilter === "Nein" && v.particleFilter) return false;
+    }
     if (ausstattungSearch.trim() !== "") {
       const allFeatures = [...v.comfortFeatures, ...v.safetyFeatures, ...v.exteriorFeatures, ...v.multimediaFeatures];
       const terms = ausstattungSearch.toLowerCase().split(",").map((t) => t.trim()).filter(Boolean);
@@ -547,6 +559,9 @@ export default function SuchenPage() {
     manufacturerWarrantyFilter !== "Alle",
     nonSmokerFilter !== "Alle",
     petFreeFilter !== "Alle",
+    emissionClassFilter !== "Alle",
+    environmentalBadgeFilter !== "Alle",
+    particleFilterFilter !== "Alle",
     ausstattungSearch.trim() !== "",
     safetyFeaturesFilter.length > 0,
     equipmentFeaturesFilter.length > 0,
@@ -577,6 +592,7 @@ export default function SuchenPage() {
     setPaintProtectionFilmFilter("Alle"); setNoRepaintFilter("Alle");
     setServiceBookFilter("Alle"); setManufacturerWarrantyFilter("Alle");
     setNonSmokerFilter("Alle"); setPetFreeFilter("Alle");
+    setEmissionClassFilter("Alle"); setEnvironmentalBadgeFilter("Alle"); setParticleFilterFilter("Alle");
     setAusstattungSearch("");
     setSafetyFeaturesFilter([]); setEquipmentFeaturesFilter([]);
   };
@@ -628,6 +644,9 @@ export default function SuchenPage() {
     if (manufacturerWarrantyFilter !== "Alle") parts.push(`Garantie: ${manufacturerWarrantyFilter}`);
     if (nonSmokerFilter !== "Alle") parts.push(`Nichtraucher: ${nonSmokerFilter}`);
     if (petFreeFilter !== "Alle") parts.push(`Tierfrei: ${petFreeFilter}`);
+    if (emissionClassFilter !== "Alle") parts.push(emissionClassFilter);
+    if (environmentalBadgeFilter !== "Alle") parts.push(`Plakette: ${environmentalBadgeFilter}`);
+    if (particleFilterFilter !== "Alle") parts.push(`Partikelfilter: ${particleFilterFilter}`);
     if (ausstattungSearch.trim()) parts.push(`"${ausstattungSearch.trim()}"`);
     if (safetyFeaturesFilter.length > 0) parts.push(`${safetyFeaturesFilter.length}x Sicherheit`);
     if (equipmentFeaturesFilter.length > 0) parts.push(`${equipmentFeaturesFilter.length}x Ausstattung`);
@@ -654,6 +673,7 @@ export default function SuchenPage() {
         paintProtectionFilmFilter, noRepaintFilter,
         serviceBookFilter, manufacturerWarrantyFilter,
         nonSmokerFilter, petFreeFilter,
+        emissionClassFilter, environmentalBadgeFilter, particleFilterFilter,
         ausstattungSearch, safetyFeaturesFilter, equipmentFeaturesFilter,
       },
       filtered.map((v) => v.id),
@@ -1088,6 +1108,29 @@ export default function SuchenPage() {
               value={petFreeFilter}
               onChange={setPetFreeFilter}
               options={[{ value: "Alle", label: "Alle" }, { value: "Ja", label: "Ja" }, { value: "Nein", label: "Nein" }]}
+            />
+          </div>
+
+          {/* Section: Umwelt & Emissionen */}
+          <h3 className="text-sm font-semibold text-gray-900 dark:text-gray-100 uppercase tracking-wider mb-4">Umwelt & Emissionen</h3>
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 mb-6">
+            <FilterSelect
+              label="Schadstoffklasse"
+              value={emissionClassFilter}
+              onChange={setEmissionClassFilter}
+              options={emissionClassOptions.map((o) => ({ value: o, label: o }))}
+            />
+            <FilterSelect
+              label="Umweltplakette"
+              value={environmentalBadgeFilter}
+              onChange={setEnvironmentalBadgeFilter}
+              options={environmentalBadgeOptions.map((o) => ({ value: o, label: o }))}
+            />
+            <FilterSelect
+              label="Rußpartikelfilter"
+              value={particleFilterFilter}
+              onChange={setParticleFilterFilter}
+              options={particleFilterOptions.map((o) => ({ value: o, label: o }))}
             />
           </div>
 

@@ -1249,6 +1249,7 @@ function InseratePageInner() {
                     paintProtectionFilmFilter: "Alle", noRepaintFilter: "Alle",
                     serviceBookFilter: "Alle", manufacturerWarrantyFilter: "Alle",
                     nonSmokerFilter: "Alle", petFreeFilter: "Alle",
+                    emissionClassFilter: "Alle", environmentalBadgeFilter: "Alle", particleFilterFilter: "Alle",
                     safetyFeaturesFilter: [], equipmentFeaturesFilter: [],
                   },
                   filtered.map((v) => v.id),

@@ -156,6 +156,12 @@ function applyFilters(filters: SavedSearch["filters"]): Vehicle[] {
       if (filters.petFreeFilter === "Ja" && !v.petFreeVehicle) return false;
       if (filters.petFreeFilter === "Nein" && v.petFreeVehicle) return false;
     }
+    if (filters.emissionClassFilter && filters.emissionClassFilter !== "Alle" && v.emissionClass !== filters.emissionClassFilter) return false;
+    if (filters.environmentalBadgeFilter && filters.environmentalBadgeFilter !== "Alle" && v.environmentalBadge !== filters.environmentalBadgeFilter) return false;
+    if (filters.particleFilterFilter && filters.particleFilterFilter !== "Alle") {
+      if (filters.particleFilterFilter === "Ja" && !v.particleFilter) return false;
+      if (filters.particleFilterFilter === "Nein" && v.particleFilter) return false;
+    }
     if (filters.ausstattungSearch && filters.ausstattungSearch.trim() !== "") {
       const allFeatures = [...v.comfortFeatures, ...v.safetyFeatures, ...v.exteriorFeatures, ...v.multimediaFeatures];
       const terms = filters.ausstattungSearch.toLowerCase().split(",").map((t: string) => t.trim()).filter(Boolean);
@@ -232,6 +238,9 @@ function buildSearchUrl(filters: SavedSearch["filters"]): string {
   if (filters.manufacturerWarrantyFilter && filters.manufacturerWarrantyFilter !== "Alle") params.set("warranty", filters.manufacturerWarrantyFilter);
   if (filters.nonSmokerFilter && filters.nonSmokerFilter !== "Alle") params.set("nonSmoker", filters.nonSmokerFilter);
   if (filters.petFreeFilter && filters.petFreeFilter !== "Alle") params.set("petFree", filters.petFreeFilter);
+  if (filters.emissionClassFilter && filters.emissionClassFilter !== "Alle") params.set("emissionClass", filters.emissionClassFilter);
+  if (filters.environmentalBadgeFilter && filters.environmentalBadgeFilter !== "Alle") params.set("envBadge", filters.environmentalBadgeFilter);
+  if (filters.particleFilterFilter && filters.particleFilterFilter !== "Alle") params.set("particleFilter", filters.particleFilterFilter);
   if (filters.ausstattungSearch && filters.ausstattungSearch.trim()) params.set("ausstattung", filters.ausstattungSearch.trim());
   if (filters.safetyFeaturesFilter && filters.safetyFeaturesFilter.length > 0) params.set("safety", filters.safetyFeaturesFilter.join(","));
   if (filters.equipmentFeaturesFilter && filters.equipmentFeaturesFilter.length > 0) params.set("equipment", filters.equipmentFeaturesFilter.join(","));
@@ -308,6 +317,9 @@ function SearchCard({
   if (f.manufacturerWarrantyFilter && f.manufacturerWarrantyFilter !== "Alle") filterTags.push(`Garantie: ${f.manufacturerWarrantyFilter}`);
   if (f.nonSmokerFilter && f.nonSmokerFilter !== "Alle") filterTags.push(`Nichtraucher: ${f.nonSmokerFilter}`);
   if (f.petFreeFilter && f.petFreeFilter !== "Alle") filterTags.push(`Tierfrei: ${f.petFreeFilter}`);
+  if (f.emissionClassFilter && f.emissionClassFilter !== "Alle") filterTags.push(f.emissionClassFilter);
+  if (f.environmentalBadgeFilter && f.environmentalBadgeFilter !== "Alle") filterTags.push(`Plakette: ${f.environmentalBadgeFilter}`);
+  if (f.particleFilterFilter && f.particleFilterFilter !== "Alle") filterTags.push(`Partikelfilter: ${f.particleFilterFilter}`);
   if (f.ausstattungSearch && f.ausstattungSearch.trim()) filterTags.push(`"${f.ausstattungSearch.trim()}"`);
   if (f.safetyFeaturesFilter && f.safetyFeaturesFilter.length > 0) filterTags.push(`${f.safetyFeaturesFilter.length}x Sicherheit`);
   if (f.equipmentFeaturesFilter && f.equipmentFeaturesFilter.length > 0) filterTags.push(`${f.equipmentFeaturesFilter.length}x Ausstattung`);
