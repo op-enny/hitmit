@@ -1273,7 +1273,7 @@ function InseratePageInner() {
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
               {/* Year From */}
               <div>
-                <label className="block text-xs font-medium text-gray-500 mb-1.5">Baujahr von</label>
+                <label className="block text-xs font-medium text-gray-500 mb-1.5">Erstzulassung von</label>
                 <div className="relative">
                   <select
                     value={yearFrom}
@@ -1291,7 +1291,7 @@ function InseratePageInner() {
 
               {/* Year To */}
               <div>
-                <label className="block text-xs font-medium text-gray-500 mb-1.5">Baujahr bis</label>
+                <label className="block text-xs font-medium text-gray-500 mb-1.5">Erstzulassung bis</label>
                 <div className="relative">
                   <select
                     value={yearTo}

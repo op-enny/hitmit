@@ -745,13 +745,13 @@ export default function SuchenPage() {
           <h3 className="text-sm font-semibold text-gray-900 dark:text-gray-100 uppercase tracking-wider mb-4">Details</h3>
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 mb-6">
             <FilterSelect
-              label="Baujahr von"
+              label="Erstzulassung von"
               value={yearFrom}
               onChange={setYearFrom}
               options={[{ value: "", label: "Alle" }, ...yearOptions.map((y) => ({ value: String(y), label: String(y) }))]}
             />
             <FilterSelect
-              label="Baujahr bis"
+              label="Erstzulassung bis"
               value={yearTo}
               onChange={setYearTo}
               options={[{ value: "", label: "Alle" }, ...yearOptions.map((y) => ({ value: String(y), label: String(y) }))]}
