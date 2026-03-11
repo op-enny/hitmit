@@ -613,7 +613,16 @@ export function getCategoriesForType(type: string): string[] {
     case "Motorrad": return motorcycleCategoryOptions;
     case "LKW": return truckCategoryOptions;
     case "Transporter": return transporterCategoryOptions;
-    default: return carCategoryOptions;
+    default: {
+      // "Alle" → merge all categories, deduplicate, keep "Alle" first
+      const all = new Set<string>();
+      for (const opts of [carCategoryOptions, motorcycleCategoryOptions, truckCategoryOptions, transporterCategoryOptions]) {
+        for (const o of opts) {
+          if (o !== "Alle") all.add(o);
+        }
+      }
+      return ["Alle", ...all];
+    }
   }
 }
 
