@@ -4,7 +4,7 @@ import React, { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import { generateDescription, checkCompleteness } from "./description-generator";
 import { ThemeToggle } from "./theme-toggle";
-import { CAR_BRANDS_MODELS } from "./vehicles-data";
+import { CAR_BRANDS_MODELS, getBrandsForType, getModelsForBrand, getCategoriesForType, VEHICLE_TYPE_VALUE_TO_LABEL } from "./vehicles-data";
 
 // ============================================================================
 // SVG ICONS
@@ -1284,22 +1284,69 @@ const VEHICLE_TYPE_OPTIONS = [
   { value: "other", label: "Sonstige" },
 ];
 
-const CAR_BRANDS = Object.keys(CAR_BRANDS_MODELS).sort();
+const VEHICLE_CATEGORY_OPTIONS_BY_TYPE: Record<string, { value: string; label: string }[]> = {
+  car: [
+    { value: "", label: "Bitte wählen" },
+    { value: "sedan", label: "Limousine" },
+    { value: "wagon", label: "Kombi" },
+    { value: "hatchback", label: "Schrägheck" },
+    { value: "suv", label: "SUV" },
+    { value: "offroad", label: "Geländewagen" },
+    { value: "sports", label: "Sportwagen" },
+    { value: "coupe", label: "Coupé" },
+    { value: "convertible", label: "Cabrio" },
+    { value: "van", label: "Van / Minibus" },
+    { value: "pickup", label: "Pick-up" },
+    { value: "other", label: "Sonstige" },
+  ],
+  motorcycle: [
+    { value: "", label: "Bitte wählen" },
+    { value: "naked", label: "Naked Bike" },
+    { value: "sport", label: "Sportler" },
+    { value: "tourer", label: "Tourer" },
+    { value: "enduro", label: "Enduro" },
+    { value: "chopper", label: "Chopper/Cruiser" },
+    { value: "scooter", label: "Roller" },
+    { value: "supermoto", label: "Supermoto" },
+    { value: "cross", label: "Cross" },
+    { value: "adventure", label: "Adventure" },
+  ],
+  truck: [
+    { value: "", label: "Bitte wählen" },
+    { value: "semitrailer", label: "Sattelzugmaschine" },
+    { value: "flatbed", label: "Pritsche" },
+    { value: "tipper", label: "Kipper" },
+    { value: "box", label: "Koffer" },
+    { value: "mixer", label: "Betonmischer" },
+    { value: "reefer", label: "Kühlkoffer" },
+    { value: "tanker", label: "Tankwagen" },
+  ],
+  van: [
+    { value: "", label: "Bitte wählen" },
+    { value: "panel", label: "Kastenwagen" },
+    { value: "flatbed", label: "Pritsche" },
+    { value: "reefer", label: "Kühlwagen" },
+    { value: "highroof", label: "Hochdachkombi" },
+    { value: "doublecab", label: "Doppelkabine" },
+    { value: "curtainside", label: "Planenwagen" },
+  ],
+};
 
-const VEHICLE_CATEGORY_OPTIONS = [
-  { value: "", label: "Bitte wählen" },
-  { value: "sedan", label: "Limousine" },
-  { value: "wagon", label: "Kombi" },
-  { value: "hatchback", label: "Schrägheck" },
-  { value: "suv", label: "SUV" },
-  { value: "offroad", label: "Geländewagen" },
-  { value: "sports", label: "Sportwagen" },
-  { value: "coupe", label: "Coupé" },
-  { value: "convertible", label: "Cabrio" },
-  { value: "van", label: "Van / Minibus" },
-  { value: "pickup", label: "Pick-up" },
-  { value: "other", label: "Sonstige" },
-];
+function getFormCategoryOptions(vehicleType: string) {
+  return VEHICLE_CATEGORY_OPTIONS_BY_TYPE[vehicleType] || VEHICLE_CATEGORY_OPTIONS_BY_TYPE.car;
+}
+
+function getFormBrands(vehicleType: string): string[] {
+  const typeLabel = VEHICLE_TYPE_VALUE_TO_LABEL[vehicleType];
+  if (typeLabel) return getBrandsForType(typeLabel);
+  return getBrandsForType("Alle");
+}
+
+function getFormModels(vehicleType: string, brand: string): string[] {
+  const typeLabel = VEHICLE_TYPE_VALUE_TO_LABEL[vehicleType];
+  if (typeLabel) return getModelsForBrand(typeLabel, brand);
+  return getModelsForBrand("Alle", brand);
+}
 
 const COLOR_OPTIONS = [
   { value: "", label: "Bitte wählen" },
@@ -2392,17 +2439,31 @@ function SubmitFormSection() {
           {/* Basic Vehicle Info - Always visible */}
           <div className="pt-6 border-t border-[#e5e5e5] dark:border-[#2a2a2a]">
             <h3 className="font-display text-2xl text-[#0a0a0a] dark:text-[#ededed] mb-6">Fahrzeugdaten</h3>
-            <div className="grid md:grid-cols-2 gap-6 mb-6">
+            <div className="grid md:grid-cols-3 gap-6 mb-6">
+              <FormSelect
+                label="Fahrzeugtyp"
+                options={VEHICLE_TYPE_OPTIONS}
+                value={formData.vehicleType}
+                onChange={(e) => {
+                  const newType = e.target.value;
+                  updateField("vehicleType", newType);
+                  // Reset brand, model, category when type changes
+                  updateField("brand", "");
+                  updateField("model", "");
+                  updateField("vehicleCategory", "");
+                }}
+              />
               <FormCombobox
                 label="Marke"
                 required
                 placeholder="Marke auswählen oder eingeben"
-                options={CAR_BRANDS}
+                options={getFormBrands(formData.vehicleType)}
                 value={formData.brand}
                 onChange={(value) => {
                   updateField("brand", value);
                   // Reset model when brand changes
-                  if (formData.model && !CAR_BRANDS_MODELS[value]?.includes(formData.model)) {
+                  const models = getFormModels(formData.vehicleType, value);
+                  if (formData.model && !models.includes(formData.model)) {
                     updateField("model", "");
                   }
                 }}
@@ -2411,7 +2472,7 @@ function SubmitFormSection() {
                 label="Modell"
                 required
                 placeholder={formData.brand ? "Modell auswählen oder eingeben" : "Zuerst Marke wählen"}
-                options={formData.brand && CAR_BRANDS_MODELS[formData.brand] ? CAR_BRANDS_MODELS[formData.brand] : []}
+                options={getFormModels(formData.vehicleType, formData.brand)}
                 value={formData.model}
                 onChange={(value) => updateField("model", value)}
                 disabled={!formData.brand}
@@ -2426,14 +2487,8 @@ function SubmitFormSection() {
                 onChange={(e) => updateField("variant", e.target.value)}
               />
               <FormSelect
-                label="Fahrzeugtyp"
-                options={VEHICLE_TYPE_OPTIONS}
-                value={formData.vehicleType}
-                onChange={(e) => updateField("vehicleType", e.target.value)}
-              />
-              <FormSelect
                 label="Karosserieform"
-                options={VEHICLE_CATEGORY_OPTIONS}
+                options={getFormCategoryOptions(formData.vehicleType)}
                 value={formData.vehicleCategory}
                 onChange={(e) => updateField("vehicleCategory", e.target.value)}
               />

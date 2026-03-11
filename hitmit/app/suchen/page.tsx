@@ -5,7 +5,6 @@ import Link from "next/link";
 import { SubpageHeader } from "../subpage-header";
 import {
   vehicles,
-  brandOptions,
   fuelOptions,
   yearOptions,
   transmissionOptions,
@@ -14,8 +13,6 @@ import {
   colorOptions,
   conditionOptions,
   doorOptions,
-  vehicleTypeOptions,
-  vehicleCategoryOptions,
   cylinderOptions,
   previousOwnerOptions,
   huOptions,
@@ -28,6 +25,9 @@ import {
   emissionClassOptions,
   environmentalBadgeOptions,
   particleFilterOptions,
+  getBrandOptionsForType,
+  getModelsForBrand,
+  getCategoriesForType,
 } from "../vehicles-data";
 import type { Vehicle } from "../vehicles-data";
 import { useSavedData } from "../use-saved-data";
@@ -723,6 +723,73 @@ export default function SuchenPage() {
         </p>
       </section>
 
+      {/* Vehicle Type Tab Bar */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 pb-4">
+        <div className="flex flex-wrap gap-2 animate-fade-in-up delay-150" style={{ opacity: 0 }}>
+          {([
+            { value: "Alle", label: "Alle", icon: (
+              <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+                <rect x="3" y="3" width="7" height="7" rx="1.5" />
+                <rect x="14" y="3" width="7" height="7" rx="1.5" />
+                <rect x="3" y="14" width="7" height="7" rx="1.5" />
+                <rect x="14" y="14" width="7" height="7" rx="1.5" />
+              </svg>
+            )},
+            { value: "PKW", label: "PKW", icon: (
+              <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+                <path d="M5 17h14M5 17a2 2 0 01-2-2v-3a1 1 0 011-1l2-4h12l2 4a1 1 0 011 1v3a2 2 0 01-2 2M5 17a1.5 1.5 0 103 0M19 17a1.5 1.5 0 10-3 0" />
+              </svg>
+            )},
+            { value: "Motorrad", label: "Motorrad", icon: (
+              <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+                <circle cx="5.5" cy="17" r="3" />
+                <circle cx="18.5" cy="17" r="3" />
+                <path d="M8.5 17h7l2-5h-4l-2-3h-3l1 3-1 5z" />
+              </svg>
+            )},
+            { value: "LKW", label: "LKW", icon: (
+              <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+                <rect x="1" y="4" width="15" height="12" rx="1" />
+                <path d="M16 8h4l3 4v4h-7V8z" />
+                <circle cx="6" cy="18" r="2" />
+                <circle cx="19" cy="18" r="2" />
+              </svg>
+            )},
+            { value: "Transporter", label: "Transporter", icon: (
+              <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+                <rect x="1" y="5" width="22" height="12" rx="2" />
+                <path d="M15 5v12" />
+                <circle cx="6" cy="19" r="2" />
+                <circle cx="18" cy="19" r="2" />
+              </svg>
+            )},
+          ] as const).map((tab) => (
+            <button
+              key={tab.value}
+              type="button"
+              onClick={() => {
+                setVehicleTypeFilter(tab.value);
+                // Reset brand/model/category when type changes
+                setBrandFilter("Alle Marken"); setModelFilter(""); setMotorizationFilter([]);
+                setBrandFilter2("Alle Marken"); setModelFilter2(""); setVariantFilter2("");
+                setBrandFilter3("Alle Marken"); setModelFilter3(""); setVariantFilter3("");
+                setShowBrandRow2(false); setShowBrandRow3(false);
+                setCustomBrandText(""); setCustomBrandText2(""); setCustomBrandText3("");
+                setVehicleCategoryFilter("Alle");
+              }}
+              className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-all ${
+                vehicleTypeFilter === tab.value
+                  ? "bg-[#f14011] text-white shadow-md"
+                  : "bg-white dark:bg-[#1a1a1a] text-gray-600 dark:text-gray-400 border border-gray-200 dark:border-[#2a2a2a] hover:border-[#f14011] hover:text-[#f14011]"
+              }`}
+            >
+              {tab.icon}
+              {tab.label}
+            </button>
+          ))}
+        </div>
+      </section>
+
       {/* Filter Panel */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 pb-6">
         <div className="bg-white dark:bg-[#141414] border border-gray-200 dark:border-[#2a2a2a] rounded-2xl p-6 animate-fade-in-up delay-200" style={{ opacity: 0 }}>
@@ -734,7 +801,7 @@ export default function SuchenPage() {
               label="Marke"
               value={brandFilter}
               onChange={(v) => { setBrandFilter(v); setModelFilter(""); setMotorizationFilter([]); setCustomBrandText(""); }}
-              options={brandOptions.map((b) => ({ value: b, label: b }))}
+              options={getBrandOptionsForType(vehicleTypeFilter).map((b) => ({ value: b, label: b }))}
             />
             {brandFilter === "Andere" ? (
               <div>
@@ -754,13 +821,13 @@ export default function SuchenPage() {
                 onChange={(v) => { setModelFilter(v); setMotorizationFilter([]); }}
                 options={[
                   { value: "", label: "Alle Modelle" },
-                  ...(brandFilter !== "Alle Marken" && CAR_BRANDS_MODELS[brandFilter]
-                    ? CAR_BRANDS_MODELS[brandFilter].map((m) => ({ value: m, label: m }))
+                  ...(brandFilter !== "Alle Marken"
+                    ? getModelsForBrand(vehicleTypeFilter, brandFilter).map((m) => ({ value: m, label: m }))
                     : []),
                 ]}
               />
             )}
-            {brandFilter === "Mercedes-Benz" && modelFilter !== "" && MERCEDES_MOTORIZATIONS[modelFilter] && (
+            {(vehicleTypeFilter === "Alle" || vehicleTypeFilter === "PKW") && brandFilter === "Mercedes-Benz" && modelFilter !== "" && MERCEDES_MOTORIZATIONS[modelFilter] && (
               <div className="relative" ref={motorizationRef}>
                 <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1.5">Motorisierung</label>
                 <button
@@ -830,7 +897,7 @@ export default function SuchenPage() {
                   label="Marke 2"
                   value={brandFilter2}
                   onChange={(v) => { setBrandFilter2(v); setModelFilter2(""); setVariantFilter2(""); setCustomBrandText2(""); }}
-                  options={brandOptions.map((b) => ({ value: b, label: b }))}
+                  options={getBrandOptionsForType(vehicleTypeFilter).map((b) => ({ value: b, label: b }))}
                 />
                 {brandFilter2 === "Andere" ? (
                   <div>
@@ -850,8 +917,8 @@ export default function SuchenPage() {
                     onChange={setModelFilter2}
                     options={[
                       { value: "", label: "Alle Modelle" },
-                      ...(brandFilter2 !== "Alle Marken" && CAR_BRANDS_MODELS[brandFilter2]
-                        ? CAR_BRANDS_MODELS[brandFilter2].map((m) => ({ value: m, label: m }))
+                      ...(brandFilter2 !== "Alle Marken"
+                        ? getModelsForBrand(vehicleTypeFilter, brandFilter2).map((m) => ({ value: m, label: m }))
                         : []),
                     ]}
                   />
@@ -909,7 +976,7 @@ export default function SuchenPage() {
                   label="Marke 3"
                   value={brandFilter3}
                   onChange={(v) => { setBrandFilter3(v); setModelFilter3(""); setVariantFilter3(""); setCustomBrandText3(""); }}
-                  options={brandOptions.map((b) => ({ value: b, label: b }))}
+                  options={getBrandOptionsForType(vehicleTypeFilter).map((b) => ({ value: b, label: b }))}
                 />
                 {brandFilter3 === "Andere" ? (
                   <div>
@@ -929,8 +996,8 @@ export default function SuchenPage() {
                     onChange={setModelFilter3}
                     options={[
                       { value: "", label: "Alle Modelle" },
-                      ...(brandFilter3 !== "Alle Marken" && CAR_BRANDS_MODELS[brandFilter3]
-                        ? CAR_BRANDS_MODELS[brandFilter3].map((m) => ({ value: m, label: m }))
+                      ...(brandFilter3 !== "Alle Marken"
+                        ? getModelsForBrand(vehicleTypeFilter, brandFilter3).map((m) => ({ value: m, label: m }))
                         : []),
                     ]}
                   />
@@ -957,16 +1024,10 @@ export default function SuchenPage() {
               </div>
             )}
             <FilterSelect
-              label="Fahrzeugtyp"
-              value={vehicleTypeFilter}
-              onChange={setVehicleTypeFilter}
-              options={vehicleTypeOptions.map((v) => ({ value: v, label: v }))}
-            />
-            <FilterSelect
               label="Karosserieform"
               value={vehicleCategoryFilter}
               onChange={setVehicleCategoryFilter}
-              options={vehicleCategoryOptions.map((c) => ({ value: c, label: c }))}
+              options={getCategoriesForType(vehicleTypeFilter).map((c) => ({ value: c, label: c }))}
             />
             <FilterSelect
               label="Kraftstoff"

@@ -495,6 +495,148 @@ export const CAR_BRANDS_MODELS: Record<string, string[]> = {
   "Andere": ["Anderes Modell"],
 };
 
+// ============================================================================
+// MOTORCYCLE BRANDS & MODELS
+// ============================================================================
+
+export const MOTORCYCLE_BRANDS_MODELS: Record<string, string[]> = {
+  "Aprilia": ["RS 660", "Tuono 660", "RSV4", "Tuono V4", "SR GT", "SX 125", "RX 125", "Shiver 900", "Dorsoduro 900"],
+  "BMW": ["R 1250 GS", "R 1250 RT", "S 1000 RR", "S 1000 R", "S 1000 XR", "F 900 R", "F 900 XR", "F 850 GS", "F 750 GS", "R nineT", "R 18", "G 310 R", "G 310 GS", "CE 04", "M 1000 RR"],
+  "Ducati": ["Panigale V4", "Panigale V2", "Streetfighter V4", "Streetfighter V2", "Monster", "Multistrada V4", "Diavel V4", "Hypermotard 950", "Scrambler", "DesertX", "SuperSport 950"],
+  "Harley-Davidson": ["Sportster S", "Nightster", "Fat Boy", "Road Glide", "Street Glide", "Road King", "Heritage Classic", "Low Rider", "Breakout", "Pan America", "LiveWire"],
+  "Honda": ["CBR 1000 RR-R", "CBR 650 R", "CB 650 R", "CB 500 F", "CB 500 X", "CRF 1100 L Africa Twin", "NC 750 X", "CMX 500 Rebel", "Forza 750", "X-ADV", "PCX 125", "Gold Wing"],
+  "Husqvarna": ["Norden 901", "Svartpilen 401", "Vitpilen 401", "Svartpilen 125", "701 Supermoto", "701 Enduro", "FE 350", "TE 300"],
+  "Indian": ["Scout", "Scout Bobber", "Chief", "Chieftain", "Challenger", "Pursuit", "Springfield", "FTR 1200"],
+  "Kawasaki": ["Ninja ZX-10R", "Ninja ZX-6R", "Ninja 650", "Ninja 400", "Z 900", "Z 650", "Z H2", "Versys 650", "Versys 1000", "Vulcan S", "KLR 650", "W800"],
+  "KTM": ["1290 Super Duke R", "890 Duke R", "390 Duke", "125 Duke", "1290 Super Adventure", "890 Adventure", "390 Adventure", "RC 390", "690 SMC R", "300 EXC"],
+  "Moto Guzzi": ["V7", "V85 TT", "V100 Mandello", "Stelvio"],
+  "Royal Enfield": ["Continental GT 650", "Interceptor 650", "Himalayan", "Classic 350", "Meteor 350", "Hunter 350", "Scram 411", "Super Meteor 650"],
+  "Suzuki": ["GSX-R 1000", "GSX-S 1000", "GSX-S 750", "GSX-8S", "V-Strom 1050", "V-Strom 800", "V-Strom 650", "SV 650", "Hayabusa", "Burgman 400"],
+  "Triumph": ["Speed Triple 1200", "Street Triple 765", "Tiger 1200", "Tiger 900", "Tiger 660", "Trident 660", "Bonneville T120", "Scrambler 1200", "Rocket 3", "Speed 400"],
+  "Yamaha": ["YZF-R1", "YZF-R7", "YZF-R3", "MT-09", "MT-07", "MT-03", "Ténéré 700", "Tracer 9", "XSR 900", "XSR 700", "XMAX 300", "TMAX 560", "Niken"],
+  "Andere": ["Anderes Modell"],
+};
+
+// ============================================================================
+// TRUCK BRANDS & MODELS
+// ============================================================================
+
+export const TRUCK_BRANDS_MODELS: Record<string, string[]> = {
+  "DAF": ["XF", "XG", "XG+", "CF", "LF", "XD"],
+  "FUSO": ["Canter", "Fighter", "Super Great"],
+  "Iveco": ["S-Way", "X-Way", "Eurocargo", "Daily", "T-Way"],
+  "MAN": ["TGX", "TGS", "TGM", "TGL", "TGE"],
+  "Mercedes-Benz": ["Actros", "Arocs", "Atego", "Econic", "eActros", "Unimog"],
+  "Renault Trucks": ["T High", "T", "C", "K", "D", "D Wide", "Master Red Edition"],
+  "Scania": ["R-Serie", "S-Serie", "G-Serie", "P-Serie", "L-Serie", "XT"],
+  "Volvo": ["FH", "FH16", "FM", "FMX", "FE", "FL"],
+  "Andere": ["Anderes Modell"],
+};
+
+// ============================================================================
+// TRANSPORTER BRANDS & MODELS
+// ============================================================================
+
+export const TRANSPORTER_BRANDS_MODELS: Record<string, string[]> = {
+  "Citroën": ["Jumpy", "Jumper", "Berlingo Van", "ë-Jumpy", "ë-Berlingo Van"],
+  "Fiat": ["Ducato", "Scudo", "Doblò Cargo", "Fiorino", "E-Ducato", "E-Scudo"],
+  "Ford": ["Transit", "Transit Custom", "Transit Connect", "Transit Courier", "E-Transit"],
+  "Iveco": ["Daily", "eDaily"],
+  "MAN": ["TGE"],
+  "Maxus": ["eDeliver 3", "eDeliver 7", "eDeliver 9", "T90 EV"],
+  "Mercedes-Benz": ["Sprinter", "Vito", "Citan", "eSprinter", "eVito"],
+  "Nissan": ["NV300", "NV400", "Interstar", "Townstar"],
+  "Opel": ["Movano", "Vivaro", "Combo Cargo", "Movano-e", "Vivaro-e"],
+  "Peugeot": ["Boxer", "Expert", "Partner", "e-Expert", "e-Partner"],
+  "Renault": ["Master", "Trafic", "Kangoo", "Master E-Tech", "Trafic E-Tech"],
+  "Toyota": ["Proace", "Proace City", "Proace Electric"],
+  "VW": ["Crafter", "Transporter", "Caddy Cargo", "ID. Buzz Cargo", "e-Crafter"],
+  "Andere": ["Anderes Modell"],
+};
+
+// ============================================================================
+// CATEGORY OPTIONS BY TYPE
+// ============================================================================
+
+export const carCategoryOptions = ["Alle", "Limousine", "Kombi", "Schrägheck", "SUV", "Geländewagen", "Sportwagen", "Coupé", "Cabrio", "Van / Minibus", "Pick-up"];
+export const motorcycleCategoryOptions = ["Alle", "Naked Bike", "Sportler", "Tourer", "Enduro", "Chopper/Cruiser", "Roller", "Supermoto", "Cross", "Adventure"];
+export const truckCategoryOptions = ["Alle", "Sattelzugmaschine", "Pritsche", "Kipper", "Koffer", "Betonmischer", "Kühlkoffer", "Tankwagen"];
+export const transporterCategoryOptions = ["Alle", "Kastenwagen", "Pritsche", "Kühlwagen", "Hochdachkombi", "Doppelkabine", "Planenwagen"];
+
+// ============================================================================
+// HELPER FUNCTIONS
+// ============================================================================
+
+export type VehicleTypeKey = "Alle" | "PKW" | "Motorrad" | "LKW" | "Transporter" | "Andere";
+
+const BRANDS_BY_TYPE: Record<string, Record<string, string[]>> = {
+  PKW: CAR_BRANDS_MODELS,
+  Motorrad: MOTORCYCLE_BRANDS_MODELS,
+  LKW: TRUCK_BRANDS_MODELS,
+  Transporter: TRANSPORTER_BRANDS_MODELS,
+};
+
+export function getBrandsForType(type: string): string[] {
+  if (type && type !== "Alle" && type !== "Andere" && BRANDS_BY_TYPE[type]) {
+    return Object.keys(BRANDS_BY_TYPE[type]).sort();
+  }
+  // "Alle" or unknown → merge all types, deduplicate, sort
+  const allBrands = new Set<string>();
+  for (const brandsModels of Object.values(BRANDS_BY_TYPE)) {
+    for (const brand of Object.keys(brandsModels)) {
+      allBrands.add(brand);
+    }
+  }
+  return [...allBrands].sort();
+}
+
+export function getModelsForBrand(type: string, brand: string): string[] {
+  if (!brand) return [];
+  if (type && type !== "Alle" && type !== "Andere" && BRANDS_BY_TYPE[type]) {
+    return BRANDS_BY_TYPE[type][brand] ?? [];
+  }
+  // "Alle" → merge models from all types for this brand, deduplicate
+  const allModels = new Set<string>();
+  for (const brandsModels of Object.values(BRANDS_BY_TYPE)) {
+    if (brandsModels[brand]) {
+      for (const model of brandsModels[brand]) {
+        allModels.add(model);
+      }
+    }
+  }
+  return [...allModels];
+}
+
+export function getCategoriesForType(type: string): string[] {
+  switch (type) {
+    case "PKW": return carCategoryOptions;
+    case "Motorrad": return motorcycleCategoryOptions;
+    case "LKW": return truckCategoryOptions;
+    case "Transporter": return transporterCategoryOptions;
+    default: return carCategoryOptions;
+  }
+}
+
+export function getBrandOptionsForType(type: string): string[] {
+  return ["Alle Marken", ...getBrandsForType(type)];
+}
+
+export const VEHICLE_TYPE_VALUE_TO_LABEL: Record<string, string> = {
+  car: "PKW",
+  motorcycle: "Motorrad",
+  truck: "LKW",
+  van: "Transporter",
+  other: "Andere",
+};
+
+export const VEHICLE_TYPE_LABEL_TO_VALUE: Record<string, string> = {
+  PKW: "car",
+  Motorrad: "motorcycle",
+  LKW: "truck",
+  Transporter: "van",
+  Andere: "other",
+};
+
 export const MERCEDES_MOTORIZATIONS: Record<string, string[]> = {
   "A-Klasse": ["A 160", "A 180", "A 180 d", "A 200", "A 200 d", "A 220", "A 220 d", "A 250", "A 250 e", "A 35 AMG", "A 45 AMG", "A 45 S AMG"],
   "B-Klasse": ["B 160", "B 180", "B 180 d", "B 200", "B 200 d", "B 220 d", "B 250 e"],

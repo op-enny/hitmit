@@ -14,7 +14,6 @@ import { getCoordsByCity } from "../geocoding";
 const LocationMap = dynamic(() => import("../location-map"), { ssr: false });
 import {
   vehicles,
-  brandOptions,
   fuelOptions,
   priceRanges,
   yearOptions,
@@ -35,8 +34,10 @@ import {
   emissionClassOptions,
   environmentalBadgeOptions,
   particleFilterOptions,
-  CAR_BRANDS_MODELS,
   MERCEDES_MOTORIZATIONS,
+  getBrandOptionsForType,
+  getModelsForBrand,
+  getCategoriesForType,
 } from "../vehicles-data";
 import type { Vehicle } from "../vehicles-data";
 import { useSavedData } from "../use-saved-data";
@@ -992,7 +993,7 @@ function InseratePageInner() {
     const brand = searchParams.get("brand");
     const fuel = searchParams.get("fuel");
     const price = searchParams.get("price");
-    if (brand && brandOptions.includes(brand)) setBrandFilter(brand);
+    if (brand && getBrandOptionsForType("Alle").includes(brand)) setBrandFilter(brand);
     const mdl = searchParams.get("model");
     if (mdl) setModelFilter(mdl);
     const mot = searchParams.get("motorization");
@@ -1078,10 +1079,10 @@ function InseratePageInner() {
     if (pff && particleFilterOptions.includes(pff)) setParticleFilterFilter(pff);
     if (mc) setManufacturerColorFilter(mc);
     if (va) setVariantFilter(va);
-    if (b2 && brandOptions.includes(b2)) { setBrandFilter2(b2); setShowBrandRow2(true); }
+    if (b2 && getBrandOptionsForType("Alle").includes(b2)) { setBrandFilter2(b2); setShowBrandRow2(true); }
     if (m2) setModelFilter2(m2);
     if (v2) setVariantFilter2(v2);
-    if (b3 && brandOptions.includes(b3)) { setBrandFilter3(b3); setShowBrandRow2(true); setShowBrandRow3(true); }
+    if (b3 && getBrandOptionsForType("Alle").includes(b3)) { setBrandFilter3(b3); setShowBrandRow2(true); setShowBrandRow3(true); }
     if (m3) setModelFilter3(m3);
     if (v3) setVariantFilter3(v3);
     // Auto-open advanced section if any advanced param is set
@@ -1255,7 +1256,7 @@ function InseratePageInner() {
                 onChange={(e) => { setBrandFilter(e.target.value); setModelFilter(""); setMotorizationFilter([]); setVariantFilter(""); setCustomBrandText(""); }}
                 className="appearance-none bg-white dark:bg-[#141414] border border-gray-200 rounded-full px-5 py-2.5 pr-10 text-sm font-medium text-gray-700 hover:border-[#f14011] focus:border-[#f14011] focus:outline-none transition-colors cursor-pointer"
               >
-                {brandOptions.map((b) => (
+                {getBrandOptionsForType(vehicleTypeFilter).map((b) => (
                   <option key={b} value={b}>
                     {b}
                   </option>
@@ -1280,8 +1281,8 @@ function InseratePageInner() {
                   className="appearance-none bg-white dark:bg-[#141414] border border-gray-200 rounded-full px-5 py-2.5 pr-10 text-sm font-medium text-gray-700 hover:border-[#f14011] focus:border-[#f14011] focus:outline-none transition-colors cursor-pointer"
                 >
                   <option value="">Alle Modelle</option>
-                  {brandFilter !== "Alle Marken" && CAR_BRANDS_MODELS[brandFilter] &&
-                    CAR_BRANDS_MODELS[brandFilter].map((m) => (
+                  {brandFilter !== "Alle Marken" &&
+                    getModelsForBrand(vehicleTypeFilter, brandFilter).map((m) => (
                       <option key={m} value={m}>{m}</option>
                     ))
                   }
@@ -1291,7 +1292,7 @@ function InseratePageInner() {
             )}
 
             {/* Motorisierung (Mercedes only) */}
-            {brandFilter === "Mercedes-Benz" && modelFilter !== "" && MERCEDES_MOTORIZATIONS[modelFilter] && (
+            {(vehicleTypeFilter === "Alle" || vehicleTypeFilter === "PKW") && brandFilter === "Mercedes-Benz" && modelFilter !== "" && MERCEDES_MOTORIZATIONS[modelFilter] && (
               <div className="relative" ref={motorizationRef}>
                 <button
                   type="button"
@@ -1358,7 +1359,7 @@ function InseratePageInner() {
                   onChange={(e) => { setBrandFilter2(e.target.value); setModelFilter2(""); setVariantFilter2(""); setCustomBrandText2(""); }}
                   className="appearance-none bg-white dark:bg-[#141414] border border-gray-200 rounded-full px-5 py-2.5 pr-10 text-sm font-medium text-gray-700 hover:border-[#f14011] focus:border-[#f14011] focus:outline-none transition-colors cursor-pointer"
                 >
-                  {brandOptions.map((b) => (
+                  {getBrandOptionsForType(vehicleTypeFilter).map((b) => (
                     <option key={b} value={b}>{b}</option>
                   ))}
                 </select>
@@ -1380,8 +1381,8 @@ function InseratePageInner() {
                     className="appearance-none bg-white dark:bg-[#141414] border border-gray-200 rounded-full px-5 py-2.5 pr-10 text-sm font-medium text-gray-700 hover:border-[#f14011] focus:border-[#f14011] focus:outline-none transition-colors cursor-pointer"
                   >
                     <option value="">Alle Modelle</option>
-                    {brandFilter2 !== "Alle Marken" && CAR_BRANDS_MODELS[brandFilter2] &&
-                      CAR_BRANDS_MODELS[brandFilter2].map((m) => (
+                    {brandFilter2 !== "Alle Marken" &&
+                      getModelsForBrand(vehicleTypeFilter, brandFilter2).map((m) => (
                         <option key={m} value={m}>{m}</option>
                       ))
                     }
@@ -1437,7 +1438,7 @@ function InseratePageInner() {
                   onChange={(e) => { setBrandFilter3(e.target.value); setModelFilter3(""); setVariantFilter3(""); setCustomBrandText3(""); }}
                   className="appearance-none bg-white dark:bg-[#141414] border border-gray-200 rounded-full px-5 py-2.5 pr-10 text-sm font-medium text-gray-700 hover:border-[#f14011] focus:border-[#f14011] focus:outline-none transition-colors cursor-pointer"
                 >
-                  {brandOptions.map((b) => (
+                  {getBrandOptionsForType(vehicleTypeFilter).map((b) => (
                     <option key={b} value={b}>{b}</option>
                   ))}
                 </select>
@@ -1459,8 +1460,8 @@ function InseratePageInner() {
                     className="appearance-none bg-white dark:bg-[#141414] border border-gray-200 rounded-full px-5 py-2.5 pr-10 text-sm font-medium text-gray-700 hover:border-[#f14011] focus:border-[#f14011] focus:outline-none transition-colors cursor-pointer"
                   >
                     <option value="">Alle Modelle</option>
-                    {brandFilter3 !== "Alle Marken" && CAR_BRANDS_MODELS[brandFilter3] &&
-                      CAR_BRANDS_MODELS[brandFilter3].map((m) => (
+                    {brandFilter3 !== "Alle Marken" &&
+                      getModelsForBrand(vehicleTypeFilter, brandFilter3).map((m) => (
                         <option key={m} value={m}>{m}</option>
                       ))
                     }
@@ -1891,7 +1892,15 @@ function InseratePageInner() {
                 <div className="relative">
                   <select
                     value={vehicleTypeFilter}
-                    onChange={(e) => setVehicleTypeFilter(e.target.value)}
+                    onChange={(e) => {
+                      setVehicleTypeFilter(e.target.value);
+                      setBrandFilter("Alle Marken"); setModelFilter(""); setMotorizationFilter([]);
+                      setBrandFilter2("Alle Marken"); setModelFilter2(""); setVariantFilter2("");
+                      setBrandFilter3("Alle Marken"); setModelFilter3(""); setVariantFilter3("");
+                      setShowBrandRow2(false); setShowBrandRow3(false);
+                      setCustomBrandText(""); setCustomBrandText2(""); setCustomBrandText3("");
+                      setVehicleCategoryFilter("Alle");
+                    }}
                     className="w-full appearance-none bg-gray-50 dark:bg-[#1a1a1a] border border-gray-200 rounded-xl px-4 py-2.5 pr-9 text-sm text-gray-700 hover:border-[#f14011] focus:border-[#f14011] focus:outline-none transition-colors cursor-pointer"
                   >
                     {vehicleTypeOptions.map((v) => (
@@ -1911,7 +1920,7 @@ function InseratePageInner() {
                     onChange={(e) => setVehicleCategoryFilter(e.target.value)}
                     className="w-full appearance-none bg-gray-50 dark:bg-[#1a1a1a] border border-gray-200 rounded-xl px-4 py-2.5 pr-9 text-sm text-gray-700 hover:border-[#f14011] focus:border-[#f14011] focus:outline-none transition-colors cursor-pointer"
                   >
-                    {vehicleCategoryOptions.map((c) => (
+                    {getCategoriesForType(vehicleTypeFilter).map((c) => (
                       <option key={c} value={c}>{c}</option>
                     ))}
                   </select>
