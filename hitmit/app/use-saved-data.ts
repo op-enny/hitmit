@@ -25,13 +25,13 @@ export interface SavedSearch {
     mileageMax: string;
     powerMin: string;
     powerMax: string;
-    transmissionFilter: string;
+    transmissionFilter: string | string[];
     driveTypeFilter: string;
     sellerTypeFilter: string;
     accidentFreeFilter: string;
     cityFilter: string;
     cityRadius: string;
-    colorFilter: string;
+    colorFilter: string | string[];
     conditionFilter: string;
     doorFilter: string;
     seatFilter: string;
@@ -156,13 +156,13 @@ function migrateSearch(raw: any): SavedSearch {
       mileageMax,
       powerMin,
       powerMax: f.powerMax ?? "",
-      transmissionFilter: f.transmissionFilter ?? "Alle",
+      transmissionFilter: f.transmissionFilter ?? [],
       driveTypeFilter: f.driveTypeFilter ?? "Alle",
       sellerTypeFilter: f.sellerTypeFilter ?? "Alle",
       accidentFreeFilter: f.accidentFreeFilter ?? "Alle",
       cityFilter: f.cityFilter ?? "",
       cityRadius: f.cityRadius ?? "",
-      colorFilter: f.colorFilter ?? "Alle Farben",
+      colorFilter: f.colorFilter ?? [],
       conditionFilter: f.conditionFilter ?? "Alle",
       doorFilter: f.doorFilter ?? "Alle",
       seatFilter,

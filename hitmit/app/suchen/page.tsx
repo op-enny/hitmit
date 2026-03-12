@@ -242,6 +242,93 @@ function ResultCard({
 }
 
 // ============================================================================
+// MULTI-SELECT FILTER (checkboxes inside dropdown)
+// ============================================================================
+
+function MultiFilterSelect({
+  label,
+  selected,
+  onChange,
+  options,
+}: {
+  label: string;
+  selected: string[];
+  onChange: (v: string[]) => void;
+  options: string[];
+}) {
+  const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    function handleClick(e: MouseEvent) {
+      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
+    }
+    if (open) {
+      document.addEventListener("mousedown", handleClick);
+      return () => document.removeEventListener("mousedown", handleClick);
+    }
+  }, [open]);
+
+  const display = selected.length === 0
+    ? options[0]
+    : selected.length === 1
+      ? selected[0]
+      : `${selected.length} ausgewählt`;
+
+  // options[0] is the "Alle" placeholder — not checkable
+  const selectableOptions = options.slice(1);
+
+  return (
+    <div ref={ref}>
+      <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1.5">{label}</label>
+      <div className="relative">
+        <button
+          type="button"
+          onClick={() => setOpen(!open)}
+          className="w-full flex items-center justify-between bg-white dark:bg-[#1a1a1a] border border-gray-200 dark:border-[#2a2a2a] rounded-xl px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:border-[#f14011] focus:border-[#f14011] focus:outline-none transition-colors cursor-pointer text-left"
+        >
+          <span className="truncate">{display}</span>
+          <ChevronDownIcon className={`w-4 h-4 text-gray-400 shrink-0 ml-2 transition-transform ${open ? "rotate-180" : ""}`} />
+        </button>
+        {open && (
+          <div className="absolute z-50 top-full mt-1 w-full bg-white dark:bg-[#1a1a1a] border border-gray-200 dark:border-[#2a2a2a] rounded-xl shadow-lg max-h-60 overflow-y-auto py-1">
+            {selected.length > 0 && (
+              <button
+                type="button"
+                onClick={() => onChange([])}
+                className="w-full text-left px-4 py-2 text-sm text-gray-400 hover:bg-gray-50 dark:hover:bg-[#222] transition-colors"
+              >
+                Auswahl zurücksetzen
+              </button>
+            )}
+            {selectableOptions.map((o) => (
+              <label
+                key={o}
+                className="flex items-center gap-2 px-4 py-2 text-sm hover:bg-gray-50 dark:hover:bg-[#222] transition-colors cursor-pointer"
+              >
+                <input
+                  type="checkbox"
+                  checked={selected.includes(o)}
+                  onChange={(e) => {
+                    if (e.target.checked) {
+                      onChange([...selected, o]);
+                    } else {
+                      onChange(selected.filter((s) => s !== o));
+                    }
+                  }}
+                  className="w-4 h-4 rounded border-gray-300 dark:border-gray-600 text-[#f14011] focus:ring-[#f14011] cursor-pointer"
+                />
+                <span className={selected.includes(o) ? "text-[#f14011] font-medium" : "text-gray-700 dark:text-gray-300"}>{o}</span>
+              </label>
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+// ============================================================================
 // NUMERIC INPUT HELPER
 // ============================================================================
 
@@ -289,13 +376,13 @@ export default function SuchenPage() {
   const [mileageMax, setMileageMax] = useState("");
   const [powerMin, setPowerMin] = useState("");
   const [powerMax, setPowerMax] = useState("");
-  const [transmissionFilter, setTransmissionFilter] = useState("Alle");
+  const [transmissionFilter, setTransmissionFilter] = useState<string[]>([]);
   const [driveTypeFilter, setDriveTypeFilter] = useState("Alle");
   const [sellerTypeFilter, setSellerTypeFilter] = useState("Alle");
   const [accidentFreeFilter, setAccidentFreeFilter] = useState("Alle");
   const [cityFilter, setCityFilter] = useState("");
   const [cityRadius, setCityRadius] = useState("");
-  const [colorFilter, setColorFilter] = useState("Alle Farben");
+  const [colorFilter, setColorFilter] = useState<string[]>([]);
   const [conditionFilter, setConditionFilter] = useState("Alle");
   const [doorFilter, setDoorFilter] = useState("Alle");
   const [seatFilter, setSeatFilter] = useState("");
@@ -418,11 +505,15 @@ export default function SuchenPage() {
     if (mileageMax !== "" && v.mileage > Number(mileageMax)) return false;
     if (powerMin !== "" && v.powerPs < Number(powerMin)) return false;
     if (powerMax !== "" && v.powerPs > Number(powerMax)) return false;
-    if (transmissionFilter !== "Alle") {
+    if (transmissionFilter.length > 0) {
       const t = v.transmission.toLowerCase();
-      if (transmissionFilter === "Automatik" && !t.includes("automatik") && !t.includes("dsg") && !t.includes("pdk") && !t.includes("tronic") && !t.includes("s tronic")) return false;
-      if (transmissionFilter === "Halbautomatik" && !t.includes("halbautomatik")) return false;
-      if (transmissionFilter === "Schaltung" && (t.includes("automatik") || t.includes("dsg") || t.includes("pdk") || t.includes("tronic") || t.includes("s tronic") || t.includes("halbautomatik"))) return false;
+      const matchesAny = transmissionFilter.some((tf) => {
+        if (tf === "Automatik") return t.includes("automatik") || t.includes("dsg") || t.includes("pdk") || t.includes("tronic") || t.includes("s tronic");
+        if (tf === "Halbautomatik") return t.includes("halbautomatik");
+        if (tf === "Schaltung") return !t.includes("automatik") && !t.includes("dsg") && !t.includes("pdk") && !t.includes("tronic") && !t.includes("s tronic") && !t.includes("halbautomatik");
+        return false;
+      });
+      if (!matchesAny) return false;
     }
     if (driveTypeFilter !== "Alle") {
       const d = v.driveType.toLowerCase();
@@ -448,7 +539,7 @@ export default function SuchenPage() {
         if (!v.city.toLowerCase().includes(cityFilter.toLowerCase())) return false;
       }
     }
-    if (colorFilter !== "Alle Farben" && !v.color.toLowerCase().includes(colorFilter.toLowerCase())) return false;
+    if (colorFilter.length > 0 && !colorFilter.some((cf) => v.color.toLowerCase().includes(cf.toLowerCase()))) return false;
     if (conditionFilter !== "Alle" && v.condition !== conditionFilter) return false;
     if (doorFilter !== "Alle") {
       if (doorFilter === "2/3" && !["2", "3"].includes(v.doors)) return false;
@@ -555,13 +646,13 @@ export default function SuchenPage() {
     mileageMax !== "",
     powerMin !== "",
     powerMax !== "",
-    transmissionFilter !== "Alle",
+    transmissionFilter.length > 0,
     driveTypeFilter !== "Alle",
     sellerTypeFilter !== "Alle",
     accidentFreeFilter !== "Alle",
     cityFilter !== "",
     cityRadius !== "",
-    colorFilter !== "Alle Farben",
+    colorFilter.length > 0,
     conditionFilter !== "Alle",
     doorFilter !== "Alle",
     seatFilter !== "",
@@ -603,10 +694,10 @@ export default function SuchenPage() {
     setPriceMin(""); setPriceMax("");
     setYearFrom(""); setYearTo("");
     setMileageMin(""); setMileageMax(""); setPowerMin(""); setPowerMax("");
-    setTransmissionFilter("Alle"); setDriveTypeFilter("Alle");
+    setTransmissionFilter([]); setDriveTypeFilter("Alle");
     setSellerTypeFilter("Alle"); setAccidentFreeFilter("Alle");
     setCityFilter(""); setCityRadius("");
-    setColorFilter("Alle Farben"); setConditionFilter("Alle");
+    setColorFilter([]); setConditionFilter("Alle");
     setDoorFilter("Alle"); setSeatFilter("");
     setModelFilter("");
     setBrandFilter2("Alle Marken"); setModelFilter2(""); setVariantFilter2(""); setCustomBrandText2("");
@@ -645,12 +736,12 @@ export default function SuchenPage() {
     if (mileageMax !== "") parts.push(`bis ${Number(mileageMax).toLocaleString("de-DE")} km`);
     if (powerMin !== "") parts.push(`ab ${powerMin} PS`);
     if (powerMax !== "") parts.push(`bis ${powerMax} PS`);
-    if (transmissionFilter !== "Alle") parts.push(transmissionFilter);
+    if (transmissionFilter.length > 0) parts.push(transmissionFilter.join(", "));
     if (driveTypeFilter !== "Alle") parts.push(driveTypeFilter);
     if (sellerTypeFilter !== "Alle") parts.push(sellerTypeFilter);
     if (accidentFreeFilter !== "Alle") parts.push("Unfallfrei");
     if (cityFilter) parts.push(cityRadius ? `${cityFilter} +${cityRadius} km` : cityFilter);
-    if (colorFilter !== "Alle Farben") parts.push(colorFilter);
+    if (colorFilter.length > 0) parts.push(colorFilter.join(", "));
     if (conditionFilter !== "Alle") parts.push(conditionFilter);
     if (doorFilter !== "Alle") parts.push(`${doorFilter} Türen`);
     if (seatFilter !== "") parts.push(`${seatFilter} Sitze`);
@@ -1068,11 +1159,11 @@ export default function SuchenPage() {
               onChange={setConditionFilter}
               options={conditionOptions.map((c) => ({ value: c, label: c }))}
             />
-            <FilterSelect
+            <MultiFilterSelect
               label="Außenfarbe"
-              value={colorFilter}
+              selected={colorFilter}
               onChange={setColorFilter}
-              options={colorOptions.map((c) => ({ value: c, label: c }))}
+              options={colorOptions}
             />
             <div>
               <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1.5">Herstellerfarbe</label>
@@ -1095,11 +1186,11 @@ export default function SuchenPage() {
             <NumericInput label="Leistung bis (PS)" value={powerMax} onChange={setPowerMax} placeholder="z.B. 500" />
             <NumericInput label="Kilometerstand ab" value={mileageMin} onChange={setMileageMin} placeholder="z.B. 10000" />
             <NumericInput label="Kilometerstand bis" value={mileageMax} onChange={setMileageMax} placeholder="z.B. 50000" />
-            <FilterSelect
+            <MultiFilterSelect
               label="Getriebe"
-              value={transmissionFilter}
+              selected={transmissionFilter}
               onChange={setTransmissionFilter}
-              options={transmissionOptions.map((t) => ({ value: t, label: t }))}
+              options={transmissionOptions}
             />
             <FilterSelect
               label="Zylinder"

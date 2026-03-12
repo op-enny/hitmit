@@ -52,11 +52,18 @@ function applyFilters(filters: SavedSearch["filters"]): Vehicle[] {
     // Power: direct comparison
     if (filters.powerMin !== "" && v.powerPs < Number(filters.powerMin)) return false;
     if (filters.powerMax !== "" && v.powerPs > Number(filters.powerMax)) return false;
-    if (filters.transmissionFilter && filters.transmissionFilter !== "Alle") {
-      const t = v.transmission.toLowerCase();
-      if (filters.transmissionFilter === "Automatik" && !t.includes("automatik") && !t.includes("dsg") && !t.includes("pdk") && !t.includes("tronic") && !t.includes("s tronic")) return false;
-      if (filters.transmissionFilter === "Halbautomatik" && !t.includes("halbautomatik")) return false;
-      if (filters.transmissionFilter === "Schaltung" && (t.includes("automatik") || t.includes("dsg") || t.includes("pdk") || t.includes("tronic") || t.includes("s tronic") || t.includes("halbautomatik"))) return false;
+    if (filters.transmissionFilter) {
+      const tfs = Array.isArray(filters.transmissionFilter) ? filters.transmissionFilter : (filters.transmissionFilter !== "Alle" ? [filters.transmissionFilter] : []);
+      if (tfs.length > 0) {
+        const t = v.transmission.toLowerCase();
+        const matchesAny = tfs.some((tf) => {
+          if (tf === "Automatik") return t.includes("automatik") || t.includes("dsg") || t.includes("pdk") || t.includes("tronic") || t.includes("s tronic");
+          if (tf === "Halbautomatik") return t.includes("halbautomatik");
+          if (tf === "Schaltung") return !t.includes("automatik") && !t.includes("dsg") && !t.includes("pdk") && !t.includes("tronic") && !t.includes("s tronic") && !t.includes("halbautomatik");
+          return false;
+        });
+        if (!matchesAny) return false;
+      }
     }
     if (filters.driveTypeFilter && filters.driveTypeFilter !== "Alle") {
       const d = v.driveType.toLowerCase();
@@ -82,7 +89,10 @@ function applyFilters(filters: SavedSearch["filters"]): Vehicle[] {
         if (!v.city.toLowerCase().includes(filters.cityFilter.toLowerCase())) return false;
       }
     }
-    if (filters.colorFilter && filters.colorFilter !== "Alle Farben" && !v.color.toLowerCase().includes(filters.colorFilter.toLowerCase())) return false;
+    if (filters.colorFilter) {
+      const cfs = Array.isArray(filters.colorFilter) ? filters.colorFilter : (filters.colorFilter !== "Alle Farben" ? [filters.colorFilter] : []);
+      if (cfs.length > 0 && !cfs.some((cf) => v.color.toLowerCase().includes(cf.toLowerCase()))) return false;
+    }
     if (filters.conditionFilter && filters.conditionFilter !== "Alle" && v.condition !== filters.conditionFilter) return false;
     if (filters.doorFilter && filters.doorFilter !== "Alle") {
       if (filters.doorFilter === "2/3" && !["2", "3"].includes(v.doors)) return false;
@@ -211,13 +221,19 @@ function buildSearchUrl(filters: SavedSearch["filters"]): string {
   if (filters.mileageMax !== "") params.set("mileageMax", filters.mileageMax);
   if (filters.powerMin !== "") params.set("powerMin", filters.powerMin);
   if (filters.powerMax !== "") params.set("powerMax", filters.powerMax);
-  if (filters.transmissionFilter && filters.transmissionFilter !== "Alle") params.set("transmission", filters.transmissionFilter);
+  if (filters.transmissionFilter) {
+    const tfs = Array.isArray(filters.transmissionFilter) ? filters.transmissionFilter : (filters.transmissionFilter !== "Alle" ? [filters.transmissionFilter] : []);
+    if (tfs.length > 0) params.set("transmission", tfs.join(","));
+  }
   if (filters.driveTypeFilter && filters.driveTypeFilter !== "Alle") params.set("driveType", filters.driveTypeFilter);
   if (filters.sellerTypeFilter && filters.sellerTypeFilter !== "Alle") params.set("sellerType", filters.sellerTypeFilter);
   if (filters.accidentFreeFilter === "Nur unfallfrei") params.set("accidentFree", "ja");
   if (filters.cityFilter) params.set("city", filters.cityFilter);
   if (filters.cityRadius) params.set("radius", filters.cityRadius);
-  if (filters.colorFilter && filters.colorFilter !== "Alle Farben") params.set("color", filters.colorFilter);
+  if (filters.colorFilter) {
+    const cfs = Array.isArray(filters.colorFilter) ? filters.colorFilter : (filters.colorFilter !== "Alle Farben" ? [filters.colorFilter] : []);
+    if (cfs.length > 0) params.set("color", cfs.join(","));
+  }
   if (filters.conditionFilter && filters.conditionFilter !== "Alle") params.set("condition", filters.conditionFilter);
   if (filters.doorFilter && filters.doorFilter !== "Alle") params.set("doors", filters.doorFilter);
   if (filters.seatFilter && filters.seatFilter !== "" && filters.seatFilter !== "Alle") params.set("seats", filters.seatFilter);
@@ -291,12 +307,18 @@ function SearchCard({
   if (f.mileageMax !== "") filterTags.push(`bis ${Number(f.mileageMax).toLocaleString("de-DE")} km`);
   if (f.powerMin !== "") filterTags.push(`ab ${f.powerMin} PS`);
   if (f.powerMax !== "") filterTags.push(`bis ${f.powerMax} PS`);
-  if (f.transmissionFilter && f.transmissionFilter !== "Alle") filterTags.push(f.transmissionFilter);
+  if (f.transmissionFilter) {
+    const tfs = Array.isArray(f.transmissionFilter) ? f.transmissionFilter : (f.transmissionFilter !== "Alle" ? [f.transmissionFilter] : []);
+    if (tfs.length > 0) filterTags.push(tfs.join(", "));
+  }
   if (f.driveTypeFilter && f.driveTypeFilter !== "Alle") filterTags.push(f.driveTypeFilter);
   if (f.sellerTypeFilter && f.sellerTypeFilter !== "Alle") filterTags.push(f.sellerTypeFilter);
   if (f.accidentFreeFilter === "Nur unfallfrei") filterTags.push("Unfallfrei");
   if (f.cityFilter) filterTags.push(f.cityRadius ? `${f.cityFilter} +${f.cityRadius} km` : f.cityFilter);
-  if (f.colorFilter && f.colorFilter !== "Alle Farben") filterTags.push(f.colorFilter);
+  if (f.colorFilter) {
+    const cfs = Array.isArray(f.colorFilter) ? f.colorFilter : (f.colorFilter !== "Alle Farben" ? [f.colorFilter] : []);
+    if (cfs.length > 0) filterTags.push(cfs.join(", "));
+  }
   if (f.conditionFilter && f.conditionFilter !== "Alle") filterTags.push(f.conditionFilter);
   if (f.doorFilter && f.doorFilter !== "Alle") filterTags.push(`${f.doorFilter} Türen`);
   if (f.seatFilter && f.seatFilter !== "" && f.seatFilter !== "Alle") filterTags.push(`${f.seatFilter} Sitze`);
