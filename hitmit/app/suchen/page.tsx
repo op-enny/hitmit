@@ -95,6 +95,25 @@ function FilterSelect({
 
   const selected = options.find((o) => String(o.value) === String(value));
 
+  const dropdownContent = (
+    <>
+      {options.map((o) => (
+        <button
+          key={String(o.value)}
+          type="button"
+          onClick={() => { onChange(String(o.value)); setOpen(false); }}
+          className={`w-full text-left px-4 py-3 text-sm hover:bg-gray-50 dark:hover:bg-[#222] transition-colors ${
+            String(o.value) === String(value)
+              ? "text-[#f14011] font-medium"
+              : "text-gray-700 dark:text-gray-300"
+          }`}
+        >
+          {o.label}
+        </button>
+      ))}
+    </>
+  );
+
   return (
     <div ref={ref}>
       <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1.5">{label}</label>
@@ -107,25 +126,30 @@ function FilterSelect({
           <span className="truncate">{selected?.label ?? ""}</span>
           <ChevronDownIcon className={`w-4 h-4 text-gray-400 shrink-0 ml-2 transition-transform ${open ? "rotate-180" : ""}`} />
         </button>
+        {/* Desktop dropdown */}
         {open && (
-          <div className="absolute z-50 top-full mt-1 w-full bg-white dark:bg-[#1a1a1a] border border-gray-200 dark:border-[#2a2a2a] rounded-xl shadow-lg max-h-60 overflow-y-auto py-1">
-            {options.map((o) => (
-              <button
-                key={String(o.value)}
-                type="button"
-                onClick={() => { onChange(String(o.value)); setOpen(false); }}
-                className={`w-full text-left px-4 py-2 text-sm hover:bg-gray-50 dark:hover:bg-[#222] transition-colors ${
-                  String(o.value) === String(value)
-                    ? "text-[#f14011] font-medium"
-                    : "text-gray-700 dark:text-gray-300"
-                }`}
-              >
-                {o.label}
-              </button>
-            ))}
+          <div className="hidden sm:block absolute z-50 top-full mt-1 w-full bg-white dark:bg-[#1a1a1a] border border-gray-200 dark:border-[#2a2a2a] rounded-xl shadow-lg max-h-60 overflow-y-auto py-1">
+            {dropdownContent}
           </div>
         )}
       </div>
+      {/* Mobile bottom sheet */}
+      {open && (
+        <div className="sm:hidden fixed inset-0 z-50 flex flex-col justify-end">
+          <div className="absolute inset-0 bg-black/40" onClick={() => setOpen(false)} />
+          <div className="relative bg-white dark:bg-[#1a1a1a] rounded-t-2xl max-h-[70vh] flex flex-col">
+            <div className="flex items-center justify-between px-4 py-3 border-b border-gray-200 dark:border-[#2a2a2a]">
+              <span className="font-semibold text-sm text-gray-900 dark:text-gray-100">{label}</span>
+              <button type="button" onClick={() => setOpen(false)} className="p-2 min-w-[44px] min-h-[44px] flex items-center justify-center text-gray-400">
+                <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path strokeLinecap="round" d="M6 18L18 6M6 6l12 12" /></svg>
+              </button>
+            </div>
+            <div className="overflow-y-auto py-1">
+              {dropdownContent}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
@@ -276,6 +300,40 @@ function MultiFilterSelect({
   // options[0] is the "Alle" placeholder — not checkable
   const selectableOptions = options.slice(1);
 
+  const dropdownContent = (
+    <>
+      {selected.length > 0 && (
+        <button
+          type="button"
+          onClick={() => onChange([])}
+          className="w-full text-left px-4 py-3 text-sm text-gray-400 hover:bg-gray-50 dark:hover:bg-[#222] transition-colors"
+        >
+          Auswahl zurücksetzen
+        </button>
+      )}
+      {selectableOptions.map((o) => (
+        <label
+          key={o}
+          className="flex items-center gap-3 px-4 py-3 text-sm hover:bg-gray-50 dark:hover:bg-[#222] transition-colors cursor-pointer"
+        >
+          <input
+            type="checkbox"
+            checked={selected.includes(o)}
+            onChange={(e) => {
+              if (e.target.checked) {
+                onChange([...selected, o]);
+              } else {
+                onChange(selected.filter((s) => s !== o));
+              }
+            }}
+            className="w-5 h-5 rounded border-gray-300 dark:border-gray-600 text-[#f14011] focus:ring-[#f14011] cursor-pointer"
+          />
+          <span className={selected.includes(o) ? "text-[#f14011] font-medium" : "text-gray-700 dark:text-gray-300"}>{o}</span>
+        </label>
+      ))}
+    </>
+  );
+
   return (
     <div ref={ref}>
       <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1.5">{label}</label>
@@ -288,40 +346,30 @@ function MultiFilterSelect({
           <span className="break-words whitespace-normal">{display}</span>
           <ChevronDownIcon className={`w-4 h-4 text-gray-400 shrink-0 ml-2 transition-transform ${open ? "rotate-180" : ""}`} />
         </button>
+        {/* Desktop dropdown */}
         {open && (
-          <div className="absolute z-50 top-full mt-1 w-full bg-white dark:bg-[#1a1a1a] border border-gray-200 dark:border-[#2a2a2a] rounded-xl shadow-lg max-h-60 overflow-y-auto py-1">
-            {selected.length > 0 && (
-              <button
-                type="button"
-                onClick={() => onChange([])}
-                className="w-full text-left px-4 py-2 text-sm text-gray-400 hover:bg-gray-50 dark:hover:bg-[#222] transition-colors"
-              >
-                Auswahl zurücksetzen
-              </button>
-            )}
-            {selectableOptions.map((o) => (
-              <label
-                key={o}
-                className="flex items-center gap-2 px-4 py-2 text-sm hover:bg-gray-50 dark:hover:bg-[#222] transition-colors cursor-pointer"
-              >
-                <input
-                  type="checkbox"
-                  checked={selected.includes(o)}
-                  onChange={(e) => {
-                    if (e.target.checked) {
-                      onChange([...selected, o]);
-                    } else {
-                      onChange(selected.filter((s) => s !== o));
-                    }
-                  }}
-                  className="w-4 h-4 rounded border-gray-300 dark:border-gray-600 text-[#f14011] focus:ring-[#f14011] cursor-pointer"
-                />
-                <span className={selected.includes(o) ? "text-[#f14011] font-medium" : "text-gray-700 dark:text-gray-300"}>{o}</span>
-              </label>
-            ))}
+          <div className="hidden sm:block absolute z-50 top-full mt-1 w-full bg-white dark:bg-[#1a1a1a] border border-gray-200 dark:border-[#2a2a2a] rounded-xl shadow-lg max-h-60 overflow-y-auto py-1">
+            {dropdownContent}
           </div>
         )}
       </div>
+      {/* Mobile bottom sheet */}
+      {open && (
+        <div className="sm:hidden fixed inset-0 z-50 flex flex-col justify-end">
+          <div className="absolute inset-0 bg-black/40" onClick={() => setOpen(false)} />
+          <div className="relative bg-white dark:bg-[#1a1a1a] rounded-t-2xl max-h-[70vh] flex flex-col">
+            <div className="flex items-center justify-between px-4 py-3 border-b border-gray-200 dark:border-[#2a2a2a]">
+              <span className="font-semibold text-sm text-gray-900 dark:text-gray-100">{label}</span>
+              <button type="button" onClick={() => setOpen(false)} className="p-2 min-w-[44px] min-h-[44px] flex items-center justify-center text-gray-400">
+                <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path strokeLinecap="round" d="M6 18L18 6M6 6l12 12" /></svg>
+              </button>
+            </div>
+            <div className="overflow-y-auto py-1">
+              {dropdownContent}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
