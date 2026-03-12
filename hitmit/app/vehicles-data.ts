@@ -780,7 +780,7 @@ export const colorOptions = [
   "Gelb",
   "Andere",
 ];
-export const conditionOptions = ["Alle", "Neuwagen", "Gebraucht", "Unfallwagen (nicht fahrtüchtig)", "Tageszulassung"];
+export const conditionOptions = ["Alle", "Neuwagen", "Gebraucht", "Vorführwagen", "Unfallwagen (nicht fahrtüchtig)", "Tageszulassung"];
 export const doorOptions = ["Alle", "2/3", "4/5", "6/7"];
 export const seatOptions = ["Alle", "2", "4", "5", "7"];
 export const vehicleTypeOptions = ["Alle", "PKW", "Motorrad", "LKW", "Transporter", "Wohnmobil", "Andere"];
