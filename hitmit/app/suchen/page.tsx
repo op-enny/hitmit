@@ -821,7 +821,7 @@ export default function SuchenPage() {
       <section className="max-w-7xl mx-auto px-4 sm:px-6 pt-12 pb-6">
         <div className="flex items-center gap-3 mb-2 animate-fade-in-up">
           <SearchIcon className="w-8 h-8 text-[#f14011]" />
-          <h1 className="font-display text-5xl sm:text-6xl tracking-wider text-gray-900 dark:text-gray-100">
+          <h1 className="font-display text-4xl sm:text-5xl md:text-6xl tracking-wider text-gray-900 dark:text-gray-100">
             Fahrzeugsuche
           </h1>
         </div>
@@ -832,7 +832,7 @@ export default function SuchenPage() {
 
       {/* Vehicle Type Tab Bar */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 pb-4">
-        <div className="flex flex-wrap gap-2 animate-fade-in-up delay-150" style={{ opacity: 0 }}>
+        <div className="flex gap-2 overflow-x-auto pb-2 -mb-2 scrollbar-hide animate-fade-in-up delay-150 sm:flex-wrap sm:overflow-visible sm:pb-0 sm:mb-0" style={{ opacity: 0 }}>
           {([
             { value: "PKW", label: "PKW", icon: (
               <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
@@ -900,7 +900,7 @@ export default function SuchenPage() {
                 setSafetyFeaturesFilter([]);
                 setEquipmentFeaturesFilter([]);
               }}
-              className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-all ${
+              className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-all whitespace-nowrap shrink-0 sm:shrink ${
                 vehicleTypeFilter === tab.value
                   ? "bg-[#f14011] text-white shadow-md"
                   : "bg-white dark:bg-[#1a1a1a] text-gray-600 dark:text-gray-400 border border-gray-200 dark:border-[#2a2a2a] hover:border-[#f14011] hover:text-[#f14011]"

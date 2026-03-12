@@ -534,7 +534,7 @@ function Header({
           : "bg-transparent"
       }`}
     >
-      <div className="max-w-7xl mx-auto px-6">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6">
         <nav className="flex items-center justify-between h-[72px]">
           {/* Logo */}
           <a href="#" className="flex items-center gap-2 group">
@@ -594,7 +594,7 @@ function Header({
           <div className="lg:hidden flex items-center gap-2">
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="p-2 text-[#0a0a0a] dark:text-[#ededed]"
+              className="p-2 min-w-[44px] min-h-[44px] flex items-center justify-center text-[#0a0a0a] dark:text-[#ededed]"
             >
               {isMobileMenuOpen ? <CloseIcon /> : <MenuIcon />}
             </button>
@@ -666,7 +666,7 @@ function HeroSection() {
         </span>
       </div>
 
-      <div className="relative max-w-7xl mx-auto px-6 pt-32 pb-20 lg:pt-40 lg:pb-32">
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 pt-24 pb-16 sm:pt-32 sm:pb-20 lg:pt-40 lg:pb-32">
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-8 items-center">
           {/* Text Content */}
           <div className="space-y-8">
@@ -680,10 +680,10 @@ function HeroSection() {
 
             {/* Headline */}
             <h1 className="animate-fade-in-up opacity-0" style={{ animationDelay: "100ms", animationFillMode: "forwards" }}>
-              <span className="font-display text-6xl sm:text-7xl lg:text-8xl xl:text-[7rem] leading-[0.9] tracking-tight text-[#0a0a0a] dark:text-[#ededed] block">
+              <span className="font-display text-5xl sm:text-7xl lg:text-8xl xl:text-[7rem] leading-[0.9] tracking-tight text-[#0a0a0a] dark:text-[#ededed] block">
                 VERKAUFE DEIN
               </span>
-              <span className="font-display text-6xl sm:text-7xl lg:text-8xl xl:text-[7rem] leading-[0.9] tracking-tight block">
+              <span className="font-display text-5xl sm:text-7xl lg:text-8xl xl:text-[7rem] leading-[0.9] tracking-tight block">
                 <span className="text-[#0a0a0a] dark:text-[#ededed]">AUTO </span>
                 <span className="italic text-[#f14011]">SCHNELL</span>
               </span>
@@ -750,11 +750,11 @@ function HeroSection() {
                 </div>
 
                 {/* Floating badges */}
-                <div className="absolute -top-4 -right-4 bg-[#f14011] text-white px-4 py-2 rounded-full text-sm font-bold shadow-lg animate-float">
+                <div className="absolute -top-4 right-0 sm:-right-4 bg-[#f14011] text-white px-4 py-2 rounded-full text-sm font-bold shadow-lg animate-float">
                   HIGHLIGHT
                 </div>
 
-                <div className="absolute -bottom-4 -left-4 bg-white dark:bg-[#141414] px-4 py-3 rounded-xl shadow-lg border border-[#e5e5e5] dark:border-[#2a2a2a]">
+                <div className="absolute -bottom-4 left-0 sm:-left-4 bg-white dark:bg-[#141414] px-4 py-3 rounded-xl shadow-lg border border-[#e5e5e5] dark:border-[#2a2a2a]">
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 bg-[#10b981]/10 rounded-lg flex items-center justify-center">
                       <CheckIcon className="w-5 h-5 text-[#10b981]" />
@@ -771,7 +771,7 @@ function HeroSection() {
         </div>
 
         {/* Stats Bar */}
-        <div className="mt-20 lg:mt-32 grid grid-cols-2 md:grid-cols-4 gap-8 py-8 border-t border-b border-[#e5e5e5] dark:border-[#2a2a2a]">
+        <div className="mt-16 sm:mt-20 lg:mt-32 grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-8 py-8 border-t border-b border-[#e5e5e5] dark:border-[#2a2a2a]">
           {[
             { value: 50, suffix: "+", label: "Verkäufe pro Monat" },
             { value: 30, suffix: "+", label: "Automarken" },
@@ -825,13 +825,13 @@ function HowItWorksSection() {
 
   return (
     <section id="how-it-works" className="py-24 lg:py-32 bg-white dark:bg-[#141414]">
-      <div className="max-w-7xl mx-auto px-6">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6">
         {/* Section Header */}
         <div className="text-center max-w-2xl mx-auto mb-16">
           <span className="inline-block px-4 py-1.5 bg-[#fdd8d0] text-[#b72b0b] rounded-full text-sm font-semibold mb-4">
             Einfacher Prozess
           </span>
-          <h2 className="font-display text-5xl md:text-6xl text-[#0a0a0a] dark:text-[#ededed] mb-4">
+          <h2 className="font-display text-4xl sm:text-5xl md:text-6xl text-[#0a0a0a] dark:text-[#ededed] mb-4">
             SO <span className="italic text-[#f14011]">FUNKTIONIERT&apos;S</span>
           </h2>
           <p className="text-lg text-[#525252] dark:text-[#a3a3a3]">
@@ -844,7 +844,7 @@ function HowItWorksSection() {
           {steps.map((step, index) => (
             <div
               key={index}
-              className="group relative p-8 rounded-2xl bg-[#fafafa] dark:bg-[#1a1a1a] border border-[#e5e5e5] dark:border-[#2a2a2a] hover:border-[#f14011] transition-all duration-300 hover:shadow-xl"
+              className="group relative p-5 sm:p-8 rounded-2xl bg-[#fafafa] dark:bg-[#1a1a1a] border border-[#e5e5e5] dark:border-[#2a2a2a] hover:border-[#f14011] transition-all duration-300 hover:shadow-xl"
             >
               {/* Step number */}
               <span className="absolute -top-4 -right-2 font-display text-7xl text-[#f14011]/10 group-hover:text-[#f14011]/20 transition-colors">
@@ -883,7 +883,7 @@ function SellerTypesSection() {
       <div className="absolute inset-0 bg-stripes opacity-30" />
       <div className="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-[#f14011]/10 to-transparent" />
 
-      <div className="relative max-w-7xl mx-auto px-6">
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6">
         <div className="grid lg:grid-cols-2 gap-16 items-center">
           {/* Left content */}
           <div>
@@ -3259,7 +3259,7 @@ function Footer() {
 
   return (
     <footer id="contact" className="bg-[#0a0a0a] text-white">
-      <div className="max-w-7xl mx-auto px-6 py-16 lg:py-20">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-16 lg:py-20">
         <div className="grid md:grid-cols-2 lg:grid-cols-5 gap-12 lg:gap-8">
           {/* Brand */}
           <div className="lg:col-span-2">

@@ -474,7 +474,7 @@ function SearchCard({
         </div>
         <button
           onClick={onRemove}
-          className="text-gray-300 hover:text-red-500 transition-colors shrink-0"
+          className="text-gray-300 hover:text-red-500 transition-colors shrink-0 p-2 min-w-[44px] min-h-[44px] flex items-center justify-center rounded-full"
           aria-label="Suche löschen"
         >
           <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -637,7 +637,7 @@ export default function GespeichertPage() {
 
       {/* Page Header */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 pt-12 pb-8">
-        <h1 className="font-display text-5xl sm:text-6xl tracking-wider text-gray-900 animate-fade-in-up">
+        <h1 className="font-display text-4xl sm:text-5xl md:text-6xl tracking-wider text-gray-900 animate-fade-in-up">
           Gespeichert
         </h1>
         <p className="text-gray-500 mt-3 max-w-xl text-lg animate-fade-in-up delay-100" style={{ opacity: 0 }}>

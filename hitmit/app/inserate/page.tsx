@@ -921,7 +921,7 @@ function VehicleCard({
         {/* Favorite heart */}
         <button
           onClick={(e) => { e.stopPropagation(); onToggleFavorite(); }}
-          className="absolute top-3 left-3 w-9 h-9 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center hover:bg-white/40 transition-colors z-10"
+          className="absolute top-2 left-2 w-11 h-11 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center hover:bg-white/40 transition-colors z-10"
           aria-label={isFavorited ? "Favorit entfernen" : "Als Favorit speichern"}
         >
           <svg className="w-5 h-5" viewBox="0 0 24 24" fill={isFavorited ? "#f14011" : "none"} stroke={isFavorited ? "#f14011" : "white"} strokeWidth="2">
@@ -1334,7 +1334,7 @@ function InseratePageInner() {
 
       {/* Page Header */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 pt-12 pb-8">
-        <h1 className="font-display text-5xl sm:text-6xl tracking-wider text-gray-900 animate-fade-in-up">
+        <h1 className="font-display text-4xl sm:text-5xl md:text-6xl tracking-wider text-gray-900 animate-fade-in-up">
           Aktuelle Inserate
         </h1>
         <p className="text-gray-500 mt-3 max-w-xl text-lg animate-fade-in-up delay-100" style={{ opacity: 0 }}>

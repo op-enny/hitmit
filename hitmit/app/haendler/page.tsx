@@ -55,7 +55,7 @@ export default function HaendlerPage() {
                     </div>
                     <button
                       onClick={() => toggleSavedDealer(dealer.companyName)}
-                      className="shrink-0 p-2 rounded-full hover:bg-gray-100 dark:hover:bg-[#1a1a1a] transition-colors"
+                      className="shrink-0 p-2 min-w-[44px] min-h-[44px] flex items-center justify-center rounded-full hover:bg-gray-100 dark:hover:bg-[#1a1a1a] transition-colors"
                       aria-label={isSavedDealer(dealer.companyName) ? "Händler entfernen" : "Händler speichern"}
                     >
                       <svg className="w-5 h-5" viewBox="0 0 24 24" fill={isSavedDealer(dealer.companyName) ? "#f14011" : "none"} stroke={isSavedDealer(dealer.companyName) ? "#f14011" : "currentColor"} strokeWidth="2">

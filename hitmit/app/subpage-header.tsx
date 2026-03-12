@@ -19,7 +19,7 @@ export function SubpageHeader() {
 
   return (
     <header className="sticky top-0 z-40 bg-white/95 dark:bg-[#0a0a0a]/95 backdrop-blur-md border-b border-gray-200 dark:border-[#2a2a2a]">
-      <div className="max-w-7xl mx-auto px-6">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6">
         <nav className="flex items-center justify-between h-[72px]">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2 group">
@@ -67,7 +67,7 @@ export function SubpageHeader() {
           <div className="lg:hidden flex items-center gap-2">
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="p-2 text-[#0a0a0a] dark:text-[#ededed]"
+              className="p-2 min-w-[44px] min-h-[44px] flex items-center justify-center text-[#0a0a0a] dark:text-[#ededed]"
             >
               {isMobileMenuOpen ? (
                 <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
