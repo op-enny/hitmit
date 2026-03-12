@@ -353,9 +353,7 @@ function MultiFilterSelect({
 
   const display = selected.length === 0
     ? options[0]
-    : selected.length === 1
-      ? selected[0]
-      : `${selected.length} ausgewählt`;
+    : selected.join(", ");
 
   const selectableOptions = options.slice(1);
 

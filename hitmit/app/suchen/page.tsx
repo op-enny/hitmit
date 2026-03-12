@@ -271,9 +271,7 @@ function MultiFilterSelect({
 
   const display = selected.length === 0
     ? options[0]
-    : selected.length === 1
-      ? selected[0]
-      : `${selected.length} ausgewählt`;
+    : selected.join(", ");
 
   // options[0] is the "Alle" placeholder — not checkable
   const selectableOptions = options.slice(1);
