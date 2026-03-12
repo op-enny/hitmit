@@ -34,11 +34,14 @@ function applyFilters(filters: SavedSearch["filters"]): Vehicle[] {
       if (!matchesAny) return false;
     }
 
-    if (filters.fuelFilter !== "Alle Kraftstoffe") {
-      if (filters.fuelFilter.startsWith("Plug-in-Hybrid")) {
-        if (!v.fuelType.startsWith("Plug-in-Hybrid")) return false;
-      } else {
-        if (v.fuelType !== filters.fuelFilter) return false;
+    if (filters.fuelFilter) {
+      const ffs = Array.isArray(filters.fuelFilter) ? filters.fuelFilter : (filters.fuelFilter !== "Alle Kraftstoffe" ? [filters.fuelFilter] : []);
+      if (ffs.length > 0) {
+        const matchesFuel = ffs.some((ff) => {
+          if (ff.startsWith("Plug-in-Hybrid")) return v.fuelType.startsWith("Plug-in-Hybrid");
+          return v.fuelType === ff;
+        });
+        if (!matchesFuel) return false;
       }
     }
     // Price: direct comparison
@@ -65,11 +68,18 @@ function applyFilters(filters: SavedSearch["filters"]): Vehicle[] {
         if (!matchesAny) return false;
       }
     }
-    if (filters.driveTypeFilter && filters.driveTypeFilter !== "Alle") {
-      const d = v.driveType.toLowerCase();
-      if (filters.driveTypeFilter === "Frontantrieb" && !d.includes("front")) return false;
-      if (filters.driveTypeFilter === "Hinterradantrieb" && !d.includes("hinter")) return false;
-      if (filters.driveTypeFilter === "Allrad" && !d.includes("allrad") && !d.includes("quattro") && !d.includes("awd") && !d.includes("4wd")) return false;
+    if (filters.driveTypeFilter) {
+      const dfs = Array.isArray(filters.driveTypeFilter) ? filters.driveTypeFilter : (filters.driveTypeFilter !== "Alle" ? [filters.driveTypeFilter] : []);
+      if (dfs.length > 0) {
+        const d = v.driveType.toLowerCase();
+        const matchesDrive = dfs.some((df) => {
+          if (df === "Frontantrieb") return d.includes("front");
+          if (df === "Hinterradantrieb") return d.includes("hinter");
+          if (df === "Allrad") return d.includes("allrad") || d.includes("quattro") || d.includes("awd") || d.includes("4wd");
+          return false;
+        });
+        if (!matchesDrive) return false;
+      }
     }
     if (filters.sellerTypeFilter && filters.sellerTypeFilter !== "Alle") {
       if (filters.sellerTypeFilter === "Privat" && v.sellerType !== "private") return false;
@@ -93,7 +103,10 @@ function applyFilters(filters: SavedSearch["filters"]): Vehicle[] {
       const cfs = Array.isArray(filters.colorFilter) ? filters.colorFilter : (filters.colorFilter !== "Alle Farben" ? [filters.colorFilter] : []);
       if (cfs.length > 0 && !cfs.some((cf) => v.color.toLowerCase().includes(cf.toLowerCase()))) return false;
     }
-    if (filters.conditionFilter && filters.conditionFilter !== "Alle" && v.condition !== filters.conditionFilter) return false;
+    if (filters.conditionFilter) {
+      const cfs = Array.isArray(filters.conditionFilter) ? filters.conditionFilter : (filters.conditionFilter !== "Alle" ? [filters.conditionFilter] : []);
+      if (cfs.length > 0 && !cfs.includes(v.condition)) return false;
+    }
     if (filters.doorFilter && filters.doorFilter !== "Alle") {
       if (filters.doorFilter === "2/3" && !["2", "3"].includes(v.doors)) return false;
       if (filters.doorFilter === "4/5" && !["4", "5"].includes(v.doors)) return false;
@@ -130,23 +143,35 @@ function applyFilters(filters: SavedSearch["filters"]): Vehicle[] {
       if (filters.huFilter === "Neu (mind. 12 Monate)" && huDate < in12) return false;
       if (filters.huFilter === "Abgelaufen" && huDate >= now) return false;
     }
-    if (filters.previousOwnersFilter && filters.previousOwnersFilter !== "Alle") {
-      if (v.previousOwners === undefined) return false;
-      if (filters.previousOwnersFilter === "4+") {
-        if (v.previousOwners < 4) return false;
-      } else {
-        if (v.previousOwners !== Number(filters.previousOwnersFilter)) return false;
+    if (filters.previousOwnersFilter) {
+      const pofs = Array.isArray(filters.previousOwnersFilter) ? filters.previousOwnersFilter : (filters.previousOwnersFilter !== "Alle" ? [filters.previousOwnersFilter] : []);
+      if (pofs.length > 0) {
+        if (v.previousOwners === undefined) return false;
+        const matchesPO = pofs.some((po) => {
+          if (po === "4+") return v.previousOwners! >= 4;
+          return v.previousOwners === Number(po);
+        });
+        if (!matchesPO) return false;
       }
     }
-    if (filters.cylinderFilter && filters.cylinderFilter !== "Alle" && v.cylinders !== Number(filters.cylinderFilter)) return false;
+    if (filters.cylinderFilter) {
+      const cyfs = Array.isArray(filters.cylinderFilter) ? filters.cylinderFilter : (filters.cylinderFilter !== "Alle" ? [filters.cylinderFilter] : []);
+      if (cyfs.length > 0 && !cyfs.includes(String(v.cylinders))) return false;
+    }
     // Displacement: direct comparison
     if (filters.displacementMin !== "" && (!v.engineDisplacement || v.engineDisplacement < Number(filters.displacementMin))) return false;
     if (filters.displacementMax !== "" && (!v.engineDisplacement || v.engineDisplacement > Number(filters.displacementMax))) return false;
     // Tank volume: direct comparison
     if (filters.tankVolumeMin !== "" && (!v.tankVolume || v.tankVolume < Number(filters.tankVolumeMin))) return false;
     if (filters.manufacturerColorFilter && !v.color.toLowerCase().includes(filters.manufacturerColorFilter.toLowerCase())) return false;
-    if (filters.interiorColorFilter && filters.interiorColorFilter !== "Alle Farben" && (!v.interiorColor || !v.interiorColor.toLowerCase().includes(filters.interiorColorFilter.toLowerCase()))) return false;
-    if (filters.seatMaterialFilter && filters.seatMaterialFilter !== "Alle" && v.seatMaterial !== filters.seatMaterialFilter) return false;
+    if (filters.interiorColorFilter) {
+      const icfs = Array.isArray(filters.interiorColorFilter) ? filters.interiorColorFilter : (filters.interiorColorFilter !== "Alle Farben" ? [filters.interiorColorFilter] : []);
+      if (icfs.length > 0 && (!v.interiorColor || !icfs.some((ic) => v.interiorColor!.toLowerCase().includes(ic.toLowerCase())))) return false;
+    }
+    if (filters.seatMaterialFilter) {
+      const smfs = Array.isArray(filters.seatMaterialFilter) ? filters.seatMaterialFilter : (filters.seatMaterialFilter !== "Alle" ? [filters.seatMaterialFilter] : []);
+      if (smfs.length > 0 && (!v.seatMaterial || !smfs.includes(v.seatMaterial))) return false;
+    }
     if (filters.climateZoneFilter && filters.climateZoneFilter !== "" && filters.climateZoneFilter !== "Alle" && v.climateZones !== Number(filters.climateZoneFilter)) return false;
     if (filters.rimSizeFilter && filters.rimSizeFilter !== "" && filters.rimSizeFilter !== "Alle" && v.rimSize !== Number(filters.rimSizeFilter)) return false;
     if (filters.paintProtectionFilmFilter && filters.paintProtectionFilmFilter !== "Alle") {
@@ -173,8 +198,14 @@ function applyFilters(filters: SavedSearch["filters"]): Vehicle[] {
       if (filters.petFreeFilter === "Ja" && !v.petFreeVehicle) return false;
       if (filters.petFreeFilter === "Nein" && v.petFreeVehicle) return false;
     }
-    if (filters.emissionClassFilter && filters.emissionClassFilter !== "Alle" && v.emissionClass !== filters.emissionClassFilter) return false;
-    if (filters.environmentalBadgeFilter && filters.environmentalBadgeFilter !== "Alle" && v.environmentalBadge !== filters.environmentalBadgeFilter) return false;
+    if (filters.emissionClassFilter) {
+      const ecfs = Array.isArray(filters.emissionClassFilter) ? filters.emissionClassFilter : (filters.emissionClassFilter !== "Alle" ? [filters.emissionClassFilter] : []);
+      if (ecfs.length > 0 && (!v.emissionClass || !ecfs.includes(v.emissionClass))) return false;
+    }
+    if (filters.environmentalBadgeFilter) {
+      const ebfs = Array.isArray(filters.environmentalBadgeFilter) ? filters.environmentalBadgeFilter : (filters.environmentalBadgeFilter !== "Alle" ? [filters.environmentalBadgeFilter] : []);
+      if (ebfs.length > 0 && (!v.environmentalBadge || !ebfs.includes(v.environmentalBadge))) return false;
+    }
     if (filters.particleFilterFilter && filters.particleFilterFilter !== "Alle") {
       if (filters.particleFilterFilter === "Ja" && !v.particleFilter) return false;
       if (filters.particleFilterFilter === "Nein" && v.particleFilter) return false;
@@ -212,7 +243,10 @@ function buildSearchUrl(filters: SavedSearch["filters"]): string {
   if (filters.modelFilter2) params.set("model2", filters.modelFilter2);
   if (filters.brandFilter3 !== "Alle Marken") params.set("brand3", filters.brandFilter3);
   if (filters.modelFilter3) params.set("model3", filters.modelFilter3);
-  if (filters.fuelFilter !== "Alle Kraftstoffe") params.set("fuel", filters.fuelFilter);
+  if (filters.fuelFilter) {
+    const ffs = Array.isArray(filters.fuelFilter) ? filters.fuelFilter : (filters.fuelFilter !== "Alle Kraftstoffe" ? [filters.fuelFilter] : []);
+    if (ffs.length > 0) params.set("fuel", ffs.join(","));
+  }
   if (filters.priceMin !== "") params.set("priceMin", filters.priceMin);
   if (filters.priceMax !== "") params.set("priceMax", filters.priceMax);
   if (filters.yearFrom) params.set("yearFrom", filters.yearFrom);
@@ -225,7 +259,10 @@ function buildSearchUrl(filters: SavedSearch["filters"]): string {
     const tfs = Array.isArray(filters.transmissionFilter) ? filters.transmissionFilter : (filters.transmissionFilter !== "Alle" ? [filters.transmissionFilter] : []);
     if (tfs.length > 0) params.set("transmission", tfs.join(","));
   }
-  if (filters.driveTypeFilter && filters.driveTypeFilter !== "Alle") params.set("driveType", filters.driveTypeFilter);
+  if (filters.driveTypeFilter) {
+    const dfs = Array.isArray(filters.driveTypeFilter) ? filters.driveTypeFilter : (filters.driveTypeFilter !== "Alle" ? [filters.driveTypeFilter] : []);
+    if (dfs.length > 0) params.set("driveType", dfs.join(","));
+  }
   if (filters.sellerTypeFilter && filters.sellerTypeFilter !== "Alle") params.set("sellerType", filters.sellerTypeFilter);
   if (filters.accidentFreeFilter === "Nur unfallfrei") params.set("accidentFree", "ja");
   if (filters.cityFilter) params.set("city", filters.cityFilter);
@@ -234,7 +271,10 @@ function buildSearchUrl(filters: SavedSearch["filters"]): string {
     const cfs = Array.isArray(filters.colorFilter) ? filters.colorFilter : (filters.colorFilter !== "Alle Farben" ? [filters.colorFilter] : []);
     if (cfs.length > 0) params.set("color", cfs.join(","));
   }
-  if (filters.conditionFilter && filters.conditionFilter !== "Alle") params.set("condition", filters.conditionFilter);
+  if (filters.conditionFilter) {
+    const cfs = Array.isArray(filters.conditionFilter) ? filters.conditionFilter : (filters.conditionFilter !== "Alle" ? [filters.conditionFilter] : []);
+    if (cfs.length > 0) params.set("condition", cfs.join(","));
+  }
   if (filters.doorFilter && filters.doorFilter !== "Alle") params.set("doors", filters.doorFilter);
   if (filters.seatFilter && filters.seatFilter !== "" && filters.seatFilter !== "Alle") params.set("seats", filters.seatFilter);
   if (filters.motorizationFilter && filters.motorizationFilter.length > 0) params.set("motorization", filters.motorizationFilter.join(","));
@@ -245,14 +285,26 @@ function buildSearchUrl(filters: SavedSearch["filters"]): string {
   if (filters.firstRegFrom) params.set("firstRegFrom", filters.firstRegFrom);
   if (filters.firstRegTo) params.set("firstRegTo", filters.firstRegTo);
   if (filters.huFilter && filters.huFilter !== "Alle") params.set("hu", filters.huFilter);
-  if (filters.previousOwnersFilter && filters.previousOwnersFilter !== "Alle") params.set("previousOwners", filters.previousOwnersFilter);
-  if (filters.cylinderFilter && filters.cylinderFilter !== "Alle") params.set("cylinders", filters.cylinderFilter);
+  if (filters.previousOwnersFilter) {
+    const pofs = Array.isArray(filters.previousOwnersFilter) ? filters.previousOwnersFilter : (filters.previousOwnersFilter !== "Alle" ? [filters.previousOwnersFilter] : []);
+    if (pofs.length > 0) params.set("previousOwners", pofs.join(","));
+  }
+  if (filters.cylinderFilter) {
+    const cyfs = Array.isArray(filters.cylinderFilter) ? filters.cylinderFilter : (filters.cylinderFilter !== "Alle" ? [filters.cylinderFilter] : []);
+    if (cyfs.length > 0) params.set("cylinders", cyfs.join(","));
+  }
   if (filters.displacementMin !== "") params.set("displacementMin", filters.displacementMin);
   if (filters.displacementMax !== "") params.set("displacementMax", filters.displacementMax);
   if (filters.tankVolumeMin !== "") params.set("tankVolumeMin", filters.tankVolumeMin);
   if (filters.manufacturerColorFilter) params.set("mfColor", filters.manufacturerColorFilter);
-  if (filters.interiorColorFilter && filters.interiorColorFilter !== "Alle Farben") params.set("interiorColor", filters.interiorColorFilter);
-  if (filters.seatMaterialFilter && filters.seatMaterialFilter !== "Alle") params.set("seatMaterial", filters.seatMaterialFilter);
+  if (filters.interiorColorFilter) {
+    const icfs = Array.isArray(filters.interiorColorFilter) ? filters.interiorColorFilter : (filters.interiorColorFilter !== "Alle Farben" ? [filters.interiorColorFilter] : []);
+    if (icfs.length > 0) params.set("interiorColor", icfs.join(","));
+  }
+  if (filters.seatMaterialFilter) {
+    const smfs = Array.isArray(filters.seatMaterialFilter) ? filters.seatMaterialFilter : (filters.seatMaterialFilter !== "Alle" ? [filters.seatMaterialFilter] : []);
+    if (smfs.length > 0) params.set("seatMaterial", smfs.join(","));
+  }
   if (filters.climateZoneFilter && filters.climateZoneFilter !== "" && filters.climateZoneFilter !== "Alle") params.set("climateZones", filters.climateZoneFilter);
   if (filters.rimSizeFilter && filters.rimSizeFilter !== "" && filters.rimSizeFilter !== "Alle") params.set("rimSize", filters.rimSizeFilter);
   if (filters.paintProtectionFilmFilter && filters.paintProtectionFilmFilter !== "Alle") params.set("ppf", filters.paintProtectionFilmFilter);
@@ -261,8 +313,14 @@ function buildSearchUrl(filters: SavedSearch["filters"]): string {
   if (filters.manufacturerWarrantyFilter && filters.manufacturerWarrantyFilter !== "Alle") params.set("warranty", filters.manufacturerWarrantyFilter);
   if (filters.nonSmokerFilter && filters.nonSmokerFilter !== "Alle") params.set("nonSmoker", filters.nonSmokerFilter);
   if (filters.petFreeFilter && filters.petFreeFilter !== "Alle") params.set("petFree", filters.petFreeFilter);
-  if (filters.emissionClassFilter && filters.emissionClassFilter !== "Alle") params.set("emissionClass", filters.emissionClassFilter);
-  if (filters.environmentalBadgeFilter && filters.environmentalBadgeFilter !== "Alle") params.set("envBadge", filters.environmentalBadgeFilter);
+  if (filters.emissionClassFilter) {
+    const ecfs = Array.isArray(filters.emissionClassFilter) ? filters.emissionClassFilter : (filters.emissionClassFilter !== "Alle" ? [filters.emissionClassFilter] : []);
+    if (ecfs.length > 0) params.set("emissionClass", ecfs.join(","));
+  }
+  if (filters.environmentalBadgeFilter) {
+    const ebfs = Array.isArray(filters.environmentalBadgeFilter) ? filters.environmentalBadgeFilter : (filters.environmentalBadgeFilter !== "Alle" ? [filters.environmentalBadgeFilter] : []);
+    if (ebfs.length > 0) params.set("envBadge", ebfs.join(","));
+  }
   if (filters.particleFilterFilter && filters.particleFilterFilter !== "Alle") params.set("particleFilter", filters.particleFilterFilter);
   if (filters.ausstattungSearch && filters.ausstattungSearch.trim()) params.set("ausstattung", filters.ausstattungSearch.trim());
   if (filters.safetyFeaturesFilter && filters.safetyFeaturesFilter.length > 0) params.set("safety", filters.safetyFeaturesFilter.join(","));
@@ -298,7 +356,10 @@ function SearchCard({
   if (f.brandFilter !== "Alle Marken") filterTags.push(f.modelFilter ? `${f.brandFilter} ${f.modelFilter}` : f.brandFilter);
   if (f.brandFilter2 !== "Alle Marken") filterTags.push(f.modelFilter2 ? `${f.brandFilter2} ${f.modelFilter2}` : f.brandFilter2);
   if (f.brandFilter3 !== "Alle Marken") filterTags.push(f.modelFilter3 ? `${f.brandFilter3} ${f.modelFilter3}` : f.brandFilter3);
-  if (f.fuelFilter !== "Alle Kraftstoffe") filterTags.push(f.fuelFilter);
+  if (f.fuelFilter) {
+    const ffs = Array.isArray(f.fuelFilter) ? f.fuelFilter : (f.fuelFilter !== "Alle Kraftstoffe" ? [f.fuelFilter] : []);
+    if (ffs.length > 0) filterTags.push(ffs.join(", "));
+  }
   if (f.priceMin !== "") filterTags.push(`ab ${Number(f.priceMin).toLocaleString("de-DE")} €`);
   if (f.priceMax !== "") filterTags.push(`bis ${Number(f.priceMax).toLocaleString("de-DE")} €`);
   if (f.yearFrom) filterTags.push(`ab ${f.yearFrom}`);
@@ -311,7 +372,10 @@ function SearchCard({
     const tfs = Array.isArray(f.transmissionFilter) ? f.transmissionFilter : (f.transmissionFilter !== "Alle" ? [f.transmissionFilter] : []);
     if (tfs.length > 0) filterTags.push(tfs.join(", "));
   }
-  if (f.driveTypeFilter && f.driveTypeFilter !== "Alle") filterTags.push(f.driveTypeFilter);
+  if (f.driveTypeFilter) {
+    const dfs = Array.isArray(f.driveTypeFilter) ? f.driveTypeFilter : (f.driveTypeFilter !== "Alle" ? [f.driveTypeFilter] : []);
+    if (dfs.length > 0) filterTags.push(dfs.join(", "));
+  }
   if (f.sellerTypeFilter && f.sellerTypeFilter !== "Alle") filterTags.push(f.sellerTypeFilter);
   if (f.accidentFreeFilter === "Nur unfallfrei") filterTags.push("Unfallfrei");
   if (f.cityFilter) filterTags.push(f.cityRadius ? `${f.cityFilter} +${f.cityRadius} km` : f.cityFilter);
@@ -319,7 +383,10 @@ function SearchCard({
     const cfs = Array.isArray(f.colorFilter) ? f.colorFilter : (f.colorFilter !== "Alle Farben" ? [f.colorFilter] : []);
     if (cfs.length > 0) filterTags.push(cfs.join(", "));
   }
-  if (f.conditionFilter && f.conditionFilter !== "Alle") filterTags.push(f.conditionFilter);
+  if (f.conditionFilter) {
+    const cfs = Array.isArray(f.conditionFilter) ? f.conditionFilter : (f.conditionFilter !== "Alle" ? [f.conditionFilter] : []);
+    if (cfs.length > 0) filterTags.push(cfs.join(", "));
+  }
   if (f.doorFilter && f.doorFilter !== "Alle") filterTags.push(`${f.doorFilter} Türen`);
   if (f.seatFilter && f.seatFilter !== "" && f.seatFilter !== "Alle") filterTags.push(`${f.seatFilter} Sitze`);
   if (f.motorizationFilter && f.motorizationFilter.length > 0) filterTags.push(f.motorizationFilter.join(", "));
@@ -330,14 +397,26 @@ function SearchCard({
   if (f.firstRegFrom) filterTags.push(`EZ ab ${f.firstRegFrom}`);
   if (f.firstRegTo) filterTags.push(`EZ bis ${f.firstRegTo}`);
   if (f.huFilter && f.huFilter !== "Alle") filterTags.push(`HU: ${f.huFilter}`);
-  if (f.previousOwnersFilter && f.previousOwnersFilter !== "Alle") filterTags.push(`${f.previousOwnersFilter} Vorbesitzer`);
-  if (f.cylinderFilter && f.cylinderFilter !== "Alle") filterTags.push(`${f.cylinderFilter} Zylinder`);
+  if (f.previousOwnersFilter) {
+    const pofs = Array.isArray(f.previousOwnersFilter) ? f.previousOwnersFilter : (f.previousOwnersFilter !== "Alle" ? [f.previousOwnersFilter] : []);
+    if (pofs.length > 0) filterTags.push(`${pofs.join("/")} Vorbesitzer`);
+  }
+  if (f.cylinderFilter) {
+    const cyfs = Array.isArray(f.cylinderFilter) ? f.cylinderFilter : (f.cylinderFilter !== "Alle" ? [f.cylinderFilter] : []);
+    if (cyfs.length > 0) filterTags.push(`${cyfs.join("/")} Zylinder`);
+  }
   if (f.displacementMin !== "") filterTags.push(`ab ${Number(f.displacementMin).toLocaleString("de-DE")} ccm`);
   if (f.displacementMax !== "") filterTags.push(`bis ${Number(f.displacementMax).toLocaleString("de-DE")} ccm`);
   if (f.tankVolumeMin !== "") filterTags.push(`ab ${f.tankVolumeMin} L`);
   if (f.manufacturerColorFilter) filterTags.push(`Farbe: ${f.manufacturerColorFilter}`);
-  if (f.interiorColorFilter && f.interiorColorFilter !== "Alle Farben") filterTags.push(`Innen: ${f.interiorColorFilter}`);
-  if (f.seatMaterialFilter && f.seatMaterialFilter !== "Alle") filterTags.push(f.seatMaterialFilter);
+  if (f.interiorColorFilter) {
+    const icfs = Array.isArray(f.interiorColorFilter) ? f.interiorColorFilter : (f.interiorColorFilter !== "Alle Farben" ? [f.interiorColorFilter] : []);
+    if (icfs.length > 0) filterTags.push(`Innen: ${icfs.join(", ")}`);
+  }
+  if (f.seatMaterialFilter) {
+    const smfs = Array.isArray(f.seatMaterialFilter) ? f.seatMaterialFilter : (f.seatMaterialFilter !== "Alle" ? [f.seatMaterialFilter] : []);
+    if (smfs.length > 0) filterTags.push(smfs.join(", "));
+  }
   if (f.climateZoneFilter && f.climateZoneFilter !== "" && f.climateZoneFilter !== "Alle") filterTags.push(`${f.climateZoneFilter}-Zonen Klima`);
   if (f.rimSizeFilter && f.rimSizeFilter !== "" && f.rimSizeFilter !== "Alle") filterTags.push(`${f.rimSizeFilter} Zoll`);
   if (f.paintProtectionFilmFilter && f.paintProtectionFilmFilter !== "Alle") filterTags.push(`Steinschlagfolie: ${f.paintProtectionFilmFilter}`);
@@ -346,8 +425,14 @@ function SearchCard({
   if (f.manufacturerWarrantyFilter && f.manufacturerWarrantyFilter !== "Alle") filterTags.push(`Garantie: ${f.manufacturerWarrantyFilter}`);
   if (f.nonSmokerFilter && f.nonSmokerFilter !== "Alle") filterTags.push(`Nichtraucher: ${f.nonSmokerFilter}`);
   if (f.petFreeFilter && f.petFreeFilter !== "Alle") filterTags.push(`Tierfrei: ${f.petFreeFilter}`);
-  if (f.emissionClassFilter && f.emissionClassFilter !== "Alle") filterTags.push(f.emissionClassFilter);
-  if (f.environmentalBadgeFilter && f.environmentalBadgeFilter !== "Alle") filterTags.push(`Plakette: ${f.environmentalBadgeFilter}`);
+  if (f.emissionClassFilter) {
+    const ecfs = Array.isArray(f.emissionClassFilter) ? f.emissionClassFilter : (f.emissionClassFilter !== "Alle" ? [f.emissionClassFilter] : []);
+    if (ecfs.length > 0) filterTags.push(ecfs.join(", "));
+  }
+  if (f.environmentalBadgeFilter) {
+    const ebfs = Array.isArray(f.environmentalBadgeFilter) ? f.environmentalBadgeFilter : (f.environmentalBadgeFilter !== "Alle" ? [f.environmentalBadgeFilter] : []);
+    if (ebfs.length > 0) filterTags.push(`Plakette: ${ebfs.join(", ")}`);
+  }
   if (f.particleFilterFilter && f.particleFilterFilter !== "Alle") filterTags.push(`Partikelfilter: ${f.particleFilterFilter}`);
   if (f.ausstattungSearch && f.ausstattungSearch.trim()) filterTags.push(`"${f.ausstattungSearch.trim()}"`);
   if (f.safetyFeaturesFilter && f.safetyFeaturesFilter.length > 0) filterTags.push(`${f.safetyFeaturesFilter.length}x Sicherheit`);

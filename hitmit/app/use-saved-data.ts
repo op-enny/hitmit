@@ -16,7 +16,7 @@ export interface SavedSearch {
   label: string;
   filters: {
     brandFilter: string;
-    fuelFilter: string;
+    fuelFilter: string | string[];
     priceMin: string;
     priceMax: string;
     yearFrom: string;
@@ -26,13 +26,13 @@ export interface SavedSearch {
     powerMin: string;
     powerMax: string;
     transmissionFilter: string | string[];
-    driveTypeFilter: string;
+    driveTypeFilter: string | string[];
     sellerTypeFilter: string;
     accidentFreeFilter: string;
     cityFilter: string;
     cityRadius: string;
     colorFilter: string | string[];
-    conditionFilter: string;
+    conditionFilter: string | string[];
     doorFilter: string;
     seatFilter: string;
     modelFilter: string;
@@ -48,14 +48,14 @@ export interface SavedSearch {
     firstRegFrom: string;
     firstRegTo: string;
     huFilter: string;
-    previousOwnersFilter: string;
-    cylinderFilter: string;
+    previousOwnersFilter: string | string[];
+    cylinderFilter: string | string[];
     displacementMin: string;
     displacementMax: string;
     tankVolumeMin: string;
     manufacturerColorFilter: string;
-    interiorColorFilter: string;
-    seatMaterialFilter: string;
+    interiorColorFilter: string | string[];
+    seatMaterialFilter: string | string[];
     climateZoneFilter: string;
     rimSizeFilter: string;
     paintProtectionFilmFilter: string;
@@ -68,8 +68,8 @@ export interface SavedSearch {
     nonSmokerFilter: string;
     petFreeFilter: string;
     tradeInFilter: boolean;
-    emissionClassFilter: string;
-    environmentalBadgeFilter: string;
+    emissionClassFilter: string | string[];
+    environmentalBadgeFilter: string | string[];
     particleFilterFilter: string;
   };
   seenVehicleIds: number[];
@@ -147,7 +147,7 @@ function migrateSearch(raw: any): SavedSearch {
     label: raw.label ?? "",
     filters: {
       brandFilter: f.brandFilter ?? "Alle Marken",
-      fuelFilter: f.fuelFilter ?? "Alle Kraftstoffe",
+      fuelFilter: f.fuelFilter ?? [],
       priceMin,
       priceMax,
       yearFrom: f.yearFrom ?? "",
@@ -157,13 +157,13 @@ function migrateSearch(raw: any): SavedSearch {
       powerMin,
       powerMax: f.powerMax ?? "",
       transmissionFilter: f.transmissionFilter ?? [],
-      driveTypeFilter: f.driveTypeFilter ?? "Alle",
+      driveTypeFilter: f.driveTypeFilter ?? [],
       sellerTypeFilter: f.sellerTypeFilter ?? "Alle",
       accidentFreeFilter: f.accidentFreeFilter ?? "Alle",
       cityFilter: f.cityFilter ?? "",
       cityRadius: f.cityRadius ?? "",
       colorFilter: f.colorFilter ?? [],
-      conditionFilter: f.conditionFilter ?? "Alle",
+      conditionFilter: f.conditionFilter ?? [],
       doorFilter: f.doorFilter ?? "Alle",
       seatFilter,
       modelFilter: f.modelFilter ?? "",
@@ -179,14 +179,14 @@ function migrateSearch(raw: any): SavedSearch {
       firstRegFrom: f.firstRegFrom ?? "",
       firstRegTo: f.firstRegTo ?? "",
       huFilter: f.huFilter ?? "Alle",
-      previousOwnersFilter: f.previousOwnersFilter ?? "Alle",
-      cylinderFilter: f.cylinderFilter ?? "Alle",
+      previousOwnersFilter: f.previousOwnersFilter ?? [],
+      cylinderFilter: f.cylinderFilter ?? [],
       displacementMin: f.displacementMin ?? "",
       displacementMax,
       tankVolumeMin,
       manufacturerColorFilter: f.manufacturerColorFilter ?? "",
-      interiorColorFilter: f.interiorColorFilter ?? "Alle Farben",
-      seatMaterialFilter: f.seatMaterialFilter ?? "Alle",
+      interiorColorFilter: f.interiorColorFilter ?? [],
+      seatMaterialFilter: f.seatMaterialFilter ?? [],
       climateZoneFilter,
       rimSizeFilter,
       paintProtectionFilmFilter: f.paintProtectionFilmFilter ?? "Alle",
@@ -199,8 +199,8 @@ function migrateSearch(raw: any): SavedSearch {
       nonSmokerFilter: f.nonSmokerFilter ?? "Alle",
       petFreeFilter: f.petFreeFilter ?? "Alle",
       tradeInFilter: f.tradeInFilter ?? false,
-      emissionClassFilter: f.emissionClassFilter ?? "Alle",
-      environmentalBadgeFilter: f.environmentalBadgeFilter ?? "Alle",
+      emissionClassFilter: f.emissionClassFilter ?? [],
+      environmentalBadgeFilter: f.environmentalBadgeFilter ?? [],
       particleFilterFilter: f.particleFilterFilter ?? "Alle",
     },
     seenVehicleIds: raw.seenVehicleIds ?? [],
