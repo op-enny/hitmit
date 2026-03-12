@@ -1002,7 +1002,7 @@ function InseratePageInner() {
   const [doorFilter, setDoorFilter] = useState("Alle");
   const [seatFilter, setSeatFilter] = useState("Alle");
   const [vehicleTypeFilter, setVehicleTypeFilter] = useState("Alle");
-  const [vehicleCategoryFilter, setVehicleCategoryFilter] = useState("Alle");
+  const [vehicleCategoryFilter, setVehicleCategoryFilter] = useState<string[]>([]);
   const [mwstFilter, setMwstFilter] = useState("Alle");
   const [cylinderFilter, setCylinderFilter] = useState<string[]>([]);
   const [displacementMin, setDisplacementMin] = useState("");
@@ -1057,7 +1057,7 @@ function InseratePageInner() {
     doorFilter !== "Alle",
     seatFilter !== "Alle",
     vehicleTypeFilter !== "Alle",
-    vehicleCategoryFilter !== "Alle",
+    vehicleCategoryFilter.length > 0,
     mwstFilter !== "Alle",
     cylinderFilter.length > 0,
     displacementMin !== "",
@@ -1149,7 +1149,7 @@ function InseratePageInner() {
     const m3 = searchParams.get("model3");
     const v3 = searchParams.get("variant3");
     if (vt && vehicleTypeOptions.includes(vt)) setVehicleTypeFilter(vt);
-    if (vc && vehicleCategoryOptions.includes(vc)) setVehicleCategoryFilter(vc);
+    if (vc) setVehicleCategoryFilter(vc.split(",").filter(Boolean));
     if (mw && ["Alle", "Ja", "Nein"].includes(mw)) setMwstFilter(mw);
     if (cy) setCylinderFilter(cy.split(",").filter(Boolean));
     if (dmi) setDisplacementMin(dmi);
@@ -1287,7 +1287,7 @@ function InseratePageInner() {
     }
     if (seatFilter !== "Alle" && v.seats !== seatFilter) return false;
     if (vehicleTypeFilter !== "Alle" && v.vehicleType !== vehicleTypeFilter) return false;
-    if (vehicleCategoryFilter !== "Alle" && v.vehicleCategory !== vehicleCategoryFilter) return false;
+    if (vehicleCategoryFilter.length > 0 && (!v.vehicleCategory || !vehicleCategoryFilter.includes(v.vehicleCategory))) return false;
     if (mwstFilter !== "Alle") {
       if (mwstFilter === "Ja" && !v.mwstAusweisbar) return false;
       if (mwstFilter === "Nein" && v.mwstAusweisbar) return false;
@@ -1682,7 +1682,7 @@ function InseratePageInner() {
                 if (doorFilter !== "Alle") parts.push(`${doorFilter} Türen`);
                 if (seatFilter !== "Alle") parts.push(`${seatFilter} Sitze`);
                 if (vehicleTypeFilter !== "Alle") parts.push(vehicleTypeFilter);
-                if (vehicleCategoryFilter !== "Alle") parts.push(vehicleCategoryFilter);
+                if (vehicleCategoryFilter.length > 0) parts.push(vehicleCategoryFilter.join(", "));
                 if (mwstFilter !== "Alle") parts.push(`MwSt. ${mwstFilter}`);
                 if (cylinderFilter.length > 0) parts.push(`${cylinderFilter.join("/")} Zyl.`);
                 if (displacementMin) parts.push(`ab ${displacementMin} ccm`);
@@ -1931,7 +1931,7 @@ function InseratePageInner() {
                       setBrandFilter3("Alle Marken"); setModelFilter3(""); setVariantFilter3("");
                       setShowBrandRow2(false); setShowBrandRow3(false);
                       setCustomBrandText(""); setCustomBrandText2(""); setCustomBrandText3("");
-                      setVehicleCategoryFilter("Alle");
+                      setVehicleCategoryFilter([]);
                       // Reset type-specific filters
                       setDriveTypeFilter([]);
                       setCylinderFilter([]);
@@ -1954,21 +1954,7 @@ function InseratePageInner() {
               </div>
 
               {/* Vehicle Category */}
-              <div>
-                <label className="block text-xs font-medium text-gray-500 mb-1.5">Karosserieform</label>
-                <div className="relative">
-                  <select
-                    value={vehicleCategoryFilter}
-                    onChange={(e) => setVehicleCategoryFilter(e.target.value)}
-                    className="w-full appearance-none bg-gray-50 dark:bg-[#1a1a1a] border border-gray-200 rounded-xl px-4 py-2.5 pr-9 text-sm text-gray-700 hover:border-[#f14011] focus:border-[#f14011] focus:outline-none transition-colors cursor-pointer"
-                  >
-                    {getCategoriesForType(vehicleTypeFilter).map((c) => (
-                      <option key={c} value={c}>{c}</option>
-                    ))}
-                  </select>
-                  <ChevronDownIcon className="w-4 h-4 text-gray-400 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
-                </div>
-              </div>
+              <MultiFilterSelect label="Karosserieform" selected={vehicleCategoryFilter} onChange={setVehicleCategoryFilter} options={getCategoriesForType(vehicleTypeFilter)} />
 
               {/* MwSt */}
               <div>
@@ -2195,7 +2181,7 @@ function InseratePageInner() {
                   setCityFilter("");
                   setColorFilter([]); setConditionFilter([]);
                   setDoorFilter("Alle"); setSeatFilter("Alle");
-                  setVehicleTypeFilter("Alle"); setVehicleCategoryFilter("Alle");
+                  setVehicleTypeFilter("Alle"); setVehicleCategoryFilter([]);
                   setMwstFilter("Alle"); setCylinderFilter([]);
                   setDisplacementMin(""); setDisplacementMax(""); setTankVolumeMin("");
                   setInteriorColorFilter([]); setSeatMaterialFilter([]);

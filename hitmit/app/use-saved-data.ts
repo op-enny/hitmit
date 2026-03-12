@@ -43,7 +43,7 @@ export interface SavedSearch {
     motorizationFilter: string[];
     variantFilter: string;
     vehicleTypeFilter: string;
-    vehicleCategoryFilter: string;
+    vehicleCategoryFilter: string | string[];
     mwstFilter: string;
     firstRegFrom: string;
     firstRegTo: string;
@@ -174,7 +174,7 @@ function migrateSearch(raw: any): SavedSearch {
       motorizationFilter: f.motorizationFilter ?? [],
       variantFilter: f.variantFilter ?? "",
       vehicleTypeFilter: f.vehicleTypeFilter ?? "Alle",
-      vehicleCategoryFilter: f.vehicleCategoryFilter ?? "Alle",
+      vehicleCategoryFilter: f.vehicleCategoryFilter ?? [],
       mwstFilter: f.mwstFilter ?? "Alle",
       firstRegFrom: f.firstRegFrom ?? "",
       firstRegTo: f.firstRegTo ?? "",

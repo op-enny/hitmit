@@ -116,7 +116,10 @@ function applyFilters(filters: SavedSearch["filters"]): Vehicle[] {
     if (filters.motorizationFilter && filters.motorizationFilter.length > 0 && !filters.motorizationFilter.some((m) => v.model.toLowerCase().includes(m.toLowerCase()))) return false;
     if (filters.variantFilter && !v.variant.toLowerCase().includes(filters.variantFilter.toLowerCase())) return false;
     if (filters.vehicleTypeFilter && filters.vehicleTypeFilter !== "Alle" && v.vehicleType !== filters.vehicleTypeFilter) return false;
-    if (filters.vehicleCategoryFilter && filters.vehicleCategoryFilter !== "Alle" && v.vehicleCategory !== filters.vehicleCategoryFilter) return false;
+    if (filters.vehicleCategoryFilter) {
+      const vcfs = Array.isArray(filters.vehicleCategoryFilter) ? filters.vehicleCategoryFilter : (filters.vehicleCategoryFilter !== "Alle" ? [filters.vehicleCategoryFilter] : []);
+      if (vcfs.length > 0 && (!v.vehicleCategory || !vcfs.includes(v.vehicleCategory))) return false;
+    }
     if (filters.mwstFilter && filters.mwstFilter !== "Alle") {
       if (filters.mwstFilter === "Ja" && !v.mwstAusweisbar) return false;
       if (filters.mwstFilter === "Nein" && v.mwstAusweisbar) return false;
@@ -280,7 +283,10 @@ function buildSearchUrl(filters: SavedSearch["filters"]): string {
   if (filters.motorizationFilter && filters.motorizationFilter.length > 0) params.set("motorization", filters.motorizationFilter.join(","));
   if (filters.variantFilter) params.set("variant", filters.variantFilter);
   if (filters.vehicleTypeFilter && filters.vehicleTypeFilter !== "Alle") params.set("vehicleType", filters.vehicleTypeFilter);
-  if (filters.vehicleCategoryFilter && filters.vehicleCategoryFilter !== "Alle") params.set("vehicleCategory", filters.vehicleCategoryFilter);
+  if (filters.vehicleCategoryFilter) {
+    const vcfs = Array.isArray(filters.vehicleCategoryFilter) ? filters.vehicleCategoryFilter : (filters.vehicleCategoryFilter !== "Alle" ? [filters.vehicleCategoryFilter] : []);
+    if (vcfs.length > 0) params.set("vehicleCategory", vcfs.join(","));
+  }
   if (filters.mwstFilter && filters.mwstFilter !== "Alle") params.set("mwst", filters.mwstFilter);
   if (filters.firstRegFrom) params.set("firstRegFrom", filters.firstRegFrom);
   if (filters.firstRegTo) params.set("firstRegTo", filters.firstRegTo);
@@ -392,7 +398,10 @@ function SearchCard({
   if (f.motorizationFilter && f.motorizationFilter.length > 0) filterTags.push(f.motorizationFilter.join(", "));
   if (f.variantFilter) filterTags.push(f.variantFilter);
   if (f.vehicleTypeFilter && f.vehicleTypeFilter !== "Alle") filterTags.push(f.vehicleTypeFilter);
-  if (f.vehicleCategoryFilter && f.vehicleCategoryFilter !== "Alle") filterTags.push(f.vehicleCategoryFilter);
+  if (f.vehicleCategoryFilter) {
+    const vcfs = Array.isArray(f.vehicleCategoryFilter) ? f.vehicleCategoryFilter : (f.vehicleCategoryFilter !== "Alle" ? [f.vehicleCategoryFilter] : []);
+    if (vcfs.length > 0) filterTags.push(vcfs.join(", "));
+  }
   if (f.mwstFilter && f.mwstFilter !== "Alle") filterTags.push(`MwSt: ${f.mwstFilter}`);
   if (f.firstRegFrom) filterTags.push(`EZ ab ${f.firstRegFrom}`);
   if (f.firstRegTo) filterTags.push(`EZ bis ${f.firstRegTo}`);

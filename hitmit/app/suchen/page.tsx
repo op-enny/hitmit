@@ -405,7 +405,7 @@ export default function SuchenPage() {
   const motorizationRef = useRef<HTMLDivElement>(null);
   const [variantFilter, setVariantFilter] = useState("");
   const [vehicleTypeFilter, setVehicleTypeFilter] = useState("PKW");
-  const [vehicleCategoryFilter, setVehicleCategoryFilter] = useState("Alle");
+  const [vehicleCategoryFilter, setVehicleCategoryFilter] = useState<string[]>([]);
   const [mwstFilter, setMwstFilter] = useState("Alle");
   const [firstRegFrom, setFirstRegFrom] = useState("");
   const [firstRegTo, setFirstRegTo] = useState("");
@@ -556,7 +556,7 @@ export default function SuchenPage() {
     if (seatFilter !== "" && v.seats !== seatFilter) return false;
     if (motorizationFilter.length > 0 && !motorizationFilter.some((m) => v.model.toLowerCase().includes(m.toLowerCase()))) return false;
     if (vehicleTypeFilter !== "Alle" && v.vehicleType !== vehicleTypeFilter) return false;
-    if (vehicleCategoryFilter !== "Alle" && v.vehicleCategory !== vehicleCategoryFilter) return false;
+    if (vehicleCategoryFilter.length > 0 && (!v.vehicleCategory || !vehicleCategoryFilter.includes(v.vehicleCategory))) return false;
     if (mwstFilter !== "Alle") {
       if (mwstFilter === "Ja" && !v.mwstAusweisbar) return false;
       if (mwstFilter === "Nein" && v.mwstAusweisbar) return false;
@@ -665,7 +665,7 @@ export default function SuchenPage() {
     seatFilter !== "",
     motorizationFilter.length > 0,
     vehicleTypeFilter !== "Alle",
-    vehicleCategoryFilter !== "Alle",
+    vehicleCategoryFilter.length > 0,
     mwstFilter !== "Alle",
     firstRegFrom !== "",
     firstRegTo !== "",
@@ -712,7 +712,7 @@ export default function SuchenPage() {
     setCustomBrandText("");
     setShowBrandRow2(false); setShowBrandRow3(false);
     setVariantFilter("");
-    setVehicleTypeFilter("Alle"); setVehicleCategoryFilter("Alle");
+    setVehicleTypeFilter("Alle"); setVehicleCategoryFilter([]);
     setMwstFilter("Alle"); setFirstRegFrom(""); setFirstRegTo("");
     setHuFilter("Alle"); setPreviousOwnersFilter([]);
     setCylinderFilter([]); setDisplacementMin(""); setDisplacementMax(""); setTankVolumeMin("");
@@ -754,7 +754,7 @@ export default function SuchenPage() {
     if (seatFilter !== "") parts.push(`${seatFilter} Sitze`);
     if (motorizationFilter.length > 0) parts.push(motorizationFilter.join(", "));
     if (vehicleTypeFilter !== "Alle") parts.push(vehicleTypeFilter);
-    if (vehicleCategoryFilter !== "Alle") parts.push(vehicleCategoryFilter);
+    if (vehicleCategoryFilter.length > 0) parts.push(vehicleCategoryFilter.join(", "));
     if (mwstFilter !== "Alle") parts.push(`MwSt: ${mwstFilter}`);
     if (firstRegFrom) parts.push(`EZ ab ${firstRegFrom}`);
     if (firstRegTo) parts.push(`EZ bis ${firstRegTo}`);
@@ -886,7 +886,7 @@ export default function SuchenPage() {
                 setBrandFilter3("Alle Marken"); setModelFilter3(""); setVariantFilter3("");
                 setShowBrandRow2(false); setShowBrandRow3(false);
                 setCustomBrandText(""); setCustomBrandText2(""); setCustomBrandText3("");
-                setVehicleCategoryFilter("Alle");
+                setVehicleCategoryFilter([]);
                 // Reset type-specific filters
                 setDriveTypeFilter([]);
                 setCylinderFilter([]);
@@ -1148,11 +1148,11 @@ export default function SuchenPage() {
                 </div>
               </div>
             )}
-            <FilterSelect
+            <MultiFilterSelect
               label="Karosserieform"
-              value={vehicleCategoryFilter}
+              selected={vehicleCategoryFilter}
               onChange={setVehicleCategoryFilter}
-              options={getCategoriesForType(vehicleTypeFilter).map((c) => ({ value: c, label: c }))}
+              options={getCategoriesForType(vehicleTypeFilter)}
             />
             <MultiFilterSelect
               label="Kraftstoff"
