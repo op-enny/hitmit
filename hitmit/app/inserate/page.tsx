@@ -366,7 +366,7 @@ function MultiFilterSelect({
           onClick={() => setOpen(!open)}
           className="w-full flex items-center justify-between bg-gray-50 dark:bg-[#1a1a1a] border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-gray-700 hover:border-[#f14011] focus:border-[#f14011] focus:outline-none transition-colors cursor-pointer text-left"
         >
-          <span className="truncate">{display}</span>
+          <span className="break-words whitespace-normal">{display}</span>
           <ChevronDownIcon className={`w-4 h-4 text-gray-400 shrink-0 ml-2 transition-transform ${open ? "rotate-180" : ""}`} />
         </button>
         {open && (
