@@ -67,6 +67,7 @@ export interface SavedSearch {
     equipmentFeaturesFilter: string[];
     nonSmokerFilter: string;
     petFreeFilter: string;
+    tradeInFilter: boolean;
     emissionClassFilter: string;
     environmentalBadgeFilter: string;
     particleFilterFilter: string;
@@ -197,6 +198,7 @@ function migrateSearch(raw: any): SavedSearch {
       equipmentFeaturesFilter: f.equipmentFeaturesFilter ?? [],
       nonSmokerFilter: f.nonSmokerFilter ?? "Alle",
       petFreeFilter: f.petFreeFilter ?? "Alle",
+      tradeInFilter: f.tradeInFilter ?? false,
       emissionClassFilter: f.emissionClassFilter ?? "Alle",
       environmentalBadgeFilter: f.environmentalBadgeFilter ?? "Alle",
       particleFilterFilter: f.particleFilterFilter ?? "Alle",

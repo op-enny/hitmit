@@ -342,6 +342,7 @@ export default function SuchenPage() {
   const [ausstattungSearch, setAusstattungSearch] = useState("");
   const [nonSmokerFilter, setNonSmokerFilter] = useState("Alle");
   const [petFreeFilter, setPetFreeFilter] = useState("Alle");
+  const [tradeInFilter, setTradeInFilter] = useState(false);
   const [emissionClassFilter, setEmissionClassFilter] = useState("Alle");
   const [environmentalBadgeFilter, setEnvironmentalBadgeFilter] = useState("Alle");
   const [particleFilterFilter, setParticleFilterFilter] = useState("Alle");
@@ -587,6 +588,7 @@ export default function SuchenPage() {
     manufacturerWarrantyFilter !== "Alle",
     nonSmokerFilter !== "Alle",
     petFreeFilter !== "Alle",
+    tradeInFilter,
     emissionClassFilter !== "Alle",
     environmentalBadgeFilter !== "Alle",
     particleFilterFilter !== "Alle",
@@ -620,7 +622,7 @@ export default function SuchenPage() {
     setSeatMaterialFilter("Alle"); setClimateZoneFilter(""); setRimSizeFilter("");
     setPaintProtectionFilmFilter("Alle"); setNoRepaintFilter("Alle");
     setServiceBookFilter("Alle"); setManufacturerWarrantyFilter("Alle");
-    setNonSmokerFilter("Alle"); setPetFreeFilter("Alle");
+    setNonSmokerFilter("Alle"); setPetFreeFilter("Alle"); setTradeInFilter(false);
     setEmissionClassFilter("Alle"); setEnvironmentalBadgeFilter("Alle"); setParticleFilterFilter("Alle");
     setAusstattungSearch("");
     setSafetyFeaturesFilter([]); setEquipmentFeaturesFilter([]);
@@ -675,6 +677,7 @@ export default function SuchenPage() {
     if (manufacturerWarrantyFilter !== "Alle") parts.push(`Garantie: ${manufacturerWarrantyFilter}`);
     if (nonSmokerFilter !== "Alle") parts.push(`Nichtraucher: ${nonSmokerFilter}`);
     if (petFreeFilter !== "Alle") parts.push(`Tierfrei: ${petFreeFilter}`);
+    if (tradeInFilter) parts.push("Inzahlungnahme");
     if (emissionClassFilter !== "Alle") parts.push(emissionClassFilter);
     if (environmentalBadgeFilter !== "Alle") parts.push(`Plakette: ${environmentalBadgeFilter}`);
     if (particleFilterFilter !== "Alle") parts.push(`Partikelfilter: ${particleFilterFilter}`);
@@ -703,7 +706,7 @@ export default function SuchenPage() {
         seatMaterialFilter, climateZoneFilter, rimSizeFilter,
         paintProtectionFilmFilter, noRepaintFilter,
         serviceBookFilter, manufacturerWarrantyFilter,
-        nonSmokerFilter, petFreeFilter,
+        nonSmokerFilter, petFreeFilter, tradeInFilter,
         emissionClassFilter, environmentalBadgeFilter, particleFilterFilter,
         ausstattungSearch, safetyFeaturesFilter, equipmentFeaturesFilter,
       },
@@ -1359,6 +1362,17 @@ export default function SuchenPage() {
                 </label>
               </div>
             )}
+            <div className="flex items-end">
+              <label className="flex items-center gap-2 px-4 py-2.5 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={tradeInFilter}
+                  onChange={(e) => setTradeInFilter(e.target.checked)}
+                  className="w-4 h-4 rounded border-gray-300 dark:border-gray-600 text-[#f14011] focus:ring-[#f14011] cursor-pointer"
+                />
+                <span className="text-sm text-gray-700 dark:text-gray-300">Inzahlungnahme möglich</span>
+              </label>
+            </div>
           </div>
 
           {/* Section: Umwelt & Emissionen */}

@@ -1647,7 +1647,7 @@ function InseratePageInner() {
                     seatMaterialFilter, climateZoneFilter, rimSizeFilter,
                     paintProtectionFilmFilter, noRepaintFilter,
                     serviceBookFilter, manufacturerWarrantyFilter,
-                    nonSmokerFilter, petFreeFilter,
+                    nonSmokerFilter, petFreeFilter, tradeInFilter: false,
                     emissionClassFilter, environmentalBadgeFilter, particleFilterFilter,
                     safetyFeaturesFilter: [], equipmentFeaturesFilter: [],
                   },
