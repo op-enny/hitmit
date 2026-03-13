@@ -36,6 +36,10 @@ import {
   isFieldVisibleForType,
   getSafetyFeaturesForType,
   getEquipmentFeaturesForType,
+  getComfortFeaturesForType,
+  getExteriorFeaturesForType,
+  getMultimediaFeaturesForType,
+  getSuspensionFeaturesForType,
 } from "../vehicles-data";
 import type { Vehicle } from "../vehicles-data";
 import { useSavedData } from "../use-saved-data";
@@ -482,7 +486,10 @@ export default function SuchenPage() {
   const [safetyFeaturesFilter, setSafetyFeaturesFilter] = useState<string[]>([]);
   const [equipmentFeaturesFilter, setEquipmentFeaturesFilter] = useState<string[]>([]);
   const [showSafetyFeatures, setShowSafetyFeatures] = useState(false);
-  const [showEquipmentFeatures, setShowEquipmentFeatures] = useState(false);
+  const [showComfortFeatures, setShowComfortFeatures] = useState(false);
+  const [showExteriorFeatures, setShowExteriorFeatures] = useState(false);
+  const [showMultimediaFeatures, setShowMultimediaFeatures] = useState(false);
+  const [showSuspensionFeatures, setShowSuspensionFeatures] = useState(false);
 
   // Search state
   const [hasSearched, setHasSearched] = useState(false);
@@ -1594,23 +1601,124 @@ export default function SuchenPage() {
             )}
           </div>
 
-          {/* Section: Ausstattung */}
+          {/* Section: Komfort */}
           <div className="mb-6">
             <button
-              onClick={() => setShowEquipmentFeatures(!showEquipmentFeatures)}
+              onClick={() => setShowComfortFeatures(!showComfortFeatures)}
               className="flex items-center gap-2 text-sm font-semibold text-gray-900 dark:text-gray-100 uppercase tracking-wider mb-4"
             >
-              Ausstattung
-              {equipmentFeaturesFilter.length > 0 && (
-                <span className="px-2 py-0.5 bg-[#f14011] text-white text-xs font-bold rounded-full normal-case tracking-normal">
-                  {equipmentFeaturesFilter.length}
-                </span>
-              )}
-              <ChevronDownIcon className={`w-4 h-4 transition-transform ${showEquipmentFeatures ? "rotate-180" : ""}`} />
+              Komfort
+              {(() => { const c = getComfortFeaturesForType(vehicleTypeFilter, fuelFilter); const n = equipmentFeaturesFilter.filter((f) => c.includes(f)).length; return n > 0 ? <span className="px-2 py-0.5 bg-[#f14011] text-white text-xs font-bold rounded-full normal-case tracking-normal">{n}</span> : null; })()}
+              <ChevronDownIcon className={`w-4 h-4 transition-transform ${showComfortFeatures ? "rotate-180" : ""}`} />
             </button>
-            {showEquipmentFeatures && (
+            {showComfortFeatures && (
               <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2">
-                {getEquipmentFeaturesForType(vehicleTypeFilter, fuelFilter).map((feature) => (
+                {getComfortFeaturesForType(vehicleTypeFilter, fuelFilter).map((feature) => (
+                  <label key={feature} className="flex items-center gap-2 cursor-pointer group">
+                    <input
+                      type="checkbox"
+                      checked={equipmentFeaturesFilter.includes(feature)}
+                      onChange={(e) => {
+                        if (e.target.checked) {
+                          setEquipmentFeaturesFilter([...equipmentFeaturesFilter, feature]);
+                        } else {
+                          setEquipmentFeaturesFilter(equipmentFeaturesFilter.filter((f) => f !== feature));
+                        }
+                      }}
+                      className="w-4 h-4 rounded border-gray-300 dark:border-gray-600 text-[#f14011] focus:ring-[#f14011] cursor-pointer"
+                    />
+                    <span className="text-sm text-gray-600 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-gray-200 transition-colors">
+                      {feature}
+                    </span>
+                  </label>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* Section: Exterieur */}
+          <div className="mb-6">
+            <button
+              onClick={() => setShowExteriorFeatures(!showExteriorFeatures)}
+              className="flex items-center gap-2 text-sm font-semibold text-gray-900 dark:text-gray-100 uppercase tracking-wider mb-4"
+            >
+              Exterieur
+              {(() => { const c = getExteriorFeaturesForType(vehicleTypeFilter, fuelFilter); const n = equipmentFeaturesFilter.filter((f) => c.includes(f)).length; return n > 0 ? <span className="px-2 py-0.5 bg-[#f14011] text-white text-xs font-bold rounded-full normal-case tracking-normal">{n}</span> : null; })()}
+              <ChevronDownIcon className={`w-4 h-4 transition-transform ${showExteriorFeatures ? "rotate-180" : ""}`} />
+            </button>
+            {showExteriorFeatures && (
+              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2">
+                {getExteriorFeaturesForType(vehicleTypeFilter, fuelFilter).map((feature) => (
+                  <label key={feature} className="flex items-center gap-2 cursor-pointer group">
+                    <input
+                      type="checkbox"
+                      checked={equipmentFeaturesFilter.includes(feature)}
+                      onChange={(e) => {
+                        if (e.target.checked) {
+                          setEquipmentFeaturesFilter([...equipmentFeaturesFilter, feature]);
+                        } else {
+                          setEquipmentFeaturesFilter(equipmentFeaturesFilter.filter((f) => f !== feature));
+                        }
+                      }}
+                      className="w-4 h-4 rounded border-gray-300 dark:border-gray-600 text-[#f14011] focus:ring-[#f14011] cursor-pointer"
+                    />
+                    <span className="text-sm text-gray-600 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-gray-200 transition-colors">
+                      {feature}
+                    </span>
+                  </label>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* Section: Multimedia */}
+          <div className="mb-6">
+            <button
+              onClick={() => setShowMultimediaFeatures(!showMultimediaFeatures)}
+              className="flex items-center gap-2 text-sm font-semibold text-gray-900 dark:text-gray-100 uppercase tracking-wider mb-4"
+            >
+              Multimedia
+              {(() => { const c = getMultimediaFeaturesForType(vehicleTypeFilter, fuelFilter); const n = equipmentFeaturesFilter.filter((f) => c.includes(f)).length; return n > 0 ? <span className="px-2 py-0.5 bg-[#f14011] text-white text-xs font-bold rounded-full normal-case tracking-normal">{n}</span> : null; })()}
+              <ChevronDownIcon className={`w-4 h-4 transition-transform ${showMultimediaFeatures ? "rotate-180" : ""}`} />
+            </button>
+            {showMultimediaFeatures && (
+              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2">
+                {getMultimediaFeaturesForType(vehicleTypeFilter, fuelFilter).map((feature) => (
+                  <label key={feature} className="flex items-center gap-2 cursor-pointer group">
+                    <input
+                      type="checkbox"
+                      checked={equipmentFeaturesFilter.includes(feature)}
+                      onChange={(e) => {
+                        if (e.target.checked) {
+                          setEquipmentFeaturesFilter([...equipmentFeaturesFilter, feature]);
+                        } else {
+                          setEquipmentFeaturesFilter(equipmentFeaturesFilter.filter((f) => f !== feature));
+                        }
+                      }}
+                      className="w-4 h-4 rounded border-gray-300 dark:border-gray-600 text-[#f14011] focus:ring-[#f14011] cursor-pointer"
+                    />
+                    <span className="text-sm text-gray-600 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-gray-200 transition-colors">
+                      {feature}
+                    </span>
+                  </label>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* Section: Fahrwerk */}
+          <div className="mb-6">
+            <button
+              onClick={() => setShowSuspensionFeatures(!showSuspensionFeatures)}
+              className="flex items-center gap-2 text-sm font-semibold text-gray-900 dark:text-gray-100 uppercase tracking-wider mb-4"
+            >
+              Fahrwerk
+              {(() => { const c = getSuspensionFeaturesForType(vehicleTypeFilter, fuelFilter); const n = equipmentFeaturesFilter.filter((f) => c.includes(f)).length; return n > 0 ? <span className="px-2 py-0.5 bg-[#f14011] text-white text-xs font-bold rounded-full normal-case tracking-normal">{n}</span> : null; })()}
+              <ChevronDownIcon className={`w-4 h-4 transition-transform ${showSuspensionFeatures ? "rotate-180" : ""}`} />
+            </button>
+            {showSuspensionFeatures && (
+              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2">
+                {getSuspensionFeaturesForType(vehicleTypeFilter, fuelFilter).map((feature) => (
                   <label key={feature} className="flex items-center gap-2 cursor-pointer group">
                     <input
                       type="checkbox"

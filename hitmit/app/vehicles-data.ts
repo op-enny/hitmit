@@ -984,6 +984,26 @@ export const MULTIMEDIA_FEATURES_BY_TYPE: Record<string, string[]> = {
   ],
 };
 
+export const SUSPENSION_FEATURES_BY_TYPE: Record<string, string[]> = {
+  PKW: [
+    "Sportfahrwerk", "Luftfahrwerk", "Adaptives Fahrwerk", "Tieferlegung",
+    "Gewindefahrwerk", "Elektronische Dämpferregelung",
+  ],
+  Motorrad: [
+    "Sportfahrwerk", "Elektronisches Fahrwerk", "Upside-Down-Gabel",
+    "Mono-Federbein", "Lenkungsdämpfer",
+  ],
+  LKW: [
+    "Luftfederung", "Blattfederung", "Komfortfahrwerk",
+  ],
+  Transporter: [
+    "Luftfederung", "Tieferlegung", "Sportfahrwerk", "Komfortfahrwerk",
+  ],
+  Wohnmobil: [
+    "Luftfederung", "Tieferlegung", "Komfortfahrwerk", "Verstärkte Federn",
+  ],
+};
+
 // ============================================================================
 // ELECTRIC / PLUG-IN-HYBRID SPECIFIC FEATURES
 // ============================================================================
@@ -1008,6 +1028,10 @@ export const EV_EXTERIOR_FEATURES: string[] = [
 
 export const EV_MULTIMEDIA_FEATURES: string[] = [
   "OTA-Updates", "App-Steuerung",
+];
+
+export const EV_SUSPENSION_FEATURES: string[] = [
+  "Adaptives Luftfahrwerk",
 ];
 
 export function getComfortFeaturesForType(type: string, fuels: string[] = []): string[] {
@@ -1050,11 +1074,22 @@ export function getMultimediaFeaturesForType(type: string, fuels: string[] = [])
   return base;
 }
 
+export function getSuspensionFeaturesForType(type: string, fuels: string[] = []): string[] {
+  const base = (type && type !== "Alle" && type !== "" && SUSPENSION_FEATURES_BY_TYPE[type])
+    ? SUSPENSION_FEATURES_BY_TYPE[type]
+    : SUSPENSION_FEATURES_BY_TYPE.PKW;
+  if (isElectricFuel(fuels)) {
+    return [...base, ...EV_SUSPENSION_FEATURES.filter((f) => !base.includes(f))];
+  }
+  return base;
+}
+
 export function getEquipmentFeaturesForType(type: string, fuels: string[] = []): string[] {
   return [
     ...getComfortFeaturesForType(type, fuels),
     ...getExteriorFeaturesForType(type, fuels),
     ...getMultimediaFeaturesForType(type, fuels),
+    ...getSuspensionFeaturesForType(type, fuels),
   ];
 }
 
