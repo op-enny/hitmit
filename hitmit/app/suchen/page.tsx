@@ -1571,7 +1571,7 @@ export default function SuchenPage() {
             </button>
             {showSafetyFeatures && (
               <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2">
-                {getSafetyFeaturesForType(vehicleTypeFilter).map((feature) => (
+                {getSafetyFeaturesForType(vehicleTypeFilter, fuelFilter).map((feature) => (
                   <label key={feature} className="flex items-center gap-2 cursor-pointer group">
                     <input
                       type="checkbox"
@@ -1610,7 +1610,7 @@ export default function SuchenPage() {
             </button>
             {showEquipmentFeatures && (
               <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2">
-                {getEquipmentFeaturesForType(vehicleTypeFilter).map((feature) => (
+                {getEquipmentFeaturesForType(vehicleTypeFilter, fuelFilter).map((feature) => (
                   <label key={feature} className="flex items-center gap-2 cursor-pointer group">
                     <input
                       type="checkbox"

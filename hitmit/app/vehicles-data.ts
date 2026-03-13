@@ -984,39 +984,77 @@ export const MULTIMEDIA_FEATURES_BY_TYPE: Record<string, string[]> = {
   ],
 };
 
-export function getComfortFeaturesForType(type: string): string[] {
-  if (type && type !== "Alle" && type !== "" && COMFORT_FEATURES_BY_TYPE[type]) {
-    return COMFORT_FEATURES_BY_TYPE[type];
-  }
-  return COMFORT_FEATURES_BY_TYPE.PKW;
+// ============================================================================
+// ELECTRIC / PLUG-IN-HYBRID SPECIFIC FEATURES
+// ============================================================================
+
+const EV_FUELS = ["Elektro", "Plug-in-Hybrid (Benzin/Elektro)", "Plug-in-Hybrid (Diesel/Elektro)"];
+
+export function isElectricFuel(fuels: string[]): boolean {
+  return fuels.some((f) => EV_FUELS.includes(f));
 }
 
-export function getSafetyFeaturesForType(type: string): string[] {
-  if (type && type !== "Alle" && type !== "" && SAFETY_FEATURES_BY_TYPE[type]) {
-    return SAFETY_FEATURES_BY_TYPE[type];
+export const EV_COMFORT_FEATURES: string[] = [
+  "Vorklimatisierung", "Wärmepumpe", "One-Pedal-Driving", "Frunk",
+];
+
+export const EV_SAFETY_FEATURES: string[] = [
+  "Autopilot", "Fußgängererkennung",
+];
+
+export const EV_EXTERIOR_FEATURES: string[] = [
+  "Ladeanschluss CCS", "Ladeanschluss Typ 2", "Bidirektionales Laden",
+];
+
+export const EV_MULTIMEDIA_FEATURES: string[] = [
+  "OTA-Updates", "App-Steuerung",
+];
+
+export function getComfortFeaturesForType(type: string, fuels: string[] = []): string[] {
+  const base = (type && type !== "Alle" && type !== "" && COMFORT_FEATURES_BY_TYPE[type])
+    ? COMFORT_FEATURES_BY_TYPE[type]
+    : COMFORT_FEATURES_BY_TYPE.PKW;
+  if (isElectricFuel(fuels)) {
+    return [...base, ...EV_COMFORT_FEATURES.filter((f) => !base.includes(f))];
   }
-  return SAFETY_FEATURES_BY_TYPE.PKW;
+  return base;
 }
 
-export function getExteriorFeaturesForType(type: string): string[] {
-  if (type && type !== "Alle" && type !== "" && EXTERIOR_FEATURES_BY_TYPE[type]) {
-    return EXTERIOR_FEATURES_BY_TYPE[type];
+export function getSafetyFeaturesForType(type: string, fuels: string[] = []): string[] {
+  const base = (type && type !== "Alle" && type !== "" && SAFETY_FEATURES_BY_TYPE[type])
+    ? SAFETY_FEATURES_BY_TYPE[type]
+    : SAFETY_FEATURES_BY_TYPE.PKW;
+  if (isElectricFuel(fuels)) {
+    return [...base, ...EV_SAFETY_FEATURES.filter((f) => !base.includes(f))];
   }
-  return EXTERIOR_FEATURES_BY_TYPE.PKW;
+  return base;
 }
 
-export function getMultimediaFeaturesForType(type: string): string[] {
-  if (type && type !== "Alle" && type !== "" && MULTIMEDIA_FEATURES_BY_TYPE[type]) {
-    return MULTIMEDIA_FEATURES_BY_TYPE[type];
+export function getExteriorFeaturesForType(type: string, fuels: string[] = []): string[] {
+  const base = (type && type !== "Alle" && type !== "" && EXTERIOR_FEATURES_BY_TYPE[type])
+    ? EXTERIOR_FEATURES_BY_TYPE[type]
+    : EXTERIOR_FEATURES_BY_TYPE.PKW;
+  if (isElectricFuel(fuels)) {
+    return [...base, ...EV_EXTERIOR_FEATURES.filter((f) => !base.includes(f))];
   }
-  return MULTIMEDIA_FEATURES_BY_TYPE.PKW;
+  return base;
 }
 
-export function getEquipmentFeaturesForType(type: string): string[] {
+export function getMultimediaFeaturesForType(type: string, fuels: string[] = []): string[] {
+  const base = (type && type !== "Alle" && type !== "" && MULTIMEDIA_FEATURES_BY_TYPE[type])
+    ? MULTIMEDIA_FEATURES_BY_TYPE[type]
+    : MULTIMEDIA_FEATURES_BY_TYPE.PKW;
+  if (isElectricFuel(fuels)) {
+    return [...base, ...EV_MULTIMEDIA_FEATURES.filter((f) => !base.includes(f))];
+  }
+  return base;
+}
+
+export function getEquipmentFeaturesForType(type: string, fuels: string[] = []): string[] {
   return [
-    ...getComfortFeaturesForType(type),
-    ...getExteriorFeaturesForType(type),
-    ...getMultimediaFeaturesForType(type),
+    ...getComfortFeaturesForType(type, fuels),
+    ...getExteriorFeaturesForType(type, fuels),
+    ...getMultimediaFeaturesForType(type, fuels),
   ];
 }
 
