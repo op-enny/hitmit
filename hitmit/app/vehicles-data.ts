@@ -920,7 +920,7 @@ export const SAFETY_FEATURES_BY_TYPE: Record<string, string[]> = {
     "Notbremsassistent", "Müdigkeitserkennung", "Verkehrszeichenerkennung",
     "Nachtsichtassistent", "Head-up-Display", "Reifendruckkontrolle",
     "Querverkehrsassistent", "Isofix",
-    "Einparkhilfe vorne", "Einparkhilfe hinten", "360°-Grad-Kamera", "Selbstparkend", "Parktronic",
+    "Einparkhilfe vorne", "Einparkhilfe hinten", "Rückfahrkamera", "360°-Grad-Kamera", "Selbstparkend", "Parktronic",
   ],
   Motorrad: [
     "ABS", "Kurven-ABS", "Traktionskontrolle", "Wheelie-Kontrolle",
