@@ -846,7 +846,10 @@ export const SAFETY_FEATURE_LIST = [
 
 export const EQUIPMENT_FEATURE_LIST = [
   "Klimaanlage",
-  "Klimaautomatik",
+  "Klimaautomatik 1-Zone",
+  "Klimaautomatik 2-Zonen",
+  "Klimaautomatik 3-Zonen",
+  "Klimaautomatik 4-Zonen",
   "Sitzheizung",
   "Lenkradheizung",
   "Elektrische Sitze",
@@ -885,7 +888,8 @@ export const EQUIPMENT_FEATURE_LIST = [
 
 export const COMFORT_FEATURES_BY_TYPE: Record<string, string[]> = {
   PKW: [
-    "Klimaanlage", "Klimaautomatik", "Sitzheizung", "Lenkradheizung",
+    "Klimaanlage", "Klimaautomatik 1-Zone", "Klimaautomatik 2-Zonen", "Klimaautomatik 3-Zonen", "Klimaautomatik 4-Zonen",
+    "Sitzheizung", "Lenkradheizung",
     "Elektrische Sitze", "Massagesitze", "Panoramadach", "Schiebedach",
     "Elektrische Heckklappe", "Keyless Entry", "Standheizung", "Tempomat",
     "Abstandsregeltempomat", "Sitzbelüftung vorne", "Sitzbelüftung hinten", "Keyless-Go",
@@ -899,7 +903,7 @@ export const COMFORT_FEATURES_BY_TYPE: Record<string, string[]> = {
     "Abstandsregeltempomat", "Luftfederung", "Elektrische Fensterheber",
   ],
   Transporter: [
-    "Klimaanlage", "Klimaautomatik", "Sitzheizung", "Tempomat",
+    "Klimaanlage", "Klimaautomatik 1-Zone", "Klimaautomatik 2-Zonen", "Sitzheizung", "Tempomat",
     "Abstandsregeltempomat", "Keyless Entry", "Standheizung",
     "Elektrische Fensterheber", "Trennwand",
   ],
