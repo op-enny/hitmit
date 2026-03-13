@@ -4,7 +4,7 @@ import React, { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import { generateDescription, checkCompleteness } from "./description-generator";
 import { ThemeToggle } from "./theme-toggle";
-import { CAR_BRANDS_MODELS, getBrandsForType, getModelsForBrand, getCategoriesForType, VEHICLE_TYPE_VALUE_TO_LABEL, DRIVE_TYPE_FORM_OPTIONS_BY_TYPE, CYLINDER_FORM_OPTIONS_BY_TYPE, DOOR_FORM_OPTIONS_BY_TYPE, SEAT_FORM_OPTIONS_BY_TYPE, isFieldVisibleForType, getComfortFeaturesForType, getSafetyFeaturesForType, getExteriorFeaturesForType, getMultimediaFeaturesForType, getVehicleNoun, getVehicleIcon } from "./vehicles-data";
+import { CAR_BRANDS_MODELS, getBrandsForType, getModelsForBrand, getCategoriesForType, VEHICLE_TYPE_VALUE_TO_LABEL, DRIVE_TYPE_FORM_OPTIONS_BY_TYPE, CYLINDER_FORM_OPTIONS_BY_TYPE, DOOR_FORM_OPTIONS_BY_TYPE, SEAT_FORM_OPTIONS_BY_TYPE, isFieldVisibleForType, getComfortFeaturesForType, getSafetyFeaturesForType, getExteriorFeaturesForType, getMultimediaFeaturesForType, getVehicleNoun, getVehicleIcon, CLIMATE_OPTIONS } from "./vehicles-data";
 
 // ============================================================================
 // SVG ICONS
@@ -1473,8 +1473,6 @@ const TIRE_CONDITION_OPTIONS = [
 ];
 
 const COMFORT_FEATURES = [
-  "Klimaanlage",
-  "Klimaautomatik",
   "Sitzheizung",
   "Lenkradheizung",
   "Elektrische Sitze",
@@ -2806,16 +2804,6 @@ function SubmitFormSection() {
                 )}
               </div>
               <div className="grid md:grid-cols-3 gap-6">
-                {isFieldVisibleForType("climateZones", getFormTypeLabel(formData.vehicleType)) && (
-                  <FormInput
-                    label="Klimazonen"
-                    type="text"
-                    inputMode="numeric"
-                    placeholder="2"
-                    value={formData.climateZones}
-                    onChange={(e) => updateField("climateZones", e.target.value)}
-                  />
-                )}
                 <FormInput
                   label="Felgengröße (Zoll)"
                   type="text"
@@ -3087,9 +3075,29 @@ function SubmitFormSection() {
 
             {/* Features */}
             <FormSection title="Ausstattung" icon="✨">
+              <div>
+                <label className="block text-sm font-semibold text-[#0a0a0a] dark:text-[#ededed] mb-3">Klimaanlage / Klimaautomatik</label>
+                <select
+                  value={formData.comfortFeatures.find((f) => CLIMATE_OPTIONS.includes(f)) || ""}
+                  onChange={(e) => {
+                    const without = formData.comfortFeatures.filter((f) => !CLIMATE_OPTIONS.includes(f));
+                    if (e.target.value) {
+                      updateField("comfortFeatures", [...without, e.target.value]);
+                    } else {
+                      updateField("comfortFeatures", without);
+                    }
+                  }}
+                  className="w-full sm:w-64 px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-[#111] text-sm text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-[#f14011] focus:border-transparent"
+                >
+                  <option value="">Keine</option>
+                  {CLIMATE_OPTIONS.map((opt) => (
+                    <option key={opt} value={opt}>{opt}</option>
+                  ))}
+                </select>
+              </div>
               <FormFeatureSelectWithOther
                 label="Komfort"
-                features={getComfortFeaturesForType(getFormTypeLabel(formData.vehicleType))}
+                features={getComfortFeaturesForType(getFormTypeLabel(formData.vehicleType)).filter((f) => !CLIMATE_OPTIONS.includes(f))}
                 selected={formData.comfortFeatures}
                 onChange={(selected) => updateField("comfortFeatures", selected)}
                 otherValue={formData.comfortOther}

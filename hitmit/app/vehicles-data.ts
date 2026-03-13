@@ -887,6 +887,15 @@ export const EQUIPMENT_FEATURE_LIST = [
 // TYPE-SPECIFIC FEATURE LISTS
 // ============================================================================
 
+export const CLIMATE_OPTIONS = [
+  "Klimaanlage",
+  "Klimaautomatik 1-Zone",
+  "Klimaautomatik 2-Zonen",
+  "Klimaautomatik 3-Zonen",
+  "Klimaautomatik 4-Zonen",
+  "Klimaautomatik 5-Zonen",
+];
+
 export const COMFORT_FEATURES_BY_TYPE: Record<string, string[]> = {
   PKW: [
     "Klimaanlage", "Klimaautomatik 1-Zone", "Klimaautomatik 2-Zonen", "Klimaautomatik 3-Zonen", "Klimaautomatik 4-Zonen", "Klimaautomatik 5-Zonen",

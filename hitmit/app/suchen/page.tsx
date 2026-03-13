@@ -40,6 +40,7 @@ import {
   getExteriorFeaturesForType,
   getMultimediaFeaturesForType,
   getSuspensionFeaturesForType,
+  CLIMATE_OPTIONS,
 } from "../vehicles-data";
 import type { Vehicle } from "../vehicles-data";
 import { useSavedData } from "../use-saved-data";
@@ -1608,30 +1609,58 @@ export default function SuchenPage() {
               className="flex items-center gap-2 text-sm font-semibold text-gray-900 dark:text-gray-100 uppercase tracking-wider mb-4"
             >
               Komfort
-              {(() => { const c = getComfortFeaturesForType(vehicleTypeFilter, fuelFilter); const n = equipmentFeaturesFilter.filter((f) => c.includes(f)).length; return n > 0 ? <span className="px-2 py-0.5 bg-[#f14011] text-white text-xs font-bold rounded-full normal-case tracking-normal">{n}</span> : null; })()}
+              {(() => { const c = getComfortFeaturesForType(vehicleTypeFilter, fuelFilter); const n = equipmentFeaturesFilter.filter((f) => c.includes(f) || CLIMATE_OPTIONS.includes(f)).length; return n > 0 ? <span className="px-2 py-0.5 bg-[#f14011] text-white text-xs font-bold rounded-full normal-case tracking-normal">{n}</span> : null; })()}
               <ChevronDownIcon className={`w-4 h-4 transition-transform ${showComfortFeatures ? "rotate-180" : ""}`} />
             </button>
             {showComfortFeatures && (
-              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2">
-                {getComfortFeaturesForType(vehicleTypeFilter, fuelFilter).map((feature) => (
-                  <label key={feature} className="flex items-center gap-2 cursor-pointer group">
-                    <input
-                      type="checkbox"
-                      checked={equipmentFeaturesFilter.includes(feature)}
-                      onChange={(e) => {
-                        if (e.target.checked) {
-                          setEquipmentFeaturesFilter([...equipmentFeaturesFilter, feature]);
-                        } else {
-                          setEquipmentFeaturesFilter(equipmentFeaturesFilter.filter((f) => f !== feature));
-                        }
-                      }}
-                      className="w-4 h-4 rounded border-gray-300 dark:border-gray-600 text-[#f14011] focus:ring-[#f14011] cursor-pointer"
-                    />
-                    <span className="text-sm text-gray-600 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-gray-200 transition-colors">
-                      {feature}
-                    </span>
-                  </label>
-                ))}
+              <div>
+                {/* Klimaanlage / Klimaautomatik */}
+                <div className="mb-4">
+                  <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1.5">Klimaanlage / Klimaautomatik</label>
+                  <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2">
+                    {CLIMATE_OPTIONS.map((opt) => (
+                      <label key={opt} className="flex items-center gap-2 cursor-pointer group">
+                        <input
+                          type="checkbox"
+                          checked={equipmentFeaturesFilter.includes(opt)}
+                          onChange={(e) => {
+                            if (e.target.checked) {
+                              setEquipmentFeaturesFilter([...equipmentFeaturesFilter, opt]);
+                            } else {
+                              setEquipmentFeaturesFilter(equipmentFeaturesFilter.filter((f) => f !== opt));
+                            }
+                          }}
+                          className="w-4 h-4 rounded border-gray-300 dark:border-gray-600 text-[#f14011] focus:ring-[#f14011] cursor-pointer"
+                        />
+                        <span className="text-sm text-gray-600 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-gray-200 transition-colors">
+                          {opt}
+                        </span>
+                      </label>
+                    ))}
+                  </div>
+                </div>
+                {/* Restliche Komfort-Features */}
+                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2">
+                  {getComfortFeaturesForType(vehicleTypeFilter, fuelFilter).filter((f) => !CLIMATE_OPTIONS.includes(f)).map((feature) => (
+                    <label key={feature} className="flex items-center gap-2 cursor-pointer group">
+                      <input
+                        type="checkbox"
+                        checked={equipmentFeaturesFilter.includes(feature)}
+                        onChange={(e) => {
+                          if (e.target.checked) {
+                            setEquipmentFeaturesFilter([...equipmentFeaturesFilter, feature]);
+                          } else {
+                            setEquipmentFeaturesFilter(equipmentFeaturesFilter.filter((f) => f !== feature));
+                          }
+                        }}
+                        className="w-4 h-4 rounded border-gray-300 dark:border-gray-600 text-[#f14011] focus:ring-[#f14011] cursor-pointer"
+                      />
+                      <span className="text-sm text-gray-600 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-gray-200 transition-colors">
+                        {feature}
+                      </span>
+                    </label>
+                  ))}
+                </div>
               </div>
             )}
           </div>
