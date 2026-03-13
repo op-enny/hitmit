@@ -850,6 +850,7 @@ export const EQUIPMENT_FEATURE_LIST = [
   "Klimaautomatik 2-Zonen",
   "Klimaautomatik 3-Zonen",
   "Klimaautomatik 4-Zonen",
+  "Klimaautomatik 5-Zonen",
   "Sitzheizung",
   "Lenkradheizung",
   "Elektrische Sitze",
@@ -888,7 +889,7 @@ export const EQUIPMENT_FEATURE_LIST = [
 
 export const COMFORT_FEATURES_BY_TYPE: Record<string, string[]> = {
   PKW: [
-    "Klimaanlage", "Klimaautomatik 1-Zone", "Klimaautomatik 2-Zonen", "Klimaautomatik 3-Zonen", "Klimaautomatik 4-Zonen",
+    "Klimaanlage", "Klimaautomatik 1-Zone", "Klimaautomatik 2-Zonen", "Klimaautomatik 3-Zonen", "Klimaautomatik 4-Zonen", "Klimaautomatik 5-Zonen",
     "Sitzheizung", "Lenkradheizung",
     "Elektrische Sitze", "Massagesitze", "Panoramadach", "Schiebedach",
     "Elektrische Heckklappe", "Keyless Entry", "Standheizung", "Tempomat",
