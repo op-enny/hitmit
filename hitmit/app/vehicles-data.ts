@@ -920,6 +920,7 @@ export const SAFETY_FEATURES_BY_TYPE: Record<string, string[]> = {
     "Notbremsassistent", "Müdigkeitserkennung", "Verkehrszeichenerkennung",
     "Nachtsichtassistent", "Head-up-Display", "Reifendruckkontrolle",
     "Querverkehrsassistent", "Isofix",
+    "Einparkhilfe vorne", "Einparkhilfe hinten", "360°-Grad-Kamera", "Selbstparkend", "Parktronic",
   ],
   Motorrad: [
     "ABS", "Kurven-ABS", "Traktionskontrolle", "Wheelie-Kontrolle",
@@ -928,15 +929,18 @@ export const SAFETY_FEATURES_BY_TYPE: Record<string, string[]> = {
   LKW: [
     "ABS", "ESP", "Abbiegeassistent", "Notbremsassistent", "Spurhalteassistent",
     "Totwinkelassistent", "Reifendruckkontrolle", "ACC",
+    "Einparkhilfe vorne", "Einparkhilfe hinten",
   ],
   Transporter: [
     "ABS", "ESP", "Traktionskontrolle", "Spurhalteassistent", "Notbremsassistent",
     "Totwinkelassistent", "Abbiegeassistent", "Reifendruckkontrolle",
     "Rückfahrkamera", "Parktronic", "ACC",
+    "Einparkhilfe vorne", "Einparkhilfe hinten",
   ],
   Wohnmobil: [
     "ABS", "ESP", "Spurhalteassistent", "Notbremsassistent", "Rückfahrkamera",
     "Reifendruckkontrolle", "Totwinkelassistent", "Gaswarner",
+    "Einparkhilfe vorne", "Einparkhilfe hinten",
   ],
 };
 
