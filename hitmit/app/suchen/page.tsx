@@ -689,11 +689,12 @@ export default function SuchenPage() {
     }
     if (previousOwnersFilter.length > 0) {
       if (v.previousOwners === undefined) return false;
-      const matchesOwner = previousOwnersFilter.some((pf) => {
-        if (pf === "4+") return v.previousOwners! >= 4;
-        return v.previousOwners === Number(pf);
-      });
-      if (!matchesOwner) return false;
+      const pf = previousOwnersFilter[0];
+      if (pf === "4+") {
+        if (v.previousOwners > 4) return false;
+      } else {
+        if (v.previousOwners > Number(pf)) return false;
+      }
     }
     if (cylinderFilter.length > 0 && !cylinderFilter.some((cf) => v.cylinders === Number(cf))) return false;
     if (displacementMin !== "" && (!v.engineDisplacement || v.engineDisplacement < Number(displacementMin))) return false;
@@ -702,7 +703,7 @@ export default function SuchenPage() {
     if (manufacturerColorFilter !== "" && !v.color.toLowerCase().includes(manufacturerColorFilter.toLowerCase())) return false;
     if (interiorColorFilter.length > 0 && (!v.interiorColor || !interiorColorFilter.some((ic) => v.interiorColor!.toLowerCase().includes(ic.toLowerCase())))) return false;
     if (seatMaterialFilter.length > 0 && !seatMaterialFilter.includes(v.seatMaterial ?? "")) return false;
-    if (climateZoneFilter !== "" && v.climateZones !== Number(climateZoneFilter)) return false;
+    if (climateZoneFilter !== "" && (v.climateZones === undefined || v.climateZones < Number(climateZoneFilter))) return false;
     if (rimSizeFilter !== "" && v.rimSize !== Number(rimSizeFilter)) return false;
     if (paintProtectionFilmFilter !== "Alle") {
       if (paintProtectionFilmFilter === "Ja" && !v.paintProtectionFilm) return false;
@@ -863,7 +864,7 @@ export default function SuchenPage() {
     if (firstRegFrom) parts.push(`EZ ab ${firstRegFrom}`);
     if (firstRegTo) parts.push(`EZ bis ${firstRegTo}`);
     if (huFilter !== "Alle") parts.push(`HU: ${huFilter}`);
-    if (previousOwnersFilter.length > 0) parts.push(`${previousOwnersFilter.join("/")} Vorbesitzer`);
+    if (previousOwnersFilter.length > 0) parts.push(`max. ${previousOwnersFilter[0]} Vorbesitzer`);
     if (cylinderFilter.length > 0) parts.push(`${cylinderFilter.join("/")} Zylinder`);
     if (displacementMin !== "") parts.push(`ab ${Number(displacementMin).toLocaleString("de-DE")} ccm`);
     if (displacementMax !== "") parts.push(`bis ${Number(displacementMax).toLocaleString("de-DE")} ccm`);
@@ -871,7 +872,7 @@ export default function SuchenPage() {
     if (manufacturerColorFilter) parts.push(`Farbe: ${manufacturerColorFilter}`);
     if (interiorColorFilter.length > 0) parts.push(`Innen: ${interiorColorFilter.join(", ")}`);
     if (seatMaterialFilter.length > 0) parts.push(seatMaterialFilter.join(", "));
-    if (climateZoneFilter !== "") parts.push(`${climateZoneFilter}-Zonen Klima`);
+    if (climateZoneFilter !== "") parts.push(`mind. ${climateZoneFilter}-Zonen Klima`);
     if (rimSizeFilter !== "") parts.push(`${rimSizeFilter} Zoll`);
     if (paintProtectionFilmFilter !== "Alle") parts.push(`Steinschlagfolie: ${paintProtectionFilmFilter}`);
     if (noRepaintFilter !== "Alle") parts.push(`Nachlackierungsfrei: ${noRepaintFilter}`);
@@ -1367,12 +1368,17 @@ export default function SuchenPage() {
               onChange={setSellerTypeFilter}
               options={sellerTypeOptions.map((s) => ({ value: s, label: s }))}
             />
-            <FilterSelect
-              label="Unfallfrei"
-              value={accidentFreeFilter}
-              onChange={setAccidentFreeFilter}
-              options={[{ value: "Alle", label: "Alle" }, { value: "Nur unfallfrei", label: "Nur unfallfrei" }]}
-            />
+            <div className="flex items-end">
+              <label className="flex items-center gap-2 px-4 py-2.5 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={accidentFreeFilter === "Nur unfallfrei"}
+                  onChange={(e) => setAccidentFreeFilter(e.target.checked ? "Nur unfallfrei" : "Alle")}
+                  className="w-4 h-4 rounded border-gray-300 dark:border-gray-600 text-[#f14011] focus:ring-[#f14011] cursor-pointer"
+                />
+                <span className="text-sm text-gray-700 dark:text-gray-300">Unfallfrei</span>
+              </label>
+            </div>
             <div>
               <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1.5">Standort (Stadt)</label>
               <input
@@ -1452,18 +1458,23 @@ export default function SuchenPage() {
                 <span className="text-sm text-gray-700 dark:text-gray-300">HU neu</span>
               </label>
             </div>
-            <MultiFilterSelect
-              label="Vorbesitzer"
-              selected={previousOwnersFilter}
-              onChange={setPreviousOwnersFilter}
-              options={previousOwnerOptions}
-            />
             <FilterSelect
-              label="MwSt. ausweisbar"
-              value={mwstFilter}
-              onChange={setMwstFilter}
-              options={[{ value: "Alle", label: "Alle" }, { value: "Ja", label: "Ja" }, { value: "Nein", label: "Nein" }]}
+              label="Vorbesitzer (max.)"
+              value={previousOwnersFilter.length > 0 ? previousOwnersFilter[0] : "Alle"}
+              onChange={(v) => setPreviousOwnersFilter(v === "Alle" ? [] : [v])}
+              options={previousOwnerOptions.map((o) => ({ value: o, label: o === "Alle" ? "Alle" : `max. ${o}` }))}
             />
+            <div className="flex items-end">
+              <label className="flex items-center gap-2 px-4 py-2.5 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={mwstFilter === "Ja"}
+                  onChange={(e) => setMwstFilter(e.target.checked ? "Ja" : "Alle")}
+                  className="w-4 h-4 rounded border-gray-300 dark:border-gray-600 text-[#f14011] focus:ring-[#f14011] cursor-pointer"
+                />
+                <span className="text-sm text-gray-700 dark:text-gray-300">MwSt. ausweisbar</span>
+              </label>
+            </div>
           </div>
 
           {/* Section: Interieur */}
@@ -1486,7 +1497,7 @@ export default function SuchenPage() {
               />
             )}
             {isFieldVisibleForType("climateZones", vehicleTypeFilter) && (
-              <NumericInput label="Klimazonen" value={climateZoneFilter} onChange={setClimateZoneFilter} placeholder="z.B. 2" />
+              <NumericInput label="Klimazonen (mind.)" value={climateZoneFilter} onChange={setClimateZoneFilter} placeholder="z.B. 2" />
             )}
             <NumericInput label="Felgengröße (Zoll)" value={rimSizeFilter} onChange={setRimSizeFilter} placeholder="z.B. 19" />
           </div>
@@ -1602,19 +1613,6 @@ export default function SuchenPage() {
               onChange={setParticleFilterFilter}
               options={particleFilterOptions.map((o) => ({ value: o, label: o }))}
             />
-          </div>
-
-          {/* Section: Freie Ausstattungssuche */}
-          <h3 className="text-sm font-semibold text-gray-900 dark:text-gray-100 uppercase tracking-wider mb-4">Ausstattungssuche</h3>
-          <div className="mb-6">
-            <input
-              type="text"
-              value={ausstattungSearch}
-              onChange={(e) => setAusstattungSearch(e.target.value)}
-              placeholder="z.B. Panoramadach, Sitzheizung, Apple CarPlay"
-              className="w-full bg-white dark:bg-[#1a1a1a] border border-gray-200 dark:border-[#2a2a2a] rounded-xl px-4 py-2.5 text-sm hover:border-[#f14011] focus:border-[#f14011] focus:outline-none transition-colors"
-            />
-            <p className="text-xs text-gray-400 mt-1.5">Mehrere Begriffe mit Komma trennen – durchsucht alle Ausstattungskategorien</p>
           </div>
 
           {/* Section: Sicherheit */}
@@ -1818,6 +1816,19 @@ export default function SuchenPage() {
                 ))}
               </div>
             )}
+          </div>
+
+          {/* Section: Freie Ausstattungssuche */}
+          <h3 className="text-sm font-semibold text-gray-900 dark:text-gray-100 uppercase tracking-wider mb-4">Ausstattungssuche</h3>
+          <div className="mb-6">
+            <input
+              type="text"
+              value={ausstattungSearch}
+              onChange={(e) => setAusstattungSearch(e.target.value)}
+              placeholder="z.B. Panoramadach, Sitzheizung, Apple CarPlay"
+              className="w-full bg-white dark:bg-[#1a1a1a] border border-gray-200 dark:border-[#2a2a2a] rounded-xl px-4 py-2.5 text-sm hover:border-[#f14011] focus:border-[#f14011] focus:outline-none transition-colors"
+            />
+            <p className="text-xs text-gray-400 mt-1.5">Mehrere Begriffe mit Komma trennen – durchsucht alle Ausstattungskategorien</p>
           </div>
 
           {/* Actions */}
