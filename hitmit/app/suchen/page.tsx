@@ -1294,7 +1294,7 @@ export default function SuchenPage() {
                 type="text"
                 value={manufacturerColorFilter}
                 onChange={(e) => setManufacturerColorFilter(e.target.value)}
-                placeholder="z.B. Nardograu"
+                placeholder={vehicleTypeFilter === "Motorrad" ? "z.B. Racing Red" : "z.B. Nardograu"}
                 className="w-full bg-white dark:bg-[#1a1a1a] border border-gray-200 dark:border-[#2a2a2a] rounded-xl px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 placeholder:text-gray-400 hover:border-[#f14011] focus:border-[#f14011] focus:outline-none transition-colors"
               />
             </div>
@@ -1303,12 +1303,12 @@ export default function SuchenPage() {
           {/* Section: Preis & Leistung */}
           <h3 className="text-sm font-semibold text-gray-900 dark:text-gray-100 uppercase tracking-wider mb-4">Preis & Leistung</h3>
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 mb-6">
-            <NumericInput label="Preis von (€)" value={priceMin} onChange={setPriceMin} placeholder="z.B. 10000" />
-            <NumericInput label="Preis bis (€)" value={priceMax} onChange={setPriceMax} placeholder="z.B. 50000" />
-            <NumericInput label="Leistung ab (PS)" value={powerMin} onChange={setPowerMin} placeholder="z.B. 200" />
-            <NumericInput label="Leistung bis (PS)" value={powerMax} onChange={setPowerMax} placeholder="z.B. 500" />
-            <NumericInput label="Kilometerstand ab" value={mileageMin} onChange={setMileageMin} placeholder="z.B. 10000" />
-            <NumericInput label="Kilometerstand bis" value={mileageMax} onChange={setMileageMax} placeholder="z.B. 50000" />
+            <NumericInput label="Preis von (€)" value={priceMin} onChange={setPriceMin} placeholder={vehicleTypeFilter === "Motorrad" ? "z.B. 3000" : "z.B. 10000"} />
+            <NumericInput label="Preis bis (€)" value={priceMax} onChange={setPriceMax} placeholder={vehicleTypeFilter === "Motorrad" ? "z.B. 15000" : "z.B. 50000"} />
+            <NumericInput label="Leistung ab (PS)" value={powerMin} onChange={setPowerMin} placeholder={vehicleTypeFilter === "Motorrad" ? "z.B. 48" : "z.B. 200"} />
+            <NumericInput label="Leistung bis (PS)" value={powerMax} onChange={setPowerMax} placeholder={vehicleTypeFilter === "Motorrad" ? "z.B. 200" : "z.B. 500"} />
+            <NumericInput label="Kilometerstand ab" value={mileageMin} onChange={setMileageMin} placeholder={vehicleTypeFilter === "Motorrad" ? "z.B. 5000" : "z.B. 10000"} />
+            <NumericInput label="Kilometerstand bis" value={mileageMax} onChange={setMileageMax} placeholder={vehicleTypeFilter === "Motorrad" ? "z.B. 30000" : "z.B. 50000"} />
             <MultiFilterSelect
               label="Getriebe"
               selected={transmissionFilter}
@@ -1614,12 +1614,17 @@ export default function SuchenPage() {
               onChange={setEnvironmentalBadgeFilter}
               options={environmentalBadgeOptions}
             />
-            <FilterSelect
-              label="Rußpartikelfilter"
-              value={particleFilterFilter}
-              onChange={setParticleFilterFilter}
-              options={particleFilterOptions.map((o) => ({ value: o, label: o }))}
-            />
+            <div className="flex items-end">
+              <label className="flex items-center gap-2 px-4 py-2.5 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={particleFilterFilter === "Ja"}
+                  onChange={(e) => setParticleFilterFilter(e.target.checked ? "Ja" : "Alle")}
+                  className="w-4 h-4 rounded border-gray-300 dark:border-gray-600 text-[#f14011] focus:ring-[#f14011] cursor-pointer"
+                />
+                <span className="text-sm text-gray-700 dark:text-gray-300">Rußpartikelfilter</span>
+              </label>
+            </div>
           </div>
 
           {/* Section: Sicherheit */}
@@ -1673,27 +1678,29 @@ export default function SuchenPage() {
             </button>
             {showComfortFeatures && (
               <div>
-                {/* Klimaanlage / Klimaautomatik */}
-                <div className="mb-4">
-                  <label className="block text-sm font-semibold text-gray-900 dark:text-gray-100 mb-3">Klimaanlage / Klimaautomatik (mind.)</label>
-                  <select
-                    value={equipmentFeaturesFilter.find((f) => CLIMATE_OPTIONS.includes(f)) || ""}
-                    onChange={(e) => {
-                      const without = equipmentFeaturesFilter.filter((f) => !CLIMATE_OPTIONS.includes(f));
-                      if (e.target.value) {
-                        setEquipmentFeaturesFilter([...without, e.target.value]);
-                      } else {
-                        setEquipmentFeaturesFilter(without);
-                      }
-                    }}
-                    className="w-full sm:w-64 px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-[#111] text-sm text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-[#f14011] focus:border-transparent"
-                  >
-                    <option value="">Alle</option>
-                    {CLIMATE_OPTIONS.map((opt) => (
-                      <option key={opt} value={opt}>{opt}</option>
-                    ))}
-                  </select>
-                </div>
+                {/* Klimaanlage / Klimaautomatik — nicht bei Motorrad */}
+                {vehicleTypeFilter !== "Motorrad" && (
+                  <div className="mb-4">
+                    <label className="block text-sm font-semibold text-gray-900 dark:text-gray-100 mb-3">Klimaanlage / Klimaautomatik (mind.)</label>
+                    <select
+                      value={equipmentFeaturesFilter.find((f) => CLIMATE_OPTIONS.includes(f)) || ""}
+                      onChange={(e) => {
+                        const without = equipmentFeaturesFilter.filter((f) => !CLIMATE_OPTIONS.includes(f));
+                        if (e.target.value) {
+                          setEquipmentFeaturesFilter([...without, e.target.value]);
+                        } else {
+                          setEquipmentFeaturesFilter(without);
+                        }
+                      }}
+                      className="w-full sm:w-64 px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-[#111] text-sm text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-[#f14011] focus:border-transparent"
+                    >
+                      <option value="">Alle</option>
+                      {CLIMATE_OPTIONS.map((opt) => (
+                        <option key={opt} value={opt}>{opt}</option>
+                      ))}
+                    </select>
+                  </div>
+                )}
                 {/* Restliche Komfort-Features */}
                 <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2">
                   {getComfortFeaturesForType(vehicleTypeFilter, fuelFilter).filter((f) => !CLIMATE_OPTIONS.includes(f)).map((feature) => (
@@ -1832,7 +1839,7 @@ export default function SuchenPage() {
               type="text"
               value={ausstattungSearch}
               onChange={(e) => setAusstattungSearch(e.target.value)}
-              placeholder="z.B. Panoramadach, Sitzheizung, Apple CarPlay"
+              placeholder={vehicleTypeFilter === "Motorrad" ? "z.B. Sturzbügel, Topcase, Windschild" : "z.B. Panoramadach, Sitzheizung, Apple CarPlay"}
               className="w-full bg-white dark:bg-[#1a1a1a] border border-gray-200 dark:border-[#2a2a2a] rounded-xl px-4 py-2.5 text-sm hover:border-[#f14011] focus:border-[#f14011] focus:outline-none transition-colors"
             />
             <p className="text-xs text-gray-400 mt-1.5">Mehrere Begriffe mit Komma trennen – durchsucht alle Ausstattungskategorien</p>

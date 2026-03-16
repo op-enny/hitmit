@@ -2533,14 +2533,14 @@ function SubmitFormSection() {
               <FormInput
                 label="Modellbeschreibung"
                 type="text"
-                placeholder="z.B. 320d xDrive, A 200 AMG Line"
+                placeholder={formData.vehicleType === "motorcycle" ? "z.B. CB 650 R, MT-07" : "z.B. 320d xDrive, A 200 AMG Line"}
                 value={formData.modelDescription}
                 onChange={(e) => updateField("modelDescription", e.target.value)}
               />
               <FormInput
                 label="Variante"
                 type="text"
-                placeholder="z.B. Competition, GTI"
+                placeholder={formData.vehicleType === "motorcycle" ? "z.B. ABS, Rally, Adventure" : "z.B. Competition, GTI"}
                 value={formData.variant}
                 onChange={(e) => updateField("variant", e.target.value)}
               />
@@ -3084,26 +3084,28 @@ function SubmitFormSection() {
 
             {/* Features */}
             <FormSection title="Ausstattung" icon="✨">
-              <div>
-                <label className="block text-sm font-semibold text-[#0a0a0a] dark:text-[#ededed] mb-3">Klimaanlage / Klimaautomatik</label>
-                <select
-                  value={formData.comfortFeatures.find((f) => CLIMATE_OPTIONS.includes(f)) || ""}
-                  onChange={(e) => {
-                    const without = formData.comfortFeatures.filter((f) => !CLIMATE_OPTIONS.includes(f));
-                    if (e.target.value) {
-                      updateField("comfortFeatures", [...without, e.target.value]);
-                    } else {
-                      updateField("comfortFeatures", without);
-                    }
-                  }}
-                  className="w-full sm:w-64 px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-[#111] text-sm text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-[#f14011] focus:border-transparent"
-                >
-                  <option value="">Keine</option>
-                  {CLIMATE_OPTIONS.map((opt) => (
-                    <option key={opt} value={opt}>{opt}</option>
-                  ))}
-                </select>
-              </div>
+              {formData.vehicleType !== "motorcycle" && (
+                <div>
+                  <label className="block text-sm font-semibold text-[#0a0a0a] dark:text-[#ededed] mb-3">Klimaanlage / Klimaautomatik</label>
+                  <select
+                    value={formData.comfortFeatures.find((f) => CLIMATE_OPTIONS.includes(f)) || ""}
+                    onChange={(e) => {
+                      const without = formData.comfortFeatures.filter((f) => !CLIMATE_OPTIONS.includes(f));
+                      if (e.target.value) {
+                        updateField("comfortFeatures", [...without, e.target.value]);
+                      } else {
+                        updateField("comfortFeatures", without);
+                      }
+                    }}
+                    className="w-full sm:w-64 px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-[#111] text-sm text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-[#f14011] focus:border-transparent"
+                  >
+                    <option value="">Keine</option>
+                    {CLIMATE_OPTIONS.map((opt) => (
+                      <option key={opt} value={opt}>{opt}</option>
+                    ))}
+                  </select>
+                </div>
+              )}
               <FormFeatureSelectWithOther
                 label="Komfort"
                 features={getComfortFeaturesForType(getFormTypeLabel(formData.vehicleType)).filter((f) => !CLIMATE_OPTIONS.includes(f))}
