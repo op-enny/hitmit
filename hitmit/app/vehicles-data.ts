@@ -412,7 +412,7 @@ export const CAR_BRANDS_MODELS: Record<string, string[]> = {
   "Alpine": ["A110", "A110 S", "A110 R", "A290"],
   "Aston Martin": ["Vantage", "DB11", "DB12", "DBS", "DBX", "DBX707", "Valkyrie"],
   "Audi": ["A1", "A3", "A4", "A5", "A6", "A7", "A8", "Q2", "Q3", "Q4 e-tron", "Q5", "Q7", "Q8", "e-tron", "e-tron GT", "RS3", "RS4", "RS5", "RS6", "RS7", "RS Q8", "S3", "S4", "S5", "S6", "S7", "S8", "TT", "R8", "80", "90", "100", "200", "V8", "Urquattro", "Coupé", "Cabriolet"],
-  "BMW": ["1er", "2er", "3er", "4er", "5er", "6er", "7er", "8er", "X1", "X2", "X3", "X4", "X5", "X6", "X7", "XM", "Z4", "i3", "i4", "i5", "i7", "iX", "iX1", "iX3", "M2", "M3", "M4", "M5", "M8", "2002", "E30", "E36", "E46", "E90", "E39", "E60", "E34", "E24", "Z1", "Z3", "Z8", "850i"],
+  "BMW": ["1er", "2er", "3er", "4er", "5er", "6er", "7er", "8er", "X1", "X2", "X3", "X4", "X5", "X6", "X7", "XM", "Z1", "Z3", "Z4", "Z8", "i3", "i4", "i5", "i7", "iX", "iX1", "iX3", "M2", "M3", "M4", "M5", "M8", "2002", "850i"],
   "Bentley": ["Continental GT", "Continental GTC", "Flying Spur", "Bentayga", "Mulsanne", "Arnage", "Azure", "Brooklands"],
   "Bugatti": ["Chiron", "Chiron Sport", "Chiron Pur Sport", "Divo", "Centodieci", "Mistral", "Tourbillon"],
   "Buick": ["Enclave", "Encore", "Envision", "LaCrosse"],
