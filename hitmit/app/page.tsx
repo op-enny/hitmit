@@ -1065,6 +1065,7 @@ interface VehicleFormData {
   zip: string;
   city: string;
   // Optional Vehicle
+  modelDescription: string;
   variant: string;
   vehicleType: string;
   vehicleCategory: string;
@@ -1154,6 +1155,7 @@ const initialFormData: VehicleFormData = {
   price: "",
   zip: "",
   city: "",
+  modelDescription: "",
   variant: "",
   vehicleType: "",
   vehicleCategory: "",
@@ -2528,6 +2530,13 @@ function SubmitFormSection() {
               />
             </div>
             <div className="grid md:grid-cols-3 gap-6 mb-6">
+              <FormInput
+                label="Modellbeschreibung"
+                type="text"
+                placeholder="z.B. 320d xDrive, A 200 AMG Line"
+                value={formData.modelDescription}
+                onChange={(e) => updateField("modelDescription", e.target.value)}
+              />
               <FormInput
                 label="Variante"
                 type="text"
