@@ -1063,6 +1063,7 @@ export default function SuchenPage() {
                     ? getModelsForBrand(vehicleTypeFilter, brandFilter).map((m) => ({ value: m, label: m }))
                     : []),
                 ]}
+                grouped
               />
             )}
             {vehicleTypeFilter === "PKW" && brandFilter === "Mercedes-Benz" && modelFilter !== "" && MERCEDES_MOTORIZATIONS[modelFilter] && (
@@ -1160,6 +1161,7 @@ export default function SuchenPage() {
                         ? getModelsForBrand(vehicleTypeFilter, brandFilter2).map((m) => ({ value: m, label: m }))
                         : []),
                     ]}
+                    grouped
                   />
                 )}
                 <div>
@@ -1240,6 +1242,7 @@ export default function SuchenPage() {
                         ? getModelsForBrand(vehicleTypeFilter, brandFilter3).map((m) => ({ value: m, label: m }))
                         : []),
                     ]}
+                    grouped
                   />
                 )}
                 <div>

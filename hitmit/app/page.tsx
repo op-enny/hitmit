@@ -1625,6 +1625,7 @@ function FormCombobox({
   onChange,
   placeholder,
   disabled,
+  grouped,
 }: {
   label: string;
   required?: boolean;
@@ -1633,6 +1634,7 @@ function FormCombobox({
   onChange: (value: string) => void;
   placeholder?: string;
   disabled?: boolean;
+  grouped?: boolean;
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const [search, setSearch] = useState("");
@@ -1711,7 +1713,32 @@ function FormCombobox({
           ref={dropdownRef}
           className="absolute z-50 w-full mt-1 bg-white dark:bg-[#141414] border border-[#e5e5e5] dark:border-[#2a2a2a] rounded-xl shadow-lg max-h-60 overflow-y-auto"
         >
-          {filteredOptions.map((option) => (
+          {grouped ? (() => {
+            let lastLetter = "";
+            return filteredOptions.map((option) => {
+              const letter = option.charAt(0).toUpperCase();
+              const showHeader = letter !== lastLetter;
+              lastLetter = letter;
+              return (
+                <div key={option}>
+                  {showHeader && (
+                    <div className="px-4 py-1.5 text-[10px] font-bold text-[#737373] dark:text-[#8a8a8a] uppercase tracking-widest bg-[#f5f5f5] dark:bg-[#111] sticky top-0">
+                      {letter}
+                    </div>
+                  )}
+                  <button
+                    type="button"
+                    onClick={() => handleSelect(option)}
+                    className={`w-full px-4 py-2.5 text-left hover:bg-[#f5f5f5] dark:hover:bg-[#1f1f1f] transition-colors ${
+                      value === option ? "bg-[#fef2ef] text-[#f14011] font-medium" : "text-[#0a0a0a] dark:text-[#ededed]"
+                    }`}
+                  >
+                    {option}
+                  </button>
+                </div>
+              );
+            });
+          })() : filteredOptions.map((option) => (
             <button
               key={option}
               type="button"
@@ -2527,6 +2554,7 @@ function SubmitFormSection() {
                 value={formData.model}
                 onChange={(value) => updateField("model", value)}
                 disabled={!formData.brand}
+                grouped
               />
             </div>
             <div className="grid md:grid-cols-3 gap-6 mb-6">
