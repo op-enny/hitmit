@@ -79,11 +79,13 @@ function FilterSelect({
   value,
   onChange,
   options,
+  grouped,
 }: {
   label: string;
   value: string | number;
   onChange: (v: string) => void;
   options: { value: string | number; label: string }[];
+  grouped?: boolean;
 }) {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
@@ -100,22 +102,48 @@ function FilterSelect({
 
   const selected = options.find((o) => String(o.value) === String(value));
 
-  const dropdownContent = (
+  const renderOption = (o: { value: string | number; label: string }) => (
+    <button
+      key={String(o.value)}
+      type="button"
+      onClick={() => { onChange(String(o.value)); setOpen(false); }}
+      className={`w-full text-left px-4 py-3 text-sm hover:bg-gray-50 dark:hover:bg-[#222] transition-colors ${
+        String(o.value) === String(value)
+          ? "text-[#f14011] font-medium"
+          : "text-gray-700 dark:text-gray-300"
+      }`}
+    >
+      {o.label}
+    </button>
+  );
+
+  const dropdownContent = grouped ? (
     <>
-      {options.map((o) => (
-        <button
-          key={String(o.value)}
-          type="button"
-          onClick={() => { onChange(String(o.value)); setOpen(false); }}
-          className={`w-full text-left px-4 py-3 text-sm hover:bg-gray-50 dark:hover:bg-[#222] transition-colors ${
-            String(o.value) === String(value)
-              ? "text-[#f14011] font-medium"
-              : "text-gray-700 dark:text-gray-300"
-          }`}
-        >
-          {o.label}
-        </button>
-      ))}
+      {/* "Alle" option first */}
+      {options.length > 0 && renderOption(options[0])}
+      {(() => {
+        const rest = options.slice(1);
+        let lastLetter = "";
+        return rest.map((o) => {
+          const letter = o.label.charAt(0).toUpperCase();
+          const showHeader = letter !== lastLetter;
+          lastLetter = letter;
+          return (
+            <div key={String(o.value)}>
+              {showHeader && (
+                <div className="px-4 py-1.5 text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-widest bg-gray-50 dark:bg-[#111] sticky top-0">
+                  {letter}
+                </div>
+              )}
+              {renderOption(o)}
+            </div>
+          );
+        });
+      })()}
+    </>
+  ) : (
+    <>
+      {options.map((o) => renderOption(o))}
     </>
   );
 
@@ -274,16 +302,32 @@ function ResultCard({
 // MULTI-SELECT FILTER (checkboxes inside dropdown)
 // ============================================================================
 
+const COLOR_DOT_MAP: Record<string, string> = {
+  "Schwarz": "#000000",
+  "Weiß": "#FFFFFF",
+  "Grau": "#808080",
+  "Silber": "#C0C0C0",
+  "Blau": "#2563EB",
+  "Rot": "#DC2626",
+  "Braun": "#92400E",
+  "Orange": "#EA580C",
+  "Grün": "#16A34A",
+  "Beige": "#D4C5A9",
+  "Gelb": "#EAB308",
+};
+
 function MultiFilterSelect({
   label,
   selected,
   onChange,
   options,
+  colorDots,
 }: {
   label: string;
   selected: string[];
   onChange: (v: string[]) => void;
   options: string[];
+  colorDots?: boolean;
 }) {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
@@ -333,6 +377,12 @@ function MultiFilterSelect({
             }}
             className="w-5 h-5 rounded border-gray-300 dark:border-gray-600 text-[#f14011] focus:ring-[#f14011] cursor-pointer"
           />
+          {colorDots && COLOR_DOT_MAP[o] && (
+            <span
+              className="w-4 h-4 rounded-full shrink-0 border border-gray-300 dark:border-gray-600"
+              style={{ backgroundColor: COLOR_DOT_MAP[o] }}
+            />
+          )}
           <span className={selected.includes(o) ? "text-[#f14011] font-medium" : "text-gray-700 dark:text-gray-300"}>{o}</span>
         </label>
       ))}
@@ -981,6 +1031,7 @@ export default function SuchenPage() {
               value={brandFilter}
               onChange={(v) => { setBrandFilter(v); setModelFilter(""); setMotorizationFilter([]); setCustomBrandText(""); }}
               options={getBrandOptionsForType(vehicleTypeFilter).map((b) => ({ value: b, label: b }))}
+              grouped
             />
             {brandFilter === "Andere" ? (
               <div>
@@ -1077,6 +1128,7 @@ export default function SuchenPage() {
                   value={brandFilter2}
                   onChange={(v) => { setBrandFilter2(v); setModelFilter2(""); setVariantFilter2(""); setCustomBrandText2(""); }}
                   options={getBrandOptionsForType(vehicleTypeFilter).map((b) => ({ value: b, label: b }))}
+                  grouped
                 />
                 {brandFilter2 === "Andere" ? (
                   <div>
@@ -1156,6 +1208,7 @@ export default function SuchenPage() {
                   value={brandFilter3}
                   onChange={(v) => { setBrandFilter3(v); setModelFilter3(""); setVariantFilter3(""); setCustomBrandText3(""); }}
                   options={getBrandOptionsForType(vehicleTypeFilter).map((b) => ({ value: b, label: b }))}
+                  grouped
                 />
                 {brandFilter3 === "Andere" ? (
                   <div>
@@ -1225,6 +1278,7 @@ export default function SuchenPage() {
               selected={colorFilter}
               onChange={setColorFilter}
               options={colorOptions}
+              colorDots
             />
             <div>
               <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1.5">Herstellerfarbe</label>
@@ -1616,28 +1670,24 @@ export default function SuchenPage() {
               <div>
                 {/* Klimaanlage / Klimaautomatik */}
                 <div className="mb-4">
-                  <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1.5">Klimaanlage / Klimaautomatik</label>
-                  <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2">
+                  <label className="block text-sm font-semibold text-gray-900 dark:text-gray-100 mb-3">Klimaanlage / Klimaautomatik</label>
+                  <select
+                    value={equipmentFeaturesFilter.find((f) => CLIMATE_OPTIONS.includes(f)) || ""}
+                    onChange={(e) => {
+                      const without = equipmentFeaturesFilter.filter((f) => !CLIMATE_OPTIONS.includes(f));
+                      if (e.target.value) {
+                        setEquipmentFeaturesFilter([...without, e.target.value]);
+                      } else {
+                        setEquipmentFeaturesFilter(without);
+                      }
+                    }}
+                    className="w-full sm:w-64 px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-[#111] text-sm text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-[#f14011] focus:border-transparent"
+                  >
+                    <option value="">Alle</option>
                     {CLIMATE_OPTIONS.map((opt) => (
-                      <label key={opt} className="flex items-center gap-2 cursor-pointer group">
-                        <input
-                          type="checkbox"
-                          checked={equipmentFeaturesFilter.includes(opt)}
-                          onChange={(e) => {
-                            if (e.target.checked) {
-                              setEquipmentFeaturesFilter([...equipmentFeaturesFilter, opt]);
-                            } else {
-                              setEquipmentFeaturesFilter(equipmentFeaturesFilter.filter((f) => f !== opt));
-                            }
-                          }}
-                          className="w-4 h-4 rounded border-gray-300 dark:border-gray-600 text-[#f14011] focus:ring-[#f14011] cursor-pointer"
-                        />
-                        <span className="text-sm text-gray-600 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-gray-200 transition-colors">
-                          {opt}
-                        </span>
-                      </label>
+                      <option key={opt} value={opt}>{opt}</option>
                     ))}
-                  </div>
+                  </select>
                 </div>
                 {/* Restliche Komfort-Features */}
                 <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2">

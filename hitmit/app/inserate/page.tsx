@@ -617,7 +617,7 @@ function DealerPurchasePanel({ vehicle }: { vehicle: Vehicle }) {
               </tr>
               <tr className="border-b border-blue-50">
                 <td className="px-3 py-2 text-gray-600">
-                  {vehicle.accidentFree ? "Unfallfrei" : "Unfallwagen"}
+                  {vehicle.accidentFree ? "Unfallfrei" : "Nicht fahrtüchtig"}
                 </td>
                 <td className={`px-3 py-2 text-right font-mono ${v.unfallBetrag >= 0 ? "text-green-600" : "text-red-600"}`}>
                   {v.unfallBetrag >= 0 ? "+" : ""}{v.unfallBetrag.toLocaleString("de-DE")} €
