@@ -2533,14 +2533,14 @@ function SubmitFormSection() {
               <FormInput
                 label="Modellbeschreibung"
                 type="text"
-                placeholder={formData.vehicleType === "motorcycle" ? "z.B. CB 650 R, MT-07" : "z.B. 320d xDrive, A 200 AMG Line"}
+                placeholder={({ "motorcycle": "z.B. CB 650 R, MT-07", "truck": "z.B. Actros 1845, TGX 18.510", "van": "z.B. Sprinter 314 CDI, Transit Custom", "motorhome": "z.B. B-Klasse ML-T 580, Van TI 650 MEG" })[formData.vehicleType] || "z.B. 320d xDrive, A 200 AMG Line"}
                 value={formData.modelDescription}
                 onChange={(e) => updateField("modelDescription", e.target.value)}
               />
               <FormInput
                 label="Variante"
                 type="text"
-                placeholder={formData.vehicleType === "motorcycle" ? "z.B. ABS, Rally, Adventure" : "z.B. Competition, GTI"}
+                placeholder={({ "motorcycle": "z.B. ABS, Rally, Adventure", "truck": "z.B. StreamSpace, GigaSpace", "van": "z.B. Kastenwagen, Hochdach, L2H2", "motorhome": "z.B. Alkoven, Teilintegriert, Kastenwagen" })[formData.vehicleType] || "z.B. Competition, GTI"}
                 value={formData.variant}
                 onChange={(e) => updateField("variant", e.target.value)}
               />
@@ -2775,7 +2775,7 @@ function SubmitFormSection() {
                 <FormInput
                   label="Herstellerfarbe"
                   type="text"
-                  placeholder="z.B. Alpinweiß, Tansanitblau"
+                  placeholder={({ "motorcycle": "z.B. Racing Red", "truck": "z.B. Fernverkehrsweiß", "van": "z.B. Reflexsilber", "motorhome": "z.B. Polarweiß" })[formData.vehicleType] || "z.B. Alpinweiß, Tansanitblau"}
                   value={formData.colorManufacturer}
                   onChange={(e) => updateField("colorManufacturer", e.target.value)}
                 />

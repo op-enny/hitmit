@@ -1294,7 +1294,7 @@ export default function SuchenPage() {
                 type="text"
                 value={manufacturerColorFilter}
                 onChange={(e) => setManufacturerColorFilter(e.target.value)}
-                placeholder={vehicleTypeFilter === "Motorrad" ? "z.B. Racing Red" : "z.B. Nardograu"}
+                placeholder={({ "Motorrad": "z.B. Racing Red", "LKW": "z.B. Fernverkehrsweiß", "Transporter": "z.B. Reflexsilber", "Wohnmobil": "z.B. Polarweiß" })[vehicleTypeFilter] || "z.B. Nardograu"}
                 className="w-full bg-white dark:bg-[#1a1a1a] border border-gray-200 dark:border-[#2a2a2a] rounded-xl px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 placeholder:text-gray-400 hover:border-[#f14011] focus:border-[#f14011] focus:outline-none transition-colors"
               />
             </div>
@@ -1303,12 +1303,12 @@ export default function SuchenPage() {
           {/* Section: Preis & Leistung */}
           <h3 className="text-sm font-semibold text-gray-900 dark:text-gray-100 uppercase tracking-wider mb-4">Preis & Leistung</h3>
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 mb-6">
-            <NumericInput label="Preis von (€)" value={priceMin} onChange={setPriceMin} placeholder={vehicleTypeFilter === "Motorrad" ? "z.B. 3000" : "z.B. 10000"} />
-            <NumericInput label="Preis bis (€)" value={priceMax} onChange={setPriceMax} placeholder={vehicleTypeFilter === "Motorrad" ? "z.B. 15000" : "z.B. 50000"} />
-            <NumericInput label="Leistung ab (PS)" value={powerMin} onChange={setPowerMin} placeholder={vehicleTypeFilter === "Motorrad" ? "z.B. 48" : "z.B. 200"} />
-            <NumericInput label="Leistung bis (PS)" value={powerMax} onChange={setPowerMax} placeholder={vehicleTypeFilter === "Motorrad" ? "z.B. 200" : "z.B. 500"} />
-            <NumericInput label="Kilometerstand ab" value={mileageMin} onChange={setMileageMin} placeholder={vehicleTypeFilter === "Motorrad" ? "z.B. 5000" : "z.B. 10000"} />
-            <NumericInput label="Kilometerstand bis" value={mileageMax} onChange={setMileageMax} placeholder={vehicleTypeFilter === "Motorrad" ? "z.B. 30000" : "z.B. 50000"} />
+            <NumericInput label="Preis von (€)" value={priceMin} onChange={setPriceMin} placeholder={({ "Motorrad": "z.B. 3000", "LKW": "z.B. 20000", "Transporter": "z.B. 10000", "Wohnmobil": "z.B. 30000" })[vehicleTypeFilter] || "z.B. 10000"} />
+            <NumericInput label="Preis bis (€)" value={priceMax} onChange={setPriceMax} placeholder={({ "Motorrad": "z.B. 15000", "LKW": "z.B. 150000", "Transporter": "z.B. 40000", "Wohnmobil": "z.B. 120000" })[vehicleTypeFilter] || "z.B. 50000"} />
+            <NumericInput label="Leistung ab (PS)" value={powerMin} onChange={setPowerMin} placeholder={({ "Motorrad": "z.B. 48", "LKW": "z.B. 300", "Transporter": "z.B. 100", "Wohnmobil": "z.B. 130" })[vehicleTypeFilter] || "z.B. 200"} />
+            <NumericInput label="Leistung bis (PS)" value={powerMax} onChange={setPowerMax} placeholder={({ "Motorrad": "z.B. 200", "LKW": "z.B. 600", "Transporter": "z.B. 200", "Wohnmobil": "z.B. 180" })[vehicleTypeFilter] || "z.B. 500"} />
+            <NumericInput label="Kilometerstand ab" value={mileageMin} onChange={setMileageMin} placeholder={({ "Motorrad": "z.B. 5000", "LKW": "z.B. 50000", "Transporter": "z.B. 20000", "Wohnmobil": "z.B. 10000" })[vehicleTypeFilter] || "z.B. 10000"} />
+            <NumericInput label="Kilometerstand bis" value={mileageMax} onChange={setMileageMax} placeholder={({ "Motorrad": "z.B. 30000", "LKW": "z.B. 500000", "Transporter": "z.B. 150000", "Wohnmobil": "z.B. 80000" })[vehicleTypeFilter] || "z.B. 50000"} />
             <MultiFilterSelect
               label="Getriebe"
               selected={transmissionFilter}
@@ -1321,9 +1321,9 @@ export default function SuchenPage() {
               onChange={setCylinderFilter}
               options={getCylinderOptionsForType(vehicleTypeFilter)}
             />
-            <NumericInput label="Hubraum von (ccm)" value={displacementMin} onChange={setDisplacementMin} placeholder="z.B. 1500" />
-            <NumericInput label="Hubraum bis (ccm)" value={displacementMax} onChange={setDisplacementMax} placeholder="z.B. 3000" />
-            <NumericInput label="Tankvolumen ab (L)" value={tankVolumeMin} onChange={setTankVolumeMin} placeholder="z.B. 50" />
+            <NumericInput label="Hubraum von (ccm)" value={displacementMin} onChange={setDisplacementMin} placeholder={({ "LKW": "z.B. 5000", "Transporter": "z.B. 1500", "Wohnmobil": "z.B. 2000" })[vehicleTypeFilter] || "z.B. 1500"} />
+            <NumericInput label="Hubraum bis (ccm)" value={displacementMax} onChange={setDisplacementMax} placeholder={({ "LKW": "z.B. 13000", "Transporter": "z.B. 3000", "Wohnmobil": "z.B. 3000" })[vehicleTypeFilter] || "z.B. 3000"} />
+            <NumericInput label="Tankvolumen ab (L)" value={tankVolumeMin} onChange={setTankVolumeMin} placeholder={({ "LKW": "z.B. 200", "Transporter": "z.B. 60", "Wohnmobil": "z.B. 80" })[vehicleTypeFilter] || "z.B. 50"} />
           </div>
 
           {/* Section: Details */}
@@ -1839,7 +1839,7 @@ export default function SuchenPage() {
               type="text"
               value={ausstattungSearch}
               onChange={(e) => setAusstattungSearch(e.target.value)}
-              placeholder={vehicleTypeFilter === "Motorrad" ? "z.B. Sturzbügel, Topcase, Windschild" : "z.B. Panoramadach, Sitzheizung, Apple CarPlay"}
+              placeholder={({ "Motorrad": "z.B. Sturzbügel, Topcase, Windschild", "LKW": "z.B. Standheizung, Kühlbox, Luftfederung", "Transporter": "z.B. Trennwand, Laderaumverkleidung, Klimaanlage", "Wohnmobil": "z.B. Markise, Solaranlage, Warmwasserboiler" })[vehicleTypeFilter] || "z.B. Panoramadach, Sitzheizung, Apple CarPlay"}
               className="w-full bg-white dark:bg-[#1a1a1a] border border-gray-200 dark:border-[#2a2a2a] rounded-xl px-4 py-2.5 text-sm hover:border-[#f14011] focus:border-[#f14011] focus:outline-none transition-colors"
             />
             <p className="text-xs text-gray-400 mt-1.5">Mehrere Begriffe mit Komma trennen – durchsucht alle Ausstattungskategorien</p>
