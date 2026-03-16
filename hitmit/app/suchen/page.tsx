@@ -742,7 +742,14 @@ export default function SuchenPage() {
     }
     if (equipmentFeaturesFilter.length > 0) {
       const allFeatures = [...v.comfortFeatures, ...v.exteriorFeatures, ...v.multimediaFeatures];
-      if (!equipmentFeaturesFilter.every((f) => allFeatures.some((vf) => vf.toLowerCase().includes(f.toLowerCase())))) return false;
+      const climateSelected = equipmentFeaturesFilter.find((f) => CLIMATE_OPTIONS.includes(f));
+      const nonClimateFilters = equipmentFeaturesFilter.filter((f) => !CLIMATE_OPTIONS.includes(f));
+      if (climateSelected) {
+        const minIndex = CLIMATE_OPTIONS.indexOf(climateSelected);
+        const validClimate = CLIMATE_OPTIONS.slice(minIndex);
+        if (!allFeatures.some((vf) => validClimate.some((vc) => vf.toLowerCase().includes(vc.toLowerCase())))) return false;
+      }
+      if (!nonClimateFilters.every((f) => allFeatures.some((vf) => vf.toLowerCase().includes(f.toLowerCase())))) return false;
     }
     return true;
   });
@@ -1668,7 +1675,7 @@ export default function SuchenPage() {
               <div>
                 {/* Klimaanlage / Klimaautomatik */}
                 <div className="mb-4">
-                  <label className="block text-sm font-semibold text-gray-900 dark:text-gray-100 mb-3">Klimaanlage / Klimaautomatik</label>
+                  <label className="block text-sm font-semibold text-gray-900 dark:text-gray-100 mb-3">Klimaanlage / Klimaautomatik (mind.)</label>
                   <select
                     value={equipmentFeaturesFilter.find((f) => CLIMATE_OPTIONS.includes(f)) || ""}
                     onChange={(e) => {
