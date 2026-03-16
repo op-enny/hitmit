@@ -414,29 +414,29 @@ export const CAR_BRANDS_MODELS: Record<string, string[]> = {
   "Audi": ["A1", "A3", "A4", "A5", "A6", "A7", "A8", "Q2", "Q3", "Q4 e-tron", "Q5", "Q7", "Q8", "e-tron", "e-tron GT", "RS3", "RS4", "RS5", "RS6", "RS7", "RS Q8", "S3", "S4", "S5", "S6", "S7", "S8", "TT", "R8", "80", "90", "100", "200", "V8", "Urquattro", "Coupé", "Cabriolet"],
   "BMW": [
     // 1er
-    "1er", "114i", "116i", "118i", "120i", "125i", "128ti", "M135i", "M135i xDrive", "M140i",
+    "1er", "114i", "116i", "118i", "120i", "125i", "128ti",
     "114d", "116d", "118d", "120d", "125d",
     // 2er
-    "2er", "218i", "220i", "225i", "230i", "M235i xDrive", "M240i xDrive",
+    "2er", "218i", "220i", "225i", "230i",
     "216d", "218d", "220d", "225d", "225xe",
     // 2er Gran Coupé
-    "218i Gran Coupé", "220i Gran Coupé", "228i Gran Coupé", "M235i xDrive Gran Coupé",
+    "218i Gran Coupé", "220i Gran Coupé", "228i Gran Coupé",
     "216d Gran Coupé", "218d Gran Coupé", "220d Gran Coupé",
     // 3er
-    "3er", "316i", "318i", "320i", "325i", "328i", "330i", "330e", "335i", "340i", "M340i", "M340i xDrive",
-    "316d", "318d", "320d", "325d", "328d", "330d", "335d", "M340d xDrive",
+    "3er", "316i", "318i", "320i", "325i", "328i", "330i", "330e", "335i", "340i",
+    "316d", "318d", "320d", "325d", "328d", "330d", "335d",
     // 3er Gran Turismo
     "318i Gran Turismo", "320i Gran Turismo", "328i Gran Turismo", "330i Gran Turismo", "335i Gran Turismo", "340i Gran Turismo",
     "318d Gran Turismo", "320d Gran Turismo", "325d Gran Turismo", "330d Gran Turismo", "335d Gran Turismo",
     // 4er
-    "4er", "420i", "428i", "430i", "435i", "440i", "M440i xDrive",
+    "4er", "420i", "428i", "430i", "435i", "440i",
     "418d", "420d", "425d", "430d", "435d",
     // 4er Gran Coupé
-    "420i Gran Coupé", "428i Gran Coupé", "430i Gran Coupé", "435i Gran Coupé", "440i Gran Coupé", "M440i xDrive Gran Coupé",
+    "420i Gran Coupé", "428i Gran Coupé", "430i Gran Coupé", "435i Gran Coupé", "440i Gran Coupé",
     "418d Gran Coupé", "420d Gran Coupé", "425d Gran Coupé", "430d Gran Coupé", "435d Gran Coupé",
     // 5er
-    "5er", "520i", "523i", "525i", "528i", "530i", "530e", "535i", "540i", "545e", "M550i xDrive",
-    "518d", "520d", "525d", "530d", "535d", "540d", "M550d xDrive",
+    "5er", "520i", "523i", "525i", "528i", "530i", "530e", "535i", "540i", "545e",
+    "518d", "520d", "525d", "530d", "535d", "540d",
     // 5er Gran Turismo
     "528i Gran Turismo", "535i Gran Turismo", "550i Gran Turismo",
     "520d Gran Turismo", "525d Gran Turismo", "530d Gran Turismo", "535d Gran Turismo",
@@ -450,29 +450,41 @@ export const CAR_BRANDS_MODELS: Record<string, string[]> = {
     "640i Gran Coupé", "650i Gran Coupé",
     "640d Gran Coupé",
     // 7er
-    "7er", "725i", "728i", "730i", "735i", "740i", "745e", "750i", "760i", "M760i xDrive", "M760e xDrive",
+    "7er", "725i", "728i", "730i", "735i", "740i", "745e", "750i", "760i",
     "725d", "728d", "730d", "735d", "740d", "745d", "750d",
     // 8er
-    "8er", "840i", "M850i xDrive",
+    "8er", "840i",
     "840d", "840d xDrive",
     // 8er Gran Coupé
-    "840i Gran Coupé", "M850i xDrive Gran Coupé",
+    "840i Gran Coupé",
     "840d xDrive Gran Coupé",
     // X-Modelle
     "X1", "X1 sDrive16i", "X1 sDrive18i", "X1 sDrive20i", "X1 xDrive20i", "X1 xDrive25i", "X1 xDrive25e",
     "X1 sDrive16d", "X1 sDrive18d", "X1 xDrive18d", "X1 xDrive20d", "X1 xDrive25d",
-    "X2", "X2 sDrive18i", "X2 sDrive20i", "X2 xDrive20i", "X2 M35i",
+    "X2", "X2 sDrive18i", "X2 sDrive20i", "X2 xDrive20i",
     "X2 sDrive16d", "X2 sDrive18d", "X2 xDrive20d", "X2 xDrive25e",
-    "X3", "X3 xDrive20i", "X3 xDrive30i", "X3 M40i", "X3 xDrive30e",
-    "X3 sDrive18d", "X3 xDrive20d", "X3 xDrive30d", "X3 M40d",
-    "X4", "X4 xDrive20i", "X4 xDrive30i", "X4 M40i",
-    "X4 xDrive20d", "X4 xDrive30d", "X4 M40d",
-    "X5", "X5 xDrive30i", "X5 xDrive40i", "X5 xDrive50i", "X5 M50i", "X5 xDrive45e",
-    "X5 xDrive25d", "X5 xDrive30d", "X5 xDrive40d", "X5 M50d",
-    "X6", "X6 xDrive35i", "X6 xDrive40i", "X6 xDrive50i", "X6 M50i",
-    "X6 xDrive30d", "X6 xDrive40d", "X6 M50d",
-    "X7", "X7 xDrive40i", "X7 M60i xDrive",
-    "X7 xDrive30d", "X7 xDrive40d", "X7 M50d",
+    "X3", "X3 xDrive20i", "X3 xDrive30i", "X3 xDrive30e",
+    "X3 sDrive18d", "X3 xDrive20d", "X3 xDrive30d",
+    "X4", "X4 xDrive20i", "X4 xDrive30i",
+    "X4 xDrive20d", "X4 xDrive30d",
+    "X5", "X5 xDrive30i", "X5 xDrive40i", "X5 xDrive50i", "X5 xDrive45e",
+    "X5 xDrive25d", "X5 xDrive30d", "X5 xDrive40d",
+    "X6", "X6 xDrive35i", "X6 xDrive40i", "X6 xDrive50i",
+    "X6 xDrive30d", "X6 xDrive40d",
+    "X7", "X7 xDrive40i",
+    "X7 xDrive30d", "X7 xDrive40d",
+    // M Performance
+    "M135i", "M135i xDrive", "M140i",
+    "M235i xDrive", "M240i xDrive", "M235i xDrive Gran Coupé",
+    "M340i", "M340i xDrive", "M340d xDrive",
+    "M440i xDrive", "M440i xDrive Gran Coupé",
+    "M550i xDrive", "M550d xDrive",
+    "M760i xDrive", "M760e xDrive",
+    "M850i xDrive", "M850i xDrive Gran Coupé",
+    "X2 M35i", "X3 M40i", "X3 M40d", "X4 M40i", "X4 M40d",
+    "X5 M50i", "X5 M50d", "X6 M50i", "X6 M50d", "X7 M60i xDrive", "X7 M50d",
+    "Z4 M40i",
+    "i4 M50", "i5 M60 xDrive", "i7 M70 xDrive", "iX M60",
     // M Rein (Pure M)
     "M2", "M2 Competition", "M2 CS",
     "M3", "M3 Competition", "M3 CS", "M3 CSL",
@@ -485,13 +497,13 @@ export const CAR_BRANDS_MODELS: Record<string, string[]> = {
     "X6 M", "X6 M Competition",
     "XM", "XM Label Red",
     // Z-Modelle
-    "Z1", "Z3", "Z4", "Z4 sDrive20i", "Z4 sDrive30i", "Z4 M40i", "Z8",
+    "Z1", "Z3", "Z4", "Z4 sDrive20i", "Z4 sDrive30i", "Z8",
     // i-Modelle (Elektro)
     "i3", "i3s",
-    "i4", "i4 eDrive35", "i4 eDrive40", "i4 M50",
-    "i5", "i5 eDrive40", "i5 M60 xDrive",
-    "i7", "i7 eDrive50", "i7 xDrive60", "i7 M70 xDrive",
-    "iX", "iX xDrive40", "iX xDrive50", "iX M60",
+    "i4", "i4 eDrive35", "i4 eDrive40",
+    "i5", "i5 eDrive40",
+    "i7", "i7 eDrive50", "i7 xDrive60",
+    "iX", "iX xDrive40", "iX xDrive50",
     "iX1", "iX1 xDrive30",
     "iX3",
     // Klassiker
