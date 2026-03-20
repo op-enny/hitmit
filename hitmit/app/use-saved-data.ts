@@ -58,6 +58,7 @@ export interface SavedSearch {
     interiorColorFilter: string | string[];
     seatMaterialFilter: string | string[];
     climateZoneFilter: string;
+    rimTypeFilter: string;
     rimSizeFilter: string;
     tireTypeFilter: string;
     paintProtectionFilmFilter: string;
@@ -191,6 +192,7 @@ function migrateSearch(raw: any): SavedSearch {
       interiorColorFilter: f.interiorColorFilter ?? [],
       seatMaterialFilter: f.seatMaterialFilter ?? [],
       climateZoneFilter,
+      rimTypeFilter: f.rimTypeFilter ?? "Alle",
       rimSizeFilter,
       tireTypeFilter: f.tireTypeFilter ?? "Alle",
       paintProtectionFilmFilter: f.paintProtectionFilmFilter ?? "Alle",

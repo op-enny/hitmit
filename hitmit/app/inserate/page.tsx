@@ -31,6 +31,7 @@ import {
   cylinderOptions,
   interiorColorOptions,
   seatMaterialOptions,
+  rimTypeOptions,
   tireTypeOptions,
   emissionClassOptions,
   environmentalBadgeOptions,
@@ -1038,6 +1039,7 @@ function InseratePageInner() {
   const [interiorColorFilter, setInteriorColorFilter] = useState<string[]>([]);
   const [seatMaterialFilter, setSeatMaterialFilter] = useState<string[]>([]);
   const [climateZoneFilter, setClimateZoneFilter] = useState("");
+  const [rimTypeFilter, setRimTypeFilter] = useState("Alle");
   const [rimSizeFilter, setRimSizeFilter] = useState("");
   const [tireTypeFilter, setTireTypeFilter] = useState("Alle");
   const [paintProtectionFilmFilter, setPaintProtectionFilmFilter] = useState("Alle");
@@ -1094,6 +1096,7 @@ function InseratePageInner() {
     interiorColorFilter.length > 0,
     seatMaterialFilter.length > 0,
     climateZoneFilter !== "",
+    rimTypeFilter !== "Alle",
     rimSizeFilter !== "",
     tireTypeFilter !== "Alle",
     paintProtectionFilmFilter !== "Alle",
@@ -1328,6 +1331,7 @@ function InseratePageInner() {
     if (interiorColorFilter.length > 0 && (!v.interiorColor || !interiorColorFilter.some((ic) => v.interiorColor!.toLowerCase().includes(ic.toLowerCase())))) return false;
     if (seatMaterialFilter.length > 0 && (!v.seatMaterial || !seatMaterialFilter.includes(v.seatMaterial))) return false;
     if (climateZoneFilter !== "" && v.climateZones !== Number(climateZoneFilter)) return false;
+    if (rimTypeFilter !== "Alle" && (v.rimType || "") !== rimTypeFilter) return false;
     if (rimSizeFilter !== "" && v.rimSize !== Number(rimSizeFilter)) return false;
     if (tireTypeFilter !== "Alle" && (v.tireType || "") !== tireTypeFilter) return false;
     if (paintProtectionFilmFilter !== "Alle") {
@@ -1755,7 +1759,7 @@ function InseratePageInner() {
                     cylinderFilter, displacementMin, displacementMax, tankVolumeMin,
                     ausstattungSearch: "",
                     manufacturerColorFilter, interiorColorFilter,
-                    seatMaterialFilter, climateZoneFilter, rimSizeFilter, tireTypeFilter,
+                    seatMaterialFilter, climateZoneFilter, rimTypeFilter, rimSizeFilter, tireTypeFilter,
                     paintProtectionFilmFilter, noRepaintFilter,
                     serviceBookFilter, manufacturerWarrantyFilter,
                     nonSmokerFilter, petFreeFilter, tradeInFilter: false,
@@ -2063,6 +2067,22 @@ function InseratePageInner() {
                     placeholder="z.B. 2"
                     className="w-full bg-gray-50 dark:bg-[#1a1a1a] border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-gray-700 placeholder:text-gray-400 hover:border-[#f14011] focus:border-[#f14011] focus:outline-none transition-colors"
                   />
+                </div>
+              )}
+
+              {/* Rim Type */}
+              {isFieldVisibleForType("rimSize", vehicleTypeFilter) && (
+                <div>
+                  <label className="block text-xs font-medium text-gray-500 mb-1.5">Felgenart</label>
+                  <select
+                    value={rimTypeFilter}
+                    onChange={(e) => setRimTypeFilter(e.target.value)}
+                    className="w-full bg-gray-50 dark:bg-[#1a1a1a] border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-gray-700 hover:border-[#f14011] focus:border-[#f14011] focus:outline-none transition-colors"
+                  >
+                    {rimTypeOptions.map((t) => (
+                      <option key={t} value={t}>{t}</option>
+                    ))}
+                  </select>
                 </div>
               )}
 

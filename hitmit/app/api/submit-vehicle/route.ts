@@ -88,6 +88,7 @@ interface VehicleSubmissionDto {
   cameraFront?: boolean;
   cameraRear?: boolean;
   climateZones?: number;
+  rimType?: string;
   rimSize?: number;
   tireType?: string;
   tireConditionFront?: string;
@@ -449,7 +450,11 @@ function generateEmailHtml(data: VehicleSubmissionDto, imageUrls: string[], pain
           </div>
           <div class="grid-row">
             <div class="grid-cell"><div class="label">Klimazonen</div><div class="value">${n(data.climateZones)}</div></div>
+            <div class="grid-cell"><div class="label">Felgenart</div><div class="value">${s(data.rimType)}</div></div>
+          </div>
+          <div class="grid-row">
             <div class="grid-cell"><div class="label">Felgengröße</div><div class="value">${data.rimSize !== undefined ? `${n(data.rimSize)} Zoll` : "-"}</div></div>
+            <div class="grid-cell"></div>
           </div>
         </div>
       </div>

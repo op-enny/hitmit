@@ -178,6 +178,7 @@ function applyFilters(filters: SavedSearch["filters"]): Vehicle[] {
     if (filters.climateZoneFilter && filters.climateZoneFilter !== "" && filters.climateZoneFilter !== "Alle" && v.climateZones !== Number(filters.climateZoneFilter)) return false;
     if (filters.rimSizeFilter && filters.rimSizeFilter !== "" && filters.rimSizeFilter !== "Alle" && v.rimSize !== Number(filters.rimSizeFilter)) return false;
     if (filters.tireTypeFilter && filters.tireTypeFilter !== "Alle" && (v.tireType || "") !== filters.tireTypeFilter) return false;
+    if (filters.rimTypeFilter && filters.rimTypeFilter !== "Alle" && (v.rimType || "") !== filters.rimTypeFilter) return false;
     if (filters.paintProtectionFilmFilter && filters.paintProtectionFilmFilter !== "Alle") {
       if (filters.paintProtectionFilmFilter === "Ja" && !v.paintProtectionFilm) return false;
       if (filters.paintProtectionFilmFilter === "Nein" && v.paintProtectionFilm) return false;
@@ -430,6 +431,7 @@ function SearchCard({
   if (f.climateZoneFilter && f.climateZoneFilter !== "" && f.climateZoneFilter !== "Alle") filterTags.push(`${f.climateZoneFilter}-Zonen Klima`);
   if (f.rimSizeFilter && f.rimSizeFilter !== "" && f.rimSizeFilter !== "Alle") filterTags.push(`${f.rimSizeFilter} Zoll`);
   if (f.tireTypeFilter && f.tireTypeFilter !== "Alle") filterTags.push(f.tireTypeFilter);
+  if (f.rimTypeFilter && f.rimTypeFilter !== "Alle") filterTags.push(f.rimTypeFilter);
   if (f.paintProtectionFilmFilter && f.paintProtectionFilmFilter !== "Alle") filterTags.push(`Steinschlagfolie: ${f.paintProtectionFilmFilter}`);
   if (f.noRepaintFilter && f.noRepaintFilter !== "Alle") filterTags.push(`Nachlackierungsfrei: ${f.noRepaintFilter}`);
   if (f.serviceBookFilter && f.serviceBookFilter !== "Alle") filterTags.push(`Scheckheft: ${f.serviceBookFilter}`);

@@ -55,6 +55,7 @@ export interface Vehicle {
   interiorColor?: string;
   seatMaterial?: string;
   climateZones?: number;
+  rimType?: string;
   rimSize?: number;
   paintProtectionFilm?: boolean;
   noRepaint?: boolean;
@@ -917,6 +918,7 @@ export const seatMaterialOptions = ["Alle", "Leder", "Teilleder", "Stoff", "Alca
 export const climateZoneOptions = ["Alle", "1", "2", "3", "4"];
 export const rimSizeOptions = ["Alle", "15", "16", "17", "18", "19", "20", "21", "22"];
 
+export const rimTypeOptions = ["Alle", "Alufelgen", "Stahlfelgen"];
 export const tireTypeOptions = ["Alle", "Sommerreifen", "Winterreifen", "Allwetterreifen"];
 export const emissionClassOptions = ["Alle", "Euro 6e", "Euro 6d", "Euro 6d-Temp", "Euro 6c", "Euro 6b", "Euro 6", "Euro 5", "Euro 4", "Euro 3", "Euro 2", "Euro 1", "Emissionsfrei"];
 export const environmentalBadgeOptions = ["Alle", "Grün (4)", "Gelb (3)", "Rot (2)", "Keine"];

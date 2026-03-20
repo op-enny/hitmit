@@ -1110,6 +1110,7 @@ interface VehicleFormData {
   cameraFront: boolean | null;
   cameraRear: boolean | null;
   climateZones: string;
+  rimType: string;
   rimSize: string;
   tireType: string;
   tireConditionFront: string;
@@ -1201,6 +1202,7 @@ const initialFormData: VehicleFormData = {
   cameraFront: null,
   cameraRear: null,
   climateZones: "",
+  rimType: "",
   rimSize: "",
   tireType: "",
   tireConditionFront: "",
@@ -2846,6 +2848,16 @@ function SubmitFormSection() {
               </div>
               {isFieldVisibleForType("rimSize", getFormTypeLabel(formData.vehicleType)) && (
                 <div className="grid md:grid-cols-3 gap-6">
+                  <FormSelect
+                    label="Felgenart"
+                    options={[
+                      { value: "", label: "Bitte wählen" },
+                      { value: "Alufelgen", label: "Alufelgen" },
+                      { value: "Stahlfelgen", label: "Stahlfelgen" },
+                    ]}
+                    value={formData.rimType}
+                    onChange={(e) => updateField("rimType", e.target.value)}
+                  />
                   <FormInput
                     label="Felgengröße (Zoll)"
                     type="text"

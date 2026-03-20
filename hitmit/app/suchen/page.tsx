@@ -23,6 +23,7 @@ import {
   EQUIPMENT_FEATURE_LIST,
   CAR_BRANDS_MODELS,
   MERCEDES_MOTORIZATIONS,
+  rimTypeOptions,
   tireTypeOptions,
   emissionClassOptions,
   environmentalBadgeOptions,
@@ -506,6 +507,9 @@ export default function SuchenPage() {
   const [showMotorizationDropdown, setShowMotorizationDropdown] = useState(false);
   const motorizationRef = useRef<HTMLDivElement>(null);
   const [variantFilter, setVariantFilter] = useState("");
+  const [equipSearch, setEquipSearch] = useState("");
+  const [equipSearch2, setEquipSearch2] = useState("");
+  const [equipSearch3, setEquipSearch3] = useState("");
   const [descriptionSearch, setDescriptionSearch] = useState("");
   const [vehicleTypeFilter, setVehicleTypeFilter] = useState("PKW");
   const [vehicleCategoryFilter, setVehicleCategoryFilter] = useState<string[]>([]);
@@ -524,6 +528,7 @@ export default function SuchenPage() {
   const [interiorColorFilter, setInteriorColorFilter] = useState<string[]>([]);
   const [seatMaterialFilter, setSeatMaterialFilter] = useState<string[]>([]);
   const [climateZoneFilter, setClimateZoneFilter] = useState("");
+  const [rimTypeFilter, setRimTypeFilter] = useState("Alle");
   const [rimSizeFilter, setRimSizeFilter] = useState("");
   const [tireTypeFilter, setTireTypeFilter] = useState("Alle");
   const [paintProtectionFilmFilter, setPaintProtectionFilmFilter] = useState("Alle");
@@ -567,10 +572,10 @@ export default function SuchenPage() {
   // Filter logic
   const filtered = vehicles.filter((v) => {
     // Brand+Model+Variant: ODER-Logik über bis zu 3 Paare
-    const brandModelPairs: { brand: string; model: string; variant: string; customText?: string }[] = [];
-    if (brandFilter !== "Alle Marken") brandModelPairs.push({ brand: brandFilter, model: modelFilter, variant: variantFilter, customText: brandFilter === "Andere" ? customBrandText : undefined });
-    if (brandFilter2 !== "Alle Marken") brandModelPairs.push({ brand: brandFilter2, model: modelFilter2, variant: variantFilter2, customText: brandFilter2 === "Andere" ? customBrandText2 : undefined });
-    if (brandFilter3 !== "Alle Marken") brandModelPairs.push({ brand: brandFilter3, model: modelFilter3, variant: variantFilter3, customText: brandFilter3 === "Andere" ? customBrandText3 : undefined });
+    const brandModelPairs: { brand: string; model: string; variant: string; customText?: string; equip: string }[] = [];
+    if (brandFilter !== "Alle Marken") brandModelPairs.push({ brand: brandFilter, model: modelFilter, variant: variantFilter, customText: brandFilter === "Andere" ? customBrandText : undefined, equip: equipSearch });
+    if (brandFilter2 !== "Alle Marken") brandModelPairs.push({ brand: brandFilter2, model: modelFilter2, variant: variantFilter2, customText: brandFilter2 === "Andere" ? customBrandText2 : undefined, equip: equipSearch2 });
+    if (brandFilter3 !== "Alle Marken") brandModelPairs.push({ brand: brandFilter3, model: modelFilter3, variant: variantFilter3, customText: brandFilter3 === "Andere" ? customBrandText3 : undefined, equip: equipSearch3 });
 
     if (brandModelPairs.length > 0) {
       const matchesAny = brandModelPairs.some((pair) => {
@@ -579,6 +584,10 @@ export default function SuchenPage() {
           const matchesBrandOrModel = v.brand.toLowerCase().includes(search) || v.model.toLowerCase().includes(search);
           if (!matchesBrandOrModel) return false;
           if (pair.variant !== "" && !v.variant.toLowerCase().includes(pair.variant.toLowerCase())) return false;
+          if (pair.equip !== "") {
+            const allFeatures = [...(v.comfortFeatures || []), ...(v.safetyFeatures || []), ...(v.exteriorFeatures || []), ...(v.multimediaFeatures || [])].join(" ").toLowerCase();
+            if (!allFeatures.includes(pair.equip.toLowerCase())) return false;
+          }
           return true;
         }
         if (v.brand !== pair.brand) return false;
@@ -590,6 +599,10 @@ export default function SuchenPage() {
           }
         }
         if (pair.variant !== "" && !v.variant.toLowerCase().includes(pair.variant.toLowerCase())) return false;
+        if (pair.equip !== "") {
+          const allFeatures = [...(v.comfortFeatures || []), ...(v.safetyFeatures || []), ...(v.exteriorFeatures || []), ...(v.multimediaFeatures || [])].join(" ").toLowerCase();
+          if (!allFeatures.includes(pair.equip.toLowerCase())) return false;
+        }
         return true;
       });
       if (!matchesAny) return false;
@@ -709,6 +722,7 @@ export default function SuchenPage() {
     if (interiorColorFilter.length > 0 && (!v.interiorColor || !interiorColorFilter.some((ic) => v.interiorColor!.toLowerCase().includes(ic.toLowerCase())))) return false;
     if (seatMaterialFilter.length > 0 && !seatMaterialFilter.includes(v.seatMaterial ?? "")) return false;
     if (climateZoneFilter !== "" && (v.climateZones === undefined || v.climateZones < Number(climateZoneFilter))) return false;
+    if (rimTypeFilter !== "Alle" && (v.rimType || "") !== rimTypeFilter) return false;
     if (rimSizeFilter !== "" && v.rimSize !== Number(rimSizeFilter)) return false;
     if (tireTypeFilter !== "Alle" && (v.tireType || "") !== tireTypeFilter) return false;
     if (paintProtectionFilmFilter !== "Alle") {
@@ -797,6 +811,7 @@ export default function SuchenPage() {
     interiorColorFilter.length > 0,
     seatMaterialFilter.length > 0,
     climateZoneFilter !== "",
+    rimTypeFilter !== "Alle",
     rimSizeFilter !== "",
     tireTypeFilter !== "Alle",
     paintProtectionFilmFilter !== "Alle",
@@ -888,6 +903,7 @@ export default function SuchenPage() {
     if (interiorColorFilter.length > 0) parts.push(`Innen: ${interiorColorFilter.join(", ")}`);
     if (seatMaterialFilter.length > 0) parts.push(seatMaterialFilter.join(", "));
     if (climateZoneFilter !== "") parts.push(`mind. ${climateZoneFilter}-Zonen Klima`);
+    if (rimTypeFilter !== "Alle") parts.push(rimTypeFilter);
     if (rimSizeFilter !== "") parts.push(`${rimSizeFilter} Zoll`);
     if (tireTypeFilter !== "Alle") parts.push(tireTypeFilter);
     if (paintProtectionFilmFilter !== "Alle") parts.push(`Steinschlagfolie: ${paintProtectionFilmFilter}`);
@@ -922,7 +938,7 @@ export default function SuchenPage() {
         huFilter, previousOwnersFilter,
         cylinderFilter, displacementMin, displacementMax, tankVolumeMin,
         manufacturerColorFilter, interiorColorFilter,
-        seatMaterialFilter, climateZoneFilter, rimSizeFilter, tireTypeFilter,
+        seatMaterialFilter, climateZoneFilter, rimTypeFilter, rimSizeFilter, tireTypeFilter,
         paintProtectionFilmFilter, noRepaintFilter,
         serviceBookFilter, manufacturerWarrantyFilter,
         nonSmokerFilter, petFreeFilter, tradeInFilter,
@@ -1124,6 +1140,19 @@ export default function SuchenPage() {
                 className="w-full bg-white dark:bg-[#1a1a1a] border border-gray-200 dark:border-[#2a2a2a] rounded-xl px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 placeholder:text-gray-400 hover:border-[#f14011] focus:border-[#f14011] focus:outline-none transition-colors"
               />
             </div>
+            {/* Equipment search per row — visible when multiple brands selected */}
+            {showBrandRow2 && (
+              <div>
+                <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1.5">Ausstattung</label>
+                <input
+                  type="text"
+                  value={equipSearch}
+                  onChange={(e) => setEquipSearch(e.target.value)}
+                  placeholder="z.B. Panoramadach, LED"
+                  className="w-full bg-white dark:bg-[#1a1a1a] border border-gray-200 dark:border-[#2a2a2a] rounded-xl px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 placeholder:text-gray-400 hover:border-[#f14011] focus:border-[#f14011] focus:outline-none transition-colors"
+                />
+              </div>
+            )}
             {/* Description search — visible when multiple brands selected */}
             {showBrandRow2 && (
               <div>
@@ -1196,17 +1225,27 @@ export default function SuchenPage() {
                     className="w-full bg-white dark:bg-[#1a1a1a] border border-gray-200 dark:border-[#2a2a2a] rounded-xl px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 placeholder:text-gray-400 hover:border-[#f14011] focus:border-[#f14011] focus:outline-none transition-colors"
                   />
                 </div>
+                <div>
+                  <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1.5">Ausstattung 2</label>
+                  <input
+                    type="text"
+                    value={equipSearch2}
+                    onChange={(e) => setEquipSearch2(e.target.value)}
+                    placeholder="z.B. Panoramadach, LED"
+                    className="w-full bg-white dark:bg-[#1a1a1a] border border-gray-200 dark:border-[#2a2a2a] rounded-xl px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 placeholder:text-gray-400 hover:border-[#f14011] focus:border-[#f14011] focus:outline-none transition-colors"
+                  />
+                </div>
                 <div className="flex items-end">
                   <button
                     type="button"
                     onClick={() => {
                       if (showBrandRow3) {
                         // Zeile 3 hochrutschen nach Zeile 2
-                        setBrandFilter2(brandFilter3); setModelFilter2(modelFilter3); setVariantFilter2(variantFilter3); setCustomBrandText2(customBrandText3);
-                        setBrandFilter3("Alle Marken"); setModelFilter3(""); setVariantFilter3(""); setCustomBrandText3("");
+                        setBrandFilter2(brandFilter3); setModelFilter2(modelFilter3); setVariantFilter2(variantFilter3); setCustomBrandText2(customBrandText3); setEquipSearch2(equipSearch3);
+                        setBrandFilter3("Alle Marken"); setModelFilter3(""); setVariantFilter3(""); setCustomBrandText3(""); setEquipSearch3("");
                         setShowBrandRow3(false);
                       } else {
-                        setBrandFilter2("Alle Marken"); setModelFilter2(""); setVariantFilter2(""); setCustomBrandText2("");
+                        setBrandFilter2("Alle Marken"); setModelFilter2(""); setVariantFilter2(""); setCustomBrandText2(""); setEquipSearch2("");
                         setShowBrandRow2(false);
                       }
                     }}
@@ -1277,10 +1316,20 @@ export default function SuchenPage() {
                     className="w-full bg-white dark:bg-[#1a1a1a] border border-gray-200 dark:border-[#2a2a2a] rounded-xl px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 placeholder:text-gray-400 hover:border-[#f14011] focus:border-[#f14011] focus:outline-none transition-colors"
                   />
                 </div>
+                <div>
+                  <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1.5">Ausstattung 3</label>
+                  <input
+                    type="text"
+                    value={equipSearch3}
+                    onChange={(e) => setEquipSearch3(e.target.value)}
+                    placeholder="z.B. Panoramadach, LED"
+                    className="w-full bg-white dark:bg-[#1a1a1a] border border-gray-200 dark:border-[#2a2a2a] rounded-xl px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 placeholder:text-gray-400 hover:border-[#f14011] focus:border-[#f14011] focus:outline-none transition-colors"
+                  />
+                </div>
                 <div className="flex items-end">
                   <button
                     type="button"
-                    onClick={() => { setBrandFilter3("Alle Marken"); setModelFilter3(""); setVariantFilter3(""); setCustomBrandText3(""); setShowBrandRow3(false); }}
+                    onClick={() => { setBrandFilter3("Alle Marken"); setModelFilter3(""); setVariantFilter3(""); setCustomBrandText3(""); setEquipSearch3(""); setShowBrandRow3(false); }}
                     className="flex items-center gap-1 px-3 py-2.5 text-sm font-medium text-gray-400 border border-gray-200 dark:border-[#2a2a2a] rounded-xl hover:text-red-500 hover:border-red-300 transition-colors"
                   >
                     <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path strokeLinecap="round" d="M6 18L18 6M6 6l12 12" /></svg>
@@ -1530,6 +1579,14 @@ export default function SuchenPage() {
             )}
             {isFieldVisibleForType("climateZones", vehicleTypeFilter) && (
               <NumericInput label="Klimazonen (mind.)" value={climateZoneFilter} onChange={setClimateZoneFilter} placeholder="z.B. 2" />
+            )}
+            {isFieldVisibleForType("rimSize", vehicleTypeFilter) && (
+              <FilterSelect
+                label="Felgenart"
+                value={rimTypeFilter}
+                onChange={setRimTypeFilter}
+                options={rimTypeOptions.map((t) => ({ value: t, label: t }))}
+              />
             )}
             {isFieldVisibleForType("rimSize", vehicleTypeFilter) && (
               <NumericInput label="Felgengröße (Zoll)" value={rimSizeFilter} onChange={setRimSizeFilter} placeholder="z.B. 19" />
