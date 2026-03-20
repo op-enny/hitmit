@@ -999,6 +999,8 @@ export const COMFORT_FEATURES_BY_TYPE: Record<string, string[]> = {
     "Elektrische Sitze", "Massagesitze", "Panoramadach", "Schiebedach",
     "Elektrische Heckklappe", "Keyless Entry", "Standheizung", "Tempomat",
     "Abstandsregeltempomat", "Sitzbelüftung vorne", "Sitzbelüftung hinten", "Keyless-Go",
+    "Lichtsensor", "Regensensor", "Ambientebeleuchtung", "Elektrische Fensterheber",
+    "Elektrisch anklappbare Spiegel", "Memory-Sitze", "Lordosenstütze",
   ],
   Motorrad: [
     "Griffheizung", "Sitzheizung", "Windschild", "Topcase", "Seitenkoffer",
@@ -1011,12 +1013,12 @@ export const COMFORT_FEATURES_BY_TYPE: Record<string, string[]> = {
   Transporter: [
     "Klimaanlage", "Klimaautomatik 1-Zone", "Klimaautomatik 2-Zonen", "Sitzheizung", "Tempomat",
     "Abstandsregeltempomat", "Keyless Entry", "Standheizung",
-    "Elektrische Fensterheber", "Trennwand",
+    "Elektrische Fensterheber", "Trennwand", "Lichtsensor", "Regensensor",
   ],
   Wohnmobil: [
     "Klimaanlage", "Standheizung", "Markise", "Warmwasserboiler",
     "Sitzheizung", "Tempomat", "Elektrische Trittstufe", "Rahmenfenster",
-    "Verdunkelungssystem", "Fußbodenheizung",
+    "Verdunkelungssystem", "Fußbodenheizung", "Lichtsensor", "Regensensor",
   ],
 };
 
