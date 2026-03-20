@@ -1558,11 +1558,11 @@ function FormSection({
   const [isOpen, setIsOpen] = useState(defaultOpen);
 
   return (
-    <div className="border border-[#e5e5e5] dark:border-[#2a2a2a] rounded-2xl overflow-hidden">
+    <div className="border border-[#e5e5e5] dark:border-[#2a2a2a] rounded-2xl">
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
-        className="w-full flex items-center justify-between p-5 bg-[#fafafa] dark:bg-[#1a1a1a] hover:bg-[#f5f5f5] dark:hover:bg-[#1f1f1f] transition-colors"
+        className="w-full flex items-center justify-between p-5 bg-[#fafafa] dark:bg-[#1a1a1a] hover:bg-[#f5f5f5] dark:hover:bg-[#1f1f1f] transition-colors rounded-t-2xl"
       >
         <span className="flex items-center gap-3 font-semibold text-[#0a0a0a] dark:text-[#ededed]">
           <span className="text-xl">{icon}</span>
@@ -2400,7 +2400,7 @@ function SubmitFormSection() {
             <label className="block text-sm font-semibold text-[#0a0a0a] dark:text-[#ededed] mb-3">
               Ich bin... <span className="text-[#f14011]">*</span>
             </label>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-2 gap-3 sm:gap-4">
               {[
                 { value: "private", label: "Privatverkäufer" },
                 { value: "dealer", label: "Händler/Gewerbe" },
@@ -2409,13 +2409,13 @@ function SubmitFormSection() {
                   key={type.value}
                   type="button"
                   onClick={() => updateField("sellerType", type.value as "private" | "dealer")}
-                  className={`p-4 rounded-xl border-2 text-left transition-all ${
+                  className={`p-3 sm:p-4 rounded-xl border-2 text-center transition-all ${
                     formData.sellerType === type.value
                       ? "border-[#f14011] bg-[#fef2ef]"
                       : "border-[#e5e5e5] dark:border-[#2a2a2a] hover:border-[#d4d4d4] dark:hover:border-[#3d3d3d]"
                   }`}
                 >
-                  <span className={`font-semibold ${formData.sellerType === type.value ? "text-[#f14011]" : "text-[#0a0a0a] dark:text-[#ededed]"}`}>
+                  <span className={`font-semibold text-sm sm:text-base ${formData.sellerType === type.value ? "text-[#f14011]" : "text-[#0a0a0a] dark:text-[#ededed]"}`}>
                     {type.label}
                   </span>
                 </button>

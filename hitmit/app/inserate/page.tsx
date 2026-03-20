@@ -1453,7 +1453,7 @@ function InseratePageInner() {
                           }}
                           className="w-4 h-4 rounded border-gray-300 dark:border-gray-600 text-[#f14011] focus:ring-[#f14011] cursor-pointer"
                         />
-                        <span className="text-sm text-gray-700 dark:text-gray-300">{m}</span>
+                        <span className="text-xs sm:text-sm text-gray-700 dark:text-gray-300">{m}</span>
                       </label>
                     ))}
                   </div>
@@ -2131,14 +2131,14 @@ function InseratePageInner() {
               {/* Paint Protection Film */}
               {isFieldVisibleForType("paintProtectionFilm", vehicleTypeFilter) && (
                 <div className="flex items-end">
-                  <label className="flex items-center gap-2 px-4 py-2.5 cursor-pointer">
+                  <label className="flex items-center gap-2 px-2 sm:px-4 py-2.5 cursor-pointer">
                     <input
                       type="checkbox"
                       checked={paintProtectionFilmFilter === "Ja"}
                       onChange={(e) => setPaintProtectionFilmFilter(e.target.checked ? "Ja" : "Alle")}
                       className="w-4 h-4 rounded border-gray-300 dark:border-gray-600 text-[#f14011] focus:ring-[#f14011] cursor-pointer"
                     />
-                    <span className="text-sm text-gray-700 dark:text-gray-300">Steinschlagschutzfolie</span>
+                    <span className="text-xs sm:text-sm text-gray-700 dark:text-gray-300">Steinschlagschutzfolie</span>
                   </label>
                 </div>
               )}
@@ -2146,55 +2146,55 @@ function InseratePageInner() {
               {/* No Repaint */}
               {isFieldVisibleForType("noRepaint", vehicleTypeFilter) && (
                 <div className="flex items-end">
-                  <label className="flex items-center gap-2 px-4 py-2.5 cursor-pointer">
+                  <label className="flex items-center gap-2 px-2 sm:px-4 py-2.5 cursor-pointer">
                     <input
                       type="checkbox"
                       checked={noRepaintFilter === "Ja"}
                       onChange={(e) => setNoRepaintFilter(e.target.checked ? "Ja" : "Alle")}
                       className="w-4 h-4 rounded border-gray-300 dark:border-gray-600 text-[#f14011] focus:ring-[#f14011] cursor-pointer"
                     />
-                    <span className="text-sm text-gray-700 dark:text-gray-300">Nachlackierungsfrei</span>
+                    <span className="text-xs sm:text-sm text-gray-700 dark:text-gray-300">Nachlackierungsfrei</span>
                   </label>
                 </div>
               )}
 
               {/* Service Book */}
               <div className="flex items-end">
-                <label className="flex items-center gap-2 px-4 py-2.5 cursor-pointer">
+                <label className="flex items-center gap-2 px-2 sm:px-4 py-2.5 cursor-pointer">
                   <input
                     type="checkbox"
                     checked={serviceBookFilter === "Ja"}
                     onChange={(e) => setServiceBookFilter(e.target.checked ? "Ja" : "Alle")}
                     className="w-4 h-4 rounded border-gray-300 dark:border-gray-600 text-[#f14011] focus:ring-[#f14011] cursor-pointer"
                   />
-                  <span className="text-sm text-gray-700 dark:text-gray-300">Scheckheftgepflegt</span>
+                  <span className="text-xs sm:text-sm text-gray-700 dark:text-gray-300">Scheckheftgepflegt</span>
                 </label>
               </div>
 
               {/* Manufacturer Warranty */}
               <div className="flex items-end">
-                <label className="flex items-center gap-2 px-4 py-2.5 cursor-pointer">
+                <label className="flex items-center gap-2 px-2 sm:px-4 py-2.5 cursor-pointer">
                   <input
                     type="checkbox"
                     checked={manufacturerWarrantyFilter === "Vorhanden"}
                     onChange={(e) => setManufacturerWarrantyFilter(e.target.checked ? "Vorhanden" : "Alle")}
                     className="w-4 h-4 rounded border-gray-300 dark:border-gray-600 text-[#f14011] focus:ring-[#f14011] cursor-pointer"
                   />
-                  <span className="text-sm text-gray-700 dark:text-gray-300">Herstellergarantie</span>
+                  <span className="text-xs sm:text-sm text-gray-700 dark:text-gray-300">Herstellergarantie</span>
                 </label>
               </div>
 
               {/* Non-Smoker */}
               {isFieldVisibleForType("nonSmokerVehicle", vehicleTypeFilter) && (
                 <div className="flex items-end">
-                  <label className="flex items-center gap-2 px-4 py-2.5 cursor-pointer">
+                  <label className="flex items-center gap-2 px-2 sm:px-4 py-2.5 cursor-pointer">
                     <input
                       type="checkbox"
                       checked={nonSmokerFilter === "Ja"}
                       onChange={(e) => setNonSmokerFilter(e.target.checked ? "Ja" : "Alle")}
                       className="w-4 h-4 rounded border-gray-300 dark:border-gray-600 text-[#f14011] focus:ring-[#f14011] cursor-pointer"
                     />
-                    <span className="text-sm text-gray-700 dark:text-gray-300">Nichtraucherfahrzeug</span>
+                    <span className="text-xs sm:text-sm text-gray-700 dark:text-gray-300">Nichtraucherfahrzeug</span>
                   </label>
                 </div>
               )}
@@ -2202,14 +2202,14 @@ function InseratePageInner() {
               {/* Pet Free */}
               {isFieldVisibleForType("petFreeVehicle", vehicleTypeFilter) && (
                 <div className="flex items-end">
-                  <label className="flex items-center gap-2 px-4 py-2.5 cursor-pointer">
+                  <label className="flex items-center gap-2 px-2 sm:px-4 py-2.5 cursor-pointer">
                     <input
                       type="checkbox"
                       checked={petFreeFilter === "Ja"}
                       onChange={(e) => setPetFreeFilter(e.target.checked ? "Ja" : "Alle")}
                       className="w-4 h-4 rounded border-gray-300 dark:border-gray-600 text-[#f14011] focus:ring-[#f14011] cursor-pointer"
                     />
-                    <span className="text-sm text-gray-700 dark:text-gray-300">Tierfreies Fahrzeug</span>
+                    <span className="text-xs sm:text-sm text-gray-700 dark:text-gray-300">Tierfreies Fahrzeug</span>
                   </label>
                 </div>
               )}

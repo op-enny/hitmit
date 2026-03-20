@@ -1125,7 +1125,7 @@ export default function SuchenPage() {
                           }}
                           className="w-4 h-4 rounded border-gray-300 dark:border-gray-600 text-[#f14011] focus:ring-[#f14011] cursor-pointer"
                         />
-                        <span className="text-sm text-gray-700 dark:text-gray-300">{m}</span>
+                        <span className="text-xs sm:text-sm text-gray-700 dark:text-gray-300">{m}</span>
                       </label>
                     ))}
                   </div>
@@ -1143,32 +1143,26 @@ export default function SuchenPage() {
                 className="w-full bg-white dark:bg-[#1a1a1a] border border-gray-200 dark:border-[#2a2a2a] rounded-xl px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 placeholder:text-gray-400 hover:border-[#f14011] focus:border-[#f14011] focus:outline-none transition-colors"
               />
             </div>
-            {/* Equipment search per row — visible when multiple brands selected */}
-            {showBrandRow2 && (
-              <div>
-                <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1.5">Ausstattung</label>
-                <input
-                  type="text"
-                  value={equipSearch}
-                  onChange={(e) => setEquipSearch(e.target.value)}
-                  placeholder="z.B. Panoramadach, LED"
-                  className="w-full bg-white dark:bg-[#1a1a1a] border border-gray-200 dark:border-[#2a2a2a] rounded-xl px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 placeholder:text-gray-400 hover:border-[#f14011] focus:border-[#f14011] focus:outline-none transition-colors"
-                />
-              </div>
-            )}
-            {/* Description search — visible when multiple brands selected */}
-            {showBrandRow2 && (
-              <div>
-                <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1.5">Beschreibung durchsuchen</label>
-                <input
-                  type="text"
-                  value={descriptionSearch}
-                  onChange={(e) => setDescriptionSearch(e.target.value)}
-                  placeholder="z.B. Scheckheft, unfallfrei"
-                  className="w-full bg-white dark:bg-[#1a1a1a] border border-gray-200 dark:border-[#2a2a2a] rounded-xl px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 placeholder:text-gray-400 hover:border-[#f14011] focus:border-[#f14011] focus:outline-none transition-colors"
-                />
-              </div>
-            )}
+            <div>
+              <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1.5">Ausstattung</label>
+              <input
+                type="text"
+                value={equipSearch}
+                onChange={(e) => setEquipSearch(e.target.value)}
+                placeholder="z.B. Panoramadach, LED"
+                className="w-full bg-white dark:bg-[#1a1a1a] border border-gray-200 dark:border-[#2a2a2a] rounded-xl px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 placeholder:text-gray-400 hover:border-[#f14011] focus:border-[#f14011] focus:outline-none transition-colors"
+              />
+            </div>
+            <div>
+              <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1.5">Beschreibung durchsuchen</label>
+              <input
+                type="text"
+                value={descriptionSearch}
+                onChange={(e) => setDescriptionSearch(e.target.value)}
+                placeholder="z.B. Scheckheft, unfallfrei"
+                className="w-full bg-white dark:bg-[#1a1a1a] border border-gray-200 dark:border-[#2a2a2a] rounded-xl px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 placeholder:text-gray-400 hover:border-[#f14011] focus:border-[#f14011] focus:outline-none transition-colors"
+              />
+            </div>
             {/* "+" Button to add Row 2 */}
             {brandFilter !== "Alle Marken" && !showBrandRow2 && (
               <div className="col-span-full">
@@ -1473,14 +1467,14 @@ export default function SuchenPage() {
               options={sellerTypeOptions.map((s) => ({ value: s, label: s }))}
             />
             <div className="flex items-end">
-              <label className="flex items-center gap-2 px-4 py-2.5 cursor-pointer">
+              <label className="flex items-center gap-2 px-2 sm:px-4 py-2.5 cursor-pointer">
                 <input
                   type="checkbox"
                   checked={accidentFreeFilter === "Nur unfallfrei"}
                   onChange={(e) => setAccidentFreeFilter(e.target.checked ? "Nur unfallfrei" : "Alle")}
                   className="w-4 h-4 rounded border-gray-300 dark:border-gray-600 text-[#f14011] focus:ring-[#f14011] cursor-pointer"
                 />
-                <span className="text-sm text-gray-700 dark:text-gray-300">Unfallfrei</span>
+                <span className="text-xs sm:text-sm text-gray-700 dark:text-gray-300">Unfallfrei</span>
               </label>
             </div>
             <div>
@@ -1552,14 +1546,14 @@ export default function SuchenPage() {
               />
             </div>
             <div className="flex items-end">
-              <label className="flex items-center gap-2 px-4 py-2.5 cursor-pointer">
+              <label className="flex items-center gap-2 px-2 sm:px-4 py-2.5 cursor-pointer">
                 <input
                   type="checkbox"
                   checked={huFilter === "Neu (mind. 12 Monate)"}
                   onChange={(e) => setHuFilter(e.target.checked ? "Neu (mind. 12 Monate)" : "Alle")}
                   className="w-4 h-4 rounded border-gray-300 dark:border-gray-600 text-[#f14011] focus:ring-[#f14011] cursor-pointer"
                 />
-                <span className="text-sm text-gray-700 dark:text-gray-300">HU neu</span>
+                <span className="text-xs sm:text-sm text-gray-700 dark:text-gray-300">HU neu</span>
               </label>
             </div>
             <FilterSelect
@@ -1569,14 +1563,14 @@ export default function SuchenPage() {
               options={previousOwnerOptions.map((o) => ({ value: o, label: o === "Alle" ? "Alle" : `max. ${o}` }))}
             />
             <div className="flex items-end">
-              <label className="flex items-center gap-2 px-4 py-2.5 cursor-pointer">
+              <label className="flex items-center gap-2 px-2 sm:px-4 py-2.5 cursor-pointer">
                 <input
                   type="checkbox"
                   checked={mwstFilter === "Ja"}
                   onChange={(e) => setMwstFilter(e.target.checked ? "Ja" : "Alle")}
                   className="w-4 h-4 rounded border-gray-300 dark:border-gray-600 text-[#f14011] focus:ring-[#f14011] cursor-pointer"
                 />
-                <span className="text-sm text-gray-700 dark:text-gray-300">MwSt. ausweisbar</span>
+                <span className="text-xs sm:text-sm text-gray-700 dark:text-gray-300">MwSt. ausweisbar</span>
               </label>
             </div>
           </div>
@@ -1629,87 +1623,87 @@ export default function SuchenPage() {
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 mb-6">
             {isFieldVisibleForType("paintProtectionFilm", vehicleTypeFilter) && (
               <div className="flex items-end">
-                <label className="flex items-center gap-2 px-4 py-2.5 cursor-pointer">
+                <label className="flex items-center gap-2 px-2 sm:px-4 py-2.5 cursor-pointer">
                   <input
                     type="checkbox"
                     checked={paintProtectionFilmFilter === "Ja"}
                     onChange={(e) => setPaintProtectionFilmFilter(e.target.checked ? "Ja" : "Alle")}
                     className="w-4 h-4 rounded border-gray-300 dark:border-gray-600 text-[#f14011] focus:ring-[#f14011] cursor-pointer"
                   />
-                  <span className="text-sm text-gray-700 dark:text-gray-300">Steinschlagschutzfolie</span>
+                  <span className="text-xs sm:text-sm text-gray-700 dark:text-gray-300">Steinschlagschutzfolie</span>
                 </label>
               </div>
             )}
             {isFieldVisibleForType("noRepaint", vehicleTypeFilter) && (
               <div className="flex items-end">
-                <label className="flex items-center gap-2 px-4 py-2.5 cursor-pointer">
+                <label className="flex items-center gap-2 px-2 sm:px-4 py-2.5 cursor-pointer">
                   <input
                     type="checkbox"
                     checked={noRepaintFilter === "Ja"}
                     onChange={(e) => setNoRepaintFilter(e.target.checked ? "Ja" : "Alle")}
                     className="w-4 h-4 rounded border-gray-300 dark:border-gray-600 text-[#f14011] focus:ring-[#f14011] cursor-pointer"
                   />
-                  <span className="text-sm text-gray-700 dark:text-gray-300">Nachlackierungsfrei</span>
+                  <span className="text-xs sm:text-sm text-gray-700 dark:text-gray-300">Nachlackierungsfrei</span>
                 </label>
               </div>
             )}
             <div className="flex items-end">
-              <label className="flex items-center gap-2 px-4 py-2.5 cursor-pointer">
+              <label className="flex items-center gap-2 px-2 sm:px-4 py-2.5 cursor-pointer">
                 <input
                   type="checkbox"
                   checked={serviceBookFilter === "Ja"}
                   onChange={(e) => setServiceBookFilter(e.target.checked ? "Ja" : "Alle")}
                   className="w-4 h-4 rounded border-gray-300 dark:border-gray-600 text-[#f14011] focus:ring-[#f14011] cursor-pointer"
                 />
-                <span className="text-sm text-gray-700 dark:text-gray-300">Scheckheftgepflegt</span>
+                <span className="text-xs sm:text-sm text-gray-700 dark:text-gray-300">Scheckheftgepflegt</span>
               </label>
             </div>
             <div className="flex items-end">
-              <label className="flex items-center gap-2 px-4 py-2.5 cursor-pointer">
+              <label className="flex items-center gap-2 px-2 sm:px-4 py-2.5 cursor-pointer">
                 <input
                   type="checkbox"
                   checked={manufacturerWarrantyFilter === "Vorhanden"}
                   onChange={(e) => setManufacturerWarrantyFilter(e.target.checked ? "Vorhanden" : "Alle")}
                   className="w-4 h-4 rounded border-gray-300 dark:border-gray-600 text-[#f14011] focus:ring-[#f14011] cursor-pointer"
                 />
-                <span className="text-sm text-gray-700 dark:text-gray-300">Herstellergarantie</span>
+                <span className="text-xs sm:text-sm text-gray-700 dark:text-gray-300">Herstellergarantie</span>
               </label>
             </div>
             {isFieldVisibleForType("nonSmokerVehicle", vehicleTypeFilter) && (
               <div className="flex items-end">
-                <label className="flex items-center gap-2 px-4 py-2.5 cursor-pointer">
+                <label className="flex items-center gap-2 px-2 sm:px-4 py-2.5 cursor-pointer">
                   <input
                     type="checkbox"
                     checked={nonSmokerFilter === "Ja"}
                     onChange={(e) => setNonSmokerFilter(e.target.checked ? "Ja" : "Alle")}
                     className="w-4 h-4 rounded border-gray-300 dark:border-gray-600 text-[#f14011] focus:ring-[#f14011] cursor-pointer"
                   />
-                  <span className="text-sm text-gray-700 dark:text-gray-300">Nichtraucherfahrzeug</span>
+                  <span className="text-xs sm:text-sm text-gray-700 dark:text-gray-300">Nichtraucherfahrzeug</span>
                 </label>
               </div>
             )}
             {isFieldVisibleForType("petFreeVehicle", vehicleTypeFilter) && (
               <div className="flex items-end">
-                <label className="flex items-center gap-2 px-4 py-2.5 cursor-pointer">
+                <label className="flex items-center gap-2 px-2 sm:px-4 py-2.5 cursor-pointer">
                   <input
                     type="checkbox"
                     checked={petFreeFilter === "Ja"}
                     onChange={(e) => setPetFreeFilter(e.target.checked ? "Ja" : "Alle")}
                     className="w-4 h-4 rounded border-gray-300 dark:border-gray-600 text-[#f14011] focus:ring-[#f14011] cursor-pointer"
                   />
-                  <span className="text-sm text-gray-700 dark:text-gray-300">Tierfreies Fahrzeug</span>
+                  <span className="text-xs sm:text-sm text-gray-700 dark:text-gray-300">Tierfreies Fahrzeug</span>
                 </label>
               </div>
             )}
             <div className="flex items-end">
-              <label className="flex items-center gap-2 px-4 py-2.5 cursor-pointer">
+              <label className="flex items-center gap-2 px-2 sm:px-4 py-2.5 cursor-pointer">
                 <input
                   type="checkbox"
                   checked={tradeInFilter}
                   onChange={(e) => setTradeInFilter(e.target.checked)}
                   className="w-4 h-4 rounded border-gray-300 dark:border-gray-600 text-[#f14011] focus:ring-[#f14011] cursor-pointer"
                 />
-                <span className="text-sm text-gray-700 dark:text-gray-300">Inzahlungnahme möglich</span>
+                <span className="text-xs sm:text-sm text-gray-700 dark:text-gray-300">Inzahlungnahme möglich</span>
               </label>
             </div>
           </div>
@@ -1730,14 +1724,14 @@ export default function SuchenPage() {
               options={environmentalBadgeOptions}
             />
             <div className="flex items-end">
-              <label className="flex items-center gap-2 px-4 py-2.5 cursor-pointer">
+              <label className="flex items-center gap-2 px-2 sm:px-4 py-2.5 cursor-pointer">
                 <input
                   type="checkbox"
                   checked={particleFilterFilter === "Ja"}
                   onChange={(e) => setParticleFilterFilter(e.target.checked ? "Ja" : "Alle")}
                   className="w-4 h-4 rounded border-gray-300 dark:border-gray-600 text-[#f14011] focus:ring-[#f14011] cursor-pointer"
                 />
-                <span className="text-sm text-gray-700 dark:text-gray-300">Rußpartikelfilter</span>
+                <span className="text-xs sm:text-sm text-gray-700 dark:text-gray-300">Rußpartikelfilter</span>
               </label>
             </div>
           </div>
@@ -1757,7 +1751,7 @@ export default function SuchenPage() {
               <ChevronDownIcon className={`w-4 h-4 transition-transform ${showSafetyFeatures ? "rotate-180" : ""}`} />
             </button>
             {showSafetyFeatures && (
-              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2">
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
                 {getSafetyFeaturesForType(vehicleTypeFilter, fuelFilter).map((feature) => (
                   <label key={feature} className="flex items-center gap-2 cursor-pointer group">
                     <input
@@ -1772,7 +1766,7 @@ export default function SuchenPage() {
                       }}
                       className="w-4 h-4 rounded border-gray-300 dark:border-gray-600 text-[#f14011] focus:ring-[#f14011] cursor-pointer"
                     />
-                    <span className="text-sm text-gray-600 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-gray-200 transition-colors">
+                    <span className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-gray-200 transition-colors">
                       {feature}
                     </span>
                   </label>
@@ -1817,7 +1811,7 @@ export default function SuchenPage() {
                   </div>
                 )}
                 {/* Restliche Komfort-Features */}
-                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2">
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
                   {getComfortFeaturesForType(vehicleTypeFilter, fuelFilter).filter((f) => !CLIMATE_OPTIONS.includes(f)).map((feature) => (
                     <label key={feature} className="flex items-center gap-2 cursor-pointer group">
                       <input
@@ -1832,7 +1826,7 @@ export default function SuchenPage() {
                         }}
                         className="w-4 h-4 rounded border-gray-300 dark:border-gray-600 text-[#f14011] focus:ring-[#f14011] cursor-pointer"
                       />
-                      <span className="text-sm text-gray-600 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-gray-200 transition-colors">
+                      <span className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-gray-200 transition-colors">
                         {feature}
                       </span>
                     </label>
@@ -1853,7 +1847,7 @@ export default function SuchenPage() {
               <ChevronDownIcon className={`w-4 h-4 transition-transform ${showExteriorFeatures ? "rotate-180" : ""}`} />
             </button>
             {showExteriorFeatures && (
-              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2">
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
                 {getExteriorFeaturesForType(vehicleTypeFilter, fuelFilter).map((feature) => (
                   <label key={feature} className="flex items-center gap-2 cursor-pointer group">
                     <input
@@ -1868,7 +1862,7 @@ export default function SuchenPage() {
                       }}
                       className="w-4 h-4 rounded border-gray-300 dark:border-gray-600 text-[#f14011] focus:ring-[#f14011] cursor-pointer"
                     />
-                    <span className="text-sm text-gray-600 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-gray-200 transition-colors">
+                    <span className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-gray-200 transition-colors">
                       {feature}
                     </span>
                   </label>
@@ -1888,7 +1882,7 @@ export default function SuchenPage() {
               <ChevronDownIcon className={`w-4 h-4 transition-transform ${showMultimediaFeatures ? "rotate-180" : ""}`} />
             </button>
             {showMultimediaFeatures && (
-              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2">
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
                 {getMultimediaFeaturesForType(vehicleTypeFilter, fuelFilter).map((feature) => (
                   <label key={feature} className="flex items-center gap-2 cursor-pointer group">
                     <input
@@ -1903,7 +1897,7 @@ export default function SuchenPage() {
                       }}
                       className="w-4 h-4 rounded border-gray-300 dark:border-gray-600 text-[#f14011] focus:ring-[#f14011] cursor-pointer"
                     />
-                    <span className="text-sm text-gray-600 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-gray-200 transition-colors">
+                    <span className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-gray-200 transition-colors">
                       {feature}
                     </span>
                   </label>
@@ -1923,7 +1917,7 @@ export default function SuchenPage() {
               <ChevronDownIcon className={`w-4 h-4 transition-transform ${showSuspensionFeatures ? "rotate-180" : ""}`} />
             </button>
             {showSuspensionFeatures && (
-              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2">
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
                 {getSuspensionFeaturesForType(vehicleTypeFilter, fuelFilter).map((feature) => (
                   <label key={feature} className="flex items-center gap-2 cursor-pointer group">
                     <input
@@ -1938,7 +1932,7 @@ export default function SuchenPage() {
                       }}
                       className="w-4 h-4 rounded border-gray-300 dark:border-gray-600 text-[#f14011] focus:ring-[#f14011] cursor-pointer"
                     />
-                    <span className="text-sm text-gray-600 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-gray-200 transition-colors">
+                    <span className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-gray-200 transition-colors">
                       {feature}
                     </span>
                   </label>
