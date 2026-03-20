@@ -1531,13 +1531,17 @@ export default function SuchenPage() {
             {isFieldVisibleForType("climateZones", vehicleTypeFilter) && (
               <NumericInput label="Klimazonen (mind.)" value={climateZoneFilter} onChange={setClimateZoneFilter} placeholder="z.B. 2" />
             )}
-            <NumericInput label="Felgengröße (Zoll)" value={rimSizeFilter} onChange={setRimSizeFilter} placeholder="z.B. 19" />
-            <FilterSelect
-              label="Reifenart"
-              value={tireTypeFilter}
-              onChange={setTireTypeFilter}
-              options={tireTypeOptions.map((t) => ({ value: t, label: t }))}
-            />
+            {isFieldVisibleForType("rimSize", vehicleTypeFilter) && (
+              <NumericInput label="Felgengröße (Zoll)" value={rimSizeFilter} onChange={setRimSizeFilter} placeholder="z.B. 19" />
+            )}
+            {isFieldVisibleForType("tireType", vehicleTypeFilter) && (
+              <FilterSelect
+                label="Reifenart"
+                value={tireTypeFilter}
+                onChange={setTireTypeFilter}
+                options={tireTypeOptions.map((t) => ({ value: t, label: t }))}
+              />
+            )}
           </div>
 
           {/* Section: Zustand & Garantie */}

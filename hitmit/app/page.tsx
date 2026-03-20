@@ -2844,16 +2844,18 @@ function SubmitFormSection() {
                   />
                 )}
               </div>
-              <div className="grid md:grid-cols-3 gap-6">
-                <FormInput
-                  label="Felgengröße (Zoll)"
-                  type="text"
-                  inputMode="numeric"
-                  placeholder="19"
-                  value={formData.rimSize}
-                  onChange={(e) => updateField("rimSize", e.target.value)}
-                />
-              </div>
+              {isFieldVisibleForType("rimSize", getFormTypeLabel(formData.vehicleType)) && (
+                <div className="grid md:grid-cols-3 gap-6">
+                  <FormInput
+                    label="Felgengröße (Zoll)"
+                    type="text"
+                    inputMode="numeric"
+                    placeholder="19"
+                    value={formData.rimSize}
+                    onChange={(e) => updateField("rimSize", e.target.value)}
+                  />
+                </div>
+              )}
             </FormSection>
 
             {/* Condition & History */}
@@ -2926,17 +2928,19 @@ function SubmitFormSection() {
               />
 
               {/* Reifendetails */}
-              <FormSelect
-                label="Reifenart"
-                options={[
-                  { value: "", label: "Bitte wählen" },
-                  { value: "Sommerreifen", label: "Sommerreifen" },
-                  { value: "Winterreifen", label: "Winterreifen" },
-                  { value: "Allwetterreifen", label: "Allwetterreifen" },
-                ]}
-                value={formData.tireType}
-                onChange={(e) => updateField("tireType", e.target.value)}
-              />
+              {isFieldVisibleForType("tireType", getFormTypeLabel(formData.vehicleType)) && (
+                <FormSelect
+                  label="Reifenart"
+                  options={[
+                    { value: "", label: "Bitte wählen" },
+                    { value: "Sommerreifen", label: "Sommerreifen" },
+                    { value: "Winterreifen", label: "Winterreifen" },
+                    { value: "Allwetterreifen", label: "Allwetterreifen" },
+                  ]}
+                  value={formData.tireType}
+                  onChange={(e) => updateField("tireType", e.target.value)}
+                />
+              )}
               <div className="grid md:grid-cols-2 gap-6">
                 <FormSelect
                   label="Reifenzustand vorne"

@@ -2067,30 +2067,34 @@ function InseratePageInner() {
               )}
 
               {/* Rim Size */}
-              <div>
-                <label className="block text-xs font-medium text-gray-500 mb-1.5">Felgengröße (Zoll)</label>
-                <input
-                  type="text"
-                  value={rimSizeFilter}
-                  onChange={(e) => setRimSizeFilter(e.target.value)}
-                  placeholder="z.B. 19"
-                  className="w-full bg-gray-50 dark:bg-[#1a1a1a] border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-gray-700 placeholder:text-gray-400 hover:border-[#f14011] focus:border-[#f14011] focus:outline-none transition-colors"
-                />
-              </div>
+              {isFieldVisibleForType("rimSize", vehicleTypeFilter) && (
+                <div>
+                  <label className="block text-xs font-medium text-gray-500 mb-1.5">Felgengröße (Zoll)</label>
+                  <input
+                    type="text"
+                    value={rimSizeFilter}
+                    onChange={(e) => setRimSizeFilter(e.target.value)}
+                    placeholder="z.B. 19"
+                    className="w-full bg-gray-50 dark:bg-[#1a1a1a] border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-gray-700 placeholder:text-gray-400 hover:border-[#f14011] focus:border-[#f14011] focus:outline-none transition-colors"
+                  />
+                </div>
+              )}
 
               {/* Tire Type */}
-              <div>
-                <label className="block text-xs font-medium text-gray-500 mb-1.5">Reifenart</label>
-                <select
-                  value={tireTypeFilter}
-                  onChange={(e) => setTireTypeFilter(e.target.value)}
-                  className="w-full bg-gray-50 dark:bg-[#1a1a1a] border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-gray-700 hover:border-[#f14011] focus:border-[#f14011] focus:outline-none transition-colors"
-                >
-                  {tireTypeOptions.map((t) => (
-                    <option key={t} value={t}>{t}</option>
-                  ))}
-                </select>
-              </div>
+              {isFieldVisibleForType("tireType", vehicleTypeFilter) && (
+                <div>
+                  <label className="block text-xs font-medium text-gray-500 mb-1.5">Reifenart</label>
+                  <select
+                    value={tireTypeFilter}
+                    onChange={(e) => setTireTypeFilter(e.target.value)}
+                    className="w-full bg-gray-50 dark:bg-[#1a1a1a] border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-gray-700 hover:border-[#f14011] focus:border-[#f14011] focus:outline-none transition-colors"
+                  >
+                    {tireTypeOptions.map((t) => (
+                      <option key={t} value={t}>{t}</option>
+                    ))}
+                  </select>
+                </div>
+              )}
 
               {/* Manufacturer Color */}
               <div>

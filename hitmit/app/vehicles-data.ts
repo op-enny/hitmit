@@ -1376,6 +1376,7 @@ const HIDDEN_FIELDS_BY_TYPE: Record<string, Set<string>> = {
     "doors", "climateZones", "airbags", "parkingAid", "cameraFront", "cameraRear",
     "interiorColor", "seatMaterial", "damageMap", "paintThickness",
     "nonSmokerVehicle", "petFreeVehicle", "noRepaint", "paintProtectionFilm",
+    "tireType", "rimSize",
   ]),
   LKW: new Set([
     "climateZones", "airbags", "interiorColor", "seatMaterial",
