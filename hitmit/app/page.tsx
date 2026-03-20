@@ -1403,7 +1403,9 @@ const COLOR_OPTIONS = [
 
 const EMISSION_CLASS_OPTIONS = [
   { value: "", label: "Bitte wählen" },
+  { value: "euro6e", label: "Euro 6e" },
   { value: "euro6d", label: "Euro 6d" },
+  { value: "euro6dtemp", label: "Euro 6d-Temp" },
   { value: "euro6c", label: "Euro 6c" },
   { value: "euro6b", label: "Euro 6b" },
   { value: "euro6", label: "Euro 6" },
