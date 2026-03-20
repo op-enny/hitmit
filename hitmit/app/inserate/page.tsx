@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef, Suspense } from "react";
+import { createPortal } from "react-dom";
 import Link from "next/link";
 import Image from "next/image";
 import dynamic from "next/dynamic";
@@ -342,10 +343,12 @@ function MultiFilterSelect({
 }) {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
+  const portalRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     function handleClick(e: MouseEvent) {
-      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
+      const target = e.target as Node;
+      if (ref.current && !ref.current.contains(target) && (!portalRef.current || !portalRef.current.contains(target))) setOpen(false);
     }
     if (open) {
       document.addEventListener("mousedown", handleClick);
@@ -412,9 +415,9 @@ function MultiFilterSelect({
           </div>
         )}
       </div>
-      {/* Mobile bottom sheet */}
-      {open && (
-        <div className="sm:hidden fixed inset-0 z-50 flex flex-col justify-end">
+      {/* Mobile bottom sheet — portal to escape stacking context */}
+      {open && typeof document !== "undefined" && createPortal(
+        <div ref={portalRef} className="sm:hidden fixed inset-0 z-[9999] flex flex-col justify-end">
           <div className="absolute inset-0 bg-black/40" onClick={() => setOpen(false)} />
           <div className="relative bg-white dark:bg-[#1a1a1a] rounded-t-2xl max-h-[70vh] flex flex-col">
             <div className="flex items-center justify-between px-4 py-3 border-b border-gray-200 dark:border-[#2a2a2a]">
@@ -427,7 +430,8 @@ function MultiFilterSelect({
               {dropdownContent}
             </div>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
     </div>
   );
