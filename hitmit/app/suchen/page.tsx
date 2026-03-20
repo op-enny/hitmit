@@ -511,6 +511,8 @@ export default function SuchenPage() {
   const [equipSearch2, setEquipSearch2] = useState("");
   const [equipSearch3, setEquipSearch3] = useState("");
   const [descriptionSearch, setDescriptionSearch] = useState("");
+  const [descriptionSearch2, setDescriptionSearch2] = useState("");
+  const [descriptionSearch3, setDescriptionSearch3] = useState("");
   const [vehicleTypeFilter, setVehicleTypeFilter] = useState("PKW");
   const [vehicleCategoryFilter, setVehicleCategoryFilter] = useState<string[]>([]);
   const [mwstFilter, setMwstFilter] = useState("Alle");
@@ -572,10 +574,10 @@ export default function SuchenPage() {
   // Filter logic
   const filtered = vehicles.filter((v) => {
     // Brand+Model+Variant: ODER-Logik über bis zu 3 Paare
-    const brandModelPairs: { brand: string; model: string; variant: string; customText?: string; equip: string }[] = [];
-    if (brandFilter !== "Alle Marken") brandModelPairs.push({ brand: brandFilter, model: modelFilter, variant: variantFilter, customText: brandFilter === "Andere" ? customBrandText : undefined, equip: equipSearch });
-    if (brandFilter2 !== "Alle Marken") brandModelPairs.push({ brand: brandFilter2, model: modelFilter2, variant: variantFilter2, customText: brandFilter2 === "Andere" ? customBrandText2 : undefined, equip: equipSearch2 });
-    if (brandFilter3 !== "Alle Marken") brandModelPairs.push({ brand: brandFilter3, model: modelFilter3, variant: variantFilter3, customText: brandFilter3 === "Andere" ? customBrandText3 : undefined, equip: equipSearch3 });
+    const brandModelPairs: { brand: string; model: string; variant: string; customText?: string; equip: string; desc: string }[] = [];
+    if (brandFilter !== "Alle Marken") brandModelPairs.push({ brand: brandFilter, model: modelFilter, variant: variantFilter, customText: brandFilter === "Andere" ? customBrandText : undefined, equip: equipSearch, desc: descriptionSearch });
+    if (brandFilter2 !== "Alle Marken") brandModelPairs.push({ brand: brandFilter2, model: modelFilter2, variant: variantFilter2, customText: brandFilter2 === "Andere" ? customBrandText2 : undefined, equip: equipSearch2, desc: descriptionSearch2 });
+    if (brandFilter3 !== "Alle Marken") brandModelPairs.push({ brand: brandFilter3, model: modelFilter3, variant: variantFilter3, customText: brandFilter3 === "Andere" ? customBrandText3 : undefined, equip: equipSearch3, desc: descriptionSearch3 });
 
     if (brandModelPairs.length > 0) {
       const matchesAny = brandModelPairs.some((pair) => {
@@ -588,6 +590,7 @@ export default function SuchenPage() {
             const allFeatures = [...(v.comfortFeatures || []), ...(v.safetyFeatures || []), ...(v.exteriorFeatures || []), ...(v.multimediaFeatures || [])].join(" ").toLowerCase();
             if (!allFeatures.includes(pair.equip.toLowerCase())) return false;
           }
+          if (pair.desc !== "" && !(v.description || "").toLowerCase().includes(pair.desc.toLowerCase())) return false;
           return true;
         }
         if (v.brand !== pair.brand) return false;
@@ -603,14 +606,14 @@ export default function SuchenPage() {
           const allFeatures = [...(v.comfortFeatures || []), ...(v.safetyFeatures || []), ...(v.exteriorFeatures || []), ...(v.multimediaFeatures || [])].join(" ").toLowerCase();
           if (!allFeatures.includes(pair.equip.toLowerCase())) return false;
         }
+        if (pair.desc !== "" && !(v.description || "").toLowerCase().includes(pair.desc.toLowerCase())) return false;
         return true;
       });
       if (!matchesAny) return false;
     } else {
       if (variantFilter !== "" && !v.variant.toLowerCase().includes(variantFilter.toLowerCase())) return false;
+      if (descriptionSearch !== "" && !(v.description || "").toLowerCase().includes(descriptionSearch.toLowerCase())) return false;
     }
-
-    if (descriptionSearch !== "" && !(v.description || "").toLowerCase().includes(descriptionSearch.toLowerCase())) return false;
 
     if (fuelFilter.length > 0) {
       const matchesFuel = fuelFilter.some((ff) => {
@@ -1235,17 +1238,27 @@ export default function SuchenPage() {
                     className="w-full bg-white dark:bg-[#1a1a1a] border border-gray-200 dark:border-[#2a2a2a] rounded-xl px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 placeholder:text-gray-400 hover:border-[#f14011] focus:border-[#f14011] focus:outline-none transition-colors"
                   />
                 </div>
+                <div>
+                  <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1.5">Beschreibung 2</label>
+                  <input
+                    type="text"
+                    value={descriptionSearch2}
+                    onChange={(e) => setDescriptionSearch2(e.target.value)}
+                    placeholder="z.B. Scheckheft, unfallfrei"
+                    className="w-full bg-white dark:bg-[#1a1a1a] border border-gray-200 dark:border-[#2a2a2a] rounded-xl px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 placeholder:text-gray-400 hover:border-[#f14011] focus:border-[#f14011] focus:outline-none transition-colors"
+                  />
+                </div>
                 <div className="flex items-end">
                   <button
                     type="button"
                     onClick={() => {
                       if (showBrandRow3) {
                         // Zeile 3 hochrutschen nach Zeile 2
-                        setBrandFilter2(brandFilter3); setModelFilter2(modelFilter3); setVariantFilter2(variantFilter3); setCustomBrandText2(customBrandText3); setEquipSearch2(equipSearch3);
-                        setBrandFilter3("Alle Marken"); setModelFilter3(""); setVariantFilter3(""); setCustomBrandText3(""); setEquipSearch3("");
+                        setBrandFilter2(brandFilter3); setModelFilter2(modelFilter3); setVariantFilter2(variantFilter3); setCustomBrandText2(customBrandText3); setEquipSearch2(equipSearch3); setDescriptionSearch2(descriptionSearch3);
+                        setBrandFilter3("Alle Marken"); setModelFilter3(""); setVariantFilter3(""); setCustomBrandText3(""); setEquipSearch3(""); setDescriptionSearch3("");
                         setShowBrandRow3(false);
                       } else {
-                        setBrandFilter2("Alle Marken"); setModelFilter2(""); setVariantFilter2(""); setCustomBrandText2(""); setEquipSearch2("");
+                        setBrandFilter2("Alle Marken"); setModelFilter2(""); setVariantFilter2(""); setCustomBrandText2(""); setEquipSearch2(""); setDescriptionSearch2("");
                         setShowBrandRow2(false);
                       }
                     }}
@@ -1326,10 +1339,20 @@ export default function SuchenPage() {
                     className="w-full bg-white dark:bg-[#1a1a1a] border border-gray-200 dark:border-[#2a2a2a] rounded-xl px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 placeholder:text-gray-400 hover:border-[#f14011] focus:border-[#f14011] focus:outline-none transition-colors"
                   />
                 </div>
+                <div>
+                  <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1.5">Beschreibung 3</label>
+                  <input
+                    type="text"
+                    value={descriptionSearch3}
+                    onChange={(e) => setDescriptionSearch3(e.target.value)}
+                    placeholder="z.B. Scheckheft, unfallfrei"
+                    className="w-full bg-white dark:bg-[#1a1a1a] border border-gray-200 dark:border-[#2a2a2a] rounded-xl px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 placeholder:text-gray-400 hover:border-[#f14011] focus:border-[#f14011] focus:outline-none transition-colors"
+                  />
+                </div>
                 <div className="flex items-end">
                   <button
                     type="button"
-                    onClick={() => { setBrandFilter3("Alle Marken"); setModelFilter3(""); setVariantFilter3(""); setCustomBrandText3(""); setEquipSearch3(""); setShowBrandRow3(false); }}
+                    onClick={() => { setBrandFilter3("Alle Marken"); setModelFilter3(""); setVariantFilter3(""); setCustomBrandText3(""); setEquipSearch3(""); setDescriptionSearch3(""); setShowBrandRow3(false); }}
                     className="flex items-center gap-1 px-3 py-2.5 text-sm font-medium text-gray-400 border border-gray-200 dark:border-[#2a2a2a] rounded-xl hover:text-red-500 hover:border-red-300 transition-colors"
                   >
                     <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path strokeLinecap="round" d="M6 18L18 6M6 6l12 12" /></svg>
