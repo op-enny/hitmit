@@ -1000,7 +1000,7 @@ export const COMFORT_FEATURES_BY_TYPE: Record<string, string[]> = {
     "Elektrische Heckklappe", "Keyless Entry", "Standheizung", "Tempomat",
     "Abstandsregeltempomat", "Sitzbelüftung vorne", "Sitzbelüftung hinten", "Keyless-Go",
     "Lichtsensor", "Regensensor", "Ambientebeleuchtung", "Elektrische Fensterheber",
-    "Elektrisch anklappbare Spiegel", "Memory-Sitze", "Lordosenstütze",
+    "Elektrisch anklappbare Spiegel", "Memory-Sitze", "Lordosenstütze", "Beheizbare Frontscheibe",
   ],
   Motorrad: [
     "Griffheizung", "Sitzheizung", "Windschild", "Topcase", "Seitenkoffer",
