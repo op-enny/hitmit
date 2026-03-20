@@ -89,6 +89,7 @@ interface VehicleSubmissionDto {
   cameraRear?: boolean;
   climateZones?: number;
   rimSize?: number;
+  tireType?: string;
   tireConditionFront?: string;
   tireConditionRear?: string;
   priceNegotiable?: boolean;
@@ -470,8 +471,12 @@ function generateEmailHtml(data: VehicleSubmissionDto, imageUrls: string[], pain
             <div class="grid-cell"><div class="label">Herstellergarantie</div><div class="value">${s(data.manufacturerWarrantyUntil)}</div></div>
           </div>
           <div class="grid-row">
+            <div class="grid-cell"><div class="label">Reifenart</div><div class="value">${s(data.tireType)}</div></div>
             <div class="grid-cell"><div class="label">Reifen vorne</div><div class="value">${s(data.tireConditionFront)}</div></div>
+          </div>
+          <div class="grid-row">
             <div class="grid-cell"><div class="label">Reifen hinten</div><div class="value">${s(data.tireConditionRear)}</div></div>
+            <div class="grid-cell"></div>
           </div>
         </div>
       </div>

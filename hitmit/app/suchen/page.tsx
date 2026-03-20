@@ -23,6 +23,7 @@ import {
   EQUIPMENT_FEATURE_LIST,
   CAR_BRANDS_MODELS,
   MERCEDES_MOTORIZATIONS,
+  tireTypeOptions,
   emissionClassOptions,
   environmentalBadgeOptions,
   particleFilterOptions,
@@ -524,6 +525,7 @@ export default function SuchenPage() {
   const [seatMaterialFilter, setSeatMaterialFilter] = useState<string[]>([]);
   const [climateZoneFilter, setClimateZoneFilter] = useState("");
   const [rimSizeFilter, setRimSizeFilter] = useState("");
+  const [tireTypeFilter, setTireTypeFilter] = useState("Alle");
   const [paintProtectionFilmFilter, setPaintProtectionFilmFilter] = useState("Alle");
   const [noRepaintFilter, setNoRepaintFilter] = useState("Alle");
   const [serviceBookFilter, setServiceBookFilter] = useState("Alle");
@@ -708,6 +710,7 @@ export default function SuchenPage() {
     if (seatMaterialFilter.length > 0 && !seatMaterialFilter.includes(v.seatMaterial ?? "")) return false;
     if (climateZoneFilter !== "" && (v.climateZones === undefined || v.climateZones < Number(climateZoneFilter))) return false;
     if (rimSizeFilter !== "" && v.rimSize !== Number(rimSizeFilter)) return false;
+    if (tireTypeFilter !== "Alle" && (v.tireType || "") !== tireTypeFilter) return false;
     if (paintProtectionFilmFilter !== "Alle") {
       if (paintProtectionFilmFilter === "Ja" && !v.paintProtectionFilm) return false;
       if (paintProtectionFilmFilter === "Nein" && v.paintProtectionFilm) return false;
@@ -795,6 +798,7 @@ export default function SuchenPage() {
     seatMaterialFilter.length > 0,
     climateZoneFilter !== "",
     rimSizeFilter !== "",
+    tireTypeFilter !== "Alle",
     paintProtectionFilmFilter !== "Alle",
     noRepaintFilter !== "Alle",
     serviceBookFilter !== "Alle",
@@ -885,6 +889,7 @@ export default function SuchenPage() {
     if (seatMaterialFilter.length > 0) parts.push(seatMaterialFilter.join(", "));
     if (climateZoneFilter !== "") parts.push(`mind. ${climateZoneFilter}-Zonen Klima`);
     if (rimSizeFilter !== "") parts.push(`${rimSizeFilter} Zoll`);
+    if (tireTypeFilter !== "Alle") parts.push(tireTypeFilter);
     if (paintProtectionFilmFilter !== "Alle") parts.push(`Steinschlagfolie: ${paintProtectionFilmFilter}`);
     if (noRepaintFilter !== "Alle") parts.push(`Nachlackierungsfrei: ${noRepaintFilter}`);
     if (serviceBookFilter !== "Alle") parts.push(`Scheckheft: ${serviceBookFilter}`);
@@ -917,7 +922,7 @@ export default function SuchenPage() {
         huFilter, previousOwnersFilter,
         cylinderFilter, displacementMin, displacementMax, tankVolumeMin,
         manufacturerColorFilter, interiorColorFilter,
-        seatMaterialFilter, climateZoneFilter, rimSizeFilter,
+        seatMaterialFilter, climateZoneFilter, rimSizeFilter, tireTypeFilter,
         paintProtectionFilmFilter, noRepaintFilter,
         serviceBookFilter, manufacturerWarrantyFilter,
         nonSmokerFilter, petFreeFilter, tradeInFilter,
@@ -1527,6 +1532,12 @@ export default function SuchenPage() {
               <NumericInput label="Klimazonen (mind.)" value={climateZoneFilter} onChange={setClimateZoneFilter} placeholder="z.B. 2" />
             )}
             <NumericInput label="Felgengröße (Zoll)" value={rimSizeFilter} onChange={setRimSizeFilter} placeholder="z.B. 19" />
+            <FilterSelect
+              label="Reifenart"
+              value={tireTypeFilter}
+              onChange={setTireTypeFilter}
+              options={tireTypeOptions.map((t) => ({ value: t, label: t }))}
+            />
           </div>
 
           {/* Section: Zustand & Garantie */}

@@ -31,6 +31,7 @@ import {
   cylinderOptions,
   interiorColorOptions,
   seatMaterialOptions,
+  tireTypeOptions,
   emissionClassOptions,
   environmentalBadgeOptions,
   particleFilterOptions,
@@ -497,6 +498,9 @@ function TireScoreBadge({ vehicle }: { vehicle: Vehicle }) {
   return (
     <div className="bg-gray-50 rounded-xl p-4">
       <h4 className="text-sm font-semibold text-gray-700 mb-3">Reifenzustand</h4>
+      {vehicle.tireType && (
+        <p className="text-sm text-gray-600 mb-2">{vehicle.tireType}</p>
+      )}
       <div className="flex flex-wrap gap-3">
         {frontRating && (() => {
           const info = TIRE_RATING_INFO[frontRating];
@@ -723,6 +727,7 @@ function DetailModal({ vehicle, onClose, isDealer }: { vehicle: Vehicle; onClose
               { label: "Erstzulassung", value: vehicle.firstRegistration },
               ...(vehicle.hu ? [{ label: "HU", value: vehicle.hu }] : []),
               ...(vehicle.previousOwners !== undefined ? [{ label: "Vorbesitzer", value: String(vehicle.previousOwners) }] : []),
+              ...(vehicle.tireType ? [{ label: "Reifenart", value: vehicle.tireType }] : []),
               ...(vehicle.emissionClass ? [{ label: "Schadstoffklasse", value: vehicle.emissionClass }] : []),
               ...(vehicle.environmentalBadge ? [{ label: "Umweltplakette", value: vehicle.environmentalBadge }] : []),
             ].map((spec) => (
@@ -1034,6 +1039,7 @@ function InseratePageInner() {
   const [seatMaterialFilter, setSeatMaterialFilter] = useState<string[]>([]);
   const [climateZoneFilter, setClimateZoneFilter] = useState("");
   const [rimSizeFilter, setRimSizeFilter] = useState("");
+  const [tireTypeFilter, setTireTypeFilter] = useState("Alle");
   const [paintProtectionFilmFilter, setPaintProtectionFilmFilter] = useState("Alle");
   const [noRepaintFilter, setNoRepaintFilter] = useState("Alle");
   const [serviceBookFilter, setServiceBookFilter] = useState("Alle");
@@ -1089,6 +1095,7 @@ function InseratePageInner() {
     seatMaterialFilter.length > 0,
     climateZoneFilter !== "",
     rimSizeFilter !== "",
+    tireTypeFilter !== "Alle",
     paintProtectionFilmFilter !== "Alle",
     noRepaintFilter !== "Alle",
     serviceBookFilter !== "Alle",
@@ -1322,6 +1329,7 @@ function InseratePageInner() {
     if (seatMaterialFilter.length > 0 && (!v.seatMaterial || !seatMaterialFilter.includes(v.seatMaterial))) return false;
     if (climateZoneFilter !== "" && v.climateZones !== Number(climateZoneFilter)) return false;
     if (rimSizeFilter !== "" && v.rimSize !== Number(rimSizeFilter)) return false;
+    if (tireTypeFilter !== "Alle" && (v.tireType || "") !== tireTypeFilter) return false;
     if (paintProtectionFilmFilter !== "Alle") {
       if (paintProtectionFilmFilter === "Ja" && !v.paintProtectionFilm) return false;
       if (paintProtectionFilmFilter === "Nein" && v.paintProtectionFilm) return false;
@@ -1747,7 +1755,7 @@ function InseratePageInner() {
                     cylinderFilter, displacementMin, displacementMax, tankVolumeMin,
                     ausstattungSearch: "",
                     manufacturerColorFilter, interiorColorFilter,
-                    seatMaterialFilter, climateZoneFilter, rimSizeFilter,
+                    seatMaterialFilter, climateZoneFilter, rimSizeFilter, tireTypeFilter,
                     paintProtectionFilmFilter, noRepaintFilter,
                     serviceBookFilter, manufacturerWarrantyFilter,
                     nonSmokerFilter, petFreeFilter, tradeInFilter: false,
@@ -2068,6 +2076,20 @@ function InseratePageInner() {
                   placeholder="z.B. 19"
                   className="w-full bg-gray-50 dark:bg-[#1a1a1a] border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-gray-700 placeholder:text-gray-400 hover:border-[#f14011] focus:border-[#f14011] focus:outline-none transition-colors"
                 />
+              </div>
+
+              {/* Tire Type */}
+              <div>
+                <label className="block text-xs font-medium text-gray-500 mb-1.5">Reifenart</label>
+                <select
+                  value={tireTypeFilter}
+                  onChange={(e) => setTireTypeFilter(e.target.value)}
+                  className="w-full bg-gray-50 dark:bg-[#1a1a1a] border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-gray-700 hover:border-[#f14011] focus:border-[#f14011] focus:outline-none transition-colors"
+                >
+                  {tireTypeOptions.map((t) => (
+                    <option key={t} value={t}>{t}</option>
+                  ))}
+                </select>
               </div>
 
               {/* Manufacturer Color */}

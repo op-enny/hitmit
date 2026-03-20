@@ -37,6 +37,7 @@ export interface Vehicle {
   paintThickness?: Record<string, string>;
   damageMap?: Record<string, string>;
   vehicleOrigin?: string;
+  tireType?: string;
   tireDepthFront?: string;
   tireDepthRear?: string;
   tireAgeFront?: string;
@@ -916,6 +917,7 @@ export const seatMaterialOptions = ["Alle", "Leder", "Teilleder", "Stoff", "Alca
 export const climateZoneOptions = ["Alle", "1", "2", "3", "4"];
 export const rimSizeOptions = ["Alle", "15", "16", "17", "18", "19", "20", "21", "22"];
 
+export const tireTypeOptions = ["Alle", "Sommerreifen", "Winterreifen", "Allwetterreifen"];
 export const emissionClassOptions = ["Alle", "Euro 6e", "Euro 6d", "Euro 6d-Temp", "Euro 6c", "Euro 6b", "Euro 6", "Euro 5", "Euro 4", "Euro 3", "Euro 2", "Euro 1", "Emissionsfrei"];
 export const environmentalBadgeOptions = ["Alle", "Grün (4)", "Gelb (3)", "Rot (2)", "Keine"];
 export const particleFilterOptions = ["Alle", "Ja", "Nein"];
@@ -964,6 +966,7 @@ export const EQUIPMENT_FEATURE_LIST = [
   "Tagfahrlicht",
   "Nebelscheinwerfer",
   "Alufelgen",
+  "Stahlfelgen",
   "Dachreling",
   "Anhängerkupplung",
   "Sportpaket",
@@ -1055,7 +1058,7 @@ export const SAFETY_FEATURES_BY_TYPE: Record<string, string[]> = {
 export const EXTERIOR_FEATURES_BY_TYPE: Record<string, string[]> = {
   PKW: [
     "LED-Scheinwerfer", "Xenon-Scheinwerfer", "Matrix-LED", "Tagfahrlicht",
-    "Nebelscheinwerfer", "Alufelgen", "Dachreling", "Anhängerkupplung",
+    "Nebelscheinwerfer", "Alufelgen", "Stahlfelgen", "Dachreling", "Anhängerkupplung",
     "Sportpaket", "Lackversiegelung",
   ],
   Motorrad: [
@@ -1064,15 +1067,15 @@ export const EXTERIOR_FEATURES_BY_TYPE: Record<string, string[]> = {
   ],
   LKW: [
     "LED-Scheinwerfer", "Nebelscheinwerfer", "Spoiler", "Seitenverkleidung",
-    "Rampe", "Anhängerkupplung", "Dachspoiler",
+    "Rampe", "Anhängerkupplung", "Dachspoiler", "Alufelgen", "Stahlfelgen",
   ],
   Transporter: [
     "LED-Scheinwerfer", "Tagfahrlicht", "Nebelscheinwerfer", "Anhängerkupplung",
-    "Dachreling", "Dachgalerie", "Trittbretter", "Laderaumverkleidung",
+    "Dachreling", "Dachgalerie", "Trittbretter", "Laderaumverkleidung", "Alufelgen", "Stahlfelgen",
   ],
   Wohnmobil: [
     "LED-Scheinwerfer", "Markise", "Fahrradträger", "Anhängerkupplung",
-    "Dachreling", "SAT-Anlage", "Solaranlage", "Dachklimaanlage",
+    "Dachreling", "SAT-Anlage", "Solaranlage", "Dachklimaanlage", "Alufelgen", "Stahlfelgen",
   ],
 };
 
