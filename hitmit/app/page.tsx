@@ -1533,7 +1533,7 @@ const MULTIMEDIA_FEATURES = [
   "Rückfahrkamera",
   "360°-Kamera",
   "WLAN-Hotspot",
-  "Induktives Laden",
+  "Induktive Ladestation",
 ];
 
 // ============================================================================

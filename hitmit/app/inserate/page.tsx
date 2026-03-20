@@ -1740,7 +1740,7 @@ function InseratePageInner() {
                     modelFilter,
                     brandFilter2, modelFilter2,
                     brandFilter3, modelFilter3,
-                    motorizationFilter, variantFilter,
+                    motorizationFilter, variantFilter, descriptionSearch: "",
                     vehicleTypeFilter, vehicleCategoryFilter,
                     mwstFilter, firstRegFrom: "", firstRegTo: "",
                     huFilter: "Alle", previousOwnersFilter: [],

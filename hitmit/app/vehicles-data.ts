@@ -976,7 +976,7 @@ export const EQUIPMENT_FEATURE_LIST = [
   "Rückfahrkamera",
   "360°-Kamera",
   "WLAN-Hotspot",
-  "Induktives Laden",
+  "Induktive Ladestation",
 ];
 
 // ============================================================================
@@ -1080,7 +1080,7 @@ export const MULTIMEDIA_FEATURES_BY_TYPE: Record<string, string[]> = {
   PKW: [
     "Navigationssystem", "Apple CarPlay", "Android Auto", "Bluetooth",
     "USB", "DAB-Radio", "Soundsystem", "Rückfahrkamera", "360°-Kamera",
-    "WLAN-Hotspot", "Induktives Laden",
+    "WLAN-Hotspot", "Induktive Ladestation",
   ],
   Motorrad: [
     "Navigationssystem", "Bluetooth-Kommunikation", "GPS-Halterung",

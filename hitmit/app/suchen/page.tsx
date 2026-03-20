@@ -505,6 +505,7 @@ export default function SuchenPage() {
   const [showMotorizationDropdown, setShowMotorizationDropdown] = useState(false);
   const motorizationRef = useRef<HTMLDivElement>(null);
   const [variantFilter, setVariantFilter] = useState("");
+  const [descriptionSearch, setDescriptionSearch] = useState("");
   const [vehicleTypeFilter, setVehicleTypeFilter] = useState("PKW");
   const [vehicleCategoryFilter, setVehicleCategoryFilter] = useState<string[]>([]);
   const [mwstFilter, setMwstFilter] = useState("Alle");
@@ -593,6 +594,8 @@ export default function SuchenPage() {
     } else {
       if (variantFilter !== "" && !v.variant.toLowerCase().includes(variantFilter.toLowerCase())) return false;
     }
+
+    if (descriptionSearch !== "" && !(v.description || "").toLowerCase().includes(descriptionSearch.toLowerCase())) return false;
 
     if (fuelFilter.length > 0) {
       const matchesFuel = fuelFilter.some((ff) => {
@@ -846,6 +849,7 @@ export default function SuchenPage() {
     if (variantFilter2) parts.push(variantFilter2);
     if (brandFilter3 !== "Alle Marken") parts.push(modelFilter3 ? `${brandFilter3} ${modelFilter3}` : brandFilter3);
     if (variantFilter3) parts.push(variantFilter3);
+    if (descriptionSearch) parts.push(`"${descriptionSearch}"`);
     if (fuelFilter.length > 0) parts.push(fuelFilter.join(", "));
     if (priceMin !== "") parts.push(`ab ${Number(priceMin).toLocaleString("de-DE")} €`);
     if (priceMax !== "") parts.push(`bis ${Number(priceMax).toLocaleString("de-DE")} €`);
@@ -907,7 +911,7 @@ export default function SuchenPage() {
         colorFilter, conditionFilter,
         doorFilter, seatFilter,
         modelFilter, brandFilter2, modelFilter2, brandFilter3, modelFilter3,
-        motorizationFilter, variantFilter,
+        motorizationFilter, variantFilter, descriptionSearch,
         vehicleTypeFilter, vehicleCategoryFilter,
         mwstFilter, firstRegFrom, firstRegTo,
         huFilter, previousOwnersFilter,
@@ -1115,6 +1119,19 @@ export default function SuchenPage() {
                 className="w-full bg-white dark:bg-[#1a1a1a] border border-gray-200 dark:border-[#2a2a2a] rounded-xl px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 placeholder:text-gray-400 hover:border-[#f14011] focus:border-[#f14011] focus:outline-none transition-colors"
               />
             </div>
+            {/* Description search — visible when multiple brands selected */}
+            {showBrandRow2 && (
+              <div>
+                <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1.5">Beschreibung durchsuchen</label>
+                <input
+                  type="text"
+                  value={descriptionSearch}
+                  onChange={(e) => setDescriptionSearch(e.target.value)}
+                  placeholder="z.B. Scheckheft, unfallfrei"
+                  className="w-full bg-white dark:bg-[#1a1a1a] border border-gray-200 dark:border-[#2a2a2a] rounded-xl px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 placeholder:text-gray-400 hover:border-[#f14011] focus:border-[#f14011] focus:outline-none transition-colors"
+                />
+              </div>
+            )}
             {/* "+" Button to add Row 2 */}
             {brandFilter !== "Alle Marken" && !showBrandRow2 && (
               <div className="col-span-full">
