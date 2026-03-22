@@ -1024,8 +1024,8 @@ export const COMFORT_FEATURES_BY_TYPE: Record<string, string[]> = {
     "Panoramadach", "Schiebedach", "Glasdach (fest)",
     // Elektrische Helfer
     "Elektrische Fensterheber", "Elektrische Spiegelverstellung", "Elektrisch anklappbare Spiegel", "Elektrische Heckklappe",
-    // Zugang
-    "Zentralverriegelung", "Keyless Entry", "Keyless-Go",
+    // Zugang & Sicherung
+    "Zentralverriegelung", "Keyless Entry", "Keyless-Go", "Handschuhfach abschließbar",
     // Fahrassistenz
     "Tempomat", "Limiter", "Abstandsregeltempomat",
     // Getränkefach & Kühlung
@@ -1069,6 +1069,9 @@ export const SAFETY_FEATURES_BY_TYPE: Record<string, string[]> = {
     "Head-up-Display", "Reifendruckkontrolle",
     // Kindersicherheit
     "Isofix",
+    // Airbags
+    "Fahrer-Airbag", "Beifahrer-Airbag", "Beifahrerairbag abschaltbar", "Seitenairbags vorne", "Seitenairbags hinten",
+    "Kopfairbags / Curtain-Airbags", "Knieairbag", "Mittelairbag", "Fußgänger-Airbag",
     // Parken & Kamera
     "Einparkhilfe vorne", "Einparkhilfe hinten", "Parktronic", "Selbstparkend", "Rückfahrkamera", "360°-Grad-Kamera",
   ],
@@ -1124,11 +1127,11 @@ export const EXTERIOR_FEATURES_BY_TYPE: Record<string, string[]> = {
 export const MULTIMEDIA_FEATURES_BY_TYPE: Record<string, string[]> = {
   PKW: [
     // Navigation
-    "Navigationssystem",
+    "Navigationssystem", "AR-Navigation", "Echtzeit-Verkehrsinformationen",
     // Konnektivität
-    "Apple CarPlay", "Android Auto", "Bluetooth", "WLAN-Hotspot",
+    "Apple CarPlay", "Android Auto", "Bluetooth", "WLAN-Hotspot", "Online-Services",
     // Audio
-    "DAB-Radio", "Soundsystem", "CD-Wechsler",
+    "DAB-Radio", "Soundsystem", "Soundsystem-Upgrade", "CD-Wechsler",
     // Anschlüsse & Laden
     "USB", "MP3-Anschluss", "Induktive Ladestation",
     // Kommunikation
