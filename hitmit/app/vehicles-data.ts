@@ -930,6 +930,7 @@ export const SAFETY_FEATURE_LIST = [
   "Traktionskontrolle",
   "Spurhalteassistent",
   "Totwinkelassistent",
+  "Querverkehrsassistent",
   "Notbremsassistent",
   "Abstandswarner",
   "Müdigkeitserkennung",
@@ -937,48 +938,60 @@ export const SAFETY_FEATURE_LIST = [
   "Nachtsichtassistent",
   "Head-up-Display",
   "Reifendruckkontrolle",
-  "Querverkehrsassistent",
   "Isofix",
   "ACC",
-  "360° Kamera",
   "Parktronic",
+  "360° Kamera",
   "Autopilot",
 ];
 
 export const EQUIPMENT_FEATURE_LIST = [
+  // Klima
   "Klimaanlage",
   "Klimaautomatik 1-Zone",
   "Klimaautomatik 2-Zonen",
   "Klimaautomatik 3-Zonen",
   "Klimaautomatik 4-Zonen",
   "Klimaautomatik 5-Zonen",
+  // Heizung & Kühlung
   "Sitzheizung",
+  "Sitzbelüftung",
   "Lenkradheizung",
+  "Standheizung",
+  // Sitze
   "Elektrische Sitze",
   "Massagesitze",
+  "Armlehne",
+  // Dach
   "Panoramadach",
   "Schiebedach",
+  // Elektrisch
   "Elektrische Heckklappe",
   "Keyless Entry",
-  "Standheizung",
+  // Fahrassistenz
   "Tempomat",
+  "Limiter",
   "Abstandsregeltempomat",
-  "Sitzbelüftung",
+  // Licht
   "LED-Scheinwerfer",
   "Matrix-LED",
   "Tagfahrlicht",
   "Nebelscheinwerfer",
+  // Exterieur
   "Alufelgen",
   "Stahlfelgen",
   "Dachreling",
   "Anhängerkupplung",
   "Sportpaket",
+  // Multimedia
   "Navigationssystem",
   "Apple CarPlay",
   "Android Auto",
   "Bluetooth",
   "DAB-Radio",
   "Soundsystem",
+  "CD-Wechsler",
+  // Anschlüsse
   "Rückfahrkamera",
   "360°-Kamera",
   "WLAN-Hotspot",
@@ -1000,69 +1013,90 @@ export const CLIMATE_OPTIONS = [
 
 export const COMFORT_FEATURES_BY_TYPE: Record<string, string[]> = {
   PKW: [
+    // Klima
     "Klimaanlage", "Klimaautomatik 1-Zone", "Klimaautomatik 2-Zonen", "Klimaautomatik 3-Zonen", "Klimaautomatik 4-Zonen", "Klimaautomatik 5-Zonen",
-    "Sitzheizung", "Lenkradheizung",
-    "Elektrische Sitze", "Massagesitze", "Panoramadach", "Schiebedach",
-    "Elektrische Heckklappe", "Keyless Entry", "Standheizung", "Tempomat",
-    "Abstandsregeltempomat", "Sitzbelüftung vorne", "Sitzbelüftung hinten", "Keyless-Go",
-    "Lichtsensor", "Regensensor", "Ambientebeleuchtung", "Elektrische Fensterheber",
-    "Elektrisch anklappbare Spiegel", "Memory-Sitze", "Lordosenstütze", "Beheizbare Frontscheibe",
+    // Heizung & Kühlung
+    "Sitzheizung", "Sitzbelüftung vorne", "Sitzbelüftung hinten", "Lenkradheizung", "Standheizung", "Beheizbare Frontscheibe",
+    // Sitze
+    "Elektrische Sitze", "Memory-Sitze", "Massagesitze", "Lordosenstütze", "Armlehne",
+    // Dach
+    "Panoramadach", "Schiebedach",
+    // Elektrische Helfer
+    "Elektrische Fensterheber", "Elektrisch anklappbare Spiegel", "Elektrische Heckklappe",
+    // Zugang
+    "Keyless Entry", "Keyless-Go",
+    // Fahrassistenz
+    "Tempomat", "Limiter", "Abstandsregeltempomat",
+    // Sensoren & Beleuchtung
+    "Lichtsensor", "Regensensor", "Ambientebeleuchtung",
   ],
   Motorrad: [
-    "Griffheizung", "Sitzheizung", "Windschild", "Topcase", "Seitenkoffer",
-    "Sozius-Fußrasten", "Tempomat", "USB-Anschluss", "12V-Steckdose", "Handprotektoren",
+    "Griffheizung", "Sitzheizung", "Tempomat", "Limiter",
+    "Windschild", "Topcase", "Seitenkoffer", "Handprotektoren",
+    "Sozius-Fußrasten", "USB-Anschluss", "12V-Steckdose",
   ],
   LKW: [
-    "Klimaanlage", "Standheizung", "Kühlbox", "Liegebett", "Tempomat",
-    "Abstandsregeltempomat", "Luftfederung", "Elektrische Fensterheber",
+    "Klimaanlage", "Standheizung", "Tempomat", "Limiter", "Abstandsregeltempomat",
+    "Kühlbox", "Liegebett", "Luftfederung", "Elektrische Fensterheber",
   ],
   Transporter: [
-    "Klimaanlage", "Klimaautomatik 1-Zone", "Klimaautomatik 2-Zonen", "Sitzheizung", "Tempomat",
-    "Abstandsregeltempomat", "Keyless Entry", "Standheizung",
+    "Klimaanlage", "Klimaautomatik 1-Zone", "Klimaautomatik 2-Zonen", "Sitzheizung", "Standheizung",
+    "Tempomat", "Limiter", "Abstandsregeltempomat", "Keyless Entry",
     "Elektrische Fensterheber", "Trennwand", "Lichtsensor", "Regensensor",
   ],
   Wohnmobil: [
-    "Klimaanlage", "Standheizung", "Markise", "Warmwasserboiler",
-    "Sitzheizung", "Tempomat", "Elektrische Trittstufe", "Rahmenfenster",
-    "Verdunkelungssystem", "Fußbodenheizung", "Lichtsensor", "Regensensor",
+    "Klimaanlage", "Standheizung", "Sitzheizung", "Fußbodenheizung",
+    "Tempomat", "Limiter",
+    "Markise", "Warmwasserboiler", "Elektrische Trittstufe", "Rahmenfenster",
+    "Verdunkelungssystem", "Lichtsensor", "Regensensor",
   ],
 };
 
 export const SAFETY_FEATURES_BY_TYPE: Record<string, string[]> = {
   PKW: [
-    "ABS", "ESP", "Traktionskontrolle", "Spurhalteassistent", "Totwinkelassistent",
-    "Notbremsassistent", "Abstandswarner", "Müdigkeitserkennung", "Verkehrszeichenerkennung",
-    "Nachtsichtassistent", "Head-up-Display", "Reifendruckkontrolle",
-    "Querverkehrsassistent", "Isofix",
-    "Einparkhilfe vorne", "Einparkhilfe hinten", "Rückfahrkamera", "360°-Grad-Kamera", "Selbstparkend", "Parktronic",
+    // Stabilität
+    "ABS", "ESP", "Traktionskontrolle",
+    // Assistenten
+    "Spurhalteassistent", "Totwinkelassistent", "Querverkehrsassistent", "Notbremsassistent", "Abstandswarner",
+    // Erkennung
+    "Müdigkeitserkennung", "Verkehrszeichenerkennung", "Nachtsichtassistent",
+    // Anzeige & Kontrolle
+    "Head-up-Display", "Reifendruckkontrolle",
+    // Kindersicherheit
+    "Isofix",
+    // Parken & Kamera
+    "Einparkhilfe vorne", "Einparkhilfe hinten", "Parktronic", "Selbstparkend", "Rückfahrkamera", "360°-Grad-Kamera",
   ],
   Motorrad: [
     "ABS", "Kurven-ABS", "Traktionskontrolle", "Wheelie-Kontrolle",
     "Quickshifter", "Fahrmodi", "Notbremsassistent", "Reifendruckkontrolle",
   ],
   LKW: [
-    "ABS", "ESP", "Abbiegeassistent", "Notbremsassistent", "Abstandswarner", "Spurhalteassistent",
-    "Totwinkelassistent", "Reifendruckkontrolle", "ACC",
+    "ABS", "ESP", "Spurhalteassistent", "Totwinkelassistent", "Abbiegeassistent",
+    "Notbremsassistent", "Abstandswarner", "Reifendruckkontrolle", "ACC",
     "Einparkhilfe vorne", "Einparkhilfe hinten",
   ],
   Transporter: [
-    "ABS", "ESP", "Traktionskontrolle", "Spurhalteassistent", "Notbremsassistent",
-    "Abstandswarner", "Totwinkelassistent", "Abbiegeassistent", "Reifendruckkontrolle",
-    "Rückfahrkamera", "Parktronic", "ACC",
-    "Einparkhilfe vorne", "Einparkhilfe hinten",
+    "ABS", "ESP", "Traktionskontrolle", "Spurhalteassistent", "Totwinkelassistent", "Abbiegeassistent",
+    "Notbremsassistent", "Abstandswarner", "Reifendruckkontrolle", "ACC",
+    "Einparkhilfe vorne", "Einparkhilfe hinten", "Parktronic", "Rückfahrkamera",
   ],
   Wohnmobil: [
-    "ABS", "ESP", "Spurhalteassistent", "Notbremsassistent", "Abstandswarner",
-    "Rückfahrkamera", "Reifendruckkontrolle", "Totwinkelassistent", "Gaswarner",
-    "Einparkhilfe vorne", "Einparkhilfe hinten",
+    "ABS", "ESP", "Spurhalteassistent", "Totwinkelassistent",
+    "Notbremsassistent", "Abstandswarner", "Reifendruckkontrolle",
+    "Gaswarner",
+    "Einparkhilfe vorne", "Einparkhilfe hinten", "Rückfahrkamera",
   ],
 };
 
 export const EXTERIOR_FEATURES_BY_TYPE: Record<string, string[]> = {
   PKW: [
-    "LED-Scheinwerfer", "Xenon-Scheinwerfer", "Matrix-LED", "Tagfahrlicht",
-    "Nebelscheinwerfer", "Alufelgen", "Stahlfelgen", "Dachreling", "Anhängerkupplung",
-    "Sportpaket", "Lackversiegelung",
+    // Licht
+    "LED-Scheinwerfer", "Xenon-Scheinwerfer", "Matrix-LED", "Tagfahrlicht", "Nebelscheinwerfer",
+    // Felgen
+    "Alufelgen", "Stahlfelgen",
+    // Rest
+    "Dachreling", "Anhängerkupplung", "Sportpaket", "Lackversiegelung",
   ],
   Motorrad: [
     "LED-Scheinwerfer", "Tagfahrlicht", "Sturzbügel", "Soziusgriffe",
@@ -1084,25 +1118,30 @@ export const EXTERIOR_FEATURES_BY_TYPE: Record<string, string[]> = {
 
 export const MULTIMEDIA_FEATURES_BY_TYPE: Record<string, string[]> = {
   PKW: [
-    "Navigationssystem", "Apple CarPlay", "Android Auto", "Bluetooth",
-    "USB", "DAB-Radio", "Soundsystem", "Rückfahrkamera", "360°-Kamera",
-    "WLAN-Hotspot", "Induktive Ladestation",
+    // Navigation
+    "Navigationssystem",
+    // Konnektivität
+    "Apple CarPlay", "Android Auto", "Bluetooth", "WLAN-Hotspot",
+    // Audio
+    "DAB-Radio", "Soundsystem", "CD-Wechsler",
+    // Anschlüsse & Laden
+    "USB", "Induktive Ladestation",
   ],
   Motorrad: [
     "Navigationssystem", "Bluetooth-Kommunikation", "GPS-Halterung",
     "TFT-Display", "Connectivity",
   ],
   LKW: [
-    "Navigationssystem", "DAB-Radio", "Bluetooth", "Freisprecheinrichtung",
-    "Rückfahrkamera",
+    "Navigationssystem", "Bluetooth", "Freisprecheinrichtung",
+    "DAB-Radio", "CD-Wechsler", "Rückfahrkamera",
   ],
   Transporter: [
     "Navigationssystem", "Apple CarPlay", "Android Auto", "Bluetooth",
-    "DAB-Radio", "Rückfahrkamera", "USB",
+    "DAB-Radio", "CD-Wechsler", "Rückfahrkamera", "USB",
   ],
   Wohnmobil: [
-    "Navigationssystem", "Apple CarPlay", "Android Auto", "Bluetooth",
-    "DAB-Radio", "Rückfahrkamera", "TV", "WLAN-Hotspot",
+    "Navigationssystem", "Apple CarPlay", "Android Auto", "Bluetooth", "WLAN-Hotspot",
+    "DAB-Radio", "CD-Wechsler", "TV", "Rückfahrkamera",
   ],
 };
 
