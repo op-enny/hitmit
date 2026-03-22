@@ -1097,6 +1097,7 @@ interface VehicleFormData {
   stoneguardFilm: boolean | null;
   serviceHistory: boolean | null;
   taxiVersion: boolean | null;
+  accessibleVehicle: boolean | null;
   serviceHistoryAt: string;
   warrantyUntil: string;
   manufacturerWarrantyUntil: string;
@@ -1107,7 +1108,7 @@ interface VehicleFormData {
   safetyFeatures: string[];
   exteriorFeatures: string[];
   multimediaFeatures: string[];
-  airbags: string;
+  airbags: string[];
   parkingAid: string[];
   cameraFront: boolean | null;
   cameraRear: boolean | null;
@@ -1192,6 +1193,7 @@ const initialFormData: VehicleFormData = {
   stoneguardFilm: null,
   serviceHistory: null,
   taxiVersion: null,
+  accessibleVehicle: null,
   serviceHistoryAt: "",
   warrantyUntil: "",
   manufacturerWarrantyUntil: "",
@@ -1202,7 +1204,7 @@ const initialFormData: VehicleFormData = {
   safetyFeatures: [],
   exteriorFeatures: [],
   multimediaFeatures: [],
-  airbags: "",
+  airbags: [],
   parkingAid: [],
   cameraFront: null,
   cameraRear: null,
@@ -1450,12 +1452,9 @@ const SEAT_MATERIAL_OPTIONS = [
   { value: "other", label: "Sonstige" },
 ];
 
-const AIRBAGS_OPTIONS = [
-  { value: "", label: "Bitte wählen" },
-  { value: "front", label: "Front-Airbags" },
-  { value: "frontSide", label: "Front- und Seiten-Airbags" },
-  { value: "full", label: "Rundum-Airbags" },
-  { value: "none", label: "Keine" },
+const AIRBAG_FEATURES = [
+  "Fahrer-Airbag", "Beifahrer-Airbag", "Seitenairbags vorne", "Seitenairbags hinten",
+  "Kopfairbags / Curtain-Airbags", "Knieairbag", "Mittelairbag", "Fußgänger-Airbag",
 ];
 
 const PARKING_AID_FEATURES = [
@@ -2539,7 +2538,7 @@ function SubmitFormSection() {
                   updateField("safetyFeatures", []);
                   updateField("exteriorFeatures", []);
                   updateField("multimediaFeatures", []);
-                  updateField("airbags", "");
+                  updateField("airbags", []);
                   updateField("parkingAid", []);
                   updateField("cameraFront", null);
                   updateField("cameraRear", null);
@@ -2926,6 +2925,11 @@ function SubmitFormSection() {
                   value={formData.taxiVersion}
                   onChange={(val) => updateField("taxiVersion", val)}
                 />
+                <FormBinaryState
+                  label="Barrierefreies Fahrzeug"
+                  value={formData.accessibleVehicle}
+                  onChange={(val) => updateField("accessibleVehicle", val)}
+                />
               </div>
               <div className="grid md:grid-cols-2 gap-6">
                 <FormSelect
@@ -3125,11 +3129,11 @@ function SubmitFormSection() {
             {/* Safety */}
             <FormSection title="Sicherheit" icon="🛡️">
               {isFieldVisibleForType("airbags", getFormTypeLabel(formData.vehicleType)) && (
-                <FormSelect
+                <FormFeatureSelect
                   label="Airbags"
-                  options={AIRBAGS_OPTIONS}
-                  value={formData.airbags}
-                  onChange={(e) => updateField("airbags", e.target.value)}
+                  features={AIRBAG_FEATURES}
+                  selected={formData.airbags}
+                  onChange={(selected) => updateField("airbags", selected)}
                 />
               )}
               {isFieldVisibleForType("parkingAid", getFormTypeLabel(formData.vehicleType)) && (

@@ -1027,6 +1027,10 @@ export const COMFORT_FEATURES_BY_TYPE: Record<string, string[]> = {
     "Keyless Entry", "Keyless-Go",
     // Fahrassistenz
     "Tempomat", "Limiter", "Abstandsregeltempomat",
+    // Getränkefächer
+    "Getränkefächer", "Getränkefach gekühlt/beheizt",
+    // Pakete
+    "Winterpaket",
     // Sensoren & Beleuchtung
     "Lichtsensor", "Regensensor", "Ambientebeleuchtung",
   ],
