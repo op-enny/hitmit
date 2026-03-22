@@ -1625,7 +1625,7 @@ function FormSelect({
         {label}
         {required && <span className="text-[#f14011] ml-1">*</span>}
       </label>
-      <select className="input appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23737373%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E')] bg-[length:12px] bg-[right_1rem_center] bg-no-repeat pr-10" required={required} {...props}>
+      <select className="input appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23737373%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E')] bg-[length:12px] bg-no-repeat pr-8 sm:pr-10 bg-[right_0.5rem_center] sm:bg-[right_1rem_center]" required={required} {...props}>
         {options.map((opt) => (
           <option key={opt.value} value={opt.value}>{opt.label}</option>
         ))}
@@ -2370,8 +2370,8 @@ function SubmitFormSection() {
   };
 
   return (
-    <section id="submit" className="py-24 lg:py-32 bg-[#fafafa] dark:bg-[#1a1a1a]">
-      <div className="max-w-4xl mx-auto px-6">
+    <section id="submit" className="py-24 lg:py-32 bg-[#fafafa] dark:bg-[#1a1a1a] overflow-x-hidden">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6">
         <div className="text-center mb-12">
           <span className="inline-block px-4 py-1.5 bg-[#fdd8d0] text-[#b72b0b] rounded-full text-sm font-semibold mb-4">
             Jetzt verkaufen
@@ -2394,7 +2394,7 @@ function SubmitFormSection() {
           </div>
         )}
 
-        <form onSubmit={handleSubmit} className="bg-white dark:bg-[#141414] rounded-3xl shadow-xl p-4 sm:p-8 md:p-12 space-y-6">
+        <form onSubmit={handleSubmit} className="bg-white dark:bg-[#141414] rounded-3xl shadow-xl p-4 sm:p-8 md:p-12 space-y-6 overflow-x-hidden">
           {/* Honeypot - hidden from users */}
           <input
             type="text"
