@@ -931,6 +931,7 @@ export const SAFETY_FEATURE_LIST = [
   "Spurhalteassistent",
   "Totwinkelassistent",
   "Notbremsassistent",
+  "Abstandswarner",
   "Müdigkeitserkennung",
   "Verkehrszeichenerkennung",
   "Nachtsichtassistent",
@@ -1030,7 +1031,7 @@ export const COMFORT_FEATURES_BY_TYPE: Record<string, string[]> = {
 export const SAFETY_FEATURES_BY_TYPE: Record<string, string[]> = {
   PKW: [
     "ABS", "ESP", "Traktionskontrolle", "Spurhalteassistent", "Totwinkelassistent",
-    "Notbremsassistent", "Müdigkeitserkennung", "Verkehrszeichenerkennung",
+    "Notbremsassistent", "Abstandswarner", "Müdigkeitserkennung", "Verkehrszeichenerkennung",
     "Nachtsichtassistent", "Head-up-Display", "Reifendruckkontrolle",
     "Querverkehrsassistent", "Isofix",
     "Einparkhilfe vorne", "Einparkhilfe hinten", "Rückfahrkamera", "360°-Grad-Kamera", "Selbstparkend", "Parktronic",
@@ -1040,19 +1041,19 @@ export const SAFETY_FEATURES_BY_TYPE: Record<string, string[]> = {
     "Quickshifter", "Fahrmodi", "Notbremsassistent", "Reifendruckkontrolle",
   ],
   LKW: [
-    "ABS", "ESP", "Abbiegeassistent", "Notbremsassistent", "Spurhalteassistent",
+    "ABS", "ESP", "Abbiegeassistent", "Notbremsassistent", "Abstandswarner", "Spurhalteassistent",
     "Totwinkelassistent", "Reifendruckkontrolle", "ACC",
     "Einparkhilfe vorne", "Einparkhilfe hinten",
   ],
   Transporter: [
     "ABS", "ESP", "Traktionskontrolle", "Spurhalteassistent", "Notbremsassistent",
-    "Totwinkelassistent", "Abbiegeassistent", "Reifendruckkontrolle",
+    "Abstandswarner", "Totwinkelassistent", "Abbiegeassistent", "Reifendruckkontrolle",
     "Rückfahrkamera", "Parktronic", "ACC",
     "Einparkhilfe vorne", "Einparkhilfe hinten",
   ],
   Wohnmobil: [
-    "ABS", "ESP", "Spurhalteassistent", "Notbremsassistent", "Rückfahrkamera",
-    "Reifendruckkontrolle", "Totwinkelassistent", "Gaswarner",
+    "ABS", "ESP", "Spurhalteassistent", "Notbremsassistent", "Abstandswarner",
+    "Rückfahrkamera", "Reifendruckkontrolle", "Totwinkelassistent", "Gaswarner",
     "Einparkhilfe vorne", "Einparkhilfe hinten",
   ],
 };
