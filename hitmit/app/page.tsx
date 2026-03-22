@@ -1368,6 +1368,12 @@ function getFormTypeLabel(vehicleType: string): string {
   return VEHICLE_TYPE_VALUE_TO_LABEL[vehicleType] || "PKW";
 }
 
+function getFormCategoryLabel(vehicleType: string, vehicleCategory: string): string {
+  const opts = VEHICLE_CATEGORY_OPTIONS_BY_TYPE[vehicleType] || VEHICLE_CATEGORY_OPTIONS_BY_TYPE.car;
+  const match = opts.find((o) => o.value === vehicleCategory);
+  return match?.label || "";
+}
+
 function getFormDriveTypeOptions(vehicleType: string) {
   const label = getFormTypeLabel(vehicleType);
   return DRIVE_TYPE_FORM_OPTIONS_BY_TYPE[label] || DRIVE_TYPE_FORM_OPTIONS_BY_TYPE.PKW;
@@ -2383,7 +2389,7 @@ function SubmitFormSection() {
           </div>
         )}
 
-        <form onSubmit={handleSubmit} className="bg-white dark:bg-[#141414] rounded-3xl shadow-xl p-8 md:p-12 space-y-6">
+        <form onSubmit={handleSubmit} className="bg-white dark:bg-[#141414] rounded-3xl shadow-xl p-4 sm:p-8 md:p-12 space-y-6">
           {/* Honeypot - hidden from users */}
           <input
             type="text"
@@ -2415,7 +2421,7 @@ function SubmitFormSection() {
                       : "border-[#e5e5e5] dark:border-[#2a2a2a] hover:border-[#d4d4d4] dark:hover:border-[#3d3d3d]"
                   }`}
                 >
-                  <span className={`font-semibold text-sm sm:text-base ${formData.sellerType === type.value ? "text-[#f14011]" : "text-[#0a0a0a] dark:text-[#ededed]"}`}>
+                  <span className={`font-semibold text-xs sm:text-base ${formData.sellerType === type.value ? "text-[#f14011]" : "text-[#0a0a0a] dark:text-[#ededed]"}`}>
                     {type.label}
                   </span>
                 </button>
@@ -3133,7 +3139,7 @@ function SubmitFormSection() {
               )}
               <FormFeatureSelectWithOther
                 label="Sicherheitsausstattung"
-                features={getSafetyFeaturesForType(getFormTypeLabel(formData.vehicleType))}
+                features={getSafetyFeaturesForType(getFormTypeLabel(formData.vehicleType), [], [getFormCategoryLabel(formData.vehicleType, formData.vehicleCategory)])}
                 selected={formData.safetyFeatures}
                 onChange={(selected) => updateField("safetyFeatures", selected)}
                 otherValue={formData.safetyOther}
@@ -3167,7 +3173,7 @@ function SubmitFormSection() {
               )}
               <FormFeatureSelectWithOther
                 label="Komfort"
-                features={getComfortFeaturesForType(getFormTypeLabel(formData.vehicleType)).filter((f) => !CLIMATE_OPTIONS.includes(f))}
+                features={getComfortFeaturesForType(getFormTypeLabel(formData.vehicleType), [], [getFormCategoryLabel(formData.vehicleType, formData.vehicleCategory)]).filter((f) => !CLIMATE_OPTIONS.includes(f))}
                 selected={formData.comfortFeatures}
                 onChange={(selected) => updateField("comfortFeatures", selected)}
                 otherValue={formData.comfortOther}
@@ -3175,7 +3181,7 @@ function SubmitFormSection() {
               />
               <FormFeatureSelectWithOther
                 label="Exterieur"
-                features={getExteriorFeaturesForType(getFormTypeLabel(formData.vehicleType))}
+                features={getExteriorFeaturesForType(getFormTypeLabel(formData.vehicleType), [], [getFormCategoryLabel(formData.vehicleType, formData.vehicleCategory)])}
                 selected={formData.exteriorFeatures}
                 onChange={(selected) => updateField("exteriorFeatures", selected)}
                 otherValue={formData.exteriorOther}
@@ -3183,7 +3189,7 @@ function SubmitFormSection() {
               />
               <FormFeatureSelectWithOther
                 label="Multimedia"
-                features={getMultimediaFeaturesForType(getFormTypeLabel(formData.vehicleType))}
+                features={getMultimediaFeaturesForType(getFormTypeLabel(formData.vehicleType), [], [getFormCategoryLabel(formData.vehicleType, formData.vehicleCategory)])}
                 selected={formData.multimediaFeatures}
                 onChange={(selected) => updateField("multimediaFeatures", selected)}
                 otherValue={formData.multimediaOther}

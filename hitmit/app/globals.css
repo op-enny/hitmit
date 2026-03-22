@@ -531,6 +531,16 @@ body {
   background-color: var(--background);
 }
 
+/* Tighter padding for date/month pickers on narrow mobile screens */
+@media (max-width: 639px) {
+  input[type="month"].input,
+  input[type="date"].input {
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+    font-size: 0.875rem;
+  }
+}
+
 /* ============================================================================
    SPECIAL EFFECTS
    ============================================================================ */

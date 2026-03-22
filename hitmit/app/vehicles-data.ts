@@ -1199,62 +1199,80 @@ export const EV_SUSPENSION_FEATURES: string[] = [
   "Adaptives Luftfahrwerk",
 ];
 
-export function getComfortFeaturesForType(type: string, fuels: string[] = []): string[] {
-  const base = (type && type !== "Alle" && type !== "" && COMFORT_FEATURES_BY_TYPE[type])
+// Category-specific extra features (appended when category matches)
+const CATEGORY_EXTRA_COMFORT_FEATURES: Record<string, string[]> = {
+  "Cabrio": ["Windschott", "Nackenwärmer", "Gurtreicher"],
+  "Coupé": ["Gurtreicher"],
+};
+
+function appendCategoryExtras(base: string[], categories: string[], map: Record<string, string[]>): string[] {
+  let result = base;
+  for (const cat of categories) {
+    const extras = map[cat];
+    if (extras) {
+      const newItems = extras.filter((f) => !result.includes(f));
+      if (newItems.length > 0) result = [...result, ...newItems];
+    }
+  }
+  return result;
+}
+
+export function getComfortFeaturesForType(type: string, fuels: string[] = [], categories: string[] = []): string[] {
+  let base = (type && type !== "Alle" && type !== "" && COMFORT_FEATURES_BY_TYPE[type])
     ? COMFORT_FEATURES_BY_TYPE[type]
     : COMFORT_FEATURES_BY_TYPE.PKW;
   if (isElectricFuel(fuels)) {
-    return [...base, ...EV_COMFORT_FEATURES.filter((f) => !base.includes(f))];
+    base = [...base, ...EV_COMFORT_FEATURES.filter((f) => !base.includes(f))];
   }
-  return base;
+  return appendCategoryExtras(base, categories, CATEGORY_EXTRA_COMFORT_FEATURES);
 }
 
-export function getSafetyFeaturesForType(type: string, fuels: string[] = []): string[] {
-  const base = (type && type !== "Alle" && type !== "" && SAFETY_FEATURES_BY_TYPE[type])
+export function getSafetyFeaturesForType(type: string, fuels: string[] = [], categories: string[] = []): string[] {
+  let base = (type && type !== "Alle" && type !== "" && SAFETY_FEATURES_BY_TYPE[type])
     ? SAFETY_FEATURES_BY_TYPE[type]
     : SAFETY_FEATURES_BY_TYPE.PKW;
   if (isElectricFuel(fuels)) {
-    return [...base, ...EV_SAFETY_FEATURES.filter((f) => !base.includes(f))];
+    base = [...base, ...EV_SAFETY_FEATURES.filter((f) => !base.includes(f))];
   }
   return base;
 }
 
-export function getExteriorFeaturesForType(type: string, fuels: string[] = []): string[] {
-  const base = (type && type !== "Alle" && type !== "" && EXTERIOR_FEATURES_BY_TYPE[type])
+export function getExteriorFeaturesForType(type: string, fuels: string[] = [], categories: string[] = []): string[] {
+  let base = (type && type !== "Alle" && type !== "" && EXTERIOR_FEATURES_BY_TYPE[type])
     ? EXTERIOR_FEATURES_BY_TYPE[type]
     : EXTERIOR_FEATURES_BY_TYPE.PKW;
   if (isElectricFuel(fuels)) {
-    return [...base, ...EV_EXTERIOR_FEATURES.filter((f) => !base.includes(f))];
+    base = [...base, ...EV_EXTERIOR_FEATURES.filter((f) => !base.includes(f))];
   }
   return base;
 }
 
-export function getMultimediaFeaturesForType(type: string, fuels: string[] = []): string[] {
-  const base = (type && type !== "Alle" && type !== "" && MULTIMEDIA_FEATURES_BY_TYPE[type])
+export function getMultimediaFeaturesForType(type: string, fuels: string[] = [], categories: string[] = []): string[] {
+  let base = (type && type !== "Alle" && type !== "" && MULTIMEDIA_FEATURES_BY_TYPE[type])
     ? MULTIMEDIA_FEATURES_BY_TYPE[type]
     : MULTIMEDIA_FEATURES_BY_TYPE.PKW;
   if (isElectricFuel(fuels)) {
-    return [...base, ...EV_MULTIMEDIA_FEATURES.filter((f) => !base.includes(f))];
+    base = [...base, ...EV_MULTIMEDIA_FEATURES.filter((f) => !base.includes(f))];
   }
   return base;
 }
 
-export function getSuspensionFeaturesForType(type: string, fuels: string[] = []): string[] {
-  const base = (type && type !== "Alle" && type !== "" && SUSPENSION_FEATURES_BY_TYPE[type])
+export function getSuspensionFeaturesForType(type: string, fuels: string[] = [], categories: string[] = []): string[] {
+  let base = (type && type !== "Alle" && type !== "" && SUSPENSION_FEATURES_BY_TYPE[type])
     ? SUSPENSION_FEATURES_BY_TYPE[type]
     : SUSPENSION_FEATURES_BY_TYPE.PKW;
   if (isElectricFuel(fuels)) {
-    return [...base, ...EV_SUSPENSION_FEATURES.filter((f) => !base.includes(f))];
+    base = [...base, ...EV_SUSPENSION_FEATURES.filter((f) => !base.includes(f))];
   }
   return base;
 }
 
-export function getEquipmentFeaturesForType(type: string, fuels: string[] = []): string[] {
+export function getEquipmentFeaturesForType(type: string, fuels: string[] = [], categories: string[] = []): string[] {
   return [
-    ...getComfortFeaturesForType(type, fuels),
-    ...getExteriorFeaturesForType(type, fuels),
-    ...getMultimediaFeaturesForType(type, fuels),
-    ...getSuspensionFeaturesForType(type, fuels),
+    ...getComfortFeaturesForType(type, fuels, categories),
+    ...getExteriorFeaturesForType(type, fuels, categories),
+    ...getMultimediaFeaturesForType(type, fuels, categories),
+    ...getSuspensionFeaturesForType(type, fuels, categories),
   ];
 }
 
