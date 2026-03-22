@@ -1453,7 +1453,7 @@ const SEAT_MATERIAL_OPTIONS = [
 ];
 
 const AIRBAG_FEATURES = [
-  "Fahrer-Airbag", "Beifahrer-Airbag", "Seitenairbags vorne", "Seitenairbags hinten",
+  "Fahrer-Airbag", "Beifahrer-Airbag", "Beifahrerairbag abschaltbar", "Seitenairbags vorne", "Seitenairbags hinten",
   "Kopfairbags / Curtain-Airbags", "Knieairbag", "Mittelairbag", "Fußgänger-Airbag",
 ];
 

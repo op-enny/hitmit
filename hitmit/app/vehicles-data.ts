@@ -1018,13 +1018,13 @@ export const COMFORT_FEATURES_BY_TYPE: Record<string, string[]> = {
     // Heizung & Kühlung
     "Sitzheizung", "Sitzbelüftung vorne", "Sitzbelüftung hinten", "Lenkradheizung", "Standheizung", "Beheizbare Frontscheibe",
     // Sitze
-    "Elektrische Sitze", "Memory-Sitze", "Massagesitze", "Lordosenstütze", "Armlehne", "Mittelarmlehne Fond", "Rücksitze umklappbar",
+    "Elektrische Sitze", "Elektrische Sitze vorne mit Memory (Fahrer)", "Elektrische Sitze mit Memory (Fahrer & Beifahrer)", "Massagesitze", "Lordosenstütze", "Armlehne", "Mittelarmlehne Fond", "Rücksitze umklappbar",
     // Dach
     "Panoramadach", "Schiebedach",
     // Elektrische Helfer
     "Elektrische Fensterheber", "Elektrische Spiegelverstellung", "Elektrisch anklappbare Spiegel", "Elektrische Heckklappe",
     // Zugang
-    "Keyless Entry", "Keyless-Go",
+    "Zentralverriegelung", "Keyless Entry", "Keyless-Go",
     // Fahrassistenz
     "Tempomat", "Limiter", "Abstandsregeltempomat",
     // Getränkefächer
