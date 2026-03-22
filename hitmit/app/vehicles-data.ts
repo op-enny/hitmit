@@ -66,6 +66,7 @@ export interface Vehicle {
   emissionClass?: string;
   environmentalBadge?: string;
   particleFilter?: boolean;
+  steeringSide?: string;
   gradient: string;
 }
 
@@ -1107,6 +1108,8 @@ export const EXTERIOR_FEATURES_BY_TYPE: Record<string, string[]> = {
     "Alufelgen", "Stahlfelgen",
     "---Sonstiges",
     "Dachreling", "Anhängerkupplung", "Sportpaket", "Lackversiegelung", "Getönte Scheiben",
+    "---Pannensicherheit",
+    "Notrad", "Pannenkit",
   ],
   Motorrad: [
     "LED-Scheinwerfer", "Tagfahrlicht", "Sturzbügel", "Soziusgriffe",

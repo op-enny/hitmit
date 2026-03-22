@@ -1033,6 +1033,7 @@ function InseratePageInner() {
   const [conditionFilter, setConditionFilter] = useState<string[]>([]);
   const [doorFilter, setDoorFilter] = useState("Alle");
   const [seatFilter, setSeatFilter] = useState("Alle");
+  const [steeringSideFilter, setSteeringSideFilter] = useState("Alle");
   const [vehicleTypeFilter, setVehicleTypeFilter] = useState("Alle");
   const [vehicleCategoryFilter, setVehicleCategoryFilter] = useState<string[]>([]);
   const [mwstFilter, setMwstFilter] = useState("Alle");
@@ -1090,6 +1091,7 @@ function InseratePageInner() {
     conditionFilter.length > 0,
     doorFilter !== "Alle",
     seatFilter !== "Alle",
+    steeringSideFilter !== "Alle",
     vehicleTypeFilter !== "Alle",
     vehicleCategoryFilter.length > 0,
     mwstFilter !== "Alle",
@@ -1156,6 +1158,8 @@ function InseratePageInner() {
     if (cn) setConditionFilter(cn.split(",").filter(Boolean));
     if (dr && doorOptions.includes(dr)) setDoorFilter(dr);
     if (se && seatOptions.includes(se)) setSeatFilter(se);
+    const ss = searchParams.get("steeringSide");
+    if (ss && ["Linkslenker", "Rechtslenker"].includes(ss)) setSteeringSideFilter(ss);
     const vt = searchParams.get("vehicleType");
     const vc = searchParams.get("vehicleCategory");
     const mw = searchParams.get("mwst");
@@ -1322,6 +1326,7 @@ function InseratePageInner() {
       if (doorFilter === "6/7" && !["6", "7"].includes(v.doors)) return false;
     }
     if (seatFilter !== "Alle" && v.seats !== seatFilter) return false;
+    if (steeringSideFilter !== "Alle" && v.steeringSide !== steeringSideFilter) return false;
     if (vehicleTypeFilter !== "Alle" && v.vehicleType !== vehicleTypeFilter) return false;
     if (vehicleCategoryFilter.length > 0 && (!v.vehicleCategory || !vehicleCategoryFilter.includes(v.vehicleCategory))) return false;
     if (mwstFilter !== "Alle") {
@@ -1719,6 +1724,7 @@ function InseratePageInner() {
                 if (conditionFilter.length > 0) parts.push(conditionFilter.join(", "));
                 if (doorFilter !== "Alle") parts.push(`${doorFilter} Türen`);
                 if (seatFilter !== "Alle") parts.push(`${seatFilter} Sitze`);
+                if (steeringSideFilter !== "Alle") parts.push(steeringSideFilter);
                 if (vehicleTypeFilter !== "Alle") parts.push(vehicleTypeFilter);
                 if (vehicleCategoryFilter.length > 0) parts.push(vehicleCategoryFilter.join(", "));
                 if (mwstFilter !== "Alle") parts.push(`MwSt. ${mwstFilter}`);
@@ -1752,7 +1758,7 @@ function InseratePageInner() {
                     sellerTypeFilter, accidentFreeFilter,
                     cityFilter, cityRadius: "",
                     colorFilter, conditionFilter,
-                    doorFilter, seatFilter: seatFilter === "Alle" ? "" : seatFilter,
+                    doorFilter, seatFilter: seatFilter === "Alle" ? "" : seatFilter, steeringSideFilter,
                     modelFilter,
                     brandFilter2, modelFilter2,
                     brandFilter3, modelFilter3,
@@ -1944,6 +1950,23 @@ function InseratePageInner() {
                 </div>
               </div>
 
+              {/* Steering Side */}
+              <div>
+                <label className="block text-xs font-medium text-gray-500 mb-1.5">Lenkung</label>
+                <div className="relative">
+                  <select
+                    value={steeringSideFilter}
+                    onChange={(e) => setSteeringSideFilter(e.target.value)}
+                    className="w-full appearance-none bg-gray-50 dark:bg-[#1a1a1a] border border-gray-200 rounded-xl px-4 py-2.5 pr-9 text-sm text-gray-700 hover:border-[#f14011] focus:border-[#f14011] focus:outline-none transition-colors cursor-pointer"
+                  >
+                    <option value="Alle">Alle</option>
+                    <option value="Linkslenker">Linkslenker</option>
+                    <option value="Rechtslenker">Rechtslenker</option>
+                  </select>
+                  <ChevronDownIcon className="w-4 h-4 text-gray-400 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+                </div>
+              </div>
+
               {/* City */}
               <div className="col-span-2 sm:col-span-1">
                 <label className="block text-xs font-medium text-gray-500 mb-1.5">Standort (Stadt)</label>
@@ -1975,6 +1998,7 @@ function InseratePageInner() {
                       setCylinderFilter([]);
                       setDoorFilter("Alle");
                       setSeatFilter("Alle");
+                      setSteeringSideFilter("Alle");
                       setInteriorColorFilter([]);
                       setSeatMaterialFilter([]);
                       setClimateZoneFilter("");
@@ -2252,7 +2276,7 @@ function InseratePageInner() {
                   setSellerTypeFilter("Alle"); setAccidentFreeFilter("Alle");
                   setCityFilter("");
                   setColorFilter([]); setConditionFilter([]);
-                  setDoorFilter("Alle"); setSeatFilter("Alle");
+                  setDoorFilter("Alle"); setSeatFilter("Alle"); setSteeringSideFilter("Alle");
                   setVehicleTypeFilter("Alle"); setVehicleCategoryFilter([]);
                   setMwstFilter("Alle"); setCylinderFilter([]);
                   setDisplacementMin(""); setDisplacementMax(""); setTankVolumeMin("");
@@ -2312,7 +2336,7 @@ function InseratePageInner() {
                 setSellerTypeFilter("Alle"); setAccidentFreeFilter("Alle");
                 setCityFilter("");
                 setColorFilter([]); setConditionFilter([]);
-                setDoorFilter("Alle"); setSeatFilter("Alle");
+                setDoorFilter("Alle"); setSeatFilter("Alle"); setSteeringSideFilter("Alle");
               }}
               className="mt-4 text-[#f14011] font-semibold hover:underline"
             >

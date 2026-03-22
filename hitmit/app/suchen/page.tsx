@@ -508,6 +508,7 @@ export default function SuchenPage() {
   const [conditionFilter, setConditionFilter] = useState<string[]>([]);
   const [doorFilter, setDoorFilter] = useState("Alle");
   const [seatFilter, setSeatFilter] = useState("");
+  const [steeringSideFilter, setSteeringSideFilter] = useState("Alle");
 
   // New filters
   const [modelFilter, setModelFilter] = useState("");
@@ -698,6 +699,7 @@ export default function SuchenPage() {
       if (doorFilter === "6/7" && !["6", "7"].includes(v.doors)) return false;
     }
     if (seatFilter !== "" && v.seats !== seatFilter) return false;
+    if (steeringSideFilter !== "Alle" && v.steeringSide !== steeringSideFilter) return false;
     if (motorizationFilter.length > 0 && !motorizationFilter.some((m) => v.model.toLowerCase().includes(m.toLowerCase()))) return false;
     if (vehicleTypeFilter !== "Alle" && v.vehicleType !== vehicleTypeFilter) return false;
     if (vehicleCategoryFilter.length > 0 && (!v.vehicleCategory || !vehicleCategoryFilter.includes(v.vehicleCategory))) return false;
@@ -817,6 +819,7 @@ export default function SuchenPage() {
     conditionFilter.length > 0,
     doorFilter !== "Alle",
     seatFilter !== "",
+    steeringSideFilter !== "Alle",
     motorizationFilter.length > 0,
     vehicleTypeFilter !== "Alle",
     vehicleCategoryFilter.length > 0,
@@ -861,7 +864,7 @@ export default function SuchenPage() {
     setSellerTypeFilter("Alle"); setAccidentFreeFilter("Alle");
     setCityFilter(""); setCityRadius("");
     setColorFilter([]); setConditionFilter([]);
-    setDoorFilter("Alle"); setSeatFilter("");
+    setDoorFilter("Alle"); setSeatFilter(""); setSteeringSideFilter("Alle");
     setModelFilter("");
     setBrandFilter2("Alle Marken"); setModelFilter2(""); setVariantFilter2(""); setCustomBrandText2("");
     setBrandFilter3("Alle Marken"); setModelFilter3(""); setVariantFilter3(""); setCustomBrandText3("");
@@ -909,6 +912,7 @@ export default function SuchenPage() {
     if (conditionFilter.length > 0) parts.push(conditionFilter.join(", "));
     if (doorFilter !== "Alle") parts.push(`${doorFilter} Türen`);
     if (seatFilter !== "") parts.push(`${seatFilter} Sitze`);
+    if (steeringSideFilter !== "Alle") parts.push(steeringSideFilter);
     if (motorizationFilter.length > 0) parts.push(motorizationFilter.join(", "));
     if (vehicleTypeFilter !== "Alle") parts.push(vehicleTypeFilter);
     if (vehicleCategoryFilter.length > 0) parts.push(vehicleCategoryFilter.join(", "));
@@ -952,7 +956,7 @@ export default function SuchenPage() {
         sellerTypeFilter, accidentFreeFilter,
         cityFilter, cityRadius,
         colorFilter, conditionFilter,
-        doorFilter, seatFilter,
+        doorFilter, seatFilter, steeringSideFilter,
         modelFilter, brandFilter2, modelFilter2, brandFilter3, modelFilter3,
         motorizationFilter, variantFilter, descriptionSearch,
         vehicleTypeFilter, vehicleCategoryFilter,
@@ -1051,6 +1055,7 @@ export default function SuchenPage() {
                 setCylinderFilter([]);
                 setDoorFilter("Alle");
                 setSeatFilter("");
+                setSteeringSideFilter("Alle");
                 setInteriorColorFilter([]);
                 setSeatMaterialFilter([]);
                 setClimateZoneFilter("");
@@ -1478,6 +1483,12 @@ export default function SuchenPage() {
               value={seatFilter}
               onChange={setSeatFilter}
               options={getSeatOptionsForType(vehicleTypeFilter).map((s) => ({ value: s, label: s }))}
+            />
+            <FilterSelect
+              label="Lenkung"
+              value={steeringSideFilter}
+              onChange={setSteeringSideFilter}
+              options={[{ value: "Alle", label: "Alle" }, { value: "Linkslenker", label: "Linkslenker" }, { value: "Rechtslenker", label: "Rechtslenker" }]}
             />
             <FilterSelect
               label="Verkäufertyp"

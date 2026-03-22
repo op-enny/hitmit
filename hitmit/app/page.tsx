@@ -1090,6 +1090,7 @@ interface VehicleFormData {
   colorManufacturer: string;
   doors: string;
   seats: string;
+  steeringSide: string;
   weight: string;
   condition: string;
   accidentFree: boolean | null;
@@ -1186,6 +1187,7 @@ const initialFormData: VehicleFormData = {
   colorManufacturer: "",
   doors: "",
   seats: "",
+  steeringSide: "",
   weight: "",
   condition: "",
   accidentFree: null,
@@ -2848,6 +2850,12 @@ function SubmitFormSection() {
                   options={getFormSeatOptions(formData.vehicleType)}
                   value={formData.seats}
                   onChange={(e) => updateField("seats", e.target.value)}
+                />
+                <FormSelect
+                  label="Lenkung"
+                  options={[{ value: "", label: "Bitte wählen" }, { value: "Linkslenker", label: "Linkslenker" }, { value: "Rechtslenker", label: "Rechtslenker" }]}
+                  value={formData.steeringSide}
+                  onChange={(e) => updateField("steeringSide", e.target.value)}
                 />
                 {isFieldVisibleForType("interiorColor", getFormTypeLabel(formData.vehicleType)) && (
                   <FormSelect
