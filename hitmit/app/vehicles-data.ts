@@ -1205,10 +1205,17 @@ const CATEGORY_EXTRA_COMFORT_FEATURES: Record<string, string[]> = {
   "Coupé": ["Gurtreicher"],
 };
 
-function appendCategoryExtras(base: string[], categories: string[], map: Record<string, string[]>): string[] {
+// Category-specific features to exclude
+const CATEGORY_EXCLUDE_COMFORT_FEATURES: Record<string, string[]> = {
+  "Cabrio": ["Panoramadach", "Schiebedach"],
+};
+
+function applyCategoryExtras(base: string[], categories: string[], addMap: Record<string, string[]>, removeMap: Record<string, string[]>): string[] {
   let result = base;
   for (const cat of categories) {
-    const extras = map[cat];
+    const remove = removeMap[cat];
+    if (remove) result = result.filter((f) => !remove.includes(f));
+    const extras = addMap[cat];
     if (extras) {
       const newItems = extras.filter((f) => !result.includes(f));
       if (newItems.length > 0) result = [...result, ...newItems];
@@ -1224,7 +1231,7 @@ export function getComfortFeaturesForType(type: string, fuels: string[] = [], ca
   if (isElectricFuel(fuels)) {
     base = [...base, ...EV_COMFORT_FEATURES.filter((f) => !base.includes(f))];
   }
-  return appendCategoryExtras(base, categories, CATEGORY_EXTRA_COMFORT_FEATURES);
+  return applyCategoryExtras(base, categories, CATEGORY_EXTRA_COMFORT_FEATURES, CATEGORY_EXCLUDE_COMFORT_FEATURES);
 }
 
 export function getSafetyFeaturesForType(type: string, fuels: string[] = [], categories: string[] = []): string[] {
@@ -1237,6 +1244,14 @@ export function getSafetyFeaturesForType(type: string, fuels: string[] = [], cat
   return base;
 }
 
+const CATEGORY_EXTRA_EXTERIOR_FEATURES: Record<string, string[]> = {
+  "Cabrio": ["Hardtop", "Softtop"],
+};
+
+const CATEGORY_EXCLUDE_EXTERIOR_FEATURES: Record<string, string[]> = {
+  "Cabrio": ["Dachreling"],
+};
+
 export function getExteriorFeaturesForType(type: string, fuels: string[] = [], categories: string[] = []): string[] {
   let base = (type && type !== "Alle" && type !== "" && EXTERIOR_FEATURES_BY_TYPE[type])
     ? EXTERIOR_FEATURES_BY_TYPE[type]
@@ -1244,7 +1259,7 @@ export function getExteriorFeaturesForType(type: string, fuels: string[] = [], c
   if (isElectricFuel(fuels)) {
     base = [...base, ...EV_EXTERIOR_FEATURES.filter((f) => !base.includes(f))];
   }
-  return base;
+  return applyCategoryExtras(base, categories, CATEGORY_EXTRA_EXTERIOR_FEATURES, CATEGORY_EXCLUDE_EXTERIOR_FEATURES);
 }
 
 export function getMultimediaFeaturesForType(type: string, fuels: string[] = [], categories: string[] = []): string[] {
