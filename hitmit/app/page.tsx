@@ -1123,6 +1123,7 @@ interface VehicleFormData {
   tireAgeRear: string;
   tireDamageFront: boolean | null;
   tireDamageRear: boolean | null;
+  tireRunflat: boolean | null;
   priceNegotiable: boolean;
   vatDeductible: boolean;
   vehicleOrigin: string;
@@ -1217,6 +1218,7 @@ const initialFormData: VehicleFormData = {
   tireAgeRear: "",
   tireDamageFront: null,
   tireDamageRear: null,
+  tireRunflat: null,
   priceNegotiable: false,
   vatDeductible: false,
   vehicleOrigin: "",
@@ -2992,6 +2994,11 @@ function SubmitFormSection() {
                   onChange={(e) => updateField("tireConditionRear", e.target.value)}
                 />
               </div>
+              <FormBinaryState
+                label="Runflat-Reifen"
+                value={formData.tireRunflat}
+                onChange={(val) => updateField("tireRunflat", val)}
+              />
               <TireConditionInfoButton />
               <div className="grid md:grid-cols-2 gap-6">
                 <FormInput
