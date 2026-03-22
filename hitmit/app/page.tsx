@@ -1114,7 +1114,7 @@ interface VehicleFormData {
   climateZones: string;
   rimType: string;
   rimSize: string;
-  tireType: string;
+  tireType: string[];
   tireConditionFront: string;
   tireConditionRear: string;
   tireDepthFront: string;
@@ -1209,7 +1209,7 @@ const initialFormData: VehicleFormData = {
   climateZones: "",
   rimType: "",
   rimSize: "",
-  tireType: "",
+  tireType: [],
   tireConditionFront: "",
   tireConditionRear: "",
   tireDepthFront: "",
@@ -2968,16 +2968,11 @@ function SubmitFormSection() {
 
               {/* Reifendetails */}
               {isFieldVisibleForType("tireType", getFormTypeLabel(formData.vehicleType)) && (
-                <FormSelect
+                <FormFeatureSelect
                   label="Reifenart"
-                  options={[
-                    { value: "", label: "Bitte wählen" },
-                    { value: "Sommerreifen", label: "Sommerreifen" },
-                    { value: "Winterreifen", label: "Winterreifen" },
-                    { value: "Allwetterreifen", label: "Allwetterreifen" },
-                  ]}
-                  value={formData.tireType}
-                  onChange={(e) => updateField("tireType", e.target.value)}
+                  features={["Sommerreifen", "Winterreifen", "Allwetterreifen"]}
+                  selected={formData.tireType}
+                  onChange={(selected) => updateField("tireType", selected)}
                 />
               )}
               <div className="grid md:grid-cols-2 gap-6">
