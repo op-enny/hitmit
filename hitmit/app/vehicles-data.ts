@@ -1022,7 +1022,7 @@ export const COMFORT_FEATURES_BY_TYPE: Record<string, string[]> = {
     // Dach
     "Panoramadach", "Schiebedach",
     // Elektrische Helfer
-    "Elektrische Fensterheber", "Elektrisch anklappbare Spiegel", "Elektrische Heckklappe",
+    "Elektrische Fensterheber", "Elektrische Spiegelverstellung", "Elektrisch anklappbare Spiegel", "Elektrische Heckklappe",
     // Zugang
     "Keyless Entry", "Keyless-Go",
     // Fahrassistenz
