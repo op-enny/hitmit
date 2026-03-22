@@ -960,11 +960,12 @@ export const EQUIPMENT_FEATURE_LIST = [
   "Standheizung",
   // Sitze
   "Elektrische Sitze",
-  "Massagesitze",
+  "Massagesitze vorne", "Massagesitze vorne & hinten",
   "Armlehne",
   // Dach
   "Panoramadach",
   "Schiebedach",
+  "Glasdach (fest)",
   // Elektrisch
   "Elektrische Heckklappe",
   "Keyless Entry",
@@ -1018,17 +1019,17 @@ export const COMFORT_FEATURES_BY_TYPE: Record<string, string[]> = {
     // Heizung & Kühlung
     "Sitzheizung", "Sitzbelüftung vorne", "Sitzbelüftung hinten", "Lenkradheizung", "Standheizung", "Beheizbare Frontscheibe",
     // Sitze
-    "Elektrische Sitze", "Elektrische Sitze vorne mit Memory (Fahrer)", "Elektrische Sitze mit Memory (Fahrer & Beifahrer)", "Massagesitze", "Lordosenstütze", "Armlehne", "Mittelarmlehne Fond", "Rücksitze umklappbar",
+    "Elektrische Sitze", "Elektrische Sitze vorne mit Memory (Fahrer)", "Elektrische Sitze mit Memory (Fahrer & Beifahrer)", "Massagesitze vorne", "Massagesitze vorne & hinten", "Lordosenstütze", "Armlehne", "Mittelarmlehne Fond", "Rücksitze umklappbar",
     // Dach
-    "Panoramadach", "Schiebedach",
+    "Panoramadach", "Schiebedach", "Glasdach (fest)",
     // Elektrische Helfer
     "Elektrische Fensterheber", "Elektrische Spiegelverstellung", "Elektrisch anklappbare Spiegel", "Elektrische Heckklappe",
     // Zugang
     "Zentralverriegelung", "Keyless Entry", "Keyless-Go",
     // Fahrassistenz
     "Tempomat", "Limiter", "Abstandsregeltempomat",
-    // Getränkefächer
-    "Getränkefächer", "Getränkefach gekühlt/beheizt",
+    // Getränkefach & Kühlung
+    "Getränkefach", "Getränkefach gekühlt/beheizt", "Kühlschrank im Fond",
     // Pakete
     "Winterpaket",
     // Sensoren & Beleuchtung
@@ -1213,7 +1214,7 @@ const CATEGORY_EXTRA_COMFORT_FEATURES: Record<string, string[]> = {
 
 // Category-specific features to exclude
 const CATEGORY_EXCLUDE_COMFORT_FEATURES: Record<string, string[]> = {
-  "Cabrio": ["Panoramadach", "Schiebedach"],
+  "Cabrio": ["Panoramadach", "Schiebedach", "Glasdach (fest)"],
 };
 
 function applyCategoryExtras(base: string[], categories: string[], addMap: Record<string, string[]>, removeMap: Record<string, string[]>): string[] {
