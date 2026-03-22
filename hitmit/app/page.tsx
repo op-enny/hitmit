@@ -1454,7 +1454,7 @@ const SEAT_MATERIAL_OPTIONS = [
 
 const AIRBAG_FEATURES = [
   "Fahrer-Airbag", "Beifahrer-Airbag", "Beifahrerairbag abschaltbar", "Seitenairbags vorne", "Seitenairbags hinten",
-  "Kopfairbags / Curtain-Airbags", "Knieairbag", "Mittelairbag", "Fußgänger-Airbag",
+  "Kopfairbags", "Knieairbag", "Mittelairbag", "Fußgänger-Airbag",
 ];
 
 const PARKING_AID_FEATURES = [
@@ -1899,20 +1899,29 @@ function FormFeatureSelectWithOther({
     <div>
       <label className="block text-sm font-semibold text-[#0a0a0a] dark:text-[#ededed] mb-3">{label}</label>
       <div className="flex flex-wrap gap-2">
-        {features.map((feature) => (
-          <button
-            key={feature}
-            type="button"
-            onClick={() => toggleFeature(feature)}
-            className={`px-3 py-1.5 rounded-full text-sm transition-all ${
-              selected.includes(feature)
-                ? "bg-[#f14011] text-white"
-                : "bg-[#f5f5f5] dark:bg-[#1f1f1f] text-[#525252] dark:text-[#a3a3a3] hover:bg-[#e5e5e5]"
-            }`}
-          >
-            {feature}
-          </button>
-        ))}
+        {features.map((feature) =>
+          feature.startsWith("---") ? (
+            <div key={feature} className="w-full mt-2 first:mt-0">
+              <span className="text-xs font-bold text-[#737373] dark:text-[#8a8a8a] uppercase tracking-wider">{feature.slice(3)}</span>
+            </div>
+          ) : (
+            <button
+              key={feature}
+              type="button"
+              onClick={() => toggleFeature(feature)}
+              className={`px-3 py-1.5 rounded-full text-sm transition-all ${
+                selected.includes(feature)
+                  ? "bg-[#f14011] text-white"
+                  : "bg-[#f5f5f5] dark:bg-[#1f1f1f] text-[#525252] dark:text-[#a3a3a3] hover:bg-[#e5e5e5]"
+              }`}
+            >
+              {feature}
+            </button>
+          )
+        )}
+        <div className="w-full mt-2">
+          <span className="text-xs font-bold text-[#737373] dark:text-[#8a8a8a] uppercase tracking-wider">Sonstige</span>
+        </div>
         <button
           type="button"
           onClick={() => setShowOther(!showOther)}

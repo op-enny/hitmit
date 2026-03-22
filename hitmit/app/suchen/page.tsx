@@ -51,6 +51,18 @@ import { calculateValuation, PRICE_RATING_INFO } from "../valuation";
 import { getCoordsByCity, distanceKm } from "../geocoding";
 
 // ============================================================================
+// HELPERS
+// ============================================================================
+
+function isGroupHeader(feature: string): boolean {
+  return feature.startsWith("---");
+}
+
+function groupHeaderLabel(feature: string): string {
+  return feature.slice(3);
+}
+
+// ============================================================================
 // ICONS
 // ============================================================================
 
@@ -539,7 +551,7 @@ export default function SuchenPage() {
   const [climateZoneFilter, setClimateZoneFilter] = useState("");
   const [rimTypeFilter, setRimTypeFilter] = useState("Alle");
   const [rimSizeFilter, setRimSizeFilter] = useState("");
-  const [tireTypeFilter, setTireTypeFilter] = useState("Alle");
+  const [tireTypeFilter, setTireTypeFilter] = useState<string[]>([]);
   const [paintProtectionFilmFilter, setPaintProtectionFilmFilter] = useState("Alle");
   const [noRepaintFilter, setNoRepaintFilter] = useState("Alle");
   const [serviceBookFilter, setServiceBookFilter] = useState("Alle");
@@ -734,7 +746,7 @@ export default function SuchenPage() {
     if (climateZoneFilter !== "" && (v.climateZones === undefined || v.climateZones < Number(climateZoneFilter))) return false;
     if (rimTypeFilter !== "Alle" && (v.rimType || "") !== rimTypeFilter) return false;
     if (rimSizeFilter !== "" && v.rimSize !== Number(rimSizeFilter)) return false;
-    if (tireTypeFilter !== "Alle" && (v.tireType || "") !== tireTypeFilter) return false;
+    if (tireTypeFilter.length > 0 && (!v.tireType || !tireTypeFilter.some((t) => v.tireType === t))) return false;
     if (paintProtectionFilmFilter !== "Alle") {
       if (paintProtectionFilmFilter === "Ja" && !v.paintProtectionFilm) return false;
       if (paintProtectionFilmFilter === "Nein" && v.paintProtectionFilm) return false;
@@ -823,7 +835,7 @@ export default function SuchenPage() {
     climateZoneFilter !== "",
     rimTypeFilter !== "Alle",
     rimSizeFilter !== "",
-    tireTypeFilter !== "Alle",
+    tireTypeFilter.length > 0,
     paintProtectionFilmFilter !== "Alle",
     noRepaintFilter !== "Alle",
     serviceBookFilter !== "Alle",
@@ -915,7 +927,7 @@ export default function SuchenPage() {
     if (climateZoneFilter !== "") parts.push(`mind. ${climateZoneFilter}-Zonen Klima`);
     if (rimTypeFilter !== "Alle") parts.push(rimTypeFilter);
     if (rimSizeFilter !== "") parts.push(`${rimSizeFilter} Zoll`);
-    if (tireTypeFilter !== "Alle") parts.push(tireTypeFilter);
+    if (tireTypeFilter.length > 0) parts.push(tireTypeFilter.join(", "));
     if (paintProtectionFilmFilter !== "Alle") parts.push(`Steinschlagfolie: ${paintProtectionFilmFilter}`);
     if (noRepaintFilter !== "Alle") parts.push(`Nachlackierungsfrei: ${noRepaintFilter}`);
     if (serviceBookFilter !== "Alle") parts.push(`Scheckheft: ${serviceBookFilter}`);
@@ -1616,11 +1628,11 @@ export default function SuchenPage() {
               <NumericInput label="Felgengröße (Zoll)" value={rimSizeFilter} onChange={setRimSizeFilter} placeholder="z.B. 19" />
             )}
             {isFieldVisibleForType("tireType", vehicleTypeFilter) && (
-              <FilterSelect
+              <MultiFilterSelect
                 label="Reifenart"
-                value={tireTypeFilter}
+                selected={tireTypeFilter}
                 onChange={setTireTypeFilter}
-                options={tireTypeOptions.map((t) => ({ value: t, label: t }))}
+                options={tireTypeOptions.filter((t) => t !== "Alle")}
               />
             )}
           </div>
@@ -1759,7 +1771,12 @@ export default function SuchenPage() {
             </button>
             {showSafetyFeatures && (
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
-                {getSafetyFeaturesForType(vehicleTypeFilter, fuelFilter, vehicleCategoryFilter).map((feature) => (
+                {getSafetyFeaturesForType(vehicleTypeFilter, fuelFilter, vehicleCategoryFilter).map((feature) =>
+                  isGroupHeader(feature) ? (
+                    <div key={feature} className="col-span-full mt-2 first:mt-0">
+                      <span className="text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider">{groupHeaderLabel(feature)}</span>
+                    </div>
+                  ) : (
                   <label key={feature} className="flex items-center gap-2 cursor-pointer group">
                     <input
                       type="checkbox"
@@ -1777,7 +1794,8 @@ export default function SuchenPage() {
                       {feature}
                     </span>
                   </label>
-                ))}
+                  )
+                )}
               </div>
             )}
           </div>
@@ -1819,7 +1837,12 @@ export default function SuchenPage() {
                 )}
                 {/* Restliche Komfort-Features */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
-                  {getComfortFeaturesForType(vehicleTypeFilter, fuelFilter, vehicleCategoryFilter).filter((f) => !CLIMATE_OPTIONS.includes(f)).map((feature) => (
+                  {getComfortFeaturesForType(vehicleTypeFilter, fuelFilter, vehicleCategoryFilter).filter((f) => !CLIMATE_OPTIONS.includes(f)).map((feature) =>
+                    isGroupHeader(feature) ? (
+                      <div key={feature} className="col-span-full mt-2 first:mt-0">
+                        <span className="text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider">{groupHeaderLabel(feature)}</span>
+                      </div>
+                    ) : (
                     <label key={feature} className="flex items-center gap-2 cursor-pointer group">
                       <input
                         type="checkbox"
@@ -1837,7 +1860,8 @@ export default function SuchenPage() {
                         {feature}
                       </span>
                     </label>
-                  ))}
+                    )
+                  )}
                 </div>
               </div>
             )}
@@ -1855,7 +1879,12 @@ export default function SuchenPage() {
             </button>
             {showExteriorFeatures && (
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
-                {getExteriorFeaturesForType(vehicleTypeFilter, fuelFilter, vehicleCategoryFilter).map((feature) => (
+                {getExteriorFeaturesForType(vehicleTypeFilter, fuelFilter, vehicleCategoryFilter).map((feature) =>
+                  isGroupHeader(feature) ? (
+                    <div key={feature} className="col-span-full mt-2 first:mt-0">
+                      <span className="text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider">{groupHeaderLabel(feature)}</span>
+                    </div>
+                  ) : (
                   <label key={feature} className="flex items-center gap-2 cursor-pointer group">
                     <input
                       type="checkbox"
@@ -1873,7 +1902,8 @@ export default function SuchenPage() {
                       {feature}
                     </span>
                   </label>
-                ))}
+                  )
+                )}
               </div>
             )}
           </div>
@@ -1890,7 +1920,12 @@ export default function SuchenPage() {
             </button>
             {showMultimediaFeatures && (
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
-                {getMultimediaFeaturesForType(vehicleTypeFilter, fuelFilter, vehicleCategoryFilter).map((feature) => (
+                {getMultimediaFeaturesForType(vehicleTypeFilter, fuelFilter, vehicleCategoryFilter).map((feature) =>
+                  isGroupHeader(feature) ? (
+                    <div key={feature} className="col-span-full mt-2 first:mt-0">
+                      <span className="text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider">{groupHeaderLabel(feature)}</span>
+                    </div>
+                  ) : (
                   <label key={feature} className="flex items-center gap-2 cursor-pointer group">
                     <input
                       type="checkbox"
@@ -1908,7 +1943,8 @@ export default function SuchenPage() {
                       {feature}
                     </span>
                   </label>
-                ))}
+                  )
+                )}
               </div>
             )}
           </div>
@@ -1925,7 +1961,12 @@ export default function SuchenPage() {
             </button>
             {showSuspensionFeatures && (
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
-                {getSuspensionFeaturesForType(vehicleTypeFilter, fuelFilter, vehicleCategoryFilter).map((feature) => (
+                {getSuspensionFeaturesForType(vehicleTypeFilter, fuelFilter, vehicleCategoryFilter).map((feature) =>
+                  isGroupHeader(feature) ? (
+                    <div key={feature} className="col-span-full mt-2 first:mt-0">
+                      <span className="text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider">{groupHeaderLabel(feature)}</span>
+                    </div>
+                  ) : (
                   <label key={feature} className="flex items-center gap-2 cursor-pointer group">
                     <input
                       type="checkbox"
@@ -1943,7 +1984,8 @@ export default function SuchenPage() {
                       {feature}
                     </span>
                   </label>
-                ))}
+                  )
+                )}
               </div>
             )}
           </div>

@@ -1014,25 +1014,25 @@ export const CLIMATE_OPTIONS = [
 
 export const COMFORT_FEATURES_BY_TYPE: Record<string, string[]> = {
   PKW: [
-    // Klima
+    "---Klima",
     "Klimaanlage", "Klimaautomatik 1-Zone", "Klimaautomatik 2-Zonen", "Klimaautomatik 3-Zonen", "Klimaautomatik 4-Zonen", "Klimaautomatik 5-Zonen",
-    // Heizung & Kühlung
-    "Sitzheizung", "Sitzbelüftung vorne", "Sitzbelüftung hinten", "Lenkradheizung", "Standheizung", "Beheizbare Frontscheibe",
-    // Sitze
-    "Elektrische Sitze", "Elektrische Sitze vorne mit Memory (Fahrer)", "Elektrische Sitze mit Memory (Fahrer & Beifahrer)", "Massagesitze vorne", "Massagesitze vorne & hinten", "Lordosenstütze", "Armlehne", "Mittelarmlehne Fond", "Rücksitze umklappbar",
-    // Dach
+    "---Sitze",
+    "Sitzheizung", "Sitzbelüftung vorne", "Sitzbelüftung hinten", "Elektrische Sitze", "Elektrische Sitze vorne mit Memory (Fahrer)", "Elektrische Sitze mit Memory (Fahrer & Beifahrer)", "Massagesitze vorne", "Massagesitze vorne & hinten", "Lordosenstütze", "Armlehne", "Mittelarmlehne Fond", "Rücksitze umklappbar",
+    "---Heizung",
+    "Lenkradheizung", "Standheizung", "Beheizbare Frontscheibe",
+    "---Dach",
     "Panoramadach", "Schiebedach", "Glasdach (fest)",
-    // Elektrische Helfer
+    "---Elektrische Helfer",
     "Elektrische Fensterheber", "Elektrische Spiegelverstellung", "Elektrisch anklappbare Spiegel", "Elektrische Heckklappe",
-    // Zugang & Sicherung
+    "---Zugang & Sicherung",
     "Zentralverriegelung", "Keyless Entry", "Keyless-Go", "Handschuhfach abschließbar",
-    // Fahrassistenz
+    "---Fahrassistenz",
     "Tempomat", "Limiter", "Abstandsregeltempomat",
-    // Getränkefach & Kühlung
+    "---Getränkefach & Kühlung",
     "Getränkefach", "Getränkefach gekühlt/beheizt", "Kühlschrank im Fond",
-    // Pakete
+    "---Pakete",
     "Winterpaket",
-    // Sensoren & Beleuchtung
+    "---Sensoren & Beleuchtung",
     "Lichtsensor", "Regensensor", "Ambientebeleuchtung",
   ],
   Motorrad: [
@@ -1059,20 +1059,20 @@ export const COMFORT_FEATURES_BY_TYPE: Record<string, string[]> = {
 
 export const SAFETY_FEATURES_BY_TYPE: Record<string, string[]> = {
   PKW: [
-    // Stabilität
+    "---Stabilität",
     "ABS", "ESP", "Traktionskontrolle",
-    // Assistenten
+    "---Assistenten",
     "Spurhalteassistent", "Totwinkelassistent", "Querverkehrsassistent", "Notbremsassistent", "Abstandswarner",
-    // Erkennung
+    "---Erkennung",
     "Müdigkeitserkennung", "Verkehrszeichenerkennung", "Nachtsichtassistent",
-    // Anzeige & Kontrolle
+    "---Anzeige & Kontrolle",
     "Head-up-Display", "Reifendruckkontrolle",
-    // Kindersicherheit
+    "---Kindersicherheit",
     "Isofix",
-    // Airbags
+    "---Airbags",
     "Fahrer-Airbag", "Beifahrer-Airbag", "Beifahrerairbag abschaltbar", "Seitenairbags vorne", "Seitenairbags hinten",
-    "Kopfairbags / Curtain-Airbags", "Knieairbag", "Mittelairbag", "Fußgänger-Airbag",
-    // Parken & Kamera
+    "Kopfairbags", "Knieairbag", "Mittelairbag", "Fußgänger-Airbag",
+    "---Parken & Kamera",
     "Einparkhilfe vorne", "Einparkhilfe hinten", "Parktronic", "Selbstparkend", "Rückfahrkamera", "360°-Grad-Kamera",
   ],
   Motorrad: [
@@ -1099,11 +1099,11 @@ export const SAFETY_FEATURES_BY_TYPE: Record<string, string[]> = {
 
 export const EXTERIOR_FEATURES_BY_TYPE: Record<string, string[]> = {
   PKW: [
-    // Licht
+    "---Licht",
     "LED-Scheinwerfer", "Xenon-Scheinwerfer", "Matrix-LED", "Tagfahrlicht", "Nebelscheinwerfer",
-    // Felgen
+    "---Felgen",
     "Alufelgen", "Stahlfelgen",
-    // Rest
+    "---Sonstiges",
     "Dachreling", "Anhängerkupplung", "Sportpaket", "Lackversiegelung",
   ],
   Motorrad: [
@@ -1126,15 +1126,15 @@ export const EXTERIOR_FEATURES_BY_TYPE: Record<string, string[]> = {
 
 export const MULTIMEDIA_FEATURES_BY_TYPE: Record<string, string[]> = {
   PKW: [
-    // Navigation
+    "---Navigation",
     "Navigationssystem", "AR-Navigation", "Echtzeit-Verkehrsinformationen",
-    // Konnektivität
+    "---Konnektivität",
     "Apple CarPlay", "Android Auto", "Bluetooth", "WLAN-Hotspot", "Online-Services",
-    // Audio
+    "---Audio",
     "DAB-Radio", "Soundsystem", "Soundsystem-Upgrade", "CD-Wechsler",
-    // Anschlüsse & Laden
+    "---Anschlüsse & Laden",
     "USB", "MP3-Anschluss", "Induktive Ladestation",
-    // Kommunikation
+    "---Kommunikation",
     "Freisprechanlage", "Spracheingabe",
   ],
   Motorrad: [

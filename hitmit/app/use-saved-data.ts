@@ -60,7 +60,7 @@ export interface SavedSearch {
     climateZoneFilter: string;
     rimTypeFilter: string;
     rimSizeFilter: string;
-    tireTypeFilter: string;
+    tireTypeFilter: string | string[];
     paintProtectionFilmFilter: string;
     noRepaintFilter: string;
     serviceBookFilter: string;
