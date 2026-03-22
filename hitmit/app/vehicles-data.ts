@@ -1018,7 +1018,7 @@ export const COMFORT_FEATURES_BY_TYPE: Record<string, string[]> = {
     // Heizung & Kühlung
     "Sitzheizung", "Sitzbelüftung vorne", "Sitzbelüftung hinten", "Lenkradheizung", "Standheizung", "Beheizbare Frontscheibe",
     // Sitze
-    "Elektrische Sitze", "Memory-Sitze", "Massagesitze", "Lordosenstütze", "Armlehne",
+    "Elektrische Sitze", "Memory-Sitze", "Massagesitze", "Lordosenstütze", "Armlehne", "Rücksitze umklappbar",
     // Dach
     "Panoramadach", "Schiebedach",
     // Elektrische Helfer
