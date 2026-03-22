@@ -1096,11 +1096,13 @@ interface VehicleFormData {
   repaintFree: boolean | null;
   stoneguardFilm: boolean | null;
   serviceHistory: boolean | null;
+  taxiVersion: boolean | null;
   serviceHistoryAt: string;
   warrantyUntil: string;
   manufacturerWarrantyUntil: string;
   interiorColor: string;
   seatMaterial: string;
+  dashboardType: string;
   comfortFeatures: string[];
   safetyFeatures: string[];
   exteriorFeatures: string[];
@@ -1188,11 +1190,13 @@ const initialFormData: VehicleFormData = {
   repaintFree: null,
   stoneguardFilm: null,
   serviceHistory: null,
+  taxiVersion: null,
   serviceHistoryAt: "",
   warrantyUntil: "",
   manufacturerWarrantyUntil: "",
   interiorColor: "",
   seatMaterial: "",
+  dashboardType: "",
   comfortFeatures: [],
   safetyFeatures: [],
   exteriorFeatures: [],
@@ -2851,6 +2855,16 @@ function SubmitFormSection() {
                     onChange={(e) => updateField("seatMaterial", e.target.value)}
                   />
                 )}
+                <FormSelect
+                  label="Tacho"
+                  options={[
+                    { value: "", label: "Bitte wählen" },
+                    { value: "digital", label: "Volldigital" },
+                    { value: "analog", label: "Analog" },
+                  ]}
+                  value={formData.dashboardType}
+                  onChange={(e) => updateField("dashboardType", e.target.value)}
+                />
               </div>
               {isFieldVisibleForType("rimSize", getFormTypeLabel(formData.vehicleType)) && (
                 <div className="grid md:grid-cols-3 gap-6">
@@ -2904,6 +2918,11 @@ function SubmitFormSection() {
                   label="Scheckheftgepflegt"
                   value={formData.serviceHistory}
                   onChange={(val) => updateField("serviceHistory", val)}
+                />
+                <FormBinaryState
+                  label="Taxiausführung"
+                  value={formData.taxiVersion}
+                  onChange={(val) => updateField("taxiVersion", val)}
                 />
               </div>
               <div className="grid md:grid-cols-2 gap-6">

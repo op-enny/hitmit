@@ -1125,7 +1125,9 @@ export const MULTIMEDIA_FEATURES_BY_TYPE: Record<string, string[]> = {
     // Audio
     "DAB-Radio", "Soundsystem", "CD-Wechsler",
     // Anschlüsse & Laden
-    "USB", "Induktive Ladestation",
+    "USB", "MP3-Anschluss", "Induktive Ladestation",
+    // Kommunikation
+    "Freisprechanlage", "Spracheingabe",
   ],
   Motorrad: [
     "Navigationssystem", "Bluetooth-Kommunikation", "GPS-Halterung",
