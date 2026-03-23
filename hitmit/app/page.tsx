@@ -1509,6 +1509,7 @@ const COMFORT_FEATURES = [
   "Multifunktionslenkrad",
   "Beifahrersitz umklappbar",
   "Servolenkung",
+  "Start-Stopp-Automatik",
   "Standheizung",
   "Tempomat",
   "Abstandsregeltempomat",
@@ -2906,11 +2907,19 @@ function SubmitFormSection() {
                     value={formData.rimType}
                     onChange={(e) => updateField("rimType", e.target.value)}
                   />
-                  <FormInput
+                  <FormSelect
                     label="Felgengröße (Zoll)"
-                    type="text"
-                    inputMode="numeric"
-                    placeholder="19"
+                    options={[
+                      { value: "", label: "Bitte wählen" },
+                      { value: "15", label: "15 Zoll" },
+                      { value: "16", label: "16 Zoll" },
+                      { value: "17", label: "17 Zoll" },
+                      { value: "18", label: "18 Zoll" },
+                      { value: "19", label: "19 Zoll" },
+                      { value: "20", label: "20 Zoll" },
+                      { value: "21", label: "21 Zoll" },
+                      { value: "22", label: "22 Zoll" },
+                    ]}
                     value={formData.rimSize}
                     onChange={(e) => updateField("rimSize", e.target.value)}
                   />

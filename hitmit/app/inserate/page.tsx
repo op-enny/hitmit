@@ -33,6 +33,7 @@ import {
   interiorColorOptions,
   seatMaterialOptions,
   rimTypeOptions,
+  rimSizeOptions,
   tireTypeOptions,
   emissionClassOptions,
   environmentalBadgeOptions,
@@ -2118,13 +2119,15 @@ function InseratePageInner() {
               {isFieldVisibleForType("rimSize", vehicleTypeFilter) && (
                 <div>
                   <label className="block text-xs font-medium text-gray-500 mb-1.5">Felgengröße (Zoll)</label>
-                  <input
-                    type="text"
-                    value={rimSizeFilter}
-                    onChange={(e) => setRimSizeFilter(e.target.value)}
-                    placeholder="z.B. 19"
+                  <select
+                    value={rimSizeFilter || "Alle"}
+                    onChange={(e) => setRimSizeFilter(e.target.value === "Alle" ? "" : e.target.value)}
                     className="w-full bg-gray-50 dark:bg-[#1a1a1a] border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-gray-700 placeholder:text-gray-400 hover:border-[#f14011] focus:border-[#f14011] focus:outline-none transition-colors"
-                  />
+                  >
+                    {rimSizeOptions.map((t) => (
+                      <option key={t} value={t}>{t === "Alle" ? "Alle" : `${t} Zoll`}</option>
+                    ))}
+                  </select>
                 </div>
               )}
 

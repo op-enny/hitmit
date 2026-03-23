@@ -25,6 +25,7 @@ import {
   CAR_BRANDS_MODELS,
   MERCEDES_MOTORIZATIONS,
   rimTypeOptions,
+  rimSizeOptions,
   tireTypeOptions,
   emissionClassOptions,
   environmentalBadgeOptions,
@@ -1636,7 +1637,12 @@ export default function SuchenPage() {
               />
             )}
             {isFieldVisibleForType("rimSize", vehicleTypeFilter) && (
-              <NumericInput label="Felgengröße (Zoll)" value={rimSizeFilter} onChange={setRimSizeFilter} placeholder="z.B. 19" />
+              <FilterSelect
+                label="Felgengröße (Zoll)"
+                value={rimSizeFilter || "Alle"}
+                onChange={(v) => setRimSizeFilter(v === "Alle" ? "" : v)}
+                options={rimSizeOptions.map((t) => ({ value: t, label: t === "Alle" ? "Alle" : `${t} Zoll` }))}
+              />
             )}
             {isFieldVisibleForType("tireType", vehicleTypeFilter) && (
               <MultiFilterSelect

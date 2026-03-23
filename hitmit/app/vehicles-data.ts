@@ -978,6 +978,7 @@ export const EQUIPMENT_FEATURE_LIST = [
   "Keyless Entry",
   // Fahrassistenz
   "Servolenkung",
+  "Start-Stopp-Automatik",
   "Tempomat",
   "Limiter",
   "Abstandsregeltempomat",
@@ -1039,7 +1040,7 @@ export const COMFORT_FEATURES_BY_TYPE: Record<string, string[]> = {
     "---Zugang & Sicherung",
     "Zentralverriegelung", "Keyless Entry", "Keyless-Go", "Handschuhfach abschließbar", "Alarmanlage", "Wegfahrsperre",
     "---Fahrassistenz",
-    "Servolenkung", "Tempomat", "Limiter", "Abstandsregeltempomat", "Hinterachslenkung", "Berganfahrhilfe", "Bergabfahrhilfe", "Aktiv-Fahrwerk",
+    "Servolenkung", "Start-Stopp-Automatik", "Tempomat", "Limiter", "Abstandsregeltempomat", "Hinterachslenkung", "Berganfahrhilfe", "Bergabfahrhilfe", "Aktiv-Fahrwerk",
     "---Getränkefach & Kühlung",
     "Getränkefach", "Getränkefach gekühlt/beheizt", "Kühlschrank im Fond",
     "---Pakete",
