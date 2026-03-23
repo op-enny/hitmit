@@ -961,6 +961,8 @@ export const EQUIPMENT_FEATURE_LIST = [
   "Standheizung",
   // Sitze
   "Lederlenkrad",
+  "Multifunktionslenkrad",
+  "Beifahrersitz umklappbar",
   "Elektrische Sitze",
   "Massagesitze vorne", "Massagesitze vorne & hinten",
   "Armlehne",
@@ -972,6 +974,7 @@ export const EQUIPMENT_FEATURE_LIST = [
   "Elektrische Heckklappe",
   "Zentralverriegelung",
   "Alarmanlage",
+  "Wegfahrsperre",
   "Keyless Entry",
   // Fahrassistenz
   "Servolenkung",
@@ -1026,7 +1029,7 @@ export const COMFORT_FEATURES_BY_TYPE: Record<string, string[]> = {
     "---Klima",
     "Klimaanlage", "Klimaautomatik 1-Zone", "Klimaautomatik 2-Zonen", "Klimaautomatik 3-Zonen", "Klimaautomatik 4-Zonen", "Klimaautomatik 5-Zonen", "Luftreinigungssystem (Ionisator)",
     "---Sitze",
-    "Sitzheizung", "Sitzbelüftung vorne", "Sitzbelüftung hinten", "Sportsitze", "Elektrische Sitze", "Elektrische Sitze vorne mit Memory (Fahrer)", "Elektrische Sitze mit Memory (Fahrer & Beifahrer)", "Massagesitze vorne", "Massagesitze vorne & hinten", "Lordosenstütze", "Armlehne", "Mittelarmlehne Fond", "Multifunktions-Armlehne", "Rücksitze umklappbar", "Einzelsitzanlage im Fond",
+    "Sitzheizung", "Sitzbelüftung vorne", "Sitzbelüftung hinten", "Sportsitze", "Elektrische Sitze", "Elektrische Sitze vorne mit Memory (Fahrer)", "Elektrische Sitze mit Memory (Fahrer & Beifahrer)", "Massagesitze vorne", "Massagesitze vorne & hinten", "Lordosenstütze", "Armlehne", "Mittelarmlehne Fond", "Multifunktions-Armlehne", "Rücksitze umklappbar", "Beifahrersitz umklappbar", "Einzelsitzanlage im Fond",
     "---Heizung",
     "Lenkradheizung", "Standheizung", "Beheizbare Frontscheibe",
     "---Dach",
@@ -1034,7 +1037,7 @@ export const COMFORT_FEATURES_BY_TYPE: Record<string, string[]> = {
     "---Elektrische Helfer",
     "Elektrische Fensterheber", "Elektrische Spiegelverstellung", "Elektrisch anklappbare Spiegel", "Elektrische Heckklappe", "Elektrisches Heckrollo", "Soft-Close-Automatik", "Elektrische Türöffnung/Schließung", "Innenspiegel automatisch abblendend", "Innenspiegel & Außenspiegel automatisch abblendend",
     "---Zugang & Sicherung",
-    "Zentralverriegelung", "Keyless Entry", "Keyless-Go", "Handschuhfach abschließbar", "Alarmanlage",
+    "Zentralverriegelung", "Keyless Entry", "Keyless-Go", "Handschuhfach abschließbar", "Alarmanlage", "Wegfahrsperre",
     "---Fahrassistenz",
     "Servolenkung", "Tempomat", "Limiter", "Abstandsregeltempomat", "Hinterachslenkung", "Berganfahrhilfe", "Bergabfahrhilfe", "Aktiv-Fahrwerk",
     "---Getränkefach & Kühlung",
@@ -1044,7 +1047,7 @@ export const COMFORT_FEATURES_BY_TYPE: Record<string, string[]> = {
     "---Sensoren & Beleuchtung",
     "Lichtsensor", "Regensensor", "Ambientebeleuchtung", "Akustikverglasung",
     "---Sonstiges",
-    "Lederlenkrad", "Kleiderhaken",
+    "Lederlenkrad", "Multifunktionslenkrad", "Kleiderhaken",
   ],
   Motorrad: [
     "Griffheizung", "Sitzheizung", "Tempomat", "Limiter",
