@@ -2901,8 +2901,11 @@ function SubmitFormSection() {
                     label="Felgenart"
                     options={[
                       { value: "", label: "Bitte wählen" },
+                      { value: "Leichtmetallfelgen", label: "Leichtmetallfelgen" },
                       { value: "Alufelgen", label: "Alufelgen" },
                       { value: "Stahlfelgen", label: "Stahlfelgen" },
+                      { value: "Schmiedefelgen", label: "Schmiedefelgen" },
+                      { value: "Chromfelgen", label: "Chromfelgen" },
                     ]}
                     value={formData.rimType}
                     onChange={(e) => updateField("rimType", e.target.value)}

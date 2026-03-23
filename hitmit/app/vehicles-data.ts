@@ -919,7 +919,7 @@ export const seatMaterialOptions = ["Alle", "Leder", "Teilleder", "Stoff", "Alca
 export const climateZoneOptions = ["Alle", "1", "2", "3", "4"];
 export const rimSizeOptions = ["Alle", "15", "16", "17", "18", "19", "20", "21", "22"];
 
-export const rimTypeOptions = ["Alle", "Alufelgen", "Stahlfelgen"];
+export const rimTypeOptions = ["Alle", "Leichtmetallfelgen", "Alufelgen", "Stahlfelgen", "Schmiedefelgen", "Chromfelgen"];
 export const tireTypeOptions = ["Alle", "Sommerreifen", "Winterreifen", "Allwetterreifen"];
 export const emissionClassOptions = ["Alle", "Euro 6e", "Euro 6d", "Euro 6d-Temp", "Euro 6c", "Euro 6b", "Euro 6", "Euro 5", "Euro 4", "Euro 3", "Euro 2", "Euro 1", "Emissionsfrei"];
 export const environmentalBadgeOptions = ["Alle", "Grün (4)", "Gelb (3)", "Rot (2)", "Keine"];
@@ -992,8 +992,11 @@ export const EQUIPMENT_FEATURE_LIST = [
   "Kurvenlicht",
   "Abbiegelicht",
   // Exterieur
+  "Leichtmetallfelgen",
   "Alufelgen",
   "Stahlfelgen",
+  "Schmiedefelgen",
+  "Chromfelgen",
   "Dachreling",
   "Anhängerkupplung",
   "Sportpaket",
@@ -1117,7 +1120,7 @@ export const EXTERIOR_FEATURES_BY_TYPE: Record<string, string[]> = {
     "---Licht",
     "LED-Scheinwerfer", "Xenon-Scheinwerfer", "Bi-Xenon-Scheinwerfer", "Matrix-LED", "Laserlicht", "Digitales Licht", "Tagfahrlicht", "Nebelscheinwerfer", "Kurvenlicht", "Abbiegelicht",
     "---Felgen",
-    "Alufelgen", "Stahlfelgen",
+    "Leichtmetallfelgen", "Alufelgen", "Stahlfelgen", "Schmiedefelgen", "Chromfelgen",
     "---Sonstiges",
     "Dachreling", "Anhängerkupplung", "Sportpaket", "Lackversiegelung", "Getönte Scheiben",
     "---Pannensicherheit",
@@ -1129,15 +1132,15 @@ export const EXTERIOR_FEATURES_BY_TYPE: Record<string, string[]> = {
   ],
   LKW: [
     "LED-Scheinwerfer", "Nebelscheinwerfer", "Spoiler", "Seitenverkleidung",
-    "Rampe", "Anhängerkupplung", "Dachspoiler", "Alufelgen", "Stahlfelgen",
+    "Rampe", "Anhängerkupplung", "Dachspoiler", "Leichtmetallfelgen", "Alufelgen", "Stahlfelgen",
   ],
   Transporter: [
     "LED-Scheinwerfer", "Tagfahrlicht", "Nebelscheinwerfer", "Anhängerkupplung",
-    "Dachreling", "Dachgalerie", "Trittbretter", "Laderaumverkleidung", "Alufelgen", "Stahlfelgen",
+    "Dachreling", "Dachgalerie", "Trittbretter", "Laderaumverkleidung", "Leichtmetallfelgen", "Alufelgen", "Stahlfelgen",
   ],
   Wohnmobil: [
     "LED-Scheinwerfer", "Markise", "Fahrradträger", "Anhängerkupplung",
-    "Dachreling", "SAT-Anlage", "Solaranlage", "Dachklimaanlage", "Alufelgen", "Stahlfelgen",
+    "Dachreling", "SAT-Anlage", "Solaranlage", "Dachklimaanlage", "Leichtmetallfelgen", "Alufelgen", "Stahlfelgen",
   ],
 };
 
