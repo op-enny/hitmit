@@ -960,6 +960,7 @@ export const EQUIPMENT_FEATURE_LIST = [
   "Lenkradheizung",
   "Standheizung",
   // Sitze
+  "Lederlenkrad",
   "Elektrische Sitze",
   "Massagesitze vorne", "Massagesitze vorne & hinten",
   "Armlehne",
@@ -969,16 +970,23 @@ export const EQUIPMENT_FEATURE_LIST = [
   "Glasdach (fest)",
   // Elektrisch
   "Elektrische Heckklappe",
+  "Zentralverriegelung",
+  "Alarmanlage",
   "Keyless Entry",
   // Fahrassistenz
+  "Servolenkung",
   "Tempomat",
   "Limiter",
   "Abstandsregeltempomat",
   // Licht
   "LED-Scheinwerfer",
+  "Xenon-Scheinwerfer",
+  "Bi-Xenon-Scheinwerfer",
   "Matrix-LED",
   "Tagfahrlicht",
   "Nebelscheinwerfer",
+  "Kurvenlicht",
+  "Abbiegelicht",
   // Exterieur
   "Alufelgen",
   "Stahlfelgen",
@@ -1026,9 +1034,9 @@ export const COMFORT_FEATURES_BY_TYPE: Record<string, string[]> = {
     "---Elektrische Helfer",
     "Elektrische Fensterheber", "Elektrische Spiegelverstellung", "Elektrisch anklappbare Spiegel", "Elektrische Heckklappe", "Elektrisches Heckrollo", "Soft-Close-Automatik", "Elektrische Türöffnung/Schließung", "Innenspiegel automatisch abblendend", "Innenspiegel & Außenspiegel automatisch abblendend",
     "---Zugang & Sicherung",
-    "Zentralverriegelung", "Keyless Entry", "Keyless-Go", "Handschuhfach abschließbar",
+    "Zentralverriegelung", "Keyless Entry", "Keyless-Go", "Handschuhfach abschließbar", "Alarmanlage",
     "---Fahrassistenz",
-    "Tempomat", "Limiter", "Abstandsregeltempomat", "Hinterachslenkung", "Berganfahrhilfe", "Bergabfahrhilfe", "Aktiv-Fahrwerk",
+    "Servolenkung", "Tempomat", "Limiter", "Abstandsregeltempomat", "Hinterachslenkung", "Berganfahrhilfe", "Bergabfahrhilfe", "Aktiv-Fahrwerk",
     "---Getränkefach & Kühlung",
     "Getränkefach", "Getränkefach gekühlt/beheizt", "Kühlschrank im Fond",
     "---Pakete",
@@ -1036,7 +1044,7 @@ export const COMFORT_FEATURES_BY_TYPE: Record<string, string[]> = {
     "---Sensoren & Beleuchtung",
     "Lichtsensor", "Regensensor", "Ambientebeleuchtung", "Akustikverglasung",
     "---Sonstiges",
-    "Kleiderhaken",
+    "Lederlenkrad", "Kleiderhaken",
   ],
   Motorrad: [
     "Griffheizung", "Sitzheizung", "Tempomat", "Limiter",
@@ -1103,7 +1111,7 @@ export const SAFETY_FEATURES_BY_TYPE: Record<string, string[]> = {
 export const EXTERIOR_FEATURES_BY_TYPE: Record<string, string[]> = {
   PKW: [
     "---Licht",
-    "LED-Scheinwerfer", "Xenon-Scheinwerfer", "Matrix-LED", "Laserlicht", "Digitales Licht", "Tagfahrlicht", "Nebelscheinwerfer",
+    "LED-Scheinwerfer", "Xenon-Scheinwerfer", "Bi-Xenon-Scheinwerfer", "Matrix-LED", "Laserlicht", "Digitales Licht", "Tagfahrlicht", "Nebelscheinwerfer", "Kurvenlicht", "Abbiegelicht",
     "---Felgen",
     "Alufelgen", "Stahlfelgen",
     "---Sonstiges",
