@@ -1523,7 +1523,7 @@ export default function SuchenPage() {
                 Umkreis {cityRadius ? `${cityRadius} km` : "(beliebig)"}
               </label>
               {(() => {
-                const radiusSteps = [0, 50, 100, 250, 500, 1000];
+                const radiusSteps = [0, 20, 40, 60, 80, 100, 200, 300, 400, 500, 600, 700, 800, 900, 1000];
                 const idx = radiusSteps.indexOf(Number(cityRadius) || 0);
                 const sliderIdx = idx >= 0 ? idx : 0;
                 const pct = (i: number) => `${(i / (radiusSteps.length - 1)) * 100}%`;
@@ -1542,15 +1542,18 @@ export default function SuchenPage() {
                       className="w-full h-2 bg-gray-200 dark:bg-[#2a2a2a] rounded-lg appearance-none cursor-pointer accent-[#f14011]"
                     />
                     <div className="relative w-full h-4 mt-0.5">
-                      {radiusSteps.map((s, i) => (
-                        <span
-                          key={s}
-                          className="absolute text-[10px] text-gray-400 -translate-x-1/2"
-                          style={{ left: pct(i) }}
-                        >
-                          {s === 0 ? "Alle" : i === radiusSteps.length - 1 ? `${s} km` : String(s)}
-                        </span>
-                      ))}
+                      {radiusSteps.filter((s) => s === 0 || s === 100 || s === 500 || s === 1000).map((s) => {
+                        const i = radiusSteps.indexOf(s);
+                        return (
+                          <span
+                            key={s}
+                            className="absolute text-[10px] text-gray-400 -translate-x-1/2"
+                            style={{ left: pct(i) }}
+                          >
+                            {s === 0 ? "Alle" : `${s} km`}
+                          </span>
+                        );
+                      })}
                     </div>
                   </div>
                 );
