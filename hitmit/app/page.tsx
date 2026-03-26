@@ -1535,6 +1535,7 @@ const SAFETY_FEATURES = [
   "Rückfahrassistent",
   "Ausparkassistent",
   "Notrufsystem",
+  "Bordcomputer",
   "Isofix",
 ];
 
