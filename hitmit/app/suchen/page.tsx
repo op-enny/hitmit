@@ -23,7 +23,6 @@ import {
   SAFETY_FEATURE_LIST,
   EQUIPMENT_FEATURE_LIST,
   CAR_BRANDS_MODELS,
-  MERCEDES_MOTORIZATIONS,
   rimTypeOptions,
   rimSizeOptions,
   tireTypeOptions,
@@ -524,9 +523,6 @@ export default function SuchenPage() {
   const [customBrandText3, setCustomBrandText3] = useState("");
   const [showBrandRow2, setShowBrandRow2] = useState(false);
   const [showBrandRow3, setShowBrandRow3] = useState(false);
-  const [motorizationFilter, setMotorizationFilter] = useState<string[]>([]);
-  const [showMotorizationDropdown, setShowMotorizationDropdown] = useState(false);
-  const motorizationRef = useRef<HTMLDivElement>(null);
   const [variantFilter, setVariantFilter] = useState("");
   const [equipSearch, setEquipSearch] = useState("");
   const [equipSearch2, setEquipSearch2] = useState("");
@@ -579,19 +575,6 @@ export default function SuchenPage() {
   const [currentSearchId, setCurrentSearchId] = useState<string | null>(null);
   const { mounted, saveSearch, toggleVehicleInSearch, isVehicleSavedInSearch, toggleFavorite, isFavorite } = useSavedData();
 
-  // Close motorization dropdown on click outside
-  useEffect(() => {
-    function handleClick(e: MouseEvent) {
-      if (motorizationRef.current && !motorizationRef.current.contains(e.target as Node)) {
-        setShowMotorizationDropdown(false);
-      }
-    }
-    if (showMotorizationDropdown) {
-      document.addEventListener("mousedown", handleClick);
-      return () => document.removeEventListener("mousedown", handleClick);
-    }
-  }, [showMotorizationDropdown]);
-
   // Filter logic
   const filtered = vehicles.filter((v) => {
     // Brand+Model+Variant: ODER-Logik über bis zu 3 Paare
@@ -616,11 +599,7 @@ export default function SuchenPage() {
         }
         if (v.brand !== pair.brand) return false;
         if (pair.model !== "") {
-          if (pair.brand === "Mercedes-Benz" && MERCEDES_MOTORIZATIONS[pair.model]) {
-            if (!MERCEDES_MOTORIZATIONS[pair.model].some((m) => v.model.toLowerCase().includes(m.toLowerCase()))) return false;
-          } else {
-            if (!v.model.toLowerCase().includes(pair.model.toLowerCase())) return false;
-          }
+          if (!v.model.toLowerCase().includes(pair.model.toLowerCase())) return false;
         }
         if (pair.variant !== "" && !v.variant.toLowerCase().includes(pair.variant.toLowerCase())) return false;
         if (pair.equip !== "") {
@@ -701,7 +680,6 @@ export default function SuchenPage() {
     }
     if (seatFilter !== "" && v.seats !== seatFilter) return false;
     if (steeringSideFilter !== "Alle" && v.steeringSide !== steeringSideFilter) return false;
-    if (motorizationFilter.length > 0 && !motorizationFilter.some((m) => v.model.toLowerCase().includes(m.toLowerCase()))) return false;
     if (vehicleTypeFilter !== "Alle" && v.vehicleType !== vehicleTypeFilter) return false;
     if (vehicleCategoryFilter.length > 0 && (!v.vehicleCategory || !vehicleCategoryFilter.includes(v.vehicleCategory))) return false;
     if (mwstFilter !== "Alle") {
@@ -821,7 +799,6 @@ export default function SuchenPage() {
     doorFilter !== "Alle",
     seatFilter !== "",
     steeringSideFilter !== "Alle",
-    motorizationFilter.length > 0,
     vehicleTypeFilter !== "Alle",
     vehicleCategoryFilter.length > 0,
     mwstFilter !== "Alle",
@@ -914,7 +891,6 @@ export default function SuchenPage() {
     if (doorFilter !== "Alle") parts.push(`${doorFilter} Türen`);
     if (seatFilter !== "") parts.push(`${seatFilter} Sitze`);
     if (steeringSideFilter !== "Alle") parts.push(steeringSideFilter);
-    if (motorizationFilter.length > 0) parts.push(motorizationFilter.join(", "));
     if (vehicleTypeFilter !== "Alle") parts.push(vehicleTypeFilter);
     if (vehicleCategoryFilter.length > 0) parts.push(vehicleCategoryFilter.join(", "));
     if (mwstFilter !== "Alle") parts.push(`MwSt: ${mwstFilter}`);
@@ -959,7 +935,7 @@ export default function SuchenPage() {
         colorFilter, conditionFilter,
         doorFilter, seatFilter, steeringSideFilter,
         modelFilter, brandFilter2, modelFilter2, brandFilter3, modelFilter3,
-        motorizationFilter, variantFilter, descriptionSearch,
+        variantFilter, descriptionSearch,
         vehicleTypeFilter, vehicleCategoryFilter,
         mwstFilter, firstRegFrom, firstRegTo,
         huFilter, previousOwnersFilter,
@@ -1045,8 +1021,7 @@ export default function SuchenPage() {
               onClick={() => {
                 setVehicleTypeFilter(tab.value);
                 // Reset brand/model/category when type changes
-                setBrandFilter("Alle Marken"); setModelFilter(""); setMotorizationFilter([]);
-                setBrandFilter2("Alle Marken"); setModelFilter2(""); setVariantFilter2("");
+                setBrandFilter("Alle Marken"); setModelFilter("");                 setBrandFilter2("Alle Marken"); setModelFilter2(""); setVariantFilter2("");
                 setBrandFilter3("Alle Marken"); setModelFilter3(""); setVariantFilter3("");
                 setShowBrandRow2(false); setShowBrandRow3(false);
                 setCustomBrandText(""); setCustomBrandText2(""); setCustomBrandText3("");
@@ -1090,7 +1065,7 @@ export default function SuchenPage() {
             <FilterSelect
               label="Marke"
               value={brandFilter}
-              onChange={(v) => { setBrandFilter(v); setModelFilter(""); setMotorizationFilter([]); setCustomBrandText(""); }}
+              onChange={(v) => { setBrandFilter(v); setModelFilter(""); setCustomBrandText(""); }}
               options={getBrandOptionsForType(vehicleTypeFilter).map((b) => ({ value: b, label: b }))}
               grouped
             />
@@ -1109,7 +1084,7 @@ export default function SuchenPage() {
               <FilterSelect
                 label="Modell"
                 value={modelFilter}
-                onChange={(v) => { setModelFilter(v); setMotorizationFilter([]); }}
+                onChange={(v) => { setModelFilter(v); }}
                 options={[
                   { value: "", label: "Alle Modelle" },
                   ...(brandFilter !== "Alle Marken"
@@ -1118,44 +1093,6 @@ export default function SuchenPage() {
                 ]}
                 grouped
               />
-            )}
-            {vehicleTypeFilter === "PKW" && brandFilter === "Mercedes-Benz" && modelFilter !== "" && MERCEDES_MOTORIZATIONS[modelFilter] && (
-              <div className="relative" ref={motorizationRef}>
-                <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1.5">Motorisierung</label>
-                <button
-                  type="button"
-                  onClick={() => setShowMotorizationDropdown(!showMotorizationDropdown)}
-                  className="w-full flex items-center justify-between bg-white dark:bg-[#1a1a1a] border border-gray-200 dark:border-[#2a2a2a] rounded-xl px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:border-[#f14011] focus:border-[#f14011] focus:outline-none transition-colors"
-                >
-                  <span className="truncate">
-                    {motorizationFilter.length === 0
-                      ? "Alle Motorisierungen"
-                      : `${motorizationFilter.length} gewählt`}
-                  </span>
-                  <ChevronDownIcon className={`w-4 h-4 ml-2 shrink-0 transition-transform ${showMotorizationDropdown ? "rotate-180" : ""}`} />
-                </button>
-                {showMotorizationDropdown && (
-                  <div className="absolute z-50 mt-1 w-full bg-white dark:bg-[#1a1a1a] border border-gray-200 dark:border-[#2a2a2a] rounded-xl shadow-lg max-h-60 overflow-y-auto py-1">
-                    {MERCEDES_MOTORIZATIONS[modelFilter].map((m) => (
-                      <label key={m} className="flex items-center gap-2 px-3 py-1.5 cursor-pointer hover:bg-gray-50 dark:hover:bg-[#222]">
-                        <input
-                          type="checkbox"
-                          checked={motorizationFilter.includes(m)}
-                          onChange={(e) => {
-                            if (e.target.checked) {
-                              setMotorizationFilter([...motorizationFilter, m]);
-                            } else {
-                              setMotorizationFilter(motorizationFilter.filter((x) => x !== m));
-                            }
-                          }}
-                          className="w-4 h-4 rounded border-gray-300 dark:border-gray-600 text-[#f14011] focus:ring-[#f14011] cursor-pointer"
-                        />
-                        <span className="text-xs sm:text-sm text-gray-700 dark:text-gray-300">{m}</span>
-                      </label>
-                    ))}
-                  </div>
-                )}
-              </div>
             )}
             {/* Variante (Row 1) */}
             <div>

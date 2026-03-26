@@ -38,7 +38,6 @@ import {
   emissionClassOptions,
   environmentalBadgeOptions,
   particleFilterOptions,
-  MERCEDES_MOTORIZATIONS,
   getBrandOptionsForType,
   getModelsForBrand,
   getCategoriesForType,
@@ -1016,9 +1015,6 @@ function InseratePageInner() {
   const searchParams = useSearchParams();
   const [brandFilter, setBrandFilter] = useState("Alle Marken");
   const [modelFilter, setModelFilter] = useState("");
-  const [motorizationFilter, setMotorizationFilter] = useState<string[]>([]);
-  const [showMotorizationDropdown, setShowMotorizationDropdown] = useState(false);
-  const motorizationRef = useRef<HTMLDivElement>(null);
   const [fuelFilter, setFuelFilter] = useState<string[]>([]);
   const [priceFilter, setPriceFilter] = useState(0);
   const [yearFrom, setYearFrom] = useState("");
@@ -1126,8 +1122,6 @@ function InseratePageInner() {
     if (brand && getBrandOptionsForType("Alle").includes(brand)) setBrandFilter(brand);
     const mdl = searchParams.get("model");
     if (mdl) setModelFilter(mdl);
-    const mot = searchParams.get("motorization");
-    if (mot) setMotorizationFilter(mot.split(","));
     if (fuel) setFuelFilter(fuel.split(",").filter(Boolean));
     if (price !== null) {
       const idx = Number(price);
@@ -1227,19 +1221,6 @@ function InseratePageInner() {
     }
   }, [searchParams]);
 
-  // Close motorization dropdown on click outside
-  useEffect(() => {
-    function handleClick(e: MouseEvent) {
-      if (motorizationRef.current && !motorizationRef.current.contains(e.target as Node)) {
-        setShowMotorizationDropdown(false);
-      }
-    }
-    if (showMotorizationDropdown) {
-      document.addEventListener("mousedown", handleClick);
-      return () => document.removeEventListener("mousedown", handleClick);
-    }
-  }, [showMotorizationDropdown]);
-
   // Persist dealer login state in localStorage
   useEffect(() => {
     const stored = localStorage.getItem("hitmit_dealer");
@@ -1270,11 +1251,7 @@ function InseratePageInner() {
         }
         if (v.brand !== pair.brand) return false;
         if (pair.model !== "") {
-          if (pair.brand === "Mercedes-Benz" && MERCEDES_MOTORIZATIONS[pair.model]) {
-            if (!MERCEDES_MOTORIZATIONS[pair.model].some((m) => v.model.toLowerCase().includes(m.toLowerCase()))) return false;
-          } else {
-            if (!v.model.toLowerCase().includes(pair.model.toLowerCase())) return false;
-          }
+          if (!v.model.toLowerCase().includes(pair.model.toLowerCase())) return false;
         }
         if (pair.variant !== "" && !v.variant.toLowerCase().includes(pair.variant.toLowerCase())) return false;
         return true;
@@ -1285,7 +1262,6 @@ function InseratePageInner() {
       if (variantFilter !== "" && !v.variant.toLowerCase().includes(variantFilter.toLowerCase())) return false;
     }
 
-    if (motorizationFilter.length > 0 && !motorizationFilter.some((m) => v.model.toLowerCase().includes(m.toLowerCase()))) return false;
     if (fuelFilter.length > 0) {
       const matchesFuel = fuelFilter.some((ff) => {
         if (ff.startsWith("Plug-in-Hybrid")) return v.fuelType.startsWith("Plug-in-Hybrid");
@@ -1402,7 +1378,7 @@ function InseratePageInner() {
             <div className="relative">
               <select
                 value={brandFilter}
-                onChange={(e) => { setBrandFilter(e.target.value); setModelFilter(""); setMotorizationFilter([]); setVariantFilter(""); setCustomBrandText(""); }}
+                onChange={(e) => { setBrandFilter(e.target.value); setModelFilter(""); setVariantFilter(""); setCustomBrandText(""); }}
                 className="appearance-none bg-white dark:bg-[#141414] border border-gray-200 rounded-full px-5 py-2.5 pr-10 text-sm font-medium text-gray-700 hover:border-[#f14011] focus:border-[#f14011] focus:outline-none transition-colors cursor-pointer"
               >
                 {getBrandOptionsForType(vehicleTypeFilter).map((b) => (
@@ -1426,54 +1402,24 @@ function InseratePageInner() {
               <div className="relative">
                 <select
                   value={modelFilter}
-                  onChange={(e) => { setModelFilter(e.target.value); setMotorizationFilter([]); }}
+                  onChange={(e) => { setModelFilter(e.target.value); }}
                   className="appearance-none bg-white dark:bg-[#141414] border border-gray-200 rounded-full px-5 py-2.5 pr-10 text-sm font-medium text-gray-700 hover:border-[#f14011] focus:border-[#f14011] focus:outline-none transition-colors cursor-pointer"
                 >
                   <option value="">Alle Modelle</option>
                   {brandFilter !== "Alle Marken" &&
-                    getModelsForBrand(vehicleTypeFilter, brandFilter).map((m) => (
-                      <option key={m} value={m}>{m}</option>
-                    ))
+                    (() => {
+                      const models = getModelsForBrand(vehicleTypeFilter, brandFilter);
+                      const groups: Record<string, string[]> = {};
+                      models.forEach((m) => { const k = m.charAt(0).toUpperCase(); (groups[k] = groups[k] || []).push(m); });
+                      return Object.entries(groups).map(([letter, items]) => (
+                        <optgroup key={letter} label={letter}>
+                          {items.map((m) => <option key={m} value={m}>{m}</option>)}
+                        </optgroup>
+                      ));
+                    })()
                   }
                 </select>
                 <ChevronDownIcon className="w-4 h-4 text-gray-400 absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
-              </div>
-            )}
-
-            {/* Motorisierung (Mercedes only) */}
-            {(vehicleTypeFilter === "Alle" || vehicleTypeFilter === "PKW") && brandFilter === "Mercedes-Benz" && modelFilter !== "" && MERCEDES_MOTORIZATIONS[modelFilter] && (
-              <div className="relative" ref={motorizationRef}>
-                <button
-                  type="button"
-                  onClick={() => setShowMotorizationDropdown(!showMotorizationDropdown)}
-                  className="appearance-none bg-white dark:bg-[#141414] border border-gray-200 rounded-full px-5 py-2.5 pr-10 text-sm font-medium text-gray-700 hover:border-[#f14011] focus:border-[#f14011] focus:outline-none transition-colors cursor-pointer flex items-center gap-1"
-                >
-                  {motorizationFilter.length === 0
-                    ? "Alle Motorisierungen"
-                    : `${motorizationFilter.length} Motorisierung${motorizationFilter.length > 1 ? "en" : ""}`}
-                </button>
-                <ChevronDownIcon className={`w-4 h-4 text-gray-400 absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none transition-transform ${showMotorizationDropdown ? "rotate-180" : ""}`} />
-                {showMotorizationDropdown && (
-                  <div className="absolute z-50 mt-1 min-w-[200px] bg-white dark:bg-[#141414] border border-gray-200 dark:border-[#2a2a2a] rounded-xl shadow-lg max-h-60 overflow-y-auto py-1">
-                    {MERCEDES_MOTORIZATIONS[modelFilter].map((m) => (
-                      <label key={m} className="flex items-center gap-2 px-3 py-1.5 cursor-pointer hover:bg-gray-50 dark:hover:bg-[#222]">
-                        <input
-                          type="checkbox"
-                          checked={motorizationFilter.includes(m)}
-                          onChange={(e) => {
-                            if (e.target.checked) {
-                              setMotorizationFilter([...motorizationFilter, m]);
-                            } else {
-                              setMotorizationFilter(motorizationFilter.filter((x) => x !== m));
-                            }
-                          }}
-                          className="w-4 h-4 rounded border-gray-300 dark:border-gray-600 text-[#f14011] focus:ring-[#f14011] cursor-pointer"
-                        />
-                        <span className="text-xs sm:text-sm text-gray-700 dark:text-gray-300">{m}</span>
-                      </label>
-                    ))}
-                  </div>
-                )}
               </div>
             )}
 
@@ -1531,9 +1477,16 @@ function InseratePageInner() {
                   >
                     <option value="">Alle Modelle</option>
                     {brandFilter2 !== "Alle Marken" &&
-                      getModelsForBrand(vehicleTypeFilter, brandFilter2).map((m) => (
-                        <option key={m} value={m}>{m}</option>
-                      ))
+                      (() => {
+                        const models = getModelsForBrand(vehicleTypeFilter, brandFilter2);
+                        const groups: Record<string, string[]> = {};
+                        models.forEach((m) => { const k = m.charAt(0).toUpperCase(); (groups[k] = groups[k] || []).push(m); });
+                        return Object.entries(groups).map(([letter, items]) => (
+                          <optgroup key={letter} label={letter}>
+                            {items.map((m) => <option key={m} value={m}>{m}</option>)}
+                          </optgroup>
+                        ));
+                      })()
                     }
                   </select>
                   <ChevronDownIcon className="w-4 h-4 text-gray-400 absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
@@ -1610,9 +1563,16 @@ function InseratePageInner() {
                   >
                     <option value="">Alle Modelle</option>
                     {brandFilter3 !== "Alle Marken" &&
-                      getModelsForBrand(vehicleTypeFilter, brandFilter3).map((m) => (
-                        <option key={m} value={m}>{m}</option>
-                      ))
+                      (() => {
+                        const models = getModelsForBrand(vehicleTypeFilter, brandFilter3);
+                        const groups: Record<string, string[]> = {};
+                        models.forEach((m) => { const k = m.charAt(0).toUpperCase(); (groups[k] = groups[k] || []).push(m); });
+                        return Object.entries(groups).map(([letter, items]) => (
+                          <optgroup key={letter} label={letter}>
+                            {items.map((m) => <option key={m} value={m}>{m}</option>)}
+                          </optgroup>
+                        ));
+                      })()
                     }
                   </select>
                   <ChevronDownIcon className="w-4 h-4 text-gray-400 absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
@@ -1706,7 +1666,6 @@ function InseratePageInner() {
                 if (variantFilter2) parts.push(variantFilter2);
                 if (brandFilter3 !== "Alle Marken") parts.push(modelFilter3 ? `${brandFilter3} ${modelFilter3}` : brandFilter3);
                 if (variantFilter3) parts.push(variantFilter3);
-                if (motorizationFilter.length > 0) parts.push(motorizationFilter.join(", "));
                 if (fuelFilter.length > 0) parts.push(fuelFilter.join(", "));
                 // Convert old number-based filters to new string format
                 const pRange = priceRanges[priceFilter];
@@ -1769,7 +1728,7 @@ function InseratePageInner() {
                     modelFilter,
                     brandFilter2, modelFilter2,
                     brandFilter3, modelFilter3,
-                    motorizationFilter, variantFilter, descriptionSearch: "",
+                    variantFilter, descriptionSearch: "",
                     vehicleTypeFilter, vehicleCategoryFilter,
                     mwstFilter, firstRegFrom: "", firstRegTo: "",
                     huFilter: "Alle", previousOwnersFilter: [],
@@ -1994,8 +1953,7 @@ function InseratePageInner() {
                     value={vehicleTypeFilter}
                     onChange={(e) => {
                       setVehicleTypeFilter(e.target.value);
-                      setBrandFilter("Alle Marken"); setModelFilter(""); setMotorizationFilter([]);
-                      setBrandFilter2("Alle Marken"); setModelFilter2(""); setVariantFilter2("");
+                      setBrandFilter("Alle Marken"); setModelFilter("");                       setBrandFilter2("Alle Marken"); setModelFilter2(""); setVariantFilter2("");
                       setBrandFilter3("Alle Marken"); setModelFilter3(""); setVariantFilter3("");
                       setShowBrandRow2(false); setShowBrandRow3(false);
                       setCustomBrandText(""); setCustomBrandText2(""); setCustomBrandText3("");
