@@ -1091,7 +1091,6 @@ function InseratePageInner() {
     doorFilter !== "Alle",
     seatFilter !== "Alle",
     steeringSideFilter !== "Alle",
-    vehicleTypeFilter !== "Alle",
     vehicleCategoryFilter.length > 0,
     mwstFilter !== "Alle",
     cylinderFilter.length > 0,
@@ -1376,8 +1375,40 @@ function InseratePageInner() {
       {/* Filters */}
       <section className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 pb-8">
         <div className="flex flex-col gap-3 animate-fade-in-up delay-200" style={{ opacity: 0 }}>
-          {/* Row 1: Brand + Model + Motorisierung + Variante */}
+          {/* Row 1: Vehicle Type + Brand + Model + Variante */}
           <div className="flex flex-wrap gap-3 items-center">
+            {/* Vehicle Type */}
+            <div className="relative">
+              <select
+                value={vehicleTypeFilter}
+                onChange={(e) => {
+                  setVehicleTypeFilter(e.target.value);
+                  setBrandFilter("Alle Marken"); setModelFilter(""); setBrandFilter2("Alle Marken"); setModelFilter2(""); setVariantFilter2("");
+                  setBrandFilter3("Alle Marken"); setModelFilter3(""); setVariantFilter3("");
+                  setShowBrandRow2(false); setShowBrandRow3(false);
+                  setCustomBrandText(""); setCustomBrandText2(""); setCustomBrandText3("");
+                  setVehicleCategoryFilter([]);
+                  setDriveTypeFilter([]);
+                  setCylinderFilter([]);
+                  setDoorFilter("Alle");
+                  setSeatFilter("Alle");
+                  setSteeringSideFilter("Alle");
+                  setInteriorColorFilter([]);
+                  setSeatMaterialFilter([]);
+                  setClimateZoneFilter("");
+                  setPaintProtectionFilmFilter("Alle");
+                  setNoRepaintFilter("Alle");
+                }}
+                className="appearance-none bg-white dark:bg-[#141414] border border-gray-200 rounded-full px-5 py-2.5 pr-10 text-sm font-medium text-gray-700 hover:border-[#f14011] focus:border-[#f14011] focus:outline-none transition-colors cursor-pointer"
+              >
+                {vehicleTypeOptions.map((v) => (
+                  <option key={v} value={v}>{v}</option>
+                ))}
+              </select>
+              <ChevronDownIcon className="w-4 h-4 text-gray-400 absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+            </div>
+
+            {/* Brand */}
             <div className="relative">
               <select
                 value={brandFilter}
@@ -1599,7 +1630,7 @@ function InseratePageInner() {
           )}
 
           {/* Price, Fuel, More filters etc. */}
-          <div className="flex flex-wrap gap-3 items-center">
+          <div className="relative z-20 flex flex-wrap gap-3 items-center">
           {/* Price */}
           <div className="relative">
             <select
@@ -1644,18 +1675,6 @@ function InseratePageInner() {
           <div className="flex items-center px-4 text-sm text-gray-400">
             {filtered.length} {filtered.length === 1 ? "Fahrzeug" : "Fahrzeuge"}
           </div>
-
-          {/* Dealer login */}
-          <button
-            onClick={toggleDealer}
-            className={`text-xs font-medium px-3 py-1.5 rounded-full border transition-colors ${
-              isDealer
-                ? "bg-blue-600 text-white border-blue-600"
-                : "bg-white dark:bg-[#141414] text-gray-500 border-gray-200 hover:border-gray-400"
-            }`}
-          >
-            {isDealer ? "Händler ✓" : "Händler-Login"}
-          </button>
 
           {/* Save search button */}
           {mounted && (
@@ -1778,7 +1797,7 @@ function InseratePageInner() {
 
         {/* Advanced Filters */}
         {showAdvanced && (
-          <div className="mt-4 p-5 bg-white dark:bg-[#141414] border border-gray-200 rounded-2xl animate-fade-in">
+          <div className="relative z-0 mt-4 p-5 bg-white dark:bg-[#141414] border border-gray-200 rounded-2xl animate-fade-in">
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
               {/* Year From */}
               <div>
@@ -1963,41 +1982,6 @@ function InseratePageInner() {
                   placeholder="z.B. München"
                   className="w-full bg-gray-50 dark:bg-[#1a1a1a] border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-gray-700 placeholder:text-gray-400 hover:border-[#f14011] focus:border-[#f14011] focus:outline-none transition-colors"
                 />
-              </div>
-
-              {/* Vehicle Type */}
-              <div>
-                <label className="block text-xs font-medium text-gray-500 mb-1.5">Fahrzeugtyp</label>
-                <div className="relative">
-                  <select
-                    value={vehicleTypeFilter}
-                    onChange={(e) => {
-                      setVehicleTypeFilter(e.target.value);
-                      setBrandFilter("Alle Marken"); setModelFilter("");                       setBrandFilter2("Alle Marken"); setModelFilter2(""); setVariantFilter2("");
-                      setBrandFilter3("Alle Marken"); setModelFilter3(""); setVariantFilter3("");
-                      setShowBrandRow2(false); setShowBrandRow3(false);
-                      setCustomBrandText(""); setCustomBrandText2(""); setCustomBrandText3("");
-                      setVehicleCategoryFilter([]);
-                      // Reset type-specific filters
-                      setDriveTypeFilter([]);
-                      setCylinderFilter([]);
-                      setDoorFilter("Alle");
-                      setSeatFilter("Alle");
-                      setSteeringSideFilter("Alle");
-                      setInteriorColorFilter([]);
-                      setSeatMaterialFilter([]);
-                      setClimateZoneFilter("");
-                      setPaintProtectionFilmFilter("Alle");
-                      setNoRepaintFilter("Alle");
-                    }}
-                    className="w-full appearance-none bg-gray-50 dark:bg-[#1a1a1a] border border-gray-200 rounded-xl px-4 py-2.5 pr-9 text-sm text-gray-700 hover:border-[#f14011] focus:border-[#f14011] focus:outline-none transition-colors cursor-pointer"
-                  >
-                    {vehicleTypeOptions.map((v) => (
-                      <option key={v} value={v}>{v}</option>
-                    ))}
-                  </select>
-                  <ChevronDownIcon className="w-4 h-4 text-gray-400 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
-                </div>
               </div>
 
               {/* Vehicle Category */}

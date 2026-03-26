@@ -636,7 +636,7 @@ export const CAR_BRANDS_MODELS: Record<string, string[]> = {
   "Suzuki": ["Swift", "Ignis", "Vitara", "S-Cross", "Jimny", "Across"],
   "Tesla": ["Model 3", "Model Y", "Model S", "Model X", "Cybertruck"],
   "Toyota": ["Aygo X", "Yaris", "Yaris Cross", "Corolla", "Camry", "C-HR", "RAV4", "Highlander", "Land Cruiser", "Supra", "GR86", "bZ4X", "Proace", "MR2", "Celica", "Supra A80", "Supra A70", "AE86", "Starlet", "Land Cruiser J80"],
-  "VW": ["Polo", "Golf", "ID.3", "ID.4", "ID.5", "ID.7", "ID. Buzz", "T-Cross", "T-Roc", "Tiguan", "Touareg", "Passat", "Arteon", "Taigo", "up!", "Caddy", "Multivan", "Transporter", "Amarok", "Käfer", "T1", "T2", "T3", "T4", "T5", "T6", "Scirocco", "Corrado", "Golf I", "Golf II", "Golf III", "Golf IV", "Bora", "Lupo", "Phaeton", "Eos"],
+  "VW": ["Polo", "Golf", "ID.3", "ID.4", "ID.5", "ID.7", "ID. Buzz", "T-Cross", "T-Roc", "Tiguan", "Touareg", "Passat", "Arteon", "Taigo", "up!", "Caddy", "Multivan", "Transporter", "Amarok", "Käfer", "T1", "T2", "T3", "T4", "T5", "T6", "Scirocco", "Corrado", "Bora", "Lupo", "Phaeton", "Eos"],
   "Volvo": ["XC40", "XC60", "XC90", "C40", "S60", "S90", "V60", "V90", "EX30", "EX90"],
   "Wiesmann": ["GT MF4", "GT MF5", "Project Thunderball"],
   "Andere": ["Anderes Modell"],
