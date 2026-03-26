@@ -1415,11 +1415,17 @@ function InseratePageInner() {
                 onChange={(e) => { setBrandFilter(e.target.value); setModelFilter(""); setVariantFilter(""); setCustomBrandText(""); }}
                 className="appearance-none bg-white dark:bg-[#141414] border border-gray-200 rounded-full px-5 py-2.5 pr-10 text-sm font-medium text-gray-700 hover:border-[#f14011] focus:border-[#f14011] focus:outline-none transition-colors cursor-pointer"
               >
-                {getBrandOptionsForType(vehicleTypeFilter).map((b) => (
-                  <option key={b} value={b}>
-                    {b}
-                  </option>
-                ))}
+                <option value="Alle Marken">Alle Marken</option>
+                {(() => {
+                  const brands = getBrandOptionsForType(vehicleTypeFilter).filter((b) => b !== "Alle Marken");
+                  const groups: Record<string, string[]> = {};
+                  brands.forEach((b) => { const k = b.normalize("NFD").charAt(0).toUpperCase(); (groups[k] = groups[k] || []).push(b); });
+                  return Object.entries(groups).map(([letter, items]) => (
+                    <optgroup key={letter} label={letter}>
+                      {items.map((b) => <option key={b} value={b}>{b}</option>)}
+                    </optgroup>
+                  ));
+                })()}
               </select>
               <ChevronDownIcon className="w-4 h-4 text-gray-400 absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
             </div>
@@ -1488,9 +1494,17 @@ function InseratePageInner() {
                   onChange={(e) => { setBrandFilter2(e.target.value); setModelFilter2(""); setVariantFilter2(""); setCustomBrandText2(""); }}
                   className="appearance-none bg-white dark:bg-[#141414] border border-gray-200 rounded-full px-5 py-2.5 pr-10 text-sm font-medium text-gray-700 hover:border-[#f14011] focus:border-[#f14011] focus:outline-none transition-colors cursor-pointer"
                 >
-                  {getBrandOptionsForType(vehicleTypeFilter).map((b) => (
-                    <option key={b} value={b}>{b}</option>
-                  ))}
+                  <option value="Alle Marken">Alle Marken</option>
+                  {(() => {
+                    const brands = getBrandOptionsForType(vehicleTypeFilter).filter((b) => b !== "Alle Marken");
+                    const groups: Record<string, string[]> = {};
+                    brands.forEach((b) => { const k = b.normalize("NFD").charAt(0).toUpperCase(); (groups[k] = groups[k] || []).push(b); });
+                    return Object.entries(groups).map(([letter, items]) => (
+                      <optgroup key={letter} label={letter}>
+                        {items.map((b) => <option key={b} value={b}>{b}</option>)}
+                      </optgroup>
+                    ));
+                  })()}
                 </select>
                 <ChevronDownIcon className="w-4 h-4 text-gray-400 absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
               </div>
@@ -1574,9 +1588,17 @@ function InseratePageInner() {
                   onChange={(e) => { setBrandFilter3(e.target.value); setModelFilter3(""); setVariantFilter3(""); setCustomBrandText3(""); }}
                   className="appearance-none bg-white dark:bg-[#141414] border border-gray-200 rounded-full px-5 py-2.5 pr-10 text-sm font-medium text-gray-700 hover:border-[#f14011] focus:border-[#f14011] focus:outline-none transition-colors cursor-pointer"
                 >
-                  {getBrandOptionsForType(vehicleTypeFilter).map((b) => (
-                    <option key={b} value={b}>{b}</option>
-                  ))}
+                  <option value="Alle Marken">Alle Marken</option>
+                  {(() => {
+                    const brands = getBrandOptionsForType(vehicleTypeFilter).filter((b) => b !== "Alle Marken");
+                    const groups: Record<string, string[]> = {};
+                    brands.forEach((b) => { const k = b.normalize("NFD").charAt(0).toUpperCase(); (groups[k] = groups[k] || []).push(b); });
+                    return Object.entries(groups).map(([letter, items]) => (
+                      <optgroup key={letter} label={letter}>
+                        {items.map((b) => <option key={b} value={b}>{b}</option>)}
+                      </optgroup>
+                    ));
+                  })()}
                 </select>
                 <ChevronDownIcon className="w-4 h-4 text-gray-400 absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
               </div>
