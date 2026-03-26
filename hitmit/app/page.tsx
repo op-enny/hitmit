@@ -1131,7 +1131,6 @@ interface VehicleFormData {
   vatDeductible: boolean;
   vehicleOrigin: string;
   vehicleOriginOther: string;
-  country: string;
   description: string;
   extras: string;
   // Sonstige text fields for each feature category
@@ -1163,7 +1162,7 @@ const initialFormData: VehicleFormData = {
   price: "",
   zip: "",
   city: "",
-  country: "",
+  country: "Deutschland",
   modelDescription: "",
   variant: "",
   vehicleType: "",
@@ -1229,7 +1228,6 @@ const initialFormData: VehicleFormData = {
   vatDeductible: false,
   vehicleOrigin: "",
   vehicleOriginOther: "",
-  country: "Deutschland",
   description: "",
   extras: "",
   safetyOther: "",

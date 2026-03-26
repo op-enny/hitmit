@@ -951,7 +951,7 @@ export default function SuchenPage() {
         serviceBookFilter, manufacturerWarrantyFilter,
         nonSmokerFilter, petFreeFilter, tradeInFilter,
         emissionClassFilter, environmentalBadgeFilter, particleFilterFilter,
-        ausstattungSearch, safetyFeaturesFilter, equipmentFeaturesFilter,
+        ausstattungSearch, motorizationFilter: [], safetyFeaturesFilter, equipmentFeaturesFilter,
       },
       filtered.map((v) => v.id),
     );

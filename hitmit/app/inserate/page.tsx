@@ -1784,6 +1784,7 @@ function InseratePageInner() {
                     serviceBookFilter, manufacturerWarrantyFilter,
                     nonSmokerFilter, petFreeFilter, tradeInFilter: false,
                     emissionClassFilter, environmentalBadgeFilter, particleFilterFilter,
+                    motorizationFilter: [],
                     safetyFeaturesFilter: [], equipmentFeaturesFilter: [],
                   },
                   filtered.map((v) => v.id),
