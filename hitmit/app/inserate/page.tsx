@@ -32,6 +32,7 @@ import {
   cylinderOptions,
   interiorColorOptions,
   seatMaterialOptions,
+  countryOptions,
   rimTypeOptions,
   rimSizeOptions,
   tireTypeOptions,
@@ -871,7 +872,7 @@ function DetailModal({ vehicle, onClose, isDealer }: { vehicle: Vehicle; onClose
             <div className="space-y-2 text-sm text-gray-600">
               <p>
                 <span className="text-gray-400">Standort:</span>{" "}
-                {vehicle.zip} {vehicle.city}
+                {vehicle.zip} {vehicle.city}{vehicle.country ? `, ${vehicle.country}` : ""}
               </p>
               {vehicle.sellerType === "dealer" && vehicle.companyName && (
                 <p>
@@ -1025,6 +1026,7 @@ function InseratePageInner() {
   const [driveTypeFilter, setDriveTypeFilter] = useState<string[]>([]);
   const [sellerTypeFilter, setSellerTypeFilter] = useState("Alle");
   const [accidentFreeFilter, setAccidentFreeFilter] = useState("Alle");
+  const [countryFilter, setCountryFilter] = useState("Alle");
   const [cityFilter, setCityFilter] = useState("");
   const [colorFilter, setColorFilter] = useState<string[]>([]);
   const [conditionFilter, setConditionFilter] = useState<string[]>([]);
@@ -1300,6 +1302,7 @@ function InseratePageInner() {
       if (sellerTypeFilter === "Händler" && v.sellerType !== "dealer") return false;
     }
     if (accidentFreeFilter === "Nur unfallfrei" && !v.accidentFree) return false;
+    if (countryFilter !== "Alle" && (v.country || "") !== countryFilter) return false;
     if (cityFilter !== "" && !v.city.toLowerCase().includes(cityFilter.toLowerCase())) return false;
     if (colorFilter.length > 0 && !colorFilter.some((cf) => v.color.toLowerCase().includes(cf.toLowerCase()))) return false;
     if (conditionFilter.length > 0 && !conditionFilter.includes(v.condition)) return false;
@@ -1928,6 +1931,23 @@ function InseratePageInner() {
                     <option value="Alle">Alle</option>
                     <option value="Linkslenker">Linkslenker</option>
                     <option value="Rechtslenker">Rechtslenker</option>
+                  </select>
+                  <ChevronDownIcon className="w-4 h-4 text-gray-400 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+                </div>
+              </div>
+
+              {/* Country */}
+              <div className="col-span-2 sm:col-span-1">
+                <label className="block text-xs font-medium text-gray-500 mb-1.5">Land</label>
+                <div className="relative">
+                  <select
+                    value={countryFilter}
+                    onChange={(e) => setCountryFilter(e.target.value)}
+                    className="w-full bg-gray-50 dark:bg-[#1a1a1a] border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-gray-700 placeholder:text-gray-400 hover:border-[#f14011] focus:border-[#f14011] focus:outline-none transition-colors appearance-none"
+                  >
+                    {countryOptions.map((c) => (
+                      <option key={c} value={c}>{c}</option>
+                    ))}
                   </select>
                   <ChevronDownIcon className="w-4 h-4 text-gray-400 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
                 </div>

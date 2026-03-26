@@ -1064,6 +1064,7 @@ interface VehicleFormData {
   price: string;
   zip: string;
   city: string;
+  country: string;
   // Optional Vehicle
   modelDescription: string;
   variant: string;
@@ -1162,6 +1163,7 @@ const initialFormData: VehicleFormData = {
   price: "",
   zip: "",
   city: "",
+  country: "",
   modelDescription: "",
   variant: "",
   vehicleType: "",
@@ -2665,10 +2667,25 @@ function SubmitFormSection() {
                 value={formData.city}
                 onChange={(e) => updateField("city", e.target.value)}
               />
-              <FormInput
+              <FormSelect
                 label="Land"
-                type="text"
-                placeholder="Deutschland"
+                options={[
+                  { value: "", label: "Bitte wählen" },
+                  { value: "Deutschland", label: "Deutschland" },
+                  { value: "Österreich", label: "Österreich" },
+                  { value: "Schweiz", label: "Schweiz" },
+                  { value: "Belgien", label: "Belgien" },
+                  { value: "Frankreich", label: "Frankreich" },
+                  { value: "Italien", label: "Italien" },
+                  { value: "Luxemburg", label: "Luxemburg" },
+                  { value: "Niederlande", label: "Niederlande" },
+                  { value: "Polen", label: "Polen" },
+                  { value: "Tschechien", label: "Tschechien" },
+                  { value: "Dänemark", label: "Dänemark" },
+                  { value: "Spanien", label: "Spanien" },
+                  { value: "Schweden", label: "Schweden" },
+                  { value: "Norwegen", label: "Norwegen" },
+                ]}
                 value={formData.country}
                 onChange={(e) => updateField("country", e.target.value)}
               />

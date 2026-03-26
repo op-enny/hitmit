@@ -67,6 +67,7 @@ export interface Vehicle {
   environmentalBadge?: string;
   particleFilter?: boolean;
   steeringSide?: string;
+  country?: string;
   gradient: string;
 }
 
@@ -84,6 +85,7 @@ export const vehicles: Vehicle[] = [
     transmission: "Automatik",
     color: "Frozen Portimao Blau",
     city: "München",
+    country: "Deutschland",
     zip: "80331",
     sellerType: "dealer",
     companyName: "Bavaria Motors GmbH",
@@ -142,6 +144,7 @@ export const vehicles: Vehicle[] = [
     transmission: "Automatik (DSG)",
     color: "Pure White",
     city: "Wolfsburg",
+    country: "Deutschland",
     zip: "38440",
     sellerType: "private",
     contactName: "Markus Weber",
@@ -197,6 +200,7 @@ export const vehicles: Vehicle[] = [
     transmission: "Automatik (9G-TRONIC)",
     color: "Obsidianschwarz Metallic",
     city: "Stuttgart",
+    country: "Deutschland",
     zip: "70173",
     sellerType: "dealer",
     companyName: "Stern Automobile Stuttgart",
@@ -253,6 +257,7 @@ export const vehicles: Vehicle[] = [
     transmission: "Automatik (PDK)",
     color: "Gentianblau Metallic",
     city: "Hamburg",
+    country: "Deutschland",
     zip: "20095",
     sellerType: "private",
     contactName: "Dr. Alexander Fischer",
@@ -308,6 +313,7 @@ export const vehicles: Vehicle[] = [
     transmission: "Automatik",
     color: "Pearl White Multi-Coat",
     city: "Berlin",
+    country: "Deutschland",
     zip: "10115",
     sellerType: "private",
     contactName: "Julia Schreiber",
@@ -362,6 +368,7 @@ export const vehicles: Vehicle[] = [
     transmission: "Automatik (S tronic)",
     color: "Nardograu",
     city: "Ingolstadt",
+    country: "Deutschland",
     zip: "85049",
     sellerType: "dealer",
     companyName: "Audi Zentrum Ingolstadt",
@@ -918,6 +925,7 @@ export const tankVolumeOptions = [
   { label: "Ab 70 l", min: 70 },
   { label: "Ab 80 l", min: 80 },
 ];
+export const countryOptions = ["Alle", "Deutschland", "Österreich", "Schweiz", "Belgien", "Frankreich", "Italien", "Luxemburg", "Niederlande", "Polen", "Tschechien", "Dänemark", "Spanien", "Schweden", "Norwegen"];
 export const previousOwnerOptions = ["Alle", "0", "1", "2", "3", "4+"];
 export const huOptions = ["Alle", "Neu (mind. 12 Monate)", "Abgelaufen"];
 export const interiorColorOptions = [

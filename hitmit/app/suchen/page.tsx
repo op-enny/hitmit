@@ -23,6 +23,7 @@ import {
   SAFETY_FEATURE_LIST,
   EQUIPMENT_FEATURE_LIST,
   CAR_BRANDS_MODELS,
+  countryOptions,
   rimTypeOptions,
   rimSizeOptions,
   tireTypeOptions,
@@ -502,6 +503,7 @@ export default function SuchenPage() {
   const [driveTypeFilter, setDriveTypeFilter] = useState<string[]>([]);
   const [sellerTypeFilter, setSellerTypeFilter] = useState("Alle");
   const [accidentFreeFilter, setAccidentFreeFilter] = useState("Alle");
+  const [countryFilter, setCountryFilter] = useState("Alle");
   const [cityFilter, setCityFilter] = useState("");
   const [cityRadius, setCityRadius] = useState("");
   const [colorFilter, setColorFilter] = useState<string[]>([]);
@@ -658,6 +660,7 @@ export default function SuchenPage() {
       if (sellerTypeFilter === "Händler" && v.sellerType !== "dealer") return false;
     }
     if (accidentFreeFilter === "Nur unfallfrei" && !v.accidentFree) return false;
+    if (countryFilter !== "Alle" && (v.country || "") !== countryFilter) return false;
     if (cityFilter !== "") {
       if (cityRadius !== "" && Number(cityRadius) > 0) {
         const from = getCoordsByCity(cityFilter);
@@ -792,6 +795,7 @@ export default function SuchenPage() {
     driveTypeFilter.length > 0,
     sellerTypeFilter !== "Alle",
     accidentFreeFilter !== "Alle",
+    countryFilter !== "Alle",
     cityFilter !== "",
     cityRadius !== "",
     colorFilter.length > 0,
@@ -840,7 +844,7 @@ export default function SuchenPage() {
     setMileageMin(""); setMileageMax(""); setPowerMin(""); setPowerMax("");
     setTransmissionFilter([]); setDriveTypeFilter([]);
     setSellerTypeFilter("Alle"); setAccidentFreeFilter("Alle");
-    setCityFilter(""); setCityRadius("");
+    setCountryFilter("Alle"); setCityFilter(""); setCityRadius("");
     setColorFilter([]); setConditionFilter([]);
     setDoorFilter("Alle"); setSeatFilter(""); setSteeringSideFilter("Alle");
     setModelFilter("");
@@ -885,6 +889,7 @@ export default function SuchenPage() {
     if (driveTypeFilter.length > 0) parts.push(driveTypeFilter.join(", "));
     if (sellerTypeFilter !== "Alle") parts.push(sellerTypeFilter);
     if (accidentFreeFilter !== "Alle") parts.push("Unfallfrei");
+    if (countryFilter !== "Alle") parts.push(countryFilter);
     if (cityFilter) parts.push(cityRadius ? `${cityFilter} +${cityRadius} km` : cityFilter);
     if (colorFilter.length > 0) parts.push(colorFilter.join(", "));
     if (conditionFilter.length > 0) parts.push(conditionFilter.join(", "));
@@ -1445,6 +1450,12 @@ export default function SuchenPage() {
                 <span className="text-xs sm:text-sm text-gray-700 dark:text-gray-300">Unfallfrei</span>
               </label>
             </div>
+            <FilterSelect
+              label="Land"
+              value={countryFilter}
+              onChange={setCountryFilter}
+              options={countryOptions.map((c) => ({ value: c, label: c }))}
+            />
             <div>
               <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1.5">Standort (Stadt)</label>
               <input
