@@ -1222,7 +1222,7 @@ function InseratePageInner() {
     // Auto-open detail modal if vehicleId is set
     const vid = searchParams.get("vehicleId");
     if (vid) {
-      const found = vehicles.find((v) => v.id === vid);
+      const found = vehicles.find((v) => String(v.id) === vid);
       if (found) setSelectedVehicle(found);
     }
   }, [searchParams]);
