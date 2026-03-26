@@ -936,6 +936,7 @@ export const SAFETY_FEATURE_LIST = [
   "Abstandswarner",
   "Rückfahrassistent",
   "Ausparkassistent",
+  "Notrufsystem",
   "Müdigkeitserkennung",
   "Verkehrszeichenerkennung",
   "Nachtsichtassistent",
@@ -1015,6 +1016,7 @@ export const EQUIPMENT_FEATURE_LIST = [
   "360°-Kamera",
   "WLAN-Hotspot",
   "Induktive Ladestation",
+  "Natives Audio-Streaming",
   // Zubehör
   "Dashcam",
 ];
@@ -1086,7 +1088,7 @@ export const SAFETY_FEATURES_BY_TYPE: Record<string, string[]> = {
     "---Stabilität",
     "ABS", "ESP", "Traktionskontrolle",
     "---Assistenten",
-    "Spurhalteassistent", "Totwinkelassistent", "Querverkehrsassistent", "Notbremsassistent", "Abstandswarner", "Rückfahrassistent", "Ausparkassistent",
+    "Spurhalteassistent", "Totwinkelassistent", "Querverkehrsassistent", "Notbremsassistent", "Abstandswarner", "Rückfahrassistent", "Ausparkassistent", "Notrufsystem",
     "---Erkennung",
     "Müdigkeitserkennung", "Verkehrszeichenerkennung", "Nachtsichtassistent",
     "---Anzeige & Kontrolle",
@@ -1157,7 +1159,7 @@ export const MULTIMEDIA_FEATURES_BY_TYPE: Record<string, string[]> = {
     "---Konnektivität",
     "Apple CarPlay", "Android Auto", "Bluetooth", "WLAN-Hotspot", "Online-Services", "Gestiksteuerung", "Touchscreen", "Funkverbindung mit Bildschirm",
     "---Audio",
-    "DAB-Radio", "Soundsystem", "Soundsystem-Upgrade", "CD-Wechsler",
+    "DAB-Radio", "Soundsystem", "Soundsystem-Upgrade", "CD-Wechsler", "Natives Audio-Streaming",
     "---Anschlüsse & Laden",
     "USB", "MP3-Anschluss", "Induktive Ladestation",
     "---Kommunikation",

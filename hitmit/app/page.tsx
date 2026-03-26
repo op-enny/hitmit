@@ -1534,6 +1534,7 @@ const SAFETY_FEATURES = [
   "Querverkehrsassistent",
   "Rückfahrassistent",
   "Ausparkassistent",
+  "Notrufsystem",
   "Isofix",
 ];
 
@@ -1561,6 +1562,7 @@ const MULTIMEDIA_FEATURES = [
   "USB",
   "DAB-Radio",
   "Soundsystem",
+  "Natives Audio-Streaming",
   "Rückfahrkamera",
   "360°-Kamera",
   "WLAN-Hotspot",
