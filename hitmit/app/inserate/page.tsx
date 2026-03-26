@@ -345,6 +345,8 @@ function MultiFilterSelect({
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
   const portalRef = useRef<HTMLDivElement>(null);
+  const buttonRef = useRef<HTMLButtonElement>(null);
+  const [portalPos, setPortalPos] = useState<{ top: number; left: number; width: number } | null>(null);
 
   useEffect(() => {
     function handleClick(e: MouseEvent) {
@@ -354,6 +356,14 @@ function MultiFilterSelect({
     if (open) {
       document.addEventListener("mousedown", handleClick);
       return () => document.removeEventListener("mousedown", handleClick);
+    }
+  }, [open]);
+
+  // Position the desktop portal dropdown beneath the button
+  useEffect(() => {
+    if (open && buttonRef.current) {
+      const rect = buttonRef.current.getBoundingClientRect();
+      setPortalPos({ top: rect.bottom + window.scrollY + 4, left: rect.left + window.scrollX, width: rect.width });
     }
   }, [open]);
 
@@ -402,6 +412,7 @@ function MultiFilterSelect({
       <label className="block text-xs font-medium text-gray-500 mb-1.5">{label}</label>
       <div className="relative">
         <button
+          ref={buttonRef}
           type="button"
           onClick={() => setOpen(!open)}
           className="w-full flex items-center justify-between bg-gray-50 dark:bg-[#1a1a1a] border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-gray-700 hover:border-[#f14011] focus:border-[#f14011] focus:outline-none transition-colors cursor-pointer text-left"
@@ -409,13 +420,14 @@ function MultiFilterSelect({
           <span className="break-words whitespace-normal">{display}</span>
           <ChevronDownIcon className={`w-4 h-4 text-gray-400 shrink-0 ml-2 transition-transform ${open ? "rotate-180" : ""}`} />
         </button>
-        {/* Desktop dropdown */}
-        {open && (
-          <div className="hidden sm:block absolute z-50 top-full mt-1 w-full bg-white dark:bg-[#1a1a1a] border border-gray-200 dark:border-[#2a2a2a] rounded-xl shadow-lg max-h-60 overflow-y-auto py-1">
-            {dropdownContent}
-          </div>
-        )}
       </div>
+      {/* Desktop dropdown — portal to escape stacking context */}
+      {open && portalPos && typeof document !== "undefined" && createPortal(
+        <div ref={portalRef} className="hidden sm:block fixed z-[9999] bg-white dark:bg-[#1a1a1a] border border-gray-200 dark:border-[#2a2a2a] rounded-xl shadow-lg max-h-60 overflow-y-auto py-1" style={{ top: portalPos.top, left: portalPos.left, width: Math.max(portalPos.width, 200), position: "absolute" }}>
+          {dropdownContent}
+        </div>,
+        document.body
+      )}
       {/* Mobile bottom sheet — portal to escape stacking context */}
       {open && typeof document !== "undefined" && createPortal(
         <div ref={portalRef} className="sm:hidden fixed inset-0 z-[9999] flex flex-col justify-end">
