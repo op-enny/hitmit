@@ -1516,6 +1516,7 @@ const COMFORT_FEATURES = [
   "Sitzbelüftung vorne",
   "Sitzbelüftung hinten",
   "Keyless-Go",
+  "Dashcam",
 ];
 
 const SAFETY_FEATURES = [
@@ -1531,6 +1532,8 @@ const SAFETY_FEATURES = [
   "Head-up-Display",
   "Reifendruckkontrolle",
   "Querverkehrsassistent",
+  "Rückfahrassistent",
+  "Ausparkassistent",
   "Isofix",
 ];
 

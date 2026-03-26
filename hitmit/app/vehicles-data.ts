@@ -934,6 +934,8 @@ export const SAFETY_FEATURE_LIST = [
   "Querverkehrsassistent",
   "Notbremsassistent",
   "Abstandswarner",
+  "Rückfahrassistent",
+  "Ausparkassistent",
   "Müdigkeitserkennung",
   "Verkehrszeichenerkennung",
   "Nachtsichtassistent",
@@ -1013,6 +1015,8 @@ export const EQUIPMENT_FEATURE_LIST = [
   "360°-Kamera",
   "WLAN-Hotspot",
   "Induktive Ladestation",
+  // Zubehör
+  "Dashcam",
 ];
 
 // ============================================================================
@@ -1052,6 +1056,8 @@ export const COMFORT_FEATURES_BY_TYPE: Record<string, string[]> = {
     "Lichtsensor", "Regensensor", "Ambientebeleuchtung", "Akustikverglasung",
     "---Sonstiges",
     "Lederlenkrad", "Multifunktionslenkrad", "Kleiderhaken",
+    "---Zubehör",
+    "Dashcam",
   ],
   Motorrad: [
     "Griffheizung", "Sitzheizung", "Tempomat", "Limiter",
@@ -1080,7 +1086,7 @@ export const SAFETY_FEATURES_BY_TYPE: Record<string, string[]> = {
     "---Stabilität",
     "ABS", "ESP", "Traktionskontrolle",
     "---Assistenten",
-    "Spurhalteassistent", "Totwinkelassistent", "Querverkehrsassistent", "Notbremsassistent", "Abstandswarner",
+    "Spurhalteassistent", "Totwinkelassistent", "Querverkehrsassistent", "Notbremsassistent", "Abstandswarner", "Rückfahrassistent", "Ausparkassistent",
     "---Erkennung",
     "Müdigkeitserkennung", "Verkehrszeichenerkennung", "Nachtsichtassistent",
     "---Anzeige & Kontrolle",

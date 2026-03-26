@@ -1219,6 +1219,12 @@ function InseratePageInner() {
     if (v3) setVariantFilter3(v3);
     // Auto-open advanced section if any advanced param is set
     if (yf || yt || ml || pw || tr || dt || st || af || ct || co || cn || dr || se || vt || vc || mw || cy || dmi || dma || tv || ic || sm || cz || rs || ppf || nr || sb || mwf || ns || pf || ec || eb || pff || mc) setShowAdvanced(true);
+    // Auto-open detail modal if vehicleId is set
+    const vid = searchParams.get("vehicleId");
+    if (vid) {
+      const found = vehicles.find((v) => v.id === vid);
+      if (found) setSelectedVehicle(found);
+    }
   }, [searchParams]);
 
   // Close motorization dropdown on click outside

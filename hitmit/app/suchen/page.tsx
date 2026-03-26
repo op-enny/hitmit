@@ -249,7 +249,7 @@ function ResultCard({
 }) {
   return (
     <div className="card cursor-pointer overflow-hidden group relative">
-      <Link href={`/inserate`} className="block">
+      <Link href={`/inserate?vehicleId=${vehicle.id}`} className="block">
         <div className={`h-40 bg-gradient-to-br ${vehicle.gradient} relative overflow-hidden`}>
           <div className="absolute inset-0 flex items-center justify-center">
             <span className="font-display text-white/15 text-5xl tracking-wider select-none group-hover:scale-110 transition-transform duration-500">
