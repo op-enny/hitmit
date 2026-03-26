@@ -753,7 +753,7 @@ const BRANDS_BY_TYPE: Record<string, Record<string, string[]>> = {
 
 export function getBrandsForType(type: string): string[] {
   if (type && type !== "Alle" && type !== "Andere" && BRANDS_BY_TYPE[type]) {
-    return Object.keys(BRANDS_BY_TYPE[type]).sort();
+    return Object.keys(BRANDS_BY_TYPE[type]).sort((a, b) => a.localeCompare(b, "de"));
   }
   // "Alle" or unknown → merge all types, deduplicate, sort
   const allBrands = new Set<string>();
@@ -762,7 +762,7 @@ export function getBrandsForType(type: string): string[] {
       allBrands.add(brand);
     }
   }
-  return [...allBrands].sort();
+  return [...allBrands].sort((a, b) => a.localeCompare(b, "de"));
 }
 
 export function getModelsForBrand(type: string, brand: string): string[] {
