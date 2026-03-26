@@ -336,11 +336,13 @@ function MultiFilterSelect({
   selected,
   onChange,
   options,
+  inline,
 }: {
   label: string;
   selected: string[];
   onChange: (v: string[]) => void;
   options: string[];
+  inline?: boolean;
 }) {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
@@ -409,16 +411,19 @@ function MultiFilterSelect({
 
   return (
     <div ref={ref}>
-      <label className="block text-xs font-medium text-gray-500 mb-1.5">{label}</label>
+      {!inline && <label className="block text-xs font-medium text-gray-500 mb-1.5">{label}</label>}
       <div className="relative">
         <button
           ref={buttonRef}
           type="button"
           onClick={() => setOpen(!open)}
-          className="w-full flex items-center justify-between bg-gray-50 dark:bg-[#1a1a1a] border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-gray-700 hover:border-[#f14011] focus:border-[#f14011] focus:outline-none transition-colors cursor-pointer text-left"
+          className={inline
+            ? "appearance-none flex items-center gap-2 bg-white dark:bg-[#141414] border border-gray-200 rounded-full px-5 py-2.5 pr-10 text-sm font-medium text-gray-700 hover:border-[#f14011] focus:border-[#f14011] focus:outline-none transition-colors cursor-pointer whitespace-nowrap"
+            : "w-full flex items-center justify-between bg-gray-50 dark:bg-[#1a1a1a] border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-gray-700 hover:border-[#f14011] focus:border-[#f14011] focus:outline-none transition-colors cursor-pointer text-left"
+          }
         >
-          <span className="break-words whitespace-normal">{display}</span>
-          <ChevronDownIcon className={`w-4 h-4 text-gray-400 shrink-0 ml-2 transition-transform ${open ? "rotate-180" : ""}`} />
+          <span className={inline ? "" : "break-words whitespace-normal"}>{display}</span>
+          <ChevronDownIcon className={`w-4 h-4 text-gray-400 shrink-0 ${inline ? "absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none" : "ml-2"} transition-transform ${open ? "rotate-180" : ""}`} />
         </button>
       </div>
       {/* Desktop dropdown — portal to escape stacking context */}
@@ -1682,7 +1687,7 @@ function InseratePageInner() {
           </div>
 
           {/* Fuel */}
-          <MultiFilterSelect label="Kraftstoff" selected={fuelFilter} onChange={setFuelFilter} options={fuelOptions} />
+          <MultiFilterSelect label="Kraftstoff" selected={fuelFilter} onChange={setFuelFilter} options={fuelOptions} inline />
 
           {/* More filters toggle */}
           <button
