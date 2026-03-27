@@ -1243,21 +1243,25 @@ export function isElectricFuel(fuels: string[]): boolean {
 }
 
 export const EV_COMFORT_FEATURES: string[] = [
+  "---Elektro",
   "Vorklimatisierung", "Wärmepumpe", "One-Pedal-Driving", "Frunk",
   "Rekuperation einstellbar", "Batterieheizung", "V2H (Vehicle-to-Home)",
   "V2L (Vehicle-to-Load)",
 ];
 
 export const EV_SAFETY_FEATURES: string[] = [
+  "---Elektro",
   "Autopilot", "Fußgängererkennung", "Akustisches Warnsystem (AVAS)",
 ];
 
 export const EV_EXTERIOR_FEATURES: string[] = [
+  "---Laden & Anschlüsse",
   "Ladeanschluss CCS", "Ladeanschluss Typ 2", "Bidirektionales Laden",
   "Schnellladefähig (DC)", "Ladeklappenbeleuchtung",
 ];
 
 export const EV_MULTIMEDIA_FEATURES: string[] = [
+  "---Elektro",
   "OTA-Updates", "App-Steuerung", "Reichweitenanzeige", "Ladeplanung & Navigation",
   "Energieverbrauchsanzeige",
 ];
