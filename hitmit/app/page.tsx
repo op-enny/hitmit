@@ -1548,6 +1548,7 @@ const EXTERIOR_FEATURES = [
   "Nebelscheinwerfer",
   "Kurvenlicht",
   "Abbiegelicht",
+  "Scheinwerferreinigungsanlage",
   "Alufelgen",
   "Dachreling",
   "Anhängerkupplung",

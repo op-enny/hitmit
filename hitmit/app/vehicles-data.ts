@@ -1020,6 +1020,7 @@ export const EQUIPMENT_FEATURE_LIST = [
   "Nebelscheinwerfer",
   "Kurvenlicht",
   "Abbiegelicht",
+  "Scheinwerferreinigungsanlage",
   // Exterieur
   "Leichtmetallfelgen",
   "Alufelgen",
@@ -1152,7 +1153,7 @@ export const SAFETY_FEATURES_BY_TYPE: Record<string, string[]> = {
 export const EXTERIOR_FEATURES_BY_TYPE: Record<string, string[]> = {
   PKW: [
     "---Licht",
-    "LED-Scheinwerfer", "Xenon-Scheinwerfer", "Bi-Xenon-Scheinwerfer", "Matrix-LED", "Laserlicht", "Digitales Licht", "Tagfahrlicht", "Nebelscheinwerfer", "Kurvenlicht", "Abbiegelicht",
+    "LED-Scheinwerfer", "Xenon-Scheinwerfer", "Bi-Xenon-Scheinwerfer", "Matrix-LED", "Laserlicht", "Digitales Licht", "Tagfahrlicht", "Nebelscheinwerfer", "Kurvenlicht", "Abbiegelicht", "Scheinwerferreinigungsanlage",
     "---Felgen",
     "Leichtmetallfelgen", "Alufelgen", "Stahlfelgen", "Schmiedefelgen", "Chromfelgen",
     "---Sonstiges",
