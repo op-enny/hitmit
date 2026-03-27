@@ -1073,6 +1073,7 @@ function InseratePageInner() {
   const [environmentalBadgeFilter, setEnvironmentalBadgeFilter] = useState<string[]>([]);
   const [particleFilterFilter, setParticleFilterFilter] = useState("Alle");
   const [manufacturerColorFilter, setManufacturerColorFilter] = useState("");
+  const [availableNowFilter, setAvailableNowFilter] = useState(false);
   const [variantFilter, setVariantFilter] = useState("");
   const [brandFilter2, setBrandFilter2] = useState("Alle Marken");
   const [modelFilter2, setModelFilter2] = useState("");
@@ -1372,6 +1373,7 @@ function InseratePageInner() {
       if (particleFilterFilter === "Nein" && v.particleFilter) return false;
     }
     if (manufacturerColorFilter !== "" && !v.color.toLowerCase().includes(manufacturerColorFilter.toLowerCase())) return false;
+    if (availableNowFilter && !v.availableNow) return false;
     return true;
   });
 
@@ -1507,6 +1509,17 @@ function InseratePageInner() {
 
             {/* Fuel */}
             <MultiFilterSelect label="Kraftstoff" selected={fuelFilter} onChange={setFuelFilter} options={fuelOptions} inline />
+
+            {/* Available Now */}
+            <label className="flex items-center gap-2 px-4 py-2.5 rounded-full border border-gray-200 bg-white dark:bg-[#141414] text-sm font-medium text-gray-700 cursor-pointer hover:border-[#f14011] transition-colors select-none">
+              <input
+                type="checkbox"
+                checked={availableNowFilter}
+                onChange={(e) => setAvailableNowFilter(e.target.checked)}
+                className="w-4 h-4 rounded border-gray-300 text-[#f14011] focus:ring-[#f14011] cursor-pointer"
+              />
+              Sofort verfügbar
+            </label>
           </div>
 
           {/* "Weitere Marke" Button — own line below row 1 */}

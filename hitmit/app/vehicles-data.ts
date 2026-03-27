@@ -68,6 +68,7 @@ export interface Vehicle {
   particleFilter?: boolean;
   steeringSide?: string;
   country?: string;
+  availableNow?: boolean;
   gradient: string;
 }
 
