@@ -1087,6 +1087,7 @@ function InseratePageInner() {
   const [showBrandRow2, setShowBrandRow2] = useState(false);
   const [showBrandRow3, setShowBrandRow3] = useState(false);
   const [showAdvanced, setShowAdvanced] = useState(false);
+  const [sortBy, setSortBy] = useState("relevanz");
   const [selectedVehicle, setSelectedVehicle] = useState<Vehicle | null>(null);
   const [isDealer, setIsDealer] = useState(false);
   const [searchSaved, setSearchSaved] = useState(false);
@@ -1375,6 +1376,21 @@ function InseratePageInner() {
     if (manufacturerColorFilter !== "" && !v.color.toLowerCase().includes(manufacturerColorFilter.toLowerCase())) return false;
     if (availableNowFilter && !v.availableNow) return false;
     return true;
+  });
+
+  // Sort
+  const sorted = [...filtered].sort((a, b) => {
+    switch (sortBy) {
+      case "preis-auf": return a.price - b.price;
+      case "preis-ab": return b.price - a.price;
+      case "km-auf": return a.mileage - b.mileage;
+      case "km-ab": return b.mileage - a.mileage;
+      case "ez-neu": return b.firstRegistration.localeCompare(a.firstRegistration);
+      case "ez-alt": return a.firstRegistration.localeCompare(b.firstRegistration);
+      case "bj-neu": return b.year - a.year;
+      case "bj-alt": return a.year - b.year;
+      default: return 0;
+    }
   });
 
   return (
@@ -1722,6 +1738,26 @@ function InseratePageInner() {
             )}
             <ChevronDownIcon className={`w-3.5 h-3.5 transition-transform ${showAdvanced ? "rotate-180" : ""}`} />
           </button>
+
+          {/* Sort */}
+          <div className="relative">
+            <select
+              value={sortBy}
+              onChange={(e) => setSortBy(e.target.value)}
+              className="appearance-none bg-white dark:bg-[#141414] border border-gray-200 rounded-full px-5 py-2.5 pr-10 text-sm font-medium text-gray-700 hover:border-[#f14011] focus:border-[#f14011] focus:outline-none transition-colors cursor-pointer"
+            >
+              <option value="relevanz">Relevanz</option>
+              <option value="preis-auf">Preis aufsteigend</option>
+              <option value="preis-ab">Preis absteigend</option>
+              <option value="km-auf">Kilometerstand aufsteigend</option>
+              <option value="km-ab">Kilometerstand absteigend</option>
+              <option value="ez-neu">Erstzulassung neueste zuerst</option>
+              <option value="ez-alt">Erstzulassung älteste zuerst</option>
+              <option value="bj-neu">Baujahr neueste zuerst</option>
+              <option value="bj-alt">Baujahr älteste zuerst</option>
+            </select>
+            <ChevronDownIcon className="w-4 h-4 text-gray-400 absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+          </div>
 
           {/* Result count */}
           <div className="flex items-center px-4 text-sm text-gray-400">
@@ -2330,7 +2366,7 @@ function InseratePageInner() {
       <section className="max-w-7xl mx-auto px-4 sm:px-6 pb-16">
         {filtered.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filtered.map((vehicle, index) => (
+            {sorted.map((vehicle, index) => (
               <div
                 key={vehicle.id}
                 className="animate-fade-in-up"
