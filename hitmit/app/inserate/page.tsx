@@ -1488,6 +1488,25 @@ function InseratePageInner() {
               placeholder="Variante (z.B. Clubsport)"
               className="bg-white dark:bg-[#141414] border border-gray-200 rounded-full px-5 py-2.5 text-sm font-medium text-gray-700 placeholder:text-gray-400 hover:border-[#f14011] focus:border-[#f14011] focus:outline-none transition-colors w-48"
             />
+
+            {/* Price */}
+            <div className="relative">
+              <select
+                value={priceFilter}
+                onChange={(e) => setPriceFilter(Number(e.target.value))}
+                className="appearance-none bg-white dark:bg-[#141414] border border-gray-200 rounded-full px-5 py-2.5 pr-10 text-sm font-medium text-gray-700 hover:border-[#f14011] focus:border-[#f14011] focus:outline-none transition-colors cursor-pointer"
+              >
+                {priceRanges.map((r, i) => (
+                  <option key={r.label} value={i}>
+                    {r.label}
+                  </option>
+                ))}
+              </select>
+              <ChevronDownIcon className="w-4 h-4 text-gray-400 absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+            </div>
+
+            {/* Fuel */}
+            <MultiFilterSelect label="Kraftstoff" selected={fuelFilter} onChange={setFuelFilter} options={fuelOptions} inline />
           </div>
 
           {/* "Weitere Marke" Button — own line below row 1 */}
@@ -1668,27 +1687,8 @@ function InseratePageInner() {
             </div>
           )}
 
-          {/* Price, Fuel, More filters etc. */}
-          <div className="relative z-20 flex flex-wrap gap-3 items-center">
-          {/* Price */}
-          <div className="relative">
-            <select
-              value={priceFilter}
-              onChange={(e) => setPriceFilter(Number(e.target.value))}
-              className="appearance-none bg-white dark:bg-[#141414] border border-gray-200 rounded-full px-5 py-2.5 pr-10 text-sm font-medium text-gray-700 hover:border-[#f14011] focus:border-[#f14011] focus:outline-none transition-colors cursor-pointer"
-            >
-              {priceRanges.map((r, i) => (
-                <option key={r.label} value={i}>
-                  {r.label}
-                </option>
-              ))}
-            </select>
-            <ChevronDownIcon className="w-4 h-4 text-gray-400 absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
-          </div>
-
-          {/* Fuel */}
-          <MultiFilterSelect label="Kraftstoff" selected={fuelFilter} onChange={setFuelFilter} options={fuelOptions} inline />
-
+          {/* More filters, result count, save search */}
+          <div className="flex flex-wrap gap-3 items-center">
           {/* More filters toggle */}
           <button
             onClick={() => setShowAdvanced(!showAdvanced)}
