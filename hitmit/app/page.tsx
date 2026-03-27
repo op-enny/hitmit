@@ -1518,6 +1518,7 @@ const COMFORT_FEATURES = [
   "Sitzbelüftung vorne",
   "Sitzbelüftung hinten",
   "Keyless-Go",
+  "Laderaumtrennetz",
   "Dashcam",
 ];
 

@@ -1047,6 +1047,8 @@ export const EQUIPMENT_FEATURE_LIST = [
   "WLAN-Hotspot",
   "Induktive Ladestation",
   "Natives Audio-Streaming",
+  // Sonstiges
+  "Laderaumtrennetz",
   // Zubehör
   "Dashcam",
 ];
@@ -1089,7 +1091,7 @@ export const COMFORT_FEATURES_BY_TYPE: Record<string, string[]> = {
     "---Motor & Antrieb",
     "Gasanlage (LPG)", "Gasanlage (CNG)",
     "---Sonstiges",
-    "Lederlenkrad", "Multifunktionslenkrad", "Kleiderhaken",
+    "Lederlenkrad", "Multifunktionslenkrad", "Kleiderhaken", "Laderaumtrennetz",
     "---Zubehör",
     "Dashcam",
   ],
