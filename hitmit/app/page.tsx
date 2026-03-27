@@ -1513,6 +1513,8 @@ const COMFORT_FEATURES = [
   "Standheizung",
   "Tempomat",
   "Abstandsregeltempomat",
+  "Gasanlage (LPG)",
+  "Gasanlage (CNG)",
   "Sitzbelüftung vorne",
   "Sitzbelüftung hinten",
   "Keyless-Go",

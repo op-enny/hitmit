@@ -1011,6 +1011,9 @@ export const EQUIPMENT_FEATURE_LIST = [
   "Tempomat",
   "Limiter",
   "Abstandsregeltempomat",
+  // Motor & Antrieb
+  "Gasanlage (LPG)",
+  "Gasanlage (CNG)",
   // Licht
   "LED-Scheinwerfer",
   "Xenon-Scheinwerfer",
@@ -1083,6 +1086,8 @@ export const COMFORT_FEATURES_BY_TYPE: Record<string, string[]> = {
     "Winterpaket", "Wärme-Komfort-Paket",
     "---Sensoren & Beleuchtung",
     "Lichtsensor", "Regensensor", "Ambientebeleuchtung", "Akustikverglasung",
+    "---Motor & Antrieb",
+    "Gasanlage (LPG)", "Gasanlage (CNG)",
     "---Sonstiges",
     "Lederlenkrad", "Multifunktionslenkrad", "Kleiderhaken",
     "---Zubehör",
