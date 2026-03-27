@@ -76,3 +76,13 @@ export function getDealerByName(
   const dealers = getDealers(reviews);
   return dealers.find((d) => d.companyName === name) ?? null;
 }
+
+export function getDealerCompanyNames(): string[] {
+  const names = new Set<string>();
+  for (const v of vehicles) {
+    if (v.sellerType === "dealer" && v.companyName) {
+      names.add(v.companyName);
+    }
+  }
+  return Array.from(names).sort();
+}
