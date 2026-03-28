@@ -429,76 +429,54 @@ export const CAR_BRANDS_MODELS: Record<string, string[]> = {
   "Audi": ["A1", "A3", "A4", "A5", "A6", "A7", "A8", "Q2", "Q3", "Q4 e-tron", "Q5", "Q7", "Q8", "e-tron", "e-tron GT", "RS3", "RS4", "RS5", "RS6", "RS7", "RS Q8", "S3", "S4", "S5", "S6", "S7", "S8", "TT", "R8", "80", "90", "100", "200", "V8", "Urquattro", "Coupé", "Cabriolet"],
   "BMW": [
     // 1er
-    "1er", "114i", "116i", "118i", "120i", "125i", "128ti", "130i",
-    "114d", "116d", "118d", "120d", "125d",
+    "1er", "114", "116", "118", "120", "125", "128ti", "130",
     // 2er
-    "2er", "218i", "220i", "225i", "230i",
-    "216d", "218d", "220d", "225d", "225xe",
+    "2er", "216", "218", "220", "225", "230", "225xe",
     // 2er Gran Coupé
-    "218i Gran Coupé", "220i Gran Coupé", "228i Gran Coupé",
-    "216d Gran Coupé", "218d Gran Coupé", "220d Gran Coupé",
+    "218 Gran Coupé", "220 Gran Coupé", "228 Gran Coupé",
     // 3er
-    "3er", "316i", "318i", "320i", "325i", "328i", "330i", "330e", "335i", "340i",
-    "316d", "318d", "320d", "325d", "328d", "330d", "335d",
+    "3er", "316", "318", "320", "325", "328", "330", "330e", "335", "340",
     // 3er Gran Turismo
-    "318i Gran Turismo", "320i Gran Turismo", "328i Gran Turismo", "330i Gran Turismo", "335i Gran Turismo", "340i Gran Turismo",
-    "318d Gran Turismo", "320d Gran Turismo", "325d Gran Turismo", "330d Gran Turismo", "335d Gran Turismo",
+    "318 Gran Turismo", "320 Gran Turismo", "325 Gran Turismo", "328 Gran Turismo", "330 Gran Turismo", "335 Gran Turismo", "340 Gran Turismo",
     // 4er
-    "4er", "420i", "428i", "430i", "435i", "440i",
-    "418d", "420d", "425d", "430d", "435d",
+    "4er", "418", "420", "425", "428", "430", "435", "440",
     // 4er Gran Coupé
-    "420i Gran Coupé", "428i Gran Coupé", "430i Gran Coupé", "435i Gran Coupé", "440i Gran Coupé",
-    "418d Gran Coupé", "420d Gran Coupé", "425d Gran Coupé", "430d Gran Coupé", "435d Gran Coupé",
+    "420 Gran Coupé", "425 Gran Coupé", "428 Gran Coupé", "430 Gran Coupé", "435 Gran Coupé", "440 Gran Coupé",
     // 5er
-    "5er", "520i", "523i", "525i", "528i", "530i", "530e", "535i", "540i", "545e",
-    "518d", "520d", "525d", "530d", "535d", "540d",
+    "5er", "518", "520", "523", "525", "528", "530", "530e", "535", "540", "545e",
     // 5er Gran Turismo
-    "528i Gran Turismo", "535i Gran Turismo", "550i Gran Turismo",
-    "520d Gran Turismo", "525d Gran Turismo", "530d Gran Turismo", "535d Gran Turismo",
+    "520 Gran Turismo", "525 Gran Turismo", "528 Gran Turismo", "530 Gran Turismo", "535 Gran Turismo", "550 Gran Turismo",
     // 6er
-    "6er", "630i", "640i", "645i", "650i",
-    "620d", "630d", "640d",
+    "6er", "620", "630", "640", "645", "650",
     // 6er Gran Turismo
-    "630i Gran Turismo", "640i Gran Turismo",
-    "620d Gran Turismo", "630d Gran Turismo", "640d Gran Turismo",
+    "620 Gran Turismo", "630 Gran Turismo", "640 Gran Turismo",
     // 6er Gran Coupé
-    "640i Gran Coupé", "650i Gran Coupé",
-    "640d Gran Coupé",
+    "640 Gran Coupé", "650 Gran Coupé",
     // 7er
-    "7er", "725i", "728i", "730i", "735i", "740i", "745e", "750i", "760i",
-    "725d", "728d", "730d", "735d", "740d", "745d", "750d",
+    "7er", "725", "728", "730", "735", "740", "745e", "750", "760",
     // 8er
-    "8er", "840i",
-    "840d", "840d xDrive",
+    "8er", "840", "840 xDrive",
     // 8er Gran Coupé
-    "840i Gran Coupé",
-    "840d xDrive Gran Coupé",
+    "840 Gran Coupé", "840 xDrive Gran Coupé",
     // X-Modelle
-    "X1", "X1 sDrive16i", "X1 sDrive18i", "X1 sDrive20i", "X1 xDrive20i", "X1 xDrive25i", "X1 xDrive25e",
-    "X1 sDrive16d", "X1 sDrive18d", "X1 xDrive18d", "X1 xDrive20d", "X1 xDrive25d",
-    "X2", "X2 sDrive18i", "X2 sDrive20i", "X2 xDrive20i",
-    "X2 sDrive16d", "X2 sDrive18d", "X2 xDrive20d", "X2 xDrive25e",
-    "X3", "X3 xDrive20i", "X3 xDrive30i", "X3 xDrive30e",
-    "X3 sDrive18d", "X3 xDrive20d", "X3 xDrive30d",
-    "X4", "X4 xDrive20i", "X4 xDrive30i",
-    "X4 xDrive20d", "X4 xDrive30d",
-    "X5", "X5 xDrive30i", "X5 xDrive40i", "X5 xDrive50i", "X5 xDrive45e",
-    "X5 xDrive25d", "X5 xDrive30d", "X5 xDrive40d",
-    "X6", "X6 xDrive35i", "X6 xDrive40i", "X6 xDrive50i",
-    "X6 xDrive30d", "X6 xDrive40d",
-    "X7", "X7 xDrive40i",
-    "X7 xDrive30d", "X7 xDrive40d",
+    "X1", "X1 sDrive16", "X1 sDrive18", "X1 sDrive20", "X1 xDrive18", "X1 xDrive20", "X1 xDrive25", "X1 xDrive25e",
+    "X2", "X2 sDrive16", "X2 sDrive18", "X2 sDrive20", "X2 xDrive20", "X2 xDrive25e",
+    "X3", "X3 sDrive18", "X3 xDrive20", "X3 xDrive30", "X3 xDrive30e",
+    "X4", "X4 xDrive20", "X4 xDrive30",
+    "X5", "X5 xDrive25", "X5 xDrive30", "X5 xDrive40", "X5 xDrive45e", "X5 xDrive50",
+    "X6", "X6 xDrive30", "X6 xDrive35", "X6 xDrive40", "X6 xDrive50",
+    "X7", "X7 xDrive30", "X7 xDrive40",
     // M Performance
-    "M135i", "M135i xDrive", "M140i",
-    "M235i xDrive", "M240i xDrive", "M235i xDrive Gran Coupé",
-    "M340i", "M340i xDrive", "M340d xDrive",
-    "M440i xDrive", "M440i xDrive Gran Coupé",
-    "M550i xDrive", "M550d xDrive",
-    "M760i xDrive", "M760e xDrive",
-    "M850i xDrive", "M850i xDrive Gran Coupé",
-    "X2 M35i", "X3 M40i", "X3 M40d", "X4 M40i", "X4 M40d",
-    "X5 M50i", "X5 M50d", "X6 M50i", "X6 M50d", "X7 M60i xDrive", "X7 M50d",
-    "Z4 M40i",
+    "M135", "M135 xDrive", "M140",
+    "M235 xDrive", "M240 xDrive", "M235 xDrive Gran Coupé",
+    "M340", "M340 xDrive",
+    "M440 xDrive", "M440 xDrive Gran Coupé",
+    "M550 xDrive",
+    "M760 xDrive", "M760e xDrive",
+    "M850 xDrive", "M850 xDrive Gran Coupé",
+    "X2 M35", "X3 M40", "X4 M40",
+    "X5 M50", "X6 M50", "X7 M50", "X7 M60 xDrive",
+    "Z4 M40",
     "i4 M50", "i5 M60 xDrive", "i7 M70 xDrive", "iX M60",
     // M Rein (Pure M)
     "M2", "M2 Competition", "M2 CS",
@@ -512,7 +490,7 @@ export const CAR_BRANDS_MODELS: Record<string, string[]> = {
     "X6 M", "X6 M Competition",
     "XM", "XM Label Red",
     // Z-Modelle
-    "Z1", "Z3", "Z4", "Z4 sDrive20i", "Z4 sDrive30i", "Z8",
+    "Z1", "Z3", "Z4", "Z4 sDrive20", "Z4 sDrive30", "Z8",
     // i-Modelle (Elektro)
     "i3", "i3s",
     "i4", "i4 eDrive35", "i4 eDrive40",
@@ -522,7 +500,7 @@ export const CAR_BRANDS_MODELS: Record<string, string[]> = {
     "iX1", "iX1 xDrive30",
     "iX3",
     // Klassiker
-    "2002", "850i",
+    "2002", "850",
   ],
   "Bentley": ["Continental GT", "Continental GTC", "Flying Spur", "Bentayga", "Mulsanne", "Arnage", "Azure", "Brooklands"],
   "Bugatti": ["Chiron", "Chiron Sport", "Chiron Pur Sport", "Divo", "Centodieci", "Mistral", "Tourbillon"],
@@ -1028,6 +1006,7 @@ export const EQUIPMENT_FEATURE_LIST = [
   "Matrix-LED",
   "Tagfahrlicht",
   "Nebelscheinwerfer",
+  "Nebelschlussleuchte",
   "Kurvenlicht",
   "Abbiegelicht",
   "Scheinwerferreinigungsanlage",
@@ -1167,9 +1146,9 @@ export const SAFETY_FEATURES_BY_TYPE: Record<string, string[]> = {
 export const EXTERIOR_FEATURES_BY_TYPE: Record<string, string[]> = {
   PKW: [
     "---Licht",
-    "LED-Scheinwerfer", "Xenon-Scheinwerfer", "Bi-Xenon-Scheinwerfer", "Matrix-LED", "Laserlicht", "Digitales Licht", "Tagfahrlicht", "Nebelscheinwerfer", "Kurvenlicht", "Abbiegelicht", "Scheinwerferreinigungsanlage",
+    "LED-Scheinwerfer", "Xenon-Scheinwerfer", "Bi-Xenon-Scheinwerfer", "Matrix-LED", "Laserlicht", "Digitales Licht", "Tagfahrlicht", "Nebelscheinwerfer", "Nebelschlussleuchte", "Kurvenlicht", "Abbiegelicht", "Scheinwerferreinigungsanlage",
     "---Felgen",
-    "Leichtmetallfelgen", "Alufelgen", "Stahlfelgen", "Schmiedefelgen", "Chromfelgen",
+    "Leichtmetallfelgen", "Alufelgen", "Stahlfelgen", "Schmiedefelgen", "Chromfelgen", "Carbonfelgen",
     "---Sonstiges",
     "Dachreling", "Anhängerkupplung", "Sportpaket", "Lackversiegelung", "Getönte Scheiben",
     "---Pannensicherheit",
@@ -1180,11 +1159,11 @@ export const EXTERIOR_FEATURES_BY_TYPE: Record<string, string[]> = {
     "Gepäckträger", "Sportauspuff", "Kettenschutz",
   ],
   LKW: [
-    "LED-Scheinwerfer", "Nebelscheinwerfer", "Spoiler", "Seitenverkleidung",
+    "LED-Scheinwerfer", "Nebelscheinwerfer", "Nebelschlussleuchte", "Spoiler", "Seitenverkleidung",
     "Rampe", "Anhängerkupplung", "Dachspoiler", "Leichtmetallfelgen", "Alufelgen", "Stahlfelgen",
   ],
   Transporter: [
-    "LED-Scheinwerfer", "Tagfahrlicht", "Nebelscheinwerfer", "Anhängerkupplung",
+    "LED-Scheinwerfer", "Tagfahrlicht", "Nebelscheinwerfer", "Nebelschlussleuchte", "Anhängerkupplung",
     "Dachreling", "Dachgalerie", "Trittbretter", "Laderaumverkleidung", "Leichtmetallfelgen", "Alufelgen", "Stahlfelgen",
   ],
   Wohnmobil: [
@@ -1228,7 +1207,7 @@ export const MULTIMEDIA_FEATURES_BY_TYPE: Record<string, string[]> = {
 
 export const SUSPENSION_FEATURES_BY_TYPE: Record<string, string[]> = {
   PKW: [
-    "Sportfahrwerk", "Luftfahrwerk", "Adaptives Fahrwerk", "Tieferlegung",
+    "Sportfahrwerk", "Luftfahrwerk", "Adaptives Fahrwerk", "Zigarettenanzünder",
     "Gewindefahrwerk", "Elektronische Dämpferregelung",
   ],
   Motorrad: [
@@ -1239,10 +1218,10 @@ export const SUSPENSION_FEATURES_BY_TYPE: Record<string, string[]> = {
     "Luftfederung", "Blattfederung", "Komfortfahrwerk",
   ],
   Transporter: [
-    "Luftfederung", "Tieferlegung", "Sportfahrwerk", "Komfortfahrwerk",
+    "Luftfederung", "Zigarettenanzünder", "Sportfahrwerk", "Komfortfahrwerk",
   ],
   Wohnmobil: [
-    "Luftfederung", "Tieferlegung", "Komfortfahrwerk", "Verstärkte Federn",
+    "Luftfederung", "Zigarettenanzünder", "Komfortfahrwerk", "Verstärkte Federn",
   ],
 };
 
