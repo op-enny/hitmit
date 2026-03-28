@@ -1095,6 +1095,8 @@ interface VehicleFormData {
   weight: string;
   condition: string;
   accidentFree: boolean | null;
+  manufacturerCertified: boolean | null;
+  offerTarget: string;
   repaintFree: boolean | null;
   stoneguardFilm: boolean | null;
   serviceHistory: boolean | null;
@@ -1192,6 +1194,8 @@ const initialFormData: VehicleFormData = {
   weight: "",
   condition: "",
   accidentFree: null,
+  manufacturerCertified: null,
+  offerTarget: "Alle",
   repaintFree: null,
   stoneguardFilm: null,
   serviceHistory: null,
@@ -2975,6 +2979,11 @@ function SubmitFormSection() {
                   value={formData.accidentFree}
                   onChange={(val) => updateField("accidentFree", val)}
                 />
+                <FormBinaryState
+                  label="Herstellerzertifiziert"
+                  value={formData.manufacturerCertified}
+                  onChange={(val) => updateField("manufacturerCertified", val)}
+                />
                 {isFieldVisibleForType("noRepaint", getFormTypeLabel(formData.vehicleType)) && (
                   <FormBinaryState
                     label="Nachlackierungsfrei"
@@ -2999,6 +3008,12 @@ function SubmitFormSection() {
                 />
               </div>
               <div className="grid md:grid-cols-2 gap-6">
+                <FormSelect
+                  label="Angeboten für"
+                  options={[{ value: "Alle", label: "Alle" }, { value: "Gewerbe/Export", label: "Gewerbe/Export" }]}
+                  value={formData.offerTarget}
+                  onChange={(e) => updateField("offerTarget", e.target.value)}
+                />
                 <FormSelect
                   label={`${getVehicleNoun(getFormTypeLabel(formData.vehicleType))}herkunft`}
                   options={VEHICLE_ORIGIN_OPTIONS}

@@ -86,6 +86,9 @@ function applyFilters(filters: SavedSearch["filters"]): Vehicle[] {
       if (filters.sellerTypeFilter === "Händler" && v.sellerType !== "dealer") return false;
     }
     if (filters.accidentFreeFilter === "Nur unfallfrei" && !v.accidentFree) return false;
+    if (filters.manufacturerCertifiedFilter === "Nur zertifiziert" && !v.manufacturerCertified) return false;
+    if (filters.manufacturerCertifiedFilter === true && !v.manufacturerCertified) return false;
+    if (filters.offerTargetFilter && filters.offerTargetFilter !== "Alle" && (v.offerTarget || "Alle") !== filters.offerTargetFilter) return false;
     if (filters.cityFilter) {
       if (filters.cityRadius && Number(filters.cityRadius) > 0) {
         const from = getCoordsByCity(filters.cityFilter);
@@ -274,6 +277,8 @@ function buildSearchUrl(filters: SavedSearch["filters"]): string {
   }
   if (filters.sellerTypeFilter && filters.sellerTypeFilter !== "Alle") params.set("sellerType", filters.sellerTypeFilter);
   if (filters.accidentFreeFilter === "Nur unfallfrei") params.set("accidentFree", "ja");
+  if (filters.manufacturerCertifiedFilter === "Nur zertifiziert" || filters.manufacturerCertifiedFilter === true) params.set("manufacturerCertified", "ja");
+  if (filters.offerTargetFilter && filters.offerTargetFilter !== "Alle") params.set("offerTarget", String(filters.offerTargetFilter));
   if (filters.cityFilter) params.set("city", filters.cityFilter);
   if (filters.cityRadius) params.set("radius", filters.cityRadius);
   if (filters.colorFilter) {
@@ -391,6 +396,8 @@ function SearchCard({
   }
   if (f.sellerTypeFilter && f.sellerTypeFilter !== "Alle") filterTags.push(f.sellerTypeFilter);
   if (f.accidentFreeFilter === "Nur unfallfrei") filterTags.push("Unfallfrei");
+  if (f.manufacturerCertifiedFilter === "Nur zertifiziert" || f.manufacturerCertifiedFilter === true) filterTags.push("Herstellerzertifiziert");
+  if (f.offerTargetFilter && f.offerTargetFilter !== "Alle") filterTags.push(String(f.offerTargetFilter));
   if (f.cityFilter) filterTags.push(f.cityRadius ? `${f.cityFilter} +${f.cityRadius} km` : f.cityFilter);
   if (f.colorFilter) {
     const cfs = Array.isArray(f.colorFilter) ? f.colorFilter : (f.colorFilter !== "Alle Farben" ? [f.colorFilter] : []);

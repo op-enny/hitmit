@@ -69,6 +69,8 @@ export interface Vehicle {
   steeringSide?: string;
   country?: string;
   availableNow?: boolean;
+  manufacturerCertified?: boolean;
+  offerTarget?: string;
   gradient: string;
 }
 
@@ -130,6 +132,7 @@ export const vehicles: Vehicle[] = [
     emissionClass: "Euro 6d",
     environmentalBadge: "Grün (4)",
     particleFilter: true,
+    manufacturerCertified: true,
     gradient: "from-blue-600 via-blue-800 to-gray-900",
   },
   {
@@ -243,6 +246,7 @@ export const vehicles: Vehicle[] = [
     emissionClass: "Euro 6d",
     environmentalBadge: "Grün (4)",
     particleFilter: true,
+    manufacturerCertified: true,
     gradient: "from-gray-700 via-gray-900 to-black",
   },
   {

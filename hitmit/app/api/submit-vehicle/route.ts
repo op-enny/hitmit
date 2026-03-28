@@ -72,6 +72,8 @@ interface VehicleSubmissionDto {
   weight?: number;
   condition?: string;
   accidentFree?: boolean;
+  manufacturerCertified?: boolean;
+  offerTarget?: string;
   repaintFree?: boolean;
   serviceHistory?: boolean;
   serviceHistoryAt?: string;
@@ -465,7 +467,13 @@ function generateEmailHtml(data: VehicleSubmissionDto, imageUrls: string[], pain
         <div class="grid">
           <div class="grid-row">
             <div class="grid-cell"><div class="label">Unfallfrei</div><div class="value">${b(data.accidentFree)}</div></div>
+            <div class="grid-cell"><div class="label">Herstellerzertifiziert</div><div class="value">${b(data.manufacturerCertified)}</div></div>
+          </div>
+          <div class="grid-row">
             <div class="grid-cell"><div class="label">Nachlackierungsfrei</div><div class="value">${b(data.repaintFree)}</div></div>
+          </div>
+          <div class="grid-row">
+            <div class="grid-cell"><div class="label">Angeboten für</div><div class="value">${s(data.offerTarget)}</div></div>
           </div>
           <div class="grid-row">
             <div class="grid-cell"><div class="label">Scheckheftgepflegt</div><div class="value">${b(data.serviceHistory)}</div></div>

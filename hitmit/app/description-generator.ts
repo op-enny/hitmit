@@ -19,6 +19,8 @@ interface GeneratorInput {
   driveType: string;
   condition: string;
   accidentFree: boolean | null;
+  manufacturerCertified: boolean | null;
+  offerTarget: string;
   repaintFree: boolean | null;
   serviceHistory: boolean | null;
   serviceHistoryAt: string;
@@ -293,6 +295,15 @@ function buildHistory(d: GeneratorInput, rand: () => number): string {
       `${g.artDef} ${g.noun} ist unfallfrei.`,
       "Laut Vorbesitzer unfallfrei.",
       `Unfallfrei laut ${g.noun}historie.`,
+    ], rand));
+  }
+
+  // Manufacturer certified
+  if (d.manufacturerCertified === true) {
+    parts.push(pick([
+      `${g.artDef} ${g.noun} ist herstellerzertifiziert.`,
+      "Zertifiziert vom Hersteller.",
+      `Geprüft und zertifiziert nach Herstellerstandards.`,
     ], rand));
   }
 
@@ -598,6 +609,7 @@ export function checkCompleteness(formData: GeneratorInput): CompletenessResult 
     { field: hasValue(formData.transmission), tip: "Getriebe" },
     { field: hasValue(formData.condition), tip: "Zustand" },
     { field: formData.accidentFree !== null, tip: "Unfallfrei" },
+    { field: formData.manufacturerCertified !== null, tip: "Herstellerzertifiziert" },
     { field: formData.serviceHistory !== null, tip: "Scheckheft" },
     { field: hasValue(formData.colorGeneral), tip: "Farbe" },
     { field: formData.comfortFeatures.length > 0, tip: "Komfort-Ausstattung" },

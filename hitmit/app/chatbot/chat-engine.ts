@@ -19,6 +19,7 @@ export interface ParsedQuery {
   city?: string;
   sellerType?: "private" | "dealer";
   accidentFree?: boolean;
+  manufacturerCertified?: boolean;
   features?: string[];
 }
 
@@ -252,6 +253,11 @@ export function parseUserQuery(input: string): ParsedQuery {
     query.accidentFree = true;
   }
 
+  // --- Manufacturer certified ---
+  if (q.includes("zertifiziert") || q.includes("herstellerzertifiziert") || q.includes("certified")) {
+    query.manufacturerCertified = true;
+  }
+
   // --- Features ---
   const matchedFeatures: string[] = [];
   for (const feat of FEATURE_KEYWORDS) {
@@ -401,6 +407,13 @@ export function matchVehicles(query: ParsedQuery, allVehicles: Vehicle[] = vehic
     // Accident free (bonus 2 pts)
     if (query.accidentFree) {
       if (v.accidentFree) {
+        score += 2;
+      }
+    }
+
+    // Manufacturer certified (bonus 2 pts)
+    if (query.manufacturerCertified) {
+      if (v.manufacturerCertified) {
         score += 2;
       }
     }

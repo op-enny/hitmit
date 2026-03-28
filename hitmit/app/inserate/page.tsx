@@ -791,6 +791,11 @@ function DetailModal({ vehicle, onClose, isDealer }: { vehicle: Vehicle; onClose
                 Herstellergarantie
               </span>
             )}
+            {vehicle.manufacturerCertified && (
+              <span className="px-3 py-1 bg-blue-50 text-blue-700 rounded-full text-sm font-medium">
+                Herstellerzertifiziert
+              </span>
+            )}
             {vehicle.nonSmokerVehicle && (
               <span className="px-3 py-1 bg-green-50 text-green-700 rounded-full text-sm font-medium">
                 Nichtraucherfahrzeug
@@ -1043,6 +1048,8 @@ function InseratePageInner() {
   const [driveTypeFilter, setDriveTypeFilter] = useState<string[]>([]);
   const [sellerTypeFilter, setSellerTypeFilter] = useState("Alle");
   const [accidentFreeFilter, setAccidentFreeFilter] = useState("Alle");
+  const [manufacturerCertifiedFilter, setManufacturerCertifiedFilter] = useState("Alle");
+  const [offerTargetFilter, setOfferTargetFilter] = useState("Alle");
   const [countryFilter, setCountryFilter] = useState("Alle");
   const [cityFilter, setCityFilter] = useState("");
   const [colorFilter, setColorFilter] = useState<string[]>([]);
@@ -1104,6 +1111,8 @@ function InseratePageInner() {
     driveTypeFilter.length > 0,
     sellerTypeFilter !== "Alle",
     accidentFreeFilter !== "Alle",
+    manufacturerCertifiedFilter !== "Alle",
+    offerTargetFilter !== "Alle",
     cityFilter !== "",
     colorFilter.length > 0,
     conditionFilter.length > 0,
@@ -1164,6 +1173,10 @@ function InseratePageInner() {
     if (dt) setDriveTypeFilter(dt.split(",").filter(Boolean));
     if (st && sellerTypeOptions.includes(st)) setSellerTypeFilter(st);
     if (af === "ja") setAccidentFreeFilter("Nur unfallfrei");
+    const mcert = searchParams.get("manufacturerCertified");
+    if (mcert === "ja") setManufacturerCertifiedFilter("Nur zertifiziert");
+    const ot = searchParams.get("offerTarget");
+    if (ot) setOfferTargetFilter(ot);
     if (ct) setCityFilter(ct);
     const co = searchParams.get("color");
     const cn = searchParams.get("condition");
@@ -1320,6 +1333,8 @@ function InseratePageInner() {
       if (sellerTypeFilter === "Händler" && v.sellerType !== "dealer") return false;
     }
     if (accidentFreeFilter === "Nur unfallfrei" && !v.accidentFree) return false;
+    if (manufacturerCertifiedFilter === "Nur zertifiziert" && !v.manufacturerCertified) return false;
+    if (offerTargetFilter !== "Alle" && (v.offerTarget || "Alle") !== offerTargetFilter) return false;
     if (countryFilter !== "Alle" && (v.country || "") !== countryFilter) return false;
     if (cityFilter !== "" && !v.city.toLowerCase().includes(cityFilter.toLowerCase())) return false;
     if (colorFilter.length > 0 && !colorFilter.some((cf) => v.color.toLowerCase().includes(cf.toLowerCase()))) return false;
@@ -1795,6 +1810,8 @@ function InseratePageInner() {
                 if (driveTypeFilter.length > 0) parts.push(driveTypeFilter.join(", "));
                 if (sellerTypeFilter !== "Alle") parts.push(sellerTypeFilter);
                 if (accidentFreeFilter !== "Alle") parts.push("Unfallfrei");
+                if (manufacturerCertifiedFilter !== "Alle") parts.push("Herstellerzertifiziert");
+                if (offerTargetFilter !== "Alle") parts.push(offerTargetFilter);
                 if (cityFilter) parts.push(cityFilter);
                 if (colorFilter.length > 0) parts.push(colorFilter.join(", "));
                 if (conditionFilter.length > 0) parts.push(conditionFilter.join(", "));
@@ -1831,7 +1848,7 @@ function InseratePageInner() {
                     yearFrom, yearTo,
                     mileageMin: "", mileageMax: mlMax, powerMin: pwMin, powerMax: "",
                     transmissionFilter, driveTypeFilter,
-                    sellerTypeFilter, accidentFreeFilter,
+                    sellerTypeFilter, accidentFreeFilter, manufacturerCertifiedFilter, offerTargetFilter,
                     cityFilter, cityRadius: "",
                     colorFilter, conditionFilter,
                     doorFilter, seatFilter: seatFilter === "Alle" ? "" : seatFilter, steeringSideFilter,
@@ -1980,6 +1997,38 @@ function InseratePageInner() {
                   >
                     <option value="Alle">Alle</option>
                     <option value="Nur unfallfrei">Nur unfallfrei</option>
+                  </select>
+                  <ChevronDownIcon className="w-4 h-4 text-gray-400 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+                </div>
+              </div>
+
+              {/* Manufacturer Certified */}
+              <div>
+                <label className="block text-xs font-medium text-gray-500 mb-1.5">Herstellerzertifiziert</label>
+                <div className="relative">
+                  <select
+                    value={manufacturerCertifiedFilter}
+                    onChange={(e) => setManufacturerCertifiedFilter(e.target.value)}
+                    className="w-full appearance-none bg-gray-50 dark:bg-[#1a1a1a] border border-gray-200 rounded-xl px-4 py-2.5 pr-9 text-sm text-gray-700 hover:border-[#f14011] focus:border-[#f14011] focus:outline-none transition-colors cursor-pointer"
+                  >
+                    <option value="Alle">Alle</option>
+                    <option value="Nur zertifiziert">Nur zertifiziert</option>
+                  </select>
+                  <ChevronDownIcon className="w-4 h-4 text-gray-400 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+                </div>
+              </div>
+
+              {/* Offer Target */}
+              <div>
+                <label className="block text-xs font-medium text-gray-500 mb-1.5">Angeboten für</label>
+                <div className="relative">
+                  <select
+                    value={offerTargetFilter}
+                    onChange={(e) => setOfferTargetFilter(e.target.value)}
+                    className="w-full appearance-none bg-gray-50 dark:bg-[#1a1a1a] border border-gray-200 rounded-xl px-4 py-2.5 pr-9 text-sm text-gray-700 hover:border-[#f14011] focus:border-[#f14011] focus:outline-none transition-colors cursor-pointer"
+                  >
+                    <option value="Alle">Alle</option>
+                    <option value="Gewerbe/Export">Gewerbe/Export</option>
                   </select>
                   <ChevronDownIcon className="w-4 h-4 text-gray-400 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
                 </div>
@@ -2333,7 +2382,7 @@ function InseratePageInner() {
                   setYearFrom(""); setYearTo("");
                   setMileageFilter(0); setPowerFilter(0);
                   setTransmissionFilter([]); setDriveTypeFilter([]);
-                  setSellerTypeFilter("Alle"); setAccidentFreeFilter("Alle");
+                  setSellerTypeFilter("Alle"); setAccidentFreeFilter("Alle"); setManufacturerCertifiedFilter("Alle"); setOfferTargetFilter("Alle");
                   setCityFilter("");
                   setColorFilter([]); setConditionFilter([]);
                   setDoorFilter("Alle"); setSeatFilter("Alle"); setSteeringSideFilter("Alle");

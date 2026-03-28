@@ -29,6 +29,8 @@ export interface SavedSearch {
     driveTypeFilter: string | string[];
     sellerTypeFilter: string;
     accidentFreeFilter: string;
+    manufacturerCertifiedFilter?: string | boolean;
+    offerTargetFilter?: string | boolean;
     cityFilter: string;
     cityRadius: string;
     colorFilter: string | string[];
@@ -164,6 +166,8 @@ function migrateSearch(raw: any): SavedSearch {
       driveTypeFilter: f.driveTypeFilter ?? [],
       sellerTypeFilter: f.sellerTypeFilter ?? "Alle",
       accidentFreeFilter: f.accidentFreeFilter ?? "Alle",
+      manufacturerCertifiedFilter: f.manufacturerCertifiedFilter ?? "Alle",
+      offerTargetFilter: f.offerTargetFilter ?? "Alle",
       cityFilter: f.cityFilter ?? "",
       cityRadius: f.cityRadius ?? "",
       colorFilter: f.colorFilter ?? [],

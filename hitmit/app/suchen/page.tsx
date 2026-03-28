@@ -503,6 +503,8 @@ export default function SuchenPage() {
   const [driveTypeFilter, setDriveTypeFilter] = useState<string[]>([]);
   const [sellerTypeFilter, setSellerTypeFilter] = useState("Alle");
   const [accidentFreeFilter, setAccidentFreeFilter] = useState("Alle");
+  const [manufacturerCertifiedFilter, setManufacturerCertifiedFilter] = useState(false);
+  const [offerTargetFilter, setOfferTargetFilter] = useState("Alle");
   const [countryFilter, setCountryFilter] = useState("Alle");
   const [cityFilter, setCityFilter] = useState("");
   const [cityRadius, setCityRadius] = useState("");
@@ -660,6 +662,8 @@ export default function SuchenPage() {
       if (sellerTypeFilter === "Händler" && v.sellerType !== "dealer") return false;
     }
     if (accidentFreeFilter === "Nur unfallfrei" && !v.accidentFree) return false;
+    if (manufacturerCertifiedFilter && !v.manufacturerCertified) return false;
+    if (offerTargetFilter !== "Alle" && (v.offerTarget || "Alle") !== offerTargetFilter) return false;
     if (countryFilter !== "Alle" && (v.country || "") !== countryFilter) return false;
     if (cityFilter !== "") {
       if (cityRadius !== "" && Number(cityRadius) > 0) {
@@ -795,6 +799,8 @@ export default function SuchenPage() {
     driveTypeFilter.length > 0,
     sellerTypeFilter !== "Alle",
     accidentFreeFilter !== "Alle",
+    manufacturerCertifiedFilter,
+    offerTargetFilter !== "Alle",
     countryFilter !== "Alle",
     cityFilter !== "",
     cityRadius !== "",
@@ -843,7 +849,7 @@ export default function SuchenPage() {
     setYearFrom(""); setYearTo("");
     setMileageMin(""); setMileageMax(""); setPowerMin(""); setPowerMax("");
     setTransmissionFilter([]); setDriveTypeFilter([]);
-    setSellerTypeFilter("Alle"); setAccidentFreeFilter("Alle");
+    setSellerTypeFilter("Alle"); setAccidentFreeFilter("Alle"); setManufacturerCertifiedFilter(false); setOfferTargetFilter("Alle");
     setCountryFilter("Alle"); setCityFilter(""); setCityRadius("");
     setColorFilter([]); setConditionFilter([]);
     setDoorFilter("Alle"); setSeatFilter(""); setSteeringSideFilter("Alle");
@@ -889,6 +895,8 @@ export default function SuchenPage() {
     if (driveTypeFilter.length > 0) parts.push(driveTypeFilter.join(", "));
     if (sellerTypeFilter !== "Alle") parts.push(sellerTypeFilter);
     if (accidentFreeFilter !== "Alle") parts.push("Unfallfrei");
+    if (manufacturerCertifiedFilter) parts.push("Herstellerzertifiziert");
+    if (offerTargetFilter !== "Alle") parts.push(offerTargetFilter);
     if (countryFilter !== "Alle") parts.push(countryFilter);
     if (cityFilter) parts.push(cityRadius ? `${cityFilter} +${cityRadius} km` : cityFilter);
     if (colorFilter.length > 0) parts.push(colorFilter.join(", "));
@@ -935,7 +943,7 @@ export default function SuchenPage() {
         yearFrom, yearTo,
         mileageMin, mileageMax, powerMin, powerMax,
         transmissionFilter, driveTypeFilter,
-        sellerTypeFilter, accidentFreeFilter,
+        sellerTypeFilter, accidentFreeFilter, manufacturerCertifiedFilter, offerTargetFilter,
         cityFilter, cityRadius,
         colorFilter, conditionFilter,
         doorFilter, seatFilter, steeringSideFilter,
@@ -1449,7 +1457,22 @@ export default function SuchenPage() {
                 />
                 <span className="text-xs sm:text-sm text-gray-700 dark:text-gray-300">Unfallfrei</span>
               </label>
+              <label className="flex items-center gap-2 px-2 sm:px-4 py-2.5 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={manufacturerCertifiedFilter}
+                  onChange={(e) => setManufacturerCertifiedFilter(e.target.checked)}
+                  className="w-4 h-4 rounded border-gray-300 dark:border-gray-600 text-[#f14011] focus:ring-[#f14011] cursor-pointer"
+                />
+                <span className="text-xs sm:text-sm text-gray-700 dark:text-gray-300">Herstellerzertifiziert</span>
+              </label>
             </div>
+            <FilterSelect
+              label="Angeboten für"
+              value={offerTargetFilter}
+              onChange={setOfferTargetFilter}
+              options={[{ value: "Alle", label: "Alle" }, { value: "Gewerbe/Export", label: "Gewerbe/Export" }]}
+            />
             <FilterSelect
               label="Land"
               value={countryFilter}
