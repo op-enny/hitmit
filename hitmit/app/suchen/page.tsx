@@ -573,6 +573,16 @@ export default function SuchenPage() {
   const [showMultimediaFeatures, setShowMultimediaFeatures] = useState(false);
   const [showSuspensionFeatures, setShowSuspensionFeatures] = useState(false);
 
+  // Placeholder helpers
+  const variantPlaceholder = vehicleTypeFilter === "Motorrad" ? "z.B. ABS, Quickshifter"
+    : vehicleTypeFilter === "LKW" ? "z.B. Pritsche, Koffer"
+    : vehicleTypeFilter === "Wohnmobil" ? "z.B. Alkoven, Teilintegriert"
+    : "z.B. Clubsport, AMG";
+  const equipPlaceholder = vehicleTypeFilter === "Motorrad" ? "z.B. Heizgriffe, Koffer"
+    : vehicleTypeFilter === "LKW" ? "z.B. Standheizung, Klimaanlage"
+    : vehicleTypeFilter === "Wohnmobil" ? "z.B. Markise, Solaranlage"
+    : "z.B. Panoramadach, LED";
+
   // Search state
   const [hasSearched, setHasSearched] = useState(false);
   const [searchSaved, setSearchSaved] = useState(false);
@@ -1114,7 +1124,7 @@ export default function SuchenPage() {
                 type="text"
                 value={variantFilter}
                 onChange={(e) => setVariantFilter(e.target.value)}
-                placeholder="z.B. Clubsport, AMG"
+                placeholder={variantPlaceholder}
                 className="w-full bg-white dark:bg-[#1a1a1a] border border-gray-200 dark:border-[#2a2a2a] rounded-xl px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 placeholder:text-gray-400 hover:border-[#f14011] focus:border-[#f14011] focus:outline-none transition-colors"
               />
             </div>
@@ -1124,7 +1134,7 @@ export default function SuchenPage() {
                 type="text"
                 value={equipSearch}
                 onChange={(e) => setEquipSearch(e.target.value)}
-                placeholder="z.B. Panoramadach, LED"
+                placeholder={equipPlaceholder}
                 className="w-full bg-white dark:bg-[#1a1a1a] border border-gray-200 dark:border-[#2a2a2a] rounded-xl px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 placeholder:text-gray-400 hover:border-[#f14011] focus:border-[#f14011] focus:outline-none transition-colors"
               />
             </div>
@@ -1193,7 +1203,7 @@ export default function SuchenPage() {
                     type="text"
                     value={variantFilter2}
                     onChange={(e) => setVariantFilter2(e.target.value)}
-                    placeholder="z.B. Clubsport, AMG"
+                    placeholder={variantPlaceholder}
                     className="w-full bg-white dark:bg-[#1a1a1a] border border-gray-200 dark:border-[#2a2a2a] rounded-xl px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 placeholder:text-gray-400 hover:border-[#f14011] focus:border-[#f14011] focus:outline-none transition-colors"
                   />
                 </div>
@@ -1203,7 +1213,7 @@ export default function SuchenPage() {
                     type="text"
                     value={equipSearch2}
                     onChange={(e) => setEquipSearch2(e.target.value)}
-                    placeholder="z.B. Panoramadach, LED"
+                    placeholder={equipPlaceholder}
                     className="w-full bg-white dark:bg-[#1a1a1a] border border-gray-200 dark:border-[#2a2a2a] rounded-xl px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 placeholder:text-gray-400 hover:border-[#f14011] focus:border-[#f14011] focus:outline-none transition-colors"
                   />
                 </div>
@@ -1294,7 +1304,7 @@ export default function SuchenPage() {
                     type="text"
                     value={variantFilter3}
                     onChange={(e) => setVariantFilter3(e.target.value)}
-                    placeholder="z.B. Clubsport, AMG"
+                    placeholder={variantPlaceholder}
                     className="w-full bg-white dark:bg-[#1a1a1a] border border-gray-200 dark:border-[#2a2a2a] rounded-xl px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 placeholder:text-gray-400 hover:border-[#f14011] focus:border-[#f14011] focus:outline-none transition-colors"
                   />
                 </div>
@@ -1304,7 +1314,7 @@ export default function SuchenPage() {
                     type="text"
                     value={equipSearch3}
                     onChange={(e) => setEquipSearch3(e.target.value)}
-                    placeholder="z.B. Panoramadach, LED"
+                    placeholder={equipPlaceholder}
                     className="w-full bg-white dark:bg-[#1a1a1a] border border-gray-200 dark:border-[#2a2a2a] rounded-xl px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 placeholder:text-gray-400 hover:border-[#f14011] focus:border-[#f14011] focus:outline-none transition-colors"
                   />
                 </div>
